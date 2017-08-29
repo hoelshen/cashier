@@ -91,8 +91,6 @@
             this.getName();
             this.setting.setCount = this.setCount;
             Vue.prototype.$slide = this.setting;
-
-            console.log(this.setting)
         }
     }
 </script>
