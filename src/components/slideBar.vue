@@ -1,7 +1,7 @@
 <template>
     <div class="slideWrap">
         <h2><router-link to="/">朴茶门店收银后台</router-link></h2>
-        <el-menu default-active="1" class="slideBar" theme="dark" router>
+        <el-menu default-active="1" class="slideBar" theme="dark" router unique-opened>
             
             <!-- 一级菜单 -->
             <template v-for="(item,index) in slidebarConfig">
