@@ -1,0 +1,18 @@
+.clearfix{
+    *zoom: 1;
+    &::after,
+    &::before{
+        content: '';
+        display: block;
+        clear: both;
+    }
+}
+.float(l) {
+    float: left;
+}
+.float(r) {
+    float: right;
+}
+.display(@dis:block) {
+    display: @dis;
+}
