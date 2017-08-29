@@ -1,0 +1,76 @@
+@import url('./tools.less');
+.mainWrap{
+    width: 100%;
+    min-width: 1200px;
+    height: 100%;
+    .mainContent{
+        padding-left: 200px;
+        height: 100%;
+    }
+    .contentTop{
+        border-bottom: 1px solid #dbdbdb;
+        box-shadow: 0 1px 3px #ccc;
+        .position(r);
+        .line(56px);
+        .clearfix;
+        .title{
+            .fontSize(18px);
+            .paddingL(15px);
+            .float(l);
+        }
+        .user {
+            .clearfix;
+            .float(r);
+        }
+        .userName{
+            cursor: pointer;
+            .fontSize(16px);
+            .line(16px);
+            .paddingAll(20px,40px,0,0);
+            .float(r);
+            span{
+                .paddingL(15px);
+                border-left: 1px solid #999;
+            }
+            i{
+                transition: .3s;
+                transform: rotateZ(-90deg);
+                top: -2px;
+                left: 5px;
+                .fontSize(10px);
+                .position(r);
+            }
+            &:hover{
+                i{
+                    transform: rotateZ(0deg);
+                }
+            }
+        }
+        .noti{
+            .float(l);
+            .position(r);
+            .paddingR(20px);
+            .count{
+                width: 20px;
+                height: 20px;
+                background: #ff4949;
+                top: 5px;
+                right: 20px;
+                border-radius: 50%;
+                .line(20px);
+                .position(a);
+                .algin(c);
+                .color(#fff);
+            }
+        }
+        .icon-tongzhi3 {
+            .iconFont;
+            .fontSize(24px);
+            .line(49px);
+        }
+    }
+    .content{
+        height: calc(~'100% - 57px');
+        overflow-y: auto;
+    }
+}

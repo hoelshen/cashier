@@ -42,7 +42,7 @@
                 </el-submenu>
 
                 <!-- 没有二级菜单 -->
-                <el-menu-item :index="item.path || String(index)" v-else>
+                <el-menu-item :index="item.path || String(index + 1)" v-else>
                     <i :class="item.icon" v-if="item.icon"></i>
                     <span slot="title">{{ item.title }}</span>
                     <span class="count" v-if="item.countName">{{ item.count }}</span>
