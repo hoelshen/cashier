@@ -39,15 +39,32 @@
         methods: {
             submitForm(formName) {
                 const self = this;
-                self.$refs[formName].validate((valid) => {
-                    if (valid) {
-                        localStorage.setItem('ms_username',self.ruleForm.username);
-                        self.$router.push('/');
-                    } else {
-                        console.log('error submit!!');
-                        return false;
+                self.$ajax({
+                    url: '/apitest/sys/login/doLogin',
+                    type: 'post',
+                    data: {
+                        'account': self.ruleForm.username,
+                        'password': self.ruleForm.password
                     }
+
+                }).then(function(response){
+                    if(response.data.status == 0){
+                        // window.location.href = '/'+self.uri+'/index';
+                    }else{
+                        alert(response.data.info);
+                    }
+                }).catch(function(error){
+
                 });
+                // self.$refs[formName].validate((valid) => {
+                //     if (valid) {
+                //         localStorage.setItem('ms_username',self.ruleForm.username);
+                //         self.$router.push('/');
+                //     } else {
+                //         console.log('error submit!!');
+                //         return false;
+                //     }
+                // });
                 
             }
         }
