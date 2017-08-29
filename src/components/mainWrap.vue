@@ -10,9 +10,6 @@
     export default {
         components: {
             slideBar
-        },
-        created() {
-            // console.log(this.$router )
         }
     }
 </script>

@@ -7,10 +7,7 @@
 <script>
 
 export default {
-	components :{
-		slideBar,
-		mainWrap
-	},
+	
 }
 </script>
 
