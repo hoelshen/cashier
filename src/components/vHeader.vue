@@ -1,7 +1,7 @@
 <template>
     <header class="clearfix">
         <div class="logo f-l">
-            <h1><router-link to="/"><img src="../assets/images/logo.png"></router-link></h1>
+            <!-- <h1><router-link to="/"><img src="../assets/images/logo.png"></router-link></h1> -->
         </div>
         <div class="login f-r clearfix">
             <div class="uesrname f-l">
@@ -59,7 +59,7 @@ header .login a{
 }
 header .login .uesrname{
     padding-left: 23px;
-    background-image: url('../assets/images/icon-css01.png');
+    /* background-image: url('../assets/images/icon-css01.png'); */
     background-repeat: no-repeat;
     background-position:0 -670px; 
     margin-right: 22px;
