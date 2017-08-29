@@ -19,7 +19,7 @@
 
 <style lang="less" scoped>
     .mainWrap{
-        height: 100%;
+        min-height: 100%;
         padding-left: 200px;
     }
 </style>
