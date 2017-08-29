@@ -6,7 +6,14 @@ Vue.use(Router);
 
 export default new Router({
     routes : [
-        {path: '/',component: resolve => require(['./App.vue'], resolve)},
-        { path: '/login', component: resolve => require(['./views/Login.vue'], resolve) }
+	    { path: '/login', component: resolve => require(['./views/Login.vue'], resolve) },
+        {path: '/',component: resolve => require(['./components/home.vue'], resolve),
+			children:[
+				{path: 'testTree',component: resolve => require(['./views/Login.vue'], resolve)},
+			
+			]
+		
+		},
+
     ]
 })

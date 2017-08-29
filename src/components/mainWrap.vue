@@ -1,14 +1,18 @@
 <template>
     <div class="mainWrap">
-        这是主要内容块
-
+    	<slide-bar></slide-bar>
+        <router-view></router-view>
     </div>
 </template>
 
 <script>
+    import slideBar from './slideBar.vue';
     export default {
+        components: {
+            slideBar
+        },
         created() {
-            console.log(this.$router )
+            // console.log(this.$router )
         }
     }
 </script>
