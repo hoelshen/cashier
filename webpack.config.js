@@ -58,8 +58,8 @@ module.exports = (options = {}) => ({
     }
   },
   devServer: {
-    host: '127.0.0.1',
-    port: 8010,
+    // host: '127.0.0.1',
+    // port: 8010,
     proxy: {
       '/apitest': {
           target: 'http://java.cbs.dev.yipicha.com/',
