@@ -1,31 +1,35 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <el-button @click.native="startHacking">Yes!</el-button>
-  </div>
+	<div id="app">
+		<slide-bar></slide-bar>
+		<main-wrap></main-wrap>
+	</div>
 </template>
 
 <script>
+import slideBar from './components/slideBar.vue';
+import mainWrap from './components/mainWrap.vue';
 export default {
 	data () {
-		return {
-			msg: 'Want something new?'
+	    return {
+		    msg: 'Want something new?'
 		}
 	},
-
-  methods: {
-    startHacking () {
-      this.$notify({
-        title: 'Shhh',
-        message: 'Just be patient...',
-        duration: 6000
-      })
-    }
-  }
+	components :{
+		slideBar,
+		mainWrap
+	},
+	methods: {
+		startHacking () {
+			this.$notify({
+				title: 'Shhh',
+				message: 'Just be patient...',
+				duration: 6000
+			})
+		}
+	}
 }
 </script>
 
 <style lang="less">
-  @import './assets/less/common.less';
+	@import './assets/less/common.less';
 </style>
