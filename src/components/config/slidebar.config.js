@@ -38,7 +38,8 @@ export default [
                 count: 0
             },
             {
-                title: '全部订单'
+                title: '全部订单',
+                path:'/orderManage'
             }
         ]
     },
@@ -50,7 +51,7 @@ export default [
                 title: '店铺管理'
             },
             {
-                title: '预存款查询'
+                title: '预存款查询',
             }
         ]
     },
