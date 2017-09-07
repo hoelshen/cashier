@@ -4,7 +4,7 @@
         <div class="mainContent">
             <div class="contentTop">
                 <div class="title">
-                    预存款查询
+                    {{ contentName }}
                 </div>
                 <div class="user">
                     <div class="noti">
@@ -12,7 +12,7 @@
                         <span class="count">0</span>
                     </div>
                     <div class="userName">
-                        <span>内置超级管理员</span>
+                        <span>{{ user.realName }}</span>
                         <i class="el-icon-caret-bottom"></i>
                     </div>
                 </div>
@@ -25,6 +25,30 @@
 <script>
     import slideBar from './slideBar.vue';
     export default {
+        data() {
+            return {
+                contentName: '主页',
+                configName: {
+                    '/': '主页',
+                    '/testTree' : '测试树'
+                },
+                user : {}
+            }
+        },
+        watch: {
+            '$route'(val) {
+                this.contentName = this.configName[val.fullPath];
+            }
+        },
+        created() {
+            if (sessionStorage.user) {
+                this.user = JSON.parse(sessionStorage.user).data;
+            } else {
+                delete sessionStorage.user;
+                this.$router.push('/login');
+            }
+            this.contentName = this.configName[this.$route.fullPath];
+        },
         components: {
             slideBar
         }
