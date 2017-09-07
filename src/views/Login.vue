@@ -3,8 +3,8 @@
         <div class="ms-title">后台管理系统</div>
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-                <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="username"></el-input>
+                <el-form-item prop="account">
+                    <el-input v-model="ruleForm.account" placeholder="account"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
                     <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
@@ -23,11 +23,11 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: '',
+                    account: '',
                     password: ''
                 },
                 rules: {
-                    username: [
+                    account: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
                     password: [
@@ -42,11 +42,7 @@
                 self.$ajax({
                     url: '/apitest/sys/login/doLogin',
                     type: 'post',
-                    data: {
-                        'account': self.ruleForm.username,
-                        'password': self.ruleForm.password
-                    }
-
+                    data: formName
                 }).then(function(response){
                     if(response.data.status == 0){
                         // window.location.href = '/'+self.uri+'/index';
