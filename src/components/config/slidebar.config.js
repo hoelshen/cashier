@@ -34,7 +34,7 @@ export default [
         children: [
             {
                 title: '待审核',
-                countName: 'wait',
+                countName: 'waitOrder',
                 count: 0
             },
             {
@@ -45,6 +45,14 @@ export default [
     {
         title: '店铺管理',
         icon: 'icon-dianpuguanli',
+        children: [
+            {
+                title: '店铺管理'
+            },
+            {
+                title: '预存款查询'
+            }
+        ]
     },
     
 ]
