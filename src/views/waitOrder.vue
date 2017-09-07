@@ -1,5 +1,6 @@
 <template>
-<div class="orderManage">
+<div class="waitOrder">
+	<main-wrap></main-wrap>
 	<div class="warp">
 	<div id="search">
 		<el-form label-width="85px" ref="form" :model="searchData">
@@ -29,8 +30,8 @@
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="2" >
-		    			<el-button type="primary" >查询</el-button>
+		    		<el-col :span="2">
+		    			<el-button type="primary">查询</el-button>
 		    		</el-col>
 		    	</el-row>
 		    	<el-row :gutter="20">
@@ -56,7 +57,7 @@
 		<el-table :data="tableData" style="width: 95%;margin: 30px auto;">
 			<el-table-column prop="orderNum" label="进货单号" width="140">
 			</el-table-column>
-			<el-table-column prop="agentNum" label="代理商编号" width="140" style="position: relative"><template scope="scope">区域？单店？专柜？</template>
+			<el-table-column prop="agentNum" label="代理商编号" width="140">
 			</el-table-column>
 			<el-table-column prop="phone" label="手机号" width="100">
 			</el-table-column>
@@ -69,22 +70,18 @@
 			<el-table-column prop="phone" label="金额" width="140">
 			</el-table-column>
 			<el-table-column prop="phone" label="详情" width="100">
-			<router-link :to="{ name: 'orderInfo', params: { orderNum: 123 }}">详情</router-link>
 			</el-table-column>
 		</el-table>
 	</div>
-	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="1000">
-	</el-pagination>	
 	</div>
 </div>
 </template>
 
-<script type="text/javascript" src="../router.js"></script>
 <script>
+import mainWrap from '../components/mainWrap.vue';
 export default {
     data(){
         return {
-        	currentPage: 1,
             searchData:{
             	searchPhone:'',		//代理商手机
             	storeName:'',			//注册店铺名
@@ -107,13 +104,10 @@ export default {
         }
     },
     methods: {
-	handleSizeChange(val) {
-	    console.log(`每页 ${val} 条`);
-	  },
-	  handleCurrentChange(val) {
-	    console.log(`当前页: ${val}`);
-	  }    	
-    }
+    },
+    components:{
+    	mainWrap,
+    },
 }
 </script>
 

@@ -35,7 +35,8 @@ export default [
             {
                 title: '待审核',
                 countName: 'waitOrder',
-                count: 0
+                count: 0,
+                path:'/waitOrder'
             },
             {
                 title: '全部订单',

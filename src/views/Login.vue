@@ -3,14 +3,14 @@
         <div class="ms-title">后台管理系统</div>
         <div class="ms-login">
             <el-form :model="ruleForm" :rules="rules" ref="ruleForm" label-width="0px" class="demo-ruleForm">
-                <el-form-item prop="username">
-                    <el-input v-model="ruleForm.username" placeholder="username"></el-input>
+                <el-form-item prop="account">
+                    <el-input v-model="ruleForm.account" placeholder="account"></el-input>
                 </el-form-item>
                 <el-form-item prop="password">
-                    <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm('ruleForm')"></el-input>
+                    <el-input type="password" placeholder="password" v-model="ruleForm.password" @keyup.enter.native="submitForm"></el-input>
                 </el-form-item>
                 <div class="login-btn">
-                    <el-button type="primary" @click="submitForm('ruleForm')">登录</el-button>
+                    <el-button type="primary" @click="submitForm">登录</el-button>
                 </div>
                 <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
             </el-form>
@@ -23,11 +23,11 @@
         data: function(){
             return {
                 ruleForm: {
-                    username: '',
+                    account: '',
                     password: ''
                 },
                 rules: {
-                    username: [
+                    account: [
                         { required: true, message: '请输入用户名', trigger: 'blur' }
                     ],
                     password: [
@@ -37,21 +37,34 @@
             }
         },
         methods: {
-            submitForm(formName) {
+            submitForm() {
                 const self = this;
                 self.$ajax({
                     url: '/apitest/sys/login/doLogin',
-                    type: 'post',
+                    method: 'post',
                     data: {
-                        'account': self.ruleForm.username,
-                        'password': self.ruleForm.password
+                        account: self.ruleForm.account,
+                        password: self.ruleForm.password
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-
                 }).then(function(response){
-                    if(response.data.status == 0){
-                        // window.location.href = '/'+self.uri+'/index';
+                    if(response.data.code == 0){
+                        if(window.sessionStorage){
+                            sessionStorage.user = JSON.stringify(response.data);
+                        }
+                        self.$router.push('/');
                     }else{
-                        alert(response.data.info);
+                        alert(response.data.message);
                     }
                 }).catch(function(error){
 

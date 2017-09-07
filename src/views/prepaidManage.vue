@@ -1,10 +1,10 @@
 <template>
-<div class="orderManage">
+<div class="prepaidManage">
 	<div class="warp">
 	<div id="search">
 		<el-form label-width="85px" ref="form" :model="searchData">
-		    	<el-row :gutter="20">
-		    		<el-col :span="6">
+		    	<el-row :gutter="10">
+		    		<el-col :span="5">
 		    			<el-form-item label="代理商手机">
 		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
 		    			</el-form-item>
@@ -15,12 +15,7 @@
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
-		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.orderNum" placeholder="进货单号"></el-input>
-		    			</el-form-item>
-		    		</el-col>
-		    		<el-col :span="5">
-		    			<el-form-item label="状态" label-width="50px">
+		    			<el-form-item label="变动类型">
 		    			<el-select :model="searchData.orderStatus" placeholder="状态">
 		    				<el-option label="待审核" value="waitPass"></el-option>
 		    				<el-option label="待发货" value="waitExp"></el-option>
@@ -29,16 +24,16 @@
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="2" >
-		    			<el-button type="primary" >查询</el-button>
-		    		</el-col>
-		    	</el-row>
-		    	<el-row :gutter="20">
 				<el-col :span="6">
-		    			<el-form-item label="下单时间" label-width="72px">
+		    			<el-form-item label="变更时间">
 		    			<el-date-picker width="200" v-model="searchData.orderTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
+		    		<el-col :span="2">
+		    			<el-button type="primary" style="margin-left:10px">查询</el-button>
+		    		</el-col>
+		    	</el-row>
+		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
 		    			<el-select :model="searchData.level" placeholder="代理商等级">
@@ -54,27 +49,30 @@
 	</div>
 	<div class="orderList">
 		<el-table :data="tableData" style="width: 95%;margin: 30px auto;">
-			<el-table-column prop="orderNum" label="进货单号" width="140">
+			<el-table-column prop="orderNum" label="进货单号" width="120">
 			</el-table-column>
-			<el-table-column prop="agentNum" label="代理商编号" width="140" style="position: relative"><template scope="scope">区域？单店？专柜？</template>
+			<el-table-column prop="agentNum" label="代理商编号" width="120" style="position: relative"><template scope="scope">区域？单店？专柜？</template>
 			</el-table-column>
 			<el-table-column prop="phone" label="手机号" width="100">
 			</el-table-column>
 			<el-table-column prop="phone" label="店铺名称">
 			</el-table-column>
-			<el-table-column prop="phone" label="状态" width="100">
+			<el-table-column prop="phone" label="变更类型" width="100">
 			</el-table-column>
-			<el-table-column prop="phone" label="下单时间" width="140">
+			<el-table-column prop="phone" label="变更金额" width="100">
 			</el-table-column>
-			<el-table-column prop="phone" label="金额" width="140">
+			<el-table-column prop="phone" label="结余" width="100">
 			</el-table-column>
-			<el-table-column prop="phone" label="详情" width="100">
-			<router-link :to="{ name: 'orderInfo', params: { orderNum: 123 }}">详情</router-link>
+			<el-table-column prop="phone" label="备注/单号" width="120">
+			</el-table-column>
+			<el-table-column prop="phone" label="变更人" width="100">
+			</el-table-column>
+			<el-table-column prop="phone" label="变更时间" width="100">
 			</el-table-column>
 		</el-table>
 	</div>
 	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="1000">
-	</el-pagination>	
+	</el-pagination>
 	</div>
 </div>
 </template>
@@ -84,7 +82,7 @@
 export default {
     data(){
         return {
-        	currentPage: 1,
+        	 currentPage: 1,
             searchData:{
             	searchPhone:'',		//代理商手机
             	storeName:'',			//注册店铺名
@@ -112,7 +110,7 @@ export default {
 	  },
 	  handleCurrentChange(val) {
 	    console.log(`当前页: ${val}`);
-	  }    	
+	  }
     }
 }
 </script>
