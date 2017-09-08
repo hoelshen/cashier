@@ -17,7 +17,9 @@
                     </div>
                 </div>
             </div>
-            <router-view class="content"></router-view>
+            <transition name="fade">
+                <router-view class="content"></router-view>
+            </transition>
         </div>
     </div>
 </template>
@@ -30,7 +32,8 @@
                 contentName: '主页',
                 configName: {
                     '/': '主页',
-                    '/testTree' : '测试树'
+                    '/testTree' : '测试树',
+                    '/storeManage': '店铺管理'
                 },
                 user : {}
             }
