@@ -78,8 +78,8 @@
                         <el-table-column label="操作" width="240">
                             <template scope="scope">
                                 <p class="operation">
-                                    <span v-if="scope.row.state==0">启用</span>
-                                    <span v-if="scope.row.state==1">禁用</span>
+                                    <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">启用</span>
+                                    <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">禁用</span>
                                     <span>修改</span>
                                     <span>详情</span>
                                     <span>预存款变更</span>
@@ -97,7 +97,7 @@
         <!-- 表格 end -->
         <!-- 新增店铺弹窗 start -->
         <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible">
-            <el-form :model="addForm">
+            <el-form :model="addForm" label-width="120px">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="店铺名称：">
@@ -107,6 +107,39 @@
                     <el-col :span="12">
                         <el-form-item label="代理商姓名：">
                             <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="addForm.shopName" placeholder="代理商手机"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="addForm.signTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：">
+                            <el-select v-model="addForm.agentLevelIds" multiple placeholder="代理商等级" clearable >
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理区域：">
+                            <addressComponent/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="addForm.shopName" placeholder="详细地址"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -122,6 +155,7 @@
 
 <script>
 import levelArray from '../components/config/agentLevel.config';
+import addressComponent from '../components/address.vue'
     export default {
         data(){
             return {
@@ -152,6 +186,9 @@ import levelArray from '../components/config/agentLevel.config';
                 addDialogVisible:false,
                 addForm:{}
             }
+        },
+        components: {
+            addressComponent
         },
         created(){
                 const self = this;
@@ -198,6 +235,39 @@ import levelArray from '../components/config/agentLevel.config';
             //打开新增店铺弹窗
             openAddDialog(){
                 this.addDialogVisible = true;
+            },
+            //修改代理商状态
+            updateAgentState(data){
+                console.log(data)
+                const h = this.$createElement;
+                const stateCN = data.state==1?'禁用':'启用';
+                this.$msgbox({
+                title: '确定'+stateCN+'？',
+                message: h('div', {style:'padding:10px'}, [
+                    h('p', {style:'padding:5px'}, [
+                        h('span',{style:'color:red'},'禁用后门店将无法使用系统'),
+                        h('span',null,'，你还要继续吗？'),
+                    ]),
+                    h('p', {style:'padding:5px'}, [
+                        h('span',null,'代理商姓名：'),
+                        h('span',{style:'color:red'},'雨哥雨'),
+                        h('span',{style:'margin-left:20px'},'代理商手机：'),
+                        h('span',{style:'color:red'},'11111111111'),
+                    ]),
+                    h('p', {style:'padding:5px'}, [
+                        h('span',null,'店铺名称：'),
+                        h('span',{style:'color:red'},'醉品茶集（河南洛阳雨哥第一帅店）'),
+                    ]),
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                }).then(action => {
+                    this.$message({
+                        message: '编号：'+'111'+' 禁用成功',
+                        type:'success'
+                    })
+                });
             }
 
         }
