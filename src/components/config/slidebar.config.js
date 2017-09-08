@@ -31,10 +31,12 @@ export default [{
         children: [{
                 title: '待审核',
                 countName: 'waitOrder',
-                count: 0
+                count: 0,
+                path:'/waitOrder'
             },
             {
-                title: '全部订单'
+                title: '全部订单',
+                path:'/orderManage'
             }
         ]
     },
@@ -46,7 +48,7 @@ export default [{
                 path: 'storeManage'
             },
             {
-                title: '预存款查询'
+                title: '预存款查询',
             }
         ]
     },
