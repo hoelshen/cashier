@@ -5,7 +5,7 @@ Vue.use(Router);
 
 const config = [
 	{
-		path: '/login', 
+		path: '/login',
 		component: resolve => require(['./views/Login.vue'], resolve)
 	},
 	{
@@ -29,12 +29,13 @@ const config = [
 			{
 				path:'prepaidManage',
 				component:resolve=>require(['./views/prepaidManage.vue'],resolve),
-			}
+			},
+			{ path: 'storeManage', component: resolve => require(['./views/storeManage.vue'], resolve) },
 		]
 	},
 ]
 
 const router = new Router({
-    routes : config
+    routes: config
 })
 export default router;

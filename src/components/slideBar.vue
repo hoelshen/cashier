@@ -63,7 +63,7 @@
             }
         },
         methods: {
-            //获取所有有cont的的下拉菜单
+            //获取所有有count的的下拉菜单
             getName() {
                 let data = this.setting.slideData;
                 let counts = {};
