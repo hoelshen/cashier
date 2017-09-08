@@ -61,6 +61,7 @@
                     if(response.data.code == 0){
                         if(window.sessionStorage){
                             sessionStorage.user = JSON.stringify(response.data);
+                            sessionStorage.haha = new Date().getTime();
                         }
                         self.$router.push('/');
                     }else{
