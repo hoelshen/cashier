@@ -18,41 +18,39 @@
 
 
 
-export default [
-    {
+export default [{
         title: '会员管理',
         icon: 'icon-huiyuanguanli',
-        children: [
-            {
-                title: '会员管理'
-            }
-        ]
+        children: [{
+            title: '会员管理'
+        }]
     },
     {
         title: '订单管理',
         icon: 'icon-dingdanguanli',
-        children: [
-            {
+        children: [{
                 title: '待审核',
                 countName: 'waitOrder',
-                count: 0
+                count: 0,
+                path:'/waitOrder'
             },
             {
-                title: '全部订单'
+                title: '全部订单',
+                path:'/orderManage'
             }
         ]
     },
     {
         title: '店铺管理',
         icon: 'icon-dianpuguanli',
-        children: [
-            {
-                title: '店铺管理'
+        children: [{
+                title: '店铺管理',
+                path: 'storeManage'
             },
             {
-                title: '预存款查询'
+                title: '预存款查询',
             }
         ]
     },
-    
+
 ]
