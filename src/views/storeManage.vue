@@ -6,23 +6,23 @@
                 <el-row :gutter="10" class="searchbar">
                     <el-col :span="6">
                         <el-form-item label="注册店铺名：">
-                            <el-input v-model="searchData.storeName" placeholder="注册店铺名"></el-input>
+                            <el-input v-model="searchData.shopName" placeholder="注册店铺名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="searchData.agentPhone" placeholder="代理商手机"></el-input>
+                            <el-input v-model="searchData.phone" placeholder="代理商手机"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="代理商姓名：">
-                            <el-input v-model="searchData.agentName" placeholder="代理商姓名"></el-input>
+                            <el-input v-model="searchData.name" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col  :span="6">
                         <el-form-item  label="状态：">
-                            <el-select v-model="searchData.status"  placeholder="状态" clearable >
-                                <el-option v-for="item in statusArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            <el-select v-model="searchData.state"  placeholder="状态" clearable >
+                                <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -36,7 +36,7 @@
                     </el-col>
                     <el-col  :span="7">
                         <el-form-item  label="注册时间： ">
-                            <el-date-picker v-model="searchData.time" type="daterange"  placeholder="选择日期范围" :picker-options="pickerOptions">
+                            <el-date-picker v-model="searchData.signTime" type="daterange"  placeholder="选择日期范围" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -50,25 +50,41 @@
         <!-- 表格 start -->
         <div class="t-bodywrap">
             <el-row class="t-body">
+                <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button>
                 <el-row class="tablebar">
-                    <el-table :data="myData"  border v-loading.fullscreen.lock="loading"  highlight-current-row style="width: 100%" @row-dblclick="openDetail" >
-                        <el-table-column prop="memberId" label="代理商编号">
+                    <el-table :data="myData"  border v-loading.fullscreen.lock="loading"  highlight-current-row style="width: 100%"  >
+                        <el-table-column prop="shopNo" label="代理商编号">
                         </el-table-column>
-                        <el-table-column prop="memberId" label="手机号">
+                        <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="levelAndName" label="姓名">
+                        <el-table-column prop="name" label="姓名">
                         </el-table-column>
-                        <el-table-column prop="phone" label="店铺名称">
+                        <el-table-column prop="shopName" label="店铺名称">
                         </el-table-column>
-                        <el-table-column prop="totalIntegral" label="代理商等级">
+                        <el-table-column prop="agentLevelIds" label="代理商等级">
                         </el-table-column>
-                        <el-table-column prop="cumulativeConsume" label="预存款余额" align="right" sortable>
+                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable min-width="100" >
                         </el-table-column>
-                        <el-table-column prop="totalAmount" label="注册时间">
+                        <el-table-column prop="signTime" label="注册时间" width="110">
                         </el-table-column>
-                        <el-table-column prop="status" label="状态">
+                        <el-table-column prop="state" label="状态">
+                            <template scope="scope">
+                                <p>
+                                    <span v-if="scope.row.state==1" ><span class="green-color"></span>启用</span>
+                                    <span v-if="scope.row.state==0" ><span class="red-color"></span>禁用</span>
+                                </p>
+                            </template>
                         </el-table-column>
-                        <el-table-column  label="操作">
+                        <el-table-column label="操作" width="240">
+                            <template scope="scope">
+                                <p class="operation">
+                                    <span v-if="scope.row.state==0">启用</span>
+                                    <span v-if="scope.row.state==1">禁用</span>
+                                    <span>修改</span>
+                                    <span>详情</span>
+                                    <span>预存款变更</span>
+                                </p>
+                            </template>
                         </el-table-column>
                     </el-table>
                 </el-row>
@@ -79,6 +95,28 @@
             </el-row>
         </div>
         <!-- 表格 end -->
+        <!-- 新增店铺弹窗 start -->
+        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible">
+            <el-form :model="addForm">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商姓名：">
+                            <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+                <el-button @click="addDialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!-- 新增店铺弹窗 end -->
     </div>
 </template>
 
@@ -91,16 +129,16 @@ import levelArray from '../components/config/agentLevel.config';
                 totalSize: 0,
                 pageSize: 30,
                 searchData: {
-                    storeName: '',
-                    agentPhone: '',
-                    agentName: '',
-                    status:'',
-                    time: [],
+                    shopName: '',
+                    phone: '',
+                    name: '',
+                    state:'',
+                    signTime: [],
                     agentLevelIds:[],
                 },
                 myData: [],
                 levelArray, //代理商等级数组
-                statusArray:[
+                stateArray:[
                     {index:1,name:'启用'},
                     {index:2,name:'禁用'},
                 ],
@@ -111,29 +149,57 @@ import levelArray from '../components/config/agentLevel.config';
                         return time.getTime() > Date.now() ;
                     }
                 },
+                addDialogVisible:false,
+                addForm:{}
             }
         },
-        methods: {
-            submitForm(formName) {
+        created(){
                 const self = this;
+                self.loading = true;
                 self.$ajax({
-                    url: '/apitest/sys/login/doLogin',
-                    type: 'post',
-                    data: {
-                        'account': self.ruleForm.username,
-                        'password': self.ruleForm.password
-                    }
-
+                    url: '/api/shop/ShopManage/search.jhtml',
+                    method: 'get',
                 }).then(function(response){
-                    if(response.data.status == 0){
-                        // window.location.href = '/'+self.uri+'/index';
-                    }else{
-                        alert(response.data.info);
-                    }
+                    console.log(response)
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    self.loading = false;
                 }).catch(function(error){
+                    console.log(error)
+                    self.loading = false;
+                });
+        },
+        methods: {
+            onSubmit:function(){
+                const self = this;
+                self.loading = true;
+                self.$ajax({
+                    url: '/api/shop/ShopManage/search.jhtml',
+                    method: 'get',
+                    data:{
+                        'page.pageSize':2
+                    }
+                }).then(function(response){
+                    console.log(response)
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    self.loading = false;
+                }).catch(function(error){
+                    console.log(error)
+                    self.loading = false;
+                });
+            },
+            handleSizeChange:function(){
 
-                });       
+            },
+            handleCurrentChange:function(){
+                
+            },
+            //打开新增店铺弹窗
+            openAddDialog(){
+                this.addDialogVisible = true;
             }
+
         }
     }
 </script>
