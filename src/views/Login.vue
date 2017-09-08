@@ -50,9 +50,9 @@
                         // Do whatever you want to transform the data
                         let ret = ''
                         for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
                         }
-                        return ret
+                        return ret;
                     }],
                     headers: {
                         'Content-Type': 'application/x-www-form-urlencoded'
@@ -61,6 +61,7 @@
                     if(response.data.code == 0){
                         if(window.sessionStorage){
                             sessionStorage.user = JSON.stringify(response.data);
+                            sessionStorage.haha = new Date().getTime();
                         }
                         self.$router.push('/');
                     }else{
