@@ -22,7 +22,8 @@ export default [{
         title: '会员管理',
         icon: 'icon-huiyuanguanli',
         children: [{
-            title: '会员管理'
+            title: '会员管理',
+            path:'/memberList'
         }]
     },
     {
@@ -49,6 +50,7 @@ export default [{
             },
             {
                 title: '预存款查询',
+                path:'prepaidManage'
             }
         ]
     },

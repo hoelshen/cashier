@@ -11,17 +11,17 @@
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.storeName" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.shopName" placeholder="注册店铺名"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.orderNum" placeholder="进货单号"></el-input>
+		    			<el-input v-model="searchData.purchaseOrderNo" placeholder="进货单号"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="状态" label-width="50px">
-		    			<el-select :model="searchData.orderStatus" placeholder="状态">
+		    			<el-select :model="searchData.stateName" placeholder="状态">
 		    				<el-option label="待审核" value="waitPass"></el-option>
 		    				<el-option label="待发货" value="waitExp"></el-option>
 		    				<el-option label="已发货" value="doneExp"></el-option>
@@ -41,11 +41,10 @@
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select :model="searchData.level" placeholder="代理商等级">
-		    				<el-option label="待审核" value="waitPass"></el-option>
-		    				<el-option label="待发货" value="waitExp"></el-option>
-		    				<el-option label="已发货" value="doneExp"></el-option>
-		    				<el-option label="已完成" value="finish"></el-option>
+		    			<el-select :model="searchData.level" multiple placeholder="代理商等级">
+		    				<el-option label="区域" value="waitPass"></el-option>
+		    				<el-option label="专卖" value="waitExp"></el-option>
+		    				<el-option label="单店" value="doneExp"></el-option>
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
@@ -54,27 +53,28 @@
 	</div>
 	<div class="orderList">
 		<el-table :data="tableData" style="width: 95%;margin: 30px auto;">
-			<el-table-column prop="orderNum" label="进货单号" width="140">
+			<el-table-column prop="purchaseOrderNo" label="进货单号" width="140">
 			</el-table-column>
-			<el-table-column prop="agentNum" label="代理商编号" width="140" style="position: relative"><template scope="scope">区域？单店？专柜？</template>
+			<el-table-column prop="agentGradeId" label="代理商编号" width="110" style="position: relative"><!-- <template scope="scope">区域？单店？专柜？</template> -->
 			</el-table-column>
-			<el-table-column prop="phone" label="手机号" width="100">
+			<el-table-column prop="phone" label="手机号" width="140">
 			</el-table-column>
-			<el-table-column prop="phone" label="店铺名称">
+			<el-table-column prop="shopName" label="店铺名称">
 			</el-table-column>
-			<el-table-column prop="phone" label="状态" width="100">
+			<el-table-column prop="stateName" label="状态" width="100">
 			</el-table-column>
-			<el-table-column prop="phone" label="下单时间" width="140">
+			<el-table-column prop="orderTime" label="下单时间" width="180">
 			</el-table-column>
-			<el-table-column prop="phone" label="金额" width="140">
+			<el-table-column prop="orderSum" label="金额" width="140">
+			<template scope="scope"><p>{{ toFixed(scope.row.orderSum) }}</p></template>
 			</el-table-column>
 			<el-table-column prop="phone" label="详情" width="100">
-			<router-link :to="{ name: 'orderInfo', params: { orderNum: 123 }}">详情</router-link>
+			<template scope="scope"><router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: 123 }}">详情</router-link></template>
 			</el-table-column>
 		</el-table>
 	</div>
-	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="100" layout="prev, pager, next, jumper" :total="1000">
-	</el-pagination>	
+	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
+	</el-pagination>
 	</div>
 </div>
 </template>
@@ -84,24 +84,27 @@
 export default {
     data(){
         return {
-        	currentPage: 1,
+        	 currentPage: 1,			//当前页
+        	 totalNums:'',				//数据总数
+    	 pageSize:30,			//当前页数
+        	total:'',					//数据总数
             searchData:{
             	searchPhone:'',		//代理商手机
-            	storeName:'',			//注册店铺名
-            	orderNum:'',			//进货单号
-            	orderStatus:'',			//订单状态
+            	shopName:'',			//注册店铺名
+            	purchaseOrderNo:'',		//进货单号
+            	stateName:'',			//订单状态
             	orderTime:'',			//下单时间
             	level:'',				//代理商等级
             },
-            tableDate:[
+            tableData:[
             {
-            	orderNum:'',			//进货单号
-            	agentNum:'',			//代理商编号
+            	purchaseOrderNo:'',		//进货单号
+            	agentGradeId:'',		//代理商编号
             	phone:'',			//手机号
-            	storeName:'',			//店铺名称
-            	orderStatus:'',			//状态
+            	shopName:'',			//店铺名称
+            	stateName:'',			//状态
             	orderTime:'',			//下单时间
-            	money:'',			//金额
+            	orderSum:'',			//金额
             }
             ]
         }
@@ -112,8 +115,42 @@ export default {
 	  },
 	  handleCurrentChange(val) {
 	    console.log(`当前页: ${val}`);
-	  }    	
-    }
+	  },
+	toFixed(num){
+		return Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
+	},
+    },
+    created(){
+	const self = this;
+            self.$ajax({
+                url: '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
+                method: 'get',
+                data: {
+		pageIndex: self.currentPage,
+		pageSize: self.pageSize,
+                },
+                transformRequest: [function (data) {
+                    // Do whatever you want to transform the data
+                    let ret = ''
+                    for (let it in data) {
+                    ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response){
+                if(response.data.success == 1){
+	         self.tableData = response.data.result;
+	         self.totalNums=response.data.totalNums;
+                }else{
+                    alert(response.data.message);
+                }
+            }).catch(function(error){
+
+            });
+    },
 }
 </script>
 
