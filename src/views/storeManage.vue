@@ -154,14 +154,14 @@
 </template>
 
 <script>
-import levelArray from '../components/config/agentLevel.config';
-import addressComponent from '../components/address.vue'
+import Utils from '../components/tools/Utils';
+import addressComponent from '../components/address.vue';
     export default {
         data(){
             return {
                 currentPage: 1,
                 totalSize: 0,
-                pageSize: 30,
+                pageSize: 20,
                 searchData: {
                     shopName: '',
                     phone: '',
@@ -171,7 +171,7 @@ import addressComponent from '../components/address.vue'
                     agentLevelIds:[],
                 },
                 myData: [],
-                levelArray, //代理商等级数组
+                levelArray:[], //代理商等级数组
                 stateArray:[
                     {index:1,name:'启用'},
                     {index:2,name:'禁用'},
@@ -191,46 +191,119 @@ import addressComponent from '../components/address.vue'
             addressComponent
         },
         created(){
-                const self = this;
-                self.loading = true;
-                self.$ajax({
-                    url: '/api/shop/ShopManage/search.jhtml',
-                    method: 'get',
-                }).then(function(response){
-                    console.log(response)
-                    self.myData = response.data.rows;
-                    self.totalSize = response.data.total
-                    self.loading = false;
-                }).catch(function(error){
-                    console.log(error)
-                    self.loading = false;
-                });
+            const self = this;
+            self.loading = true;
+            //获取代理商等级列表
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml',{
+            }).then(function(response){
+                console.log(response);
+                if(response.data.success==1){
+                    self.levelArray = response.data.result
+                }else{
+                    self.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
+                }
+                
+            }).catch(function(err){
+                console.log(err);
+            });
+            //获取列表数据
+            self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                params:{
+                    'pager.pageIndex':self.currentPage,
+                    'pager.pageSize':self.pageSize
+                }
+            }).then(function(response){
+                self.loading = false;
+                self.myData = response.data.rows;
+                self.totalSize = response.data.total
+                console.log(response);
+            }).catch(function(err){
+                self.loading = false;
+                console.log(err);
+            });
+
         },
         methods: {
             onSubmit:function(){
                 const self = this;
+                self.currentPage = 1;
                 self.loading = true;
-                self.$ajax({
-                    url: '/api/shop/ShopManage/search.jhtml',
-                    method: 'get',
-                    data:{
-                        'page.pageSize':2
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state
                     }
                 }).then(function(response){
-                    console.log(response)
+                    self.loading = false;
                     self.myData = response.data.rows;
                     self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
                     self.loading = false;
-                }).catch(function(error){
-                    console.log(error)
-                    self.loading = false;
+                    console.log(err);
                 });
             },
-            handleSizeChange:function(){
-
+            //改变每页显示的条数
+            handleSizeChange:function(val){
+                const self = this;
+                self.pageSize = val;
+                self.currentPage = 1;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
             },
-            handleCurrentChange:function(){
-                
+            //改变当前页
+            handleCurrentChange:function(val){
+                const self = this;
+                self.currentPage = val;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
             },
             //打开新增店铺弹窗
             openAddDialog(){
@@ -239,34 +312,63 @@ import addressComponent from '../components/address.vue'
             //修改代理商状态
             updateAgentState(data){
                 console.log(data)
-                const h = this.$createElement;
+                const self =this;
+                const h = self.$createElement;
                 const stateCN = data.state==1?'禁用':'启用';
-                this.$msgbox({
+                self.$msgbox({
                 title: '确定'+stateCN+'？',
                 message: h('div', {style:'padding:10px'}, [
-                    h('p', {style:'padding:5px'}, [
-                        h('span',{style:'color:red'},'禁用后门店将无法使用系统'),
-                        h('span',null,'，你还要继续吗？'),
+                    h('div', {style:data.state==1?'padding:5px':''}, [
+                        h('span',{style:'color:red'},data.state==1?'禁用后门店将无法使用系统':''),
+                        h('span',null,data.state==1?'，你还要继续吗？':''),
                     ]),
-                    h('p', {style:'padding:5px'}, [
-                        h('span',null,'代理商姓名：'),
-                        h('span',{style:'color:red'},'雨哥雨'),
-                        h('span',{style:'margin-left:20px'},'代理商手机：'),
-                        h('span',{style:'color:red'},'11111111111'),
+                    h('div', {style:'padding:5px;display:flex'}, [
+                        h('div',{style:'flex:1'},[
+                            h('span',null,'代理商姓名：'),
+                            h('span',{style:'color:red'},data.name)
+                        ]),
+                        h('div',null,[
+                            h('span',{style:'margin-left:20px'},'代理商手机：'),
+                            h('span',{style:'color:red'},data.phone)
+                        ])
+
                     ]),
-                    h('p', {style:'padding:5px'}, [
-                        h('span',null,'店铺名称：'),
-                        h('span',{style:'color:red'},'醉品茶集（河南洛阳雨哥第一帅店）'),
+                    h('div', {style:'padding:5px'}, [
+                        h('span',{style:'padding-left:14px'},'店铺名称：'),
+                        h('span',{style:'color:red'},data.shopName),
                     ]),
                 ]),
                 showCancelButton: true,
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 }).then(action => {
-                    this.$message({
-                        message: '编号：'+'111'+' 禁用成功',
-                        type:'success'
-                    })
+                    self.loading = true;
+                    //获取代理商等级列表
+                    self.$ajax.get('/api/shop/shopManage/updateState.jhtml',{
+                        params:{
+'shop.id':data.id,
+                        'shop.state':data.state
+                        }
+                        
+                    }).then(function(response){
+                        console.log(response);
+                        self.loading = false;
+                        if(response.data.success==1){
+                            self.$message({
+                                message: '编号：'+data.shopNo+' '+stateCN+'成功',
+                                type:'success'
+                            })
+                        }else{
+                            self.$message({
+                                message:response.data.msg,
+                                type:'error'
+                            })
+                        }
+                    }).catch(function(err){
+                        self.loading = false;
+                        console.log(err);
+                    });
+
                 });
             }
 
