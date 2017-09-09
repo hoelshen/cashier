@@ -16,7 +16,7 @@
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="变动类型">
-		    			<el-select v-model="searchData.searchStatus" placeholder="状态">
+		    			<el-select v-model="searchData.searchStatus" clearable placeholder="状态">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
 		    				<el-option label="扣款" value="DEDUCTIONS"></el-option>
 		    				<el-option label="进货" value="PURCHASE"></el-option>
@@ -36,7 +36,7 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select multiple v-model="searchData.searchLevel" placeholder="代理商等级">
+		    			<el-select multiple v-model="searchData.searchLevel" clearable placeholder="代理商等级">
 		    				<el-option label="待审核" value="waitPass"></el-option>
 		    				<el-option label="待发货" value="waitExp"></el-option>
 		    				<el-option label="已发货" value="doneExp"></el-option>
@@ -113,6 +113,38 @@ export default {
     methods: {
     	onSumbit(){
 		console.log(this.searchData.searchTime);
+		console.log(this.searchData.searchTime[0]);
+		var temp = new Date(this.searchData.searchTime[0]);
+		if (temp.getFullYear() > 2016) {
+			var time1 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time1 =  time1+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time1 =  time1+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time1 =  time1+ '-0' + temp.getDate();
+			}else{
+				time1 =  time1+ '-' + temp.getDate();
+			}
+			console.log(time1);
+			temp = new Date(this.searchData.searchTime[1]);
+			var time2 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time2 =  time2+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time2 =  time2+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time2 =  time2+ '-0' + temp.getDate();
+			}else{
+				time2 =  time2+ '-' + temp.getDate();
+			}
+			console.log(time2);
+		}else{
+			var time1 = '';
+			var time2 = '';
+		}
 		this.$getData({
 			url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data:{
@@ -121,8 +153,8 @@ export default {
 				'advanceDeposit.shopNo':this.searchData.searchId,
 				'advanceDeposit.phone':this.searchData.searchPhone,
 				'advanceDeposit.changeType':this.searchData.searchStatus,
-				'advanceDeposit.startTime':this.searchData.searchTime[0],
-				'advanceDeposit.endTime':this.searchData.searchTime[1],
+				'advanceDeposit.startTime':time1,
+				'advanceDeposit.endTime':time2,
 				//还有个代理商等级
 			},
 			success(response){
@@ -183,7 +215,7 @@ export default {
 <style>
 .el-form .el-row{
 	/*width: calc(100%-80px);*/
-	width: 1220px;
+	width: 1210px;
 }
 .warp{
 	margin-top: 30px;

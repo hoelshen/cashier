@@ -6,7 +6,7 @@
 		    	<el-row :gutter="10">
 				<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.shopName" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
@@ -21,7 +21,7 @@
 		    		</el-col>
 				<el-col :span="6">
 		    			<el-form-item label="注册时间">
-		    			<el-date-picker width="200" v-model="searchData.createdTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="2">
@@ -31,21 +31,8 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="会员等级">
-		    			<el-select :model="searchData.level" multiple placeholder="请选择">
-		    				<el-option label="v0" value="1"></el-option>
-		    				<el-option label="v1" value="2"></el-option>
-		    				<el-option label="v2" value="3"></el-option>
-		    				<el-option label="v3" value="4"></el-option>
-		    				<el-option label="v4" value="5"></el-option>
-		    				<el-option label="v5" value="6"></el-option>
-		    				<el-option label="v6" value="7"></el-option>
-		    				<el-option label="v7" value="8"></el-option>
-		    				<el-option label="v8" value="9"></el-option>
-		    				<el-option label="v9" value="10"></el-option>
-		    				<el-option label="v10" value="11"></el-option>
-		    				<el-option label="v11" value="12"></el-option>
-		    				<el-option label="v12" value="13"></el-option>
-		    				<el-option label="v13" value="14"></el-option>
+		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择">
+		    				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
@@ -85,13 +72,55 @@ export default {
         	 currentPage: 1,			//当前页
         	 totalNums:'',				//数据总数
     	 pageSize:30,			//当前页数
+ 	options: [{				//会员等级
+		value: '1',
+		label: 'v0'
+	}, {
+		value: '2',
+		label: 'v1'
+	}, {
+		value: '3',
+		label: 'v2'
+	}, {
+		value: '4',
+		label: 'v3'
+	}, {
+		value: '5',
+		label: 'v4'
+	},{
+		value: '6',
+		label: 'v5'
+	}, {
+		value: '7',
+		label: 'v6'
+	}, {
+		value: '8',
+		label: 'v7'
+	}, {
+		value: '9',
+		label: 'v8'
+	}, {
+		value: '10',
+		label: 'v9'
+	},{
+		value: '11',
+		label: 'v10'
+	}, {
+		value: '12',
+		label: 'v11'
+	}, {
+		value: '13',
+		label: 'v12'
+	}, {
+		value: '14',
+		label: 'v13'
+	}],
             searchData:{
             	searchPhone:'',		//代理商手机
-            	shopName:'',			//注册店铺名
-            	orderNum:'',			//进货单号
-            	orderStatus:'',		//订单状态
-            	createdTime:'',		//下单时间
-            	level:'',				//代理商等级
+            	searchShop:'',		//注册店铺名
+            	searchName:'',		//姓名
+            	searchTime:'',		//注册时间
+            	searchLevel:[],		//代理商等级
             },
             tableData:[
             {
@@ -106,35 +135,74 @@ export default {
     },
     methods: {
     	onSumbit(){
-		console.log(this.searchData.searchTime);
-		this.$getData({
-			url:'customerInfo/customerInfo/search.jhtml',
-			data:{
-				'pager.pageIndex': this.currentPage,
-				'pager.pageSize': this.pageSize,
-				'customerInfo.shopName':this.searchData.searchId,
-				'customerInfo.phone':this.searchData.searchPhone,
-				'customerInfo.changeType':this.searchData.searchStatus,
-				'customerInfo.startTime':this.searchData.searchTime[0],
-				'customerInfo.endTime':this.searchData.searchTime[1],
-			},
-			success(response){
-				this.tableData = response.data.rows;
-		         		this.totalNums=response.data.total;
-			},
-			fail(response){
-				alert(response.data.msg);
-			},
-			error(response){
-				alert(response.data.msg);
-			}
-	    	});
+	console.log(this.searchData.searchLevel);
+            const self = this;
+	self.$ajax.post('api/customerInfo/customerInfo/search.jhtml',{
+                        'page': this.currentPage,
+		'rows': this.pageSize,
+		'customerInfo.shop.shopName':this.searchData.searchShop,
+		'customerInfo.phone':this.searchData.searchPhone,
+		'customerInfo.name':this.searchData.searchName,
+		'customerInfo.gid':this.searchData.searchLevel,
+		'customerInfo.startTime':this.searchData.searchTime[0],
+		'customerInfo.endTime':this.searchData.searchTime[1],
+                    }).then(function(res){
+		console.log(res);
+		})
+		.catch(function(err){
+		console.log(err);
+		});
+           //          transformRequest: [function (data) {
+           //              // Do whatever you want to transform the data
+           //              let ret = ''
+           //              for (let it in data) {
+           //                  ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '||'
+           //              }
+           //              return ret;
+           //          }],
+           //          headers: {
+           //              'Content-Type': 'application/x-www-form-urlencoded'
+           //          }
+           //      }).then(function(response){
+           //          if(response.data.success == 1){
+           //          	console.log(response);
+           //          	self.tableData = response.data.rows;
+         		// self.totalNums=response.data.total;
+           //          }else{
+           //              alert(response.data.msg);
+           //          }
+           //      }).catch(function(error){
+
+           //      });
+		// this.getData({
+		// 	url:'customerInfo/customerInfo/search.jhtml',
+		// 	data:{
+		// 		'pager.pageIndex': this.currentPage,
+		// 		'pager.pageSize': this.pageSize,
+		// 		'customerInfo.shop.shopName':this.searchData.searchShop,
+		// 		'customerInfo.phone':this.searchData.searchPhone,
+		// 		'customerInfo.name':this.searchData.searchName,
+		// 		'customerInfo.gid':this.searchData.searchLevel,
+		// 		'customerInfo.startTime':this.searchData.searchTime[0],
+		// 		'customerInfo.endTime':this.searchData.searchTime[1],
+		// 	},
+		// 	success(response){
+		// 		this.tableData = response.data.rows;
+		//          		this.totalNums=response.data.total;
+		// 	},
+		// 	fail(response){
+		// 		alert(response.data.msg);
+		// 	},
+		// 	error(response){
+		// 		alert(response.data.msg);
+		// 	}
+	 //    	});
     	},
 	handleSizeChange(val) {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
-    	this.$getData({
+    	this.getData({
 		url:'customerInfo/customerInfo/search.jhtml',
 		data:{
 			'pager.pageIndex': val,
@@ -156,9 +224,41 @@ export default {
 	toFixed(num){
 		return Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
 	},
+	getData(obj) {
+	const self = this;
+	obj.method = obj.method || 'get';
+	obj.url = obj.url || '';
+	obj.data = obj.data  || {};
+	obj.success = obj.success || function () {};
+	obj.fail = obj.fail || function () {};
+	obj.error = obj.error || function () {};
+	if (obj.method === 'get') {
+		var str = '?';
+		for(var item in obj.data){
+			if (obj.data[item] != '' && obj.data[item] != undefined) {
+				str  += item + '=' + obj.data[item] + '&';
+			}
+		}
+		str = str.substring(0,str.length-1);
+		obj.url = obj.url+str;
+		self.$ajax({
+			method: 'get',
+			url: `api/${obj.url}`
+		}).then(function(response){
+			if(response.data.code === 1){
+				obj.success.call(self,response);
+			}else{
+				// console.log(response);
+				obj.fail.call(self,response);
+			}
+		}).catch(function(error){
+			obj.error.call(self,error);
+		});
+	}
+}
     },
     created(){
-    	this.$getData({
+    	this.getData({
 		url:'customerInfo/customerInfo/search.jhtml',
 		data:{
 			'pager.pageIndex': this.currentPage,
@@ -177,7 +277,7 @@ export default {
 <style>
 .el-form .el-row{
 	/*width: calc(100%-80px);*/
-	width: 1220px;
+	width: 1210px;
 }
 .warp{
 	margin-top: 30px;
