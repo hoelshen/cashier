@@ -30,6 +30,10 @@ const config = [
 				path:'prepaidManage',
 				component:resolve=>require(['./views/prepaidManage.vue'],resolve),
 			},
+			{
+				path:'memberList',
+				component:resolve=>require(['./views/memberList.vue'],resolve),
+			},
 			{ path: 'storeManage', component: resolve => require(['./views/storeManage.vue'], resolve) },
 		]
 	},
