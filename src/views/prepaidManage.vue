@@ -36,11 +36,10 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select multiple v-model="searchData.searchLevel" clearable placeholder="代理商等级">
-		    				<el-option label="待审核" value="waitPass"></el-option>
-		    				<el-option label="待发货" value="waitExp"></el-option>
-		    				<el-option label="已发货" value="doneExp"></el-option>
-		    				<el-option label="已完成" value="finish"></el-option>
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    				<el-option label="区域代理" value="265"></el-option>
+		    				<el-option label="专柜代理" value="266"></el-option>
+		    				<el-option label="单店代理" value="31"></el-option>
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
@@ -90,8 +89,9 @@ export default {
             	searchPhone:'',		//代理商手机
             	searchId:'',			//代理商编号
             	searchStatus:'',		//订单状态
-            	searchTime:'',		//下单时间
-            	searchLevel:'',		//代理商等级
+            	searchTime:'',			//下单时间
+            	searchLevel:[],		//代理商等级
+            	Level:[],			//代理商等级替代
             },
             tableData:[
             {
@@ -145,6 +145,12 @@ export default {
 			var time1 = '';
 			var time2 = '';
 		}
+		if (this.searchData.searchLevel !='') {
+	    		this.searchData.level = this.searchData.searchLevel.join(',');
+	    	}else{
+	    		this.searchData.level = '';
+	    	}
+		console.log(this.searchData.searchLevel);
 		this.$getData({
 			url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data:{
@@ -155,7 +161,7 @@ export default {
 				'advanceDeposit.changeType':this.searchData.searchStatus,
 				'advanceDeposit.startTime':time1,
 				'advanceDeposit.endTime':time2,
-				//还有个代理商等级
+				'purchaseOrder.agentGradeIds':this.searchData.level,
 			},
 			success(response){
 				this.tableData = response.data.result;
@@ -173,11 +179,47 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	var temp = new Date(this.searchData.searchTime[0]);
+	if (temp.getFullYear() > 2016) {
+		var time1 = temp.getFullYear();
+		if ((temp.getMonth() + 1)<10) {
+			time1 =  time1+ '-0' + (temp.getMonth() + 1);
+		}else{
+			time1 =  time1+ '-' + (temp.getMonth() + 1);
+		}
+		if (temp.getDate()<10) {
+			time1 =  time1+ '-0' + temp.getDate();
+		}else{
+			time1 =  time1+ '-' + temp.getDate();
+		}
+		console.log(time1);
+		temp = new Date(this.searchData.searchTime[1]);
+		var time2 = temp.getFullYear();
+		if ((temp.getMonth() + 1)<10) {
+			time2 =  time2+ '-0' + (temp.getMonth() + 1);
+		}else{
+			time2 =  time2+ '-' + (temp.getMonth() + 1);
+		}
+		if (temp.getDate()<10) {
+			time2 =  time2+ '-0' + temp.getDate();
+		}else{
+			time2 =  time2+ '-' + temp.getDate();
+		}
+		console.log(time2);
+	}else{
+		var time1 = '';
+		var time2 = '';
+	}
     	this.$getData({
 		url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 		data:{
-			'pager.pageIndex': val,
+			'pager.pageIndex': this.currentPage,
 			'pager.pageSize': this.pageSize,
+			'advanceDeposit.shopNo':this.searchData.searchId,
+			'advanceDeposit.phone':this.searchData.searchPhone,
+			'advanceDeposit.changeType':this.searchData.searchStatus,
+			'advanceDeposit.startTime':time1,
+			'advanceDeposit.endTime':time2,
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -212,7 +254,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-form .el-row{
 	/*width: calc(100%-80px);*/
 	width: 1210px;

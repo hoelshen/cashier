@@ -129,8 +129,8 @@ export default {
 			'purchaseOrder.phone':this.searchData.searchPhone,
 			'purchaseOrder.shopName':this.searchData.searchName,
 			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
-			'purchaseOrder.state':this.searchData.searchState,
-			'purchaseOrder.agentGradeId':this.searchData.level,
+			'purchaseOrder.phone.state':this.searchData.searchState,
+			'purchaseOrder.agentGradeIds':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
 			//还有个代理商等级
@@ -154,8 +154,15 @@ export default {
 	this.$getData({
 		url:'http/purchaseOrder/queryPurchaseOrderList.jhtml',
 		data:{
-			'pager.pageIndex': val,
+			'pager.pageIndex': this.currentPage,
 			'pager.pageSize': this.pageSize,
+			'purchaseOrder.phone':this.searchData.searchPhone,
+			'purchaseOrder.shopName':this.searchData.searchName,
+			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
+			'purchaseOrder.state':this.searchData.searchState,
+			'purchaseOrder.agentGradeId':this.searchData.level,
+			'advanceDeposit.startTime':this.searchData.searchTime[0],
+			'advanceDeposit.endTime':this.searchData.searchTime[1],
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -203,7 +210,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-form .el-row{
 	/*width: calc(100%-80px);*/
 	width: 1220px;

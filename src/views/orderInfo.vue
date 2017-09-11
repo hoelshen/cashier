@@ -140,7 +140,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .orderTitle{
 	margin: 30px auto auto auto;
 }

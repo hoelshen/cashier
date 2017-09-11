@@ -50,7 +50,7 @@
 			</el-table-column>
 			<el-table-column prop="NAME" label="姓名">
 			</el-table-column>
-			<el-table-column prop="LEVER" label="会员等级" width="180">
+			<el-table-column prop="GID" label="会员等级" width="180">
 			</el-table-column>
 			<el-table-column prop="SHOPNAME" label="注册店铺" width="280">
 			</el-table-column>
@@ -73,46 +73,46 @@ export default {
         	 totalNums:'',				//数据总数
     	 pageSize:30,			//当前页数
  	options: [{				//会员等级
-		value: '1',
+		value: '13',
 		label: 'v0'
 	}, {
-		value: '2',
+		value: '14',
 		label: 'v1'
 	}, {
-		value: '3',
+		value: '15',
 		label: 'v2'
 	}, {
-		value: '4',
+		value: '16',
 		label: 'v3'
 	}, {
-		value: '5',
+		value: '17',
 		label: 'v4'
 	},{
-		value: '6',
+		value: '18',
 		label: 'v5'
 	}, {
-		value: '7',
+		value: '19',
 		label: 'v6'
 	}, {
-		value: '8',
+		value: '20',
 		label: 'v7'
 	}, {
-		value: '9',
+		value: '21',
 		label: 'v8'
 	}, {
-		value: '10',
+		value: '22',
 		label: 'v9'
 	},{
-		value: '11',
+		value: '23',
 		label: 'v10'
 	}, {
-		value: '12',
+		value: '24',
 		label: 'v11'
 	}, {
 		value: '13',
 		label: 'v12'
 	}, {
-		value: '14',
+		value: '25',
 		label: 'v13'
 	}],
             searchData:{
@@ -127,7 +127,7 @@ export default {
             	PHONE:'',			//手机号
             	SHOPNAME:'',		//注册店铺
             	NAME:'',			//姓名
-            	LEVER:'',			//会员等级
+            	GID:'',				//会员等级
             	CREATED_TIME:'',		//注册时间
             }
             ]
@@ -135,68 +135,74 @@ export default {
     },
     methods: {
     	onSumbit(){
-	console.log(this.searchData.searchLevel);
-            const self = this;
-	self.$ajax.post('api/customerInfo/customerInfo/search.jhtml',{
-                        'page': this.currentPage,
+	var temp = new Date(this.searchData.searchTime[0]);
+		if (temp.getFullYear() > 2016) {
+			var time1 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time1 =  time1+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time1 =  time1+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time1 =  time1+ '-0' + temp.getDate();
+			}else{
+				time1 =  time1+ '-' + temp.getDate();
+			}
+			console.log(time1);
+			temp = new Date(this.searchData.searchTime[1]);
+			var time2 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time2 =  time2+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time2 =  time2+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time2 =  time2+ '-0' + temp.getDate();
+			}else{
+				time2 =  time2+ '-' + temp.getDate();
+			}
+			console.log(time2);
+		}else{
+			var time1 = '';
+			var time2 = '';
+		}
+	const self = this;
+                self.$ajax({
+                    url: '/api/customerInfo/customerInfo/search.jhtml',
+                    method: 'post',
+                    data: {
+                         'page': this.currentPage,
 		'rows': this.pageSize,
 		'customerInfo.shop.shopName':this.searchData.searchShop,
 		'customerInfo.phone':this.searchData.searchPhone,
 		'customerInfo.name':this.searchData.searchName,
 		'customerInfo.gid':this.searchData.searchLevel,
-		'customerInfo.startTime':this.searchData.searchTime[0],
-		'customerInfo.endTime':this.searchData.searchTime[1],
-                    }).then(function(res){
-		console.log(res);
-		})
-		.catch(function(err){
-		console.log(err);
-		});
-           //          transformRequest: [function (data) {
-           //              // Do whatever you want to transform the data
-           //              let ret = ''
-           //              for (let it in data) {
-           //                  ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '||'
-           //              }
-           //              return ret;
-           //          }],
-           //          headers: {
-           //              'Content-Type': 'application/x-www-form-urlencoded'
-           //          }
-           //      }).then(function(response){
-           //          if(response.data.success == 1){
-           //          	console.log(response);
-           //          	self.tableData = response.data.rows;
-         		// self.totalNums=response.data.total;
-           //          }else{
-           //              alert(response.data.msg);
-           //          }
-           //      }).catch(function(error){
+		'customerInfo.startTime':time1,
+		'customerInfo.endTime':time2,
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    console.log(response)
+                    if(response.data.result === 1){
+                        if(window.sessionStorage){
+                            alert(response.data.msg);
+                        }
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function(error){
 
-           //      });
-		// this.getData({
-		// 	url:'customerInfo/customerInfo/search.jhtml',
-		// 	data:{
-		// 		'pager.pageIndex': this.currentPage,
-		// 		'pager.pageSize': this.pageSize,
-		// 		'customerInfo.shop.shopName':this.searchData.searchShop,
-		// 		'customerInfo.phone':this.searchData.searchPhone,
-		// 		'customerInfo.name':this.searchData.searchName,
-		// 		'customerInfo.gid':this.searchData.searchLevel,
-		// 		'customerInfo.startTime':this.searchData.searchTime[0],
-		// 		'customerInfo.endTime':this.searchData.searchTime[1],
-		// 	},
-		// 	success(response){
-		// 		this.tableData = response.data.rows;
-		//          		this.totalNums=response.data.total;
-		// 	},
-		// 	fail(response){
-		// 		alert(response.data.msg);
-		// 	},
-		// 	error(response){
-		// 		alert(response.data.msg);
-		// 	}
-	 //    	});
+                });
     	},
 	handleSizeChange(val) {
 	    console.log(`每页 ${val} 条`);
@@ -209,14 +215,9 @@ export default {
 			'pager.pageSize': this.pageSize,
 		},
 		success(response){
+			console.log(response);
 			this.tableData = response.data.rows;
 	         		this.totalNums=response.data.total;
-		},
-		fail(response){
-			alert(response.data.msg);
-		},
-		error(response){
-			alert(response.data.msg);
 		}
     	});
 		console.log(`当前页: ${val}`);
@@ -274,7 +275,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .el-form .el-row{
 	/*width: calc(100%-80px);*/
 	width: 1210px;
