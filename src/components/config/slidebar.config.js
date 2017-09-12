@@ -46,11 +46,11 @@ export default [{
         icon: 'icon-dianpuguanli',
         children: [{
                 title: '店铺管理',
-                path: 'storeManage'
+                path: '/storeManage'
             },
             {
                 title: '预存款查询',
-                path:'prepaidManage'
+                path:'/prepaidManage'
             }
         ]
     },

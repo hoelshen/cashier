@@ -51,6 +51,22 @@
                 this.$router.push('/login');
             }
             this.contentName = this.configName[this.$route.fullPath];
+            this.$getData({
+                url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
+                data: {
+                    pageIndex: this.currentPage,
+                    pageSize: this.pageSize,
+                    'purchaseOrder.state':'WAIT_CHECK',
+                },
+                success(response){
+                    console.log(response.data.totalNums);
+                    this.$slide.setCount('waitOrder',response.data.totalNums);
+                    console.log(this.$slide.counts['waitOrder'].count);
+                },
+                fail(response){
+                    alert(response.data.msg);
+                },
+            });
         },
         components: {
             slideBar
