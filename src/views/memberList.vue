@@ -51,6 +51,7 @@
 			<el-table-column prop="NAME" label="姓名">
 			</el-table-column>
 			<el-table-column prop="GID" label="会员等级" width="180">
+			<template scope="scope"><p>{{getLevel(scope.row.GID)}}</p></template>
 			</el-table-column>
 			<el-table-column prop="SHOPNAME" label="注册店铺" width="280">
 			</el-table-column>
@@ -109,10 +110,10 @@ export default {
 		value: '24',
 		label: 'v11'
 	}, {
-		value: '13',
+		value: '25',
 		label: 'v12'
 	}, {
-		value: '25',
+		value: '26',
 		label: 'v13'
 	}],
             searchData:{
@@ -171,7 +172,7 @@ export default {
                     url: '/api/customerInfo/customerInfo/search.jhtml',
                     method: 'post',
                     data: {
-                         'page': this.currentPage,
+                         'page': 1,
 		'rows': this.pageSize,
 		'customerInfo.shop.shopName':this.searchData.searchShop,
 		'customerInfo.phone':this.searchData.searchPhone,
@@ -192,11 +193,9 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response){
-                    console.log(response)
-                    if(response.data.result === 1){
-                        if(window.sessionStorage){
-                            alert(response.data.msg);
-                        }
+                    if(response.data.code === 1){
+		self.tableData = response.data.rows;
+         		self.totalNums=response.data.total;
                     }else{
                         alert(response.data.msg);
                     }
@@ -208,22 +207,85 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
-    	this.getData({
-		url:'customerInfo/customerInfo/search.jhtml',
-		data:{
-			'pager.pageIndex': val,
-			'pager.pageSize': this.pageSize,
-		},
-		success(response){
-			console.log(response);
-			this.tableData = response.data.rows;
-	         		this.totalNums=response.data.total;
+    	var temp = new Date(this.searchData.searchTime[0]);
+		if (temp.getFullYear() > 2016) {
+			var time1 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time1 =  time1+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time1 =  time1+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time1 =  time1+ '-0' + temp.getDate();
+			}else{
+				time1 =  time1+ '-' + temp.getDate();
+			}
+			console.log(time1);
+			temp = new Date(this.searchData.searchTime[1]);
+			var time2 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time2 =  time2+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time2 =  time2+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time2 =  time2+ '-0' + temp.getDate();
+			}else{
+				time2 =  time2+ '-' + temp.getDate();
+			}
+			console.log(time2);
+		}else{
+			var time1 = '';
+			var time2 = '';
 		}
-    	});
+	const self = this;
+                self.$ajax({
+                    url: '/api/customerInfo/customerInfo/search.jhtml',
+                    method: 'post',
+                    data: {
+                        'page': val,
+		'rows': this.pageSize,
+		'customerInfo.shop.shopName':this.searchData.searchShop,
+		'customerInfo.phone':this.searchData.searchPhone,
+		'customerInfo.name':this.searchData.searchName,
+		'customerInfo.gid':this.searchData.searchLevel,
+		'customerInfo.startTime':time1,
+		'customerInfo.endTime':time2,
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    if(response.data.code === 1){
+		self.tableData = response.data.rows;
+         		self.totalNums=response.data.total;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function(error){
+
+                });
 		console.log(`当前页: ${val}`);
 	},
 	toFixed(num){
 		return Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
+	},
+	getLevel(num){
+		// console.log(num);
+		for (var i = this.options.length - 1; i >= 0; i--) {
+			// console.log(this.options[i].value == num);
+			if (this.options[i].value == num) {
+				return this.options[i].label;
+			}
+		}
 	},
 	getData(obj) {
 	const self = this;
@@ -275,25 +337,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-form .el-row{
-	/*width: calc(100%-80px);*/
-	width: 1210px;
-}
-.warp{
-	margin-top: 30px;
-}
-
-#search .el-form{
-    	margin-left: 18px;
-}
-.el-date-editor--daterange.el-input{
-	width: 200px;
-    	margin-left: 13px;
-}
-..el-table{
-	width: 95%;
-	margin: 30px auto;
-	display: block;
-}
+<style lang="less" scoped>
+	@import url('../assets/less/member.less');
 </style>

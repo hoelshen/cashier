@@ -121,19 +121,67 @@ export default {
     		this.searchData.level = '';
     	}
 	console.log(this.searchData.searchLevel);
+	const self = this;
+                self.$ajax({
+                    url:'/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
+                    method: 'post',
+                    data: {
+                      'pager.pageIndex': 1,
+		'pager.pageSize': this.pageSize,
+		'purchaseOrder.phone':this.searchData.searchPhone,
+		'purchaseOrder.shopName':this.searchData.searchName,
+		'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
+		'purchaseOrder.state':this.searchData.searchState,
+		'purchaseOrder.agentGradeIds':this.searchData.level,
+		'advanceDeposit.startTime':this.searchData.searchTime[0],
+		'advanceDeposit.endTime':this.searchData.searchTime[1],
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    if(response.data.success === 1){
+		self.tableData = response.data.result;
+         		self.totalNums=response.data.totalNums;
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function(error){
+
+                });
+    	},
+	handleSizeChange(val) {
+	    console.log(`每页 ${val} 条`);
+	  },
+	handleCurrentChange(val) {
+	if (this.searchData.searchLevel !='') {
+    		this.searchData.level = this.searchData.searchLevel.join(',');
+    	}else{
+    		this.searchData.level = '';
+    	}
+	console.log(this.searchData.searchLevel);
 	this.$getData({
 		url:'http/purchaseOrder/queryPurchaseOrderList.jhtml',
 		data:{
-			'pager.pageIndex': this.currentPage,
+			'pager.pageIndex':val,
 			'pager.pageSize': this.pageSize,
 			'purchaseOrder.phone':this.searchData.searchPhone,
 			'purchaseOrder.shopName':this.searchData.searchName,
 			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
-			'purchaseOrder.phone.state':this.searchData.searchState,
+			'purchaseOrder.state':this.searchData.searchState,
 			'purchaseOrder.agentGradeIds':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
-			//还有个代理商等级
+			'purchaseOrder.sort':'orderSum',
+			'purchaseOrder.order':this.order,
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -146,23 +194,36 @@ export default {
 			alert(response.data.msg);
 		}
     	});
-    	},
-	handleSizeChange(val) {
-	    console.log(`每页 ${val} 条`);
-	  },
-	handleCurrentChange(val) {
+	    console.log(`当前页: ${val}`);
+	},
+	store(row, column) {
+		console.log(row);
+		if (row.order === 'ascending') {
+			this.order = 'asc';
+		}
+		if (row.order === 'descending') {
+			this.order = 'desc';
+		}
+	if (this.searchData.searchLevel !='') {
+    		this.searchData.level = this.searchData.searchLevel.join(',');
+    	}else{
+    		this.searchData.level = '';
+    	}
+	console.log(this.searchData.searchLevel);
 	this.$getData({
 		url:'http/purchaseOrder/queryPurchaseOrderList.jhtml',
 		data:{
-			'pager.pageIndex': this.currentPage,
+			'pager.pageIndex':1,
 			'pager.pageSize': this.pageSize,
 			'purchaseOrder.phone':this.searchData.searchPhone,
 			'purchaseOrder.shopName':this.searchData.searchName,
 			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
 			'purchaseOrder.state':this.searchData.searchState,
-			'purchaseOrder.agentGradeId':this.searchData.level,
+			'purchaseOrder.agentGradeIds':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
+			'purchaseOrder.sort':'orderSum',
+			'purchaseOrder.order':this.order,
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -174,18 +235,7 @@ export default {
 		error(response){
 			alert(response.data.msg);
 		}
-		});
-	    console.log(`当前页: ${val}`);
-	},
-	store(row, column) {
-		console.log(row);
-		if (row.order === 'ascending') {
-			this.order = 'asc';
-		}
-		if (row.order === 'descending') {
-			this.order = 'desc';
-		}
-		console.log(this.order);
+    	});
 	},
 	toFixed(num){
 		return Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
@@ -210,55 +260,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-form .el-row{
-	/*width: calc(100%-80px);*/
-	width: 1220px;
-}
-.warp{
-	margin-top: 30px;
-}
-
-#search .el-form{
-    	margin-left: 18px;
-}
-.el-date-editor--daterange.el-input{
-	width: 200px;
-    	margin-left: 13px;
-}
-..el-table{
-	width: 95%;
-	margin: 30px auto;
-	display: block;
-}
-.textBlue{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: blue;
-	border:1px solid blue;
-	border-radius: 40%;
-	margin-left: 5px;
-}
-.textOrange{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: orange;
-	border:1px solid orange;
-	border-radius: 40%;
-	margin-left: 5px;
-}
-.textYellow{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: yellow;
-	border:1px solid yellow;
-	border-radius: 40%;
-	margin-left: 5px;
-}
+<style lang="less" scoped>
+	@import url('../assets/less/orderManage.less');
 </style>
