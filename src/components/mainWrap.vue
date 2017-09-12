@@ -33,7 +33,12 @@
                 configName: {
                     '/': '主页',
                     '/testTree' : '测试树',
-                    '/storeManage': '店铺管理'
+                    '/storeManage': '店铺管理',
+                    '/prepaidManage': '预存款查询',
+                    '/orderManage': '进货单管理',
+                    '/memberList': '会员查询',
+                    '/waitOrder': '待审核订单',
+                    '/orderInfo': '进货单详情',
                 },
                 user : {}
             }
