@@ -70,6 +70,7 @@
                 }).catch(function(error){
 
                 });
+                //1
                 // self.$refs[formName].validate((valid) => {
                 //     if (valid) {
                 //         localStorage.setItem('ms_username',self.ruleForm.username);
