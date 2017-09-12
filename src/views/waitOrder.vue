@@ -124,7 +124,7 @@ export default {
 	this.$getData({
 		url:'http/purchaseOrder/queryPurchaseOrderList.jhtml',
 		data:{
-			'pager.pageIndex': this.currentPage,
+			'pager.pageIndex': 1,
 			'pager.pageSize': this.pageSize,
 			'purchaseOrder.state':'WAIT_CHECK',
 			'purchaseOrder.phone':this.searchData.searchPhone,
@@ -152,10 +152,16 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	if (this.searchData.searchLevel !='') {
+    		this.searchData.level = this.searchData.searchLevel.join(',');
+    	}else{
+    		this.searchData.level = '';
+    	}
+	console.log(this.searchData.searchLevel);
 	this.$getData({
 		url:'http/purchaseOrder/queryPurchaseOrderList.jhtml',
 		data:{
-			'pager.pageIndex': this.currentPage,
+			'pager.pageIndex': val,
 			'pager.pageSize': this.pageSize,
 			'purchaseOrder.state':'WAIT_CHECK',
 			'purchaseOrder.phone':this.searchData.searchPhone,
@@ -165,6 +171,7 @@ export default {
 			'purchaseOrder.agentGradeId':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
+			//还有个代理商等级
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -176,7 +183,7 @@ export default {
 		error(response){
 			alert(response.data.msg);
 		}
-		});
+    	});
 	    console.log(`当前页: ${val}`);
 	},
 	store(row, column) {
@@ -213,55 +220,6 @@ export default {
 }
 </script>
 
-<style scoped>
-.el-form .el-row{
-	/*width: calc(100%-80px);*/
-	width: 1220px;
-}
-.warp{
-	margin-top: 30px;
-}
-
-#search .el-form{
-    	margin-left: 18px;
-}
-.el-date-editor--daterange.el-input{
-	width: 200px;
-    	margin-left: 13px;
-}
-..el-table{
-	width: 95%;
-	margin: 30px auto;
-	display: block;
-}
-.textBlue{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: blue;
-	border:1px solid blue;
-	border-radius: 40%;
-	margin-left: 5px;
-}
-.textOrange{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: orange;
-	border:1px solid orange;
-	border-radius: 40%;
-	margin-left: 5px;
-}
-.textYellow{
-	display: inline-block;
-	height: 20px;
-	line-height: 20px;
-	color: white;
-	background-color: yellow;
-	border:1px solid yellow;
-	border-radius: 40%;
-	margin-left: 5px;
-}
+<style lang="less" scoped>
+	@import url('../assets/less/waitOrder.less');
 </style>
