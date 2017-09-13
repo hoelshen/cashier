@@ -14,6 +14,17 @@ let Utils = {
         second = second < 10 ? '0' + second : second;
         return `${year}-${month}-${day} ${hours}:${min}:${second}`
     },
+    //格式化日期成字符串(年月日)
+    formatDayDate(date) {
+        let year = date.getFullYear();
+        let month = date.getMonth() + 1;
+        let day = date.getDate();
+        let hours = date.getHours();
+        month = month < 10 ? '0' + month : month;
+        day = day < 10 ? '0' + day : day;
+        hours = hours < 10 ? '0' + hours : hours;
+        return `${year}-${month}-${day}`
+    },
     // 保留小数
     toFiexd(num, n = 2) {
         let type = typeof num;
@@ -23,7 +34,7 @@ let Utils = {
         }
         if (isNaN(num)) {
             return '0.00';
-        }else {
+        } else {
             return String(Number(num).toFixed(n));
         }
     },
@@ -50,12 +61,12 @@ let Utils = {
         }
     },
     // 数组分组
-    arrGroup(data,l = 10) {
-        if(!data instanceof Array) return [];
-        if(data.length <= l) return [data];
+    arrGroup(data, l = 10) {
+        if (!data instanceof Array) return [];
+        if (data.length <= l) return [data];
         let result = [];
-        for (let i  = 0; i < data.length; i += l) {
-            result.push(data.slice(i,i + l));
+        for (let i = 0; i < data.length; i += l) {
+            result.push(data.slice(i, i + l));
         }
         return result;
     }

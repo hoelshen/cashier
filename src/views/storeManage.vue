@@ -61,7 +61,12 @@
                         </el-table-column>
                         <el-table-column prop="shopName" label="店铺名称">
                         </el-table-column>
-                        <el-table-column prop="agentLevelIds" label="代理商等级">
+                        <el-table-column prop="agentGradeId" label="代理商等级">
+                            <template  scope="scope">
+                                <span v-if="scope.row.agentGradeId==31" >单店代理</span>
+                                <span v-if="scope.row.agentGradeId==265" >区域代理</span>
+                                <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable min-width="100" >
                         </el-table-column>
@@ -96,8 +101,8 @@
         </div>
         <!-- 表格 end -->
         <!-- 新增店铺弹窗 start -->
-        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible">
-            <el-form :model="addForm" label-width="120px">
+        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" >
+            <el-form :model="addForm" label-width="120px" ref="addForm">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="店铺名称：">
@@ -116,7 +121,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="合同签约日期：">
-                            <el-date-picker v-model="addForm.createTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
+                            <el-date-picker v-model="addForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -139,7 +144,7 @@
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="详细地址：">
-                            <el-input placeholder="详细地址"></el-input>
+                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -150,6 +155,61 @@
             </div>
         </el-dialog>
         <!-- 新增店铺弹窗 end -->
+        <!-- 修改店铺及店铺详情弹窗 start -->
+        <el-dialog title="新增代理商店铺" :visible.sync="editDialogVisible" >
+            <el-form :model="addForm" label-width="120px" ref="editForm">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商姓名：">
+                            <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="addForm.phone" placeholder="代理商手机"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="addForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：">
+                            <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable >
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-show="addForm.agentGradeId=='265'">
+                        <el-form-item label="代理区域：">
+                            <addressComponent ref='addAgentAddress'/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent ref='addAddress'/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addAgent">确 定</el-button>
+                <el-button @click="addDialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改店铺及店铺详情弹窗 end -->
     </div>
 </template>
 
@@ -184,11 +244,12 @@ import addressComponent from '../components/address.vue';
                     }
                 },
                 addDialogVisible:false,
+                editDialogVisible:false,
                 addForm:{
                     shopName:'',
                     name:'',
                     phone:'',
-                    createTime:'',
+                    signedTime:'',
                     agentGradeId:'',
                     provinceCode:'',
                     cityCode:'',
@@ -196,6 +257,22 @@ import addressComponent from '../components/address.vue';
                     agentProvince:'',
                     agentCity:'',
                     agentCounty:'',
+                    address:''
+                },
+                editForm:{
+                    id:'',
+                    shopName:'',
+                    name:'',
+                    phone:'',
+                    signedTime:'',
+                    agentGradeId:'',
+                    provinceCode:'',
+                    cityCode:'',
+                    countyCode:'',
+                    agentProvince:'',
+                    agentCity:'',
+                    agentCounty:'',
+                    address:''
                 }
             }
         },
@@ -275,7 +352,8 @@ import addressComponent from '../components/address.vue';
                         'shop.name':self.searchData.name,
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
-                        'shop.state':self.searchData.state
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -303,7 +381,8 @@ import addressComponent from '../components/address.vue';
                         'shop.name':self.searchData.name,
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
-                        'shop.state':self.searchData.state
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -330,7 +409,8 @@ import addressComponent from '../components/address.vue';
                         'shop.name':self.searchData.name,
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
-                        'shop.state':self.searchData.state
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -419,12 +499,11 @@ import addressComponent from '../components/address.vue';
 
                 });
             },
-            // 新增店铺
-            addAgent(){
+            //提交字段校验
+            testData(data,addAddress,addAgentAddress){
                 const self = this;
-                if(!self.checkSession())return;
-                self.loading = true;
-                const data = self.addForm;
+                let isMobile = /^1\d{10}$/
+                //店铺名判断
                 if(!data.shopName){
                     self.loading = false;
                     self.$message({
@@ -442,22 +521,118 @@ import addressComponent from '../components/address.vue';
                         return false
                     }
                 }
+                //代理商姓名判断
+                if(!data.name){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商姓名不得为空',
+                        type:'error'
+                    })
+                    return false
+                }else{
+                    if(data.name.length>10){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理商姓名长度不得大于10',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                //代理商手机判断
+                if(!data.phone){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商手机不得为空',
+                        type:'error'
+                    })
+                    return false
+                }else{
+                    if(!isMobile.test(data.phone)){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理商手机格式有误',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                //合同签约日期判断
+                if(!data.signedTime){
+                    self.loading = false;
+                    self.$message({
+                        message:'合同签约日期不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //代理商等级判断
+                if(!data.agentGradeId){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商等级不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //收件地址判断
+                if(!addAddress.provinceCode||!addAddress.cityCode||!addAddress.areaCode){
+                    self.loading = false;
+                    self.$message({
+                        message:'收件地址不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //详细地址判断
+                if(!data.address){
+                    self.loading = false;
+                    self.$message({
+                        message:'详细地址不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //代理区域判断
+                if(data.agentGradeId==265){
+                    if(!addAgentAddress.provinceCode||!addAgentAddress.cityCode||!addAgentAddress.areaCode){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理区域不得为空',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                return true
+                
+            },
+            // 新增店铺
+            addAgent(){
+                const self = this;
+                if(!self.checkSession())return;
+                self.loading = true;
+                const data = self.addForm;
+                let addAddress = self.$refs.addAddress.getData();
+                let addAgentAddress = self.$refs.addAgentAddress.getData();
+                if (!self.testData(data,addAddress,addAgentAddress))return;
                 //请求
                 self.$ajax({
                     url: '/api/shop/shopManage/modify.jhtml',
                     method: 'post',
                     data: {
                         'shop.shopName':data.shopName,
-                        'shop.name':dat.name,
+                        'shop.name':data.name,
                         'shop.phone':data.phone,
-                        'shop.createTime':data.createTime,
+                        'shop.signedTime':Utils.formatDayDate(data.signedTime),
                         'shop.agentGradeId':data.agentGradeId,
-                        'shop.provinceCode':data.provinceCode,
-                        'shop.cityCode':data.cityCode,
-                        'shop.countyCodeid':data.countyCode,
-                        'shop.agentProvinceid':data.agentProvince,
-                        'shop.agentCity':data.agentCity,
-                        'shop.agentCounty':data.agentCounty,
+                        'shop.provinceCode':addAddress.provinceCode,
+                        'shop.cityCode':addAddress.cityCode,
+                        'shop.countyCode':addAddress.areaCode,
+                        'shop.agentProvince':data.agentGradeId==265?addAgentAddress.provinceCode:'',
+                        'shop.agentCity':data.agentGradeId==265?addAgentAddress.cityCode:'',
+                        'shop.agentCounty':data.agentGradeId==265?addAgentAddress.areaCode:'',
+                        'shop.address':data.address,
                     },
                     transformRequest: [function (data) {
                         let ret = ''
@@ -471,20 +646,14 @@ import addressComponent from '../components/address.vue';
                     }
                 }).then(function(response){
                     self.loading = false;
-                    if(response.data.success==1){
-                        self.$message({
-                            message:response.data.msg,
-                            type:'success'
-                        })
-                        setTimeout(function() {
-                            window.location.reload();
-                        }, 1000)
-                    }else{
-                        self.$message({
-                            message:response.data.msg,
-                            type:'error'
-                        })
-                    }
+                    console.log(response)
+                    self.$message({
+                        message:response.data.msg,
+                        type:'success'
+                    })
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000)
                 }).catch(function(err){
                     self.loading = false;
                 });
