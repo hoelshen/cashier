@@ -40,7 +40,7 @@
             submitForm() {
                 const self = this;
                 self.$ajax({
-                    url: '/api/sysUser/doLogin.jhtml',
+                    url: '/api/http/sysUser/doLogin.jhtml',
                     method: 'post',
                     data: {
                         'user.account': self.ruleForm.account,
