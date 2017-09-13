@@ -65,7 +65,7 @@
                         }
                         self.$router.push('/');
                     }else{
-                        alert(response.data.message);
+                        alert(response.data.msg);
                     }
                 }).catch(function(error){
 
