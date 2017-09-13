@@ -38,7 +38,7 @@
                     '/orderManage': '进货单管理',
                     '/memberList': '会员查询',
                     '/waitOrder': '待审核订单',
-                    '/orderInfo': '进货单详情',
+                    '/orderInfo/:purchaseOrderNo/:shopNo': '进货单详情',
                 },
                 user : {}
             }
@@ -56,6 +56,7 @@
                 this.$router.push('/login');
             }
             this.contentName = this.configName[this.$route.fullPath];
+
             this.$getData({
                 url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
                 data: {
