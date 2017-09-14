@@ -2,7 +2,7 @@
 <div class="prepaidManage">
 	<div class="warp">
 	<div id="search">
-		<el-form label-width="85px" ref="form" :model="searchData">
+		<el-form label-width="85px" ref="form" v-model="searchData">
 		    	<el-row :gutter="10">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商编号">
@@ -16,7 +16,7 @@
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="变动类型">
-		    			<el-select v-model="searchData.searchStatus" placeholder="状态">
+		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
 		    				<el-option label="扣款" value="DEDUCTIONS"></el-option>
 		    				<el-option label="进货" value="PURCHASE"></el-option>
@@ -36,11 +36,10 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select multiple v-model="searchData.searchLevel" placeholder="代理商等级">
-		    				<el-option label="待审核" value="waitPass"></el-option>
-		    				<el-option label="待发货" value="waitExp"></el-option>
-		    				<el-option label="已发货" value="doneExp"></el-option>
-		    				<el-option label="已完成" value="finish"></el-option>
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    				<el-option label="区域代理" value="265"></el-option>
+		    				<el-option label="专柜代理" value="266"></el-option>
+		    				<el-option label="单店代理" value="31"></el-option>
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
@@ -49,7 +48,8 @@
 	</div>
 	<div class="orderList">
 		<el-table :data="tableData" style="width: 95%;margin: 30px auto;">
-			<el-table-column prop="shopNo" label="代理商编号" width="140" style="position: relative"><!-- <template scope="scope">区域？单店？专柜？</template> -->
+			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
+			</el-table-column>
 			</el-table-column>
 			<el-table-column prop="phone" label="手机号" width="130">
 			</el-table-column>
@@ -64,7 +64,8 @@
 			<template scope="scope"><p>{{ toFixed(scope.row.afterMoney) }}</p></template>
 			</el-table-column>
 			<el-table-column prop="remark" label="备注/单号" width="180">
-			<template scope="scope"><p>{{ scope.row.remark == '' ?  scope.row.purchaseOrderNo : scope.row.remark }}</p></template>
+			<template scope="scope"><p :title=scope.row.remark >
+			<router-link v-if="scope.row.remark == ''" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p v-if="scope.row.remark != ''" style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
 			</el-table-column>
 			<el-table-column prop="creator" label="变更人" width="90">
 			</el-table-column>
@@ -84,14 +85,15 @@ export default {
     data(){
         return {
         	 currentPage: 1,			//当前页
-        	 totalNums:'',				//数据总数
+        	 totalNums:0,				//数据总数
     	 pageSize:30,			//当前页数
             searchData:{
             	searchPhone:'',		//代理商手机
             	searchId:'',			//代理商编号
             	searchStatus:'',		//订单状态
-            	searchTime:'',		//下单时间
-            	searchLevel:'',		//代理商等级
+            	searchTime:'',			//下单时间
+            	searchLevel:[],		//代理商等级
+            	Level:[],			//代理商等级替代
             },
             tableData:[
             {
@@ -113,6 +115,44 @@ export default {
     methods: {
     	onSumbit(){
 		console.log(this.searchData.searchTime);
+		console.log(this.searchData.searchTime[0]);
+		var temp = new Date(this.searchData.searchTime[0]);
+		if (temp.getFullYear() > 2016) {
+			var time1 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time1 =  time1+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time1 =  time1+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time1 =  time1+ '-0' + temp.getDate();
+			}else{
+				time1 =  time1+ '-' + temp.getDate();
+			}
+			console.log(time1);
+			temp = new Date(this.searchData.searchTime[1]);
+			var time2 = temp.getFullYear();
+			if ((temp.getMonth() + 1)<10) {
+				time2 =  time2+ '-0' + (temp.getMonth() + 1);
+			}else{
+				time2 =  time2+ '-' + (temp.getMonth() + 1);
+			}
+			if (temp.getDate()<10) {
+				time2 =  time2+ '-0' + temp.getDate();
+			}else{
+				time2 =  time2+ '-' + temp.getDate();
+			}
+			console.log(time2);
+		}else{
+			var time1 = '';
+			var time2 = '';
+		}
+		if (this.searchData.searchLevel !='') {
+	    		this.searchData.level = this.searchData.searchLevel.join(',');
+	    	}else{
+	    		this.searchData.level = '';
+	    	}
+		console.log(this.searchData.searchLevel);
 		this.$getData({
 			url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data:{
@@ -121,9 +161,9 @@ export default {
 				'advanceDeposit.shopNo':this.searchData.searchId,
 				'advanceDeposit.phone':this.searchData.searchPhone,
 				'advanceDeposit.changeType':this.searchData.searchStatus,
-				'advanceDeposit.startTime':this.searchData.searchTime[0],
-				'advanceDeposit.endTime':this.searchData.searchTime[1],
-				//还有个代理商等级
+				'advanceDeposit.startTime':time1,
+				'advanceDeposit.endTime':time2,
+				'purchaseOrder.agentGradeIds':this.searchData.level,
 			},
 			success(response){
 				this.tableData = response.data.result;
@@ -141,11 +181,47 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	var temp = new Date(this.searchData.searchTime[0]);
+	if (temp.getFullYear() > 2016) {
+		var time1 = temp.getFullYear();
+		if ((temp.getMonth() + 1)<10) {
+			time1 =  time1+ '-0' + (temp.getMonth() + 1);
+		}else{
+			time1 =  time1+ '-' + (temp.getMonth() + 1);
+		}
+		if (temp.getDate()<10) {
+			time1 =  time1+ '-0' + temp.getDate();
+		}else{
+			time1 =  time1+ '-' + temp.getDate();
+		}
+		console.log(time1);
+		temp = new Date(this.searchData.searchTime[1]);
+		var time2 = temp.getFullYear();
+		if ((temp.getMonth() + 1)<10) {
+			time2 =  time2+ '-0' + (temp.getMonth() + 1);
+		}else{
+			time2 =  time2+ '-' + (temp.getMonth() + 1);
+		}
+		if (temp.getDate()<10) {
+			time2 =  time2+ '-0' + temp.getDate();
+		}else{
+			time2 =  time2+ '-' + temp.getDate();
+		}
+		console.log(time2);
+	}else{
+		var time1 = '';
+		var time2 = '';
+	}
     	this.$getData({
 		url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 		data:{
-			'pager.pageIndex': val,
+			'pager.pageIndex': this.currentPage,
 			'pager.pageSize': this.pageSize,
+			'advanceDeposit.shopNo':this.searchData.searchId,
+			'advanceDeposit.phone':this.searchData.searchPhone,
+			'advanceDeposit.changeType':this.searchData.searchStatus,
+			'advanceDeposit.startTime':time1,
+			'advanceDeposit.endTime':time2,
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -180,25 +256,7 @@ export default {
 }
 </script>
 
-<style>
-.el-form .el-row{
-	/*width: calc(100%-80px);*/
-	width: 1220px;
-}
-.warp{
-	margin-top: 30px;
-}
 
-#search .el-form{
-    	margin-left: 18px;
-}
-.el-date-editor--daterange.el-input{
-	width: 200px;
-    	margin-left: 13px;
-}
-..el-table{
-	width: 95%;
-	margin: 30px auto;
-	display: block;
-}
+<style lang="less" scoped>
+	@import url('../assets/less/prepaidManage.less');
 </style>

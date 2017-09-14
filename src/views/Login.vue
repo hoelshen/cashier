@@ -40,11 +40,11 @@
             submitForm() {
                 const self = this;
                 self.$ajax({
-                    url: '/apitest/sys/login/doLogin',
+                    url: '/api/http/sysUser/doLogin.jhtml',
                     method: 'post',
                     data: {
-                        account: self.ruleForm.account,
-                        password: self.ruleForm.password
+                        'user.account': self.ruleForm.account,
+                        'user.password': self.ruleForm.password
                     },
                     transformRequest: [function (data) {
                         // Do whatever you want to transform the data
@@ -58,14 +58,14 @@
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response){
-                    if(response.data.code == 0){
+                    if(response.data.success == 1){
                         if(window.sessionStorage){
-                            sessionStorage.user = JSON.stringify(response.data);
+                            sessionStorage.user = JSON.stringify(response.result);
                             sessionStorage.haha = new Date().getTime();
                         }
                         self.$router.push('/');
                     }else{
-                        alert(response.data.message);
+                        alert(response.data.msg);
                     }
                 }).catch(function(error){
 

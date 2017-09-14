@@ -85,9 +85,9 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span>修改</span>
+                                    <span @click="openEditDialog(scope.row)">修改</span>
                                     <span>详情</span>
-                                    <span>预存款变更</span>
+                                    <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
                             </template>
                         </el-table-column>
@@ -156,60 +156,109 @@
         </el-dialog>
         <!-- 新增店铺弹窗 end -->
         <!-- 修改店铺及店铺详情弹窗 start -->
-        <el-dialog title="新增代理商店铺" :visible.sync="editDialogVisible" >
-            <el-form :model="addForm" label-width="120px" ref="editForm">
+        <el-dialog title="修改代理商店铺" :visible.sync="editDialogVisible" >
+            <el-form :model="editForm" label-width="120px" ref="editForm">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="店铺名称：">
-                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                            <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商姓名：">
-                            <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                            <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="addForm.phone" placeholder="代理商手机"></el-input>
+                            <el-input v-model="editForm.phone" placeholder="代理商手机" :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="合同签约日期：">
-                            <el-date-picker v-model="addForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
+                            <el-date-picker v-model="editForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions" disabled>
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="代理商等级：">
-                            <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable >
+                            <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
                                 <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24" v-show="addForm.agentGradeId=='265'">
+                    <el-col :span="24" v-if="editForm.agentGradeId=='265'">
                         <el-form-item label="代理区域：">
-                            <addressComponent ref='addAgentAddress'/>
+                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='addAgentAddress'  :disabled="isDisable"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="收件地址：">
-                            <addressComponent ref='addAddress'/>
+                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode"  ref='addAddress' :disabled="isDisable"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
                         <el-form-item label="详细地址：">
-                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
+                            <el-input v-model="editForm.address" placeholder="详细地址" :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
                 <el-button type="primary" @click="addAgent">确 定</el-button>
-                <el-button @click="addDialogVisible = false">取 消</el-button>
+                <el-button @click="editDialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
         <!-- 修改店铺及店铺详情弹窗 end -->
+        <!-- 预存款变更弹窗 start -->
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny">
+            <el-form :model="changeForm">
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="店铺名称：" label-width="100px">
+                            <el-input v-model="changeForm.changeShopName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="变动类型：" label-width="100px">
+                            <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;">
+                            <el-option label="充值" value="TOP_UP"></el-option>
+                            <el-option label="扣款" value="DEDUCTIONS"></el-option>
+                        </el-select>
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row :gutter="20">
+                    <el-col :span="7">
+                        <el-form-item label="变动金额：" label-width="100px">
+                            <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
+                            <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
+                        </el-form-item>
+                        </el-col>
+                        <el-col :span="15">
+                        <el-form-item>
+                           <el-input v-model="changeForm.alterMoney" placeholder="变动金额"></el-input>
+                           <p class="yuan">元</p>
+                        </el-form-item>
+                    </el-col>
+                    </el-row>
+                    <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="备注说明：" label-width="100px">
+                            <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
+                            <p class="triangle"></p><p class="msg">备注修改的原因，不超过50个中文字符</p>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="onChange">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 预存款变更弹窗 end -->
     </div>
 </template>
 
@@ -245,6 +294,15 @@ import addressComponent from '../components/address.vue';
                 },
                 addDialogVisible:false,
                 editDialogVisible:false,
+                dialogFormVisible:false,
+                changeTitle:'',
+                changeForm:{
+                    changeShopId:'',
+                    changeShopName:'',
+                    changeType:'',
+                    alterMoney:'',
+                    remark:'',
+                },
                 addForm:{
                     shopName:'',
                     name:'',
@@ -273,7 +331,8 @@ import addressComponent from '../components/address.vue';
                     agentCity:'',
                     agentCounty:'',
                     address:''
-                }
+                },
+                isDisable:false
             }
         },
         components: {
@@ -336,6 +395,65 @@ import addressComponent from '../components/address.vue';
                         return true;
                     }
                 }
+            },
+            onChange(){
+                if (!this.changeForm.changeType) {
+                    alert("请选择一个变动类型！");
+                    return;
+                }
+                if (!this.changeForm.alterMoney) {
+                    alert("变动金额不能为空！");
+                    return;
+                }
+                if(!/^[0-9\.]*$/.test(this.changeForm.alterMoney)){
+                    alert("变更金额格式错误！");
+                    return;
+                }
+                if (!/^[\u4e00-\u9fa5\，\w\-]{1,50}$/.test(this.changeForm.remark)){
+                    alert("备注长度错误或存在非法字符！");
+                    return;
+                }
+                const self = this;
+                self.$ajax({
+                    url: '/api/shop/shopManage/updateDepositAmount.jhtml',
+                    method: 'post',
+                    data: {
+                         'advanceDeposit.shopId':this.changeForm.changeShopId,
+                          'advanceDeposit.changeType':this.changeForm.changeType,
+                          'advanceDeposit.alterMoney':this.changeForm.alterMoney,
+                          'advanceDeposit.remark':this.changeForm.remark,
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    console.log(response)
+                    if(response.data.result === 1){
+                        if(window.sessionStorage){
+                            alert(response.data.msg);
+                        }
+                    }else{
+                        alert(response.data.msg);
+                    }
+                }).catch(function(error){
+
+                });
+                this.dialogFormVisible = false;
+            },
+            chengPre(id,shopName,shopNo){
+                console.log(id);
+                this.changeForm.changeShopId = id;
+                this.changeForm.changeShopName = shopName;
+                this.changeTitle = "编辑代理商店铺（编号："+shopNo+"）"
+                this.dialogFormVisible = true;
             },
             //查询
             onSubmit:function(){
@@ -426,6 +544,30 @@ import addressComponent from '../components/address.vue';
             openAddDialog(){
                 this.addDialogVisible = true;
             },
+            //打开修改店铺及店铺详情弹窗
+            openEditDialog(data){
+                console.log(data)
+                this.getInfoById(data.id);
+                this.editDialogVisible = true;
+            },
+            // 获取选中店铺信息
+            getInfoById(id){
+                const self = this;
+                if(!self.checkSession())return;
+                self.loading = true;
+                self.$ajax.get('/api/http/shop/searchShop.jhtml',{
+                    params:{
+                        'shopId':id,
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.editForm = response.data.result;
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
+            },
             //修改代理商状态
             updateAgentState(data){
                 const self =this;
@@ -445,7 +587,7 @@ import addressComponent from '../components/address.vue';
                             h('span',{style:'color:red'},data.name)
                         ]),
                         h('div',null,[
-                            h('span',{style:'margin-left:20px'},'代理商手机：'),
+                            h('span',{style:'margin-left:15px'},'代理商手机：'),
                             h('span',{style:'color:red'},data.phone)
                         ])
 

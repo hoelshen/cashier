@@ -33,7 +33,12 @@
                 configName: {
                     '/': '主页',
                     '/testTree' : '测试树',
-                    '/storeManage': '店铺管理'
+                    '/storeManage': '店铺管理',
+                    '/prepaidManage': '预存款查询',
+                    '/orderManage': '进货单管理',
+                    '/memberList': '会员查询',
+                    '/waitOrder': '待审核订单',
+                    '/orderInfo/:purchaseOrderNo/:shopNo': '进货单详情',
                 },
                 user : {}
             }
@@ -51,6 +56,23 @@
                 this.$router.push('/login');
             }
             this.contentName = this.configName[this.$route.fullPath];
+
+            this.$getData({
+                url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
+                data: {
+                    pageIndex: this.currentPage,
+                    pageSize: this.pageSize,
+                    'purchaseOrder.state':'WAIT_CHECK',
+                },
+                success(response){
+                    console.log(response.data.totalNums);
+                    this.$slide.setCount('waitOrder',response.data.totalNums);
+                    console.log(this.$slide.counts['waitOrder'].count);
+                },
+                fail(response){
+                    alert(response.data.msg);
+                },
+            });
         },
         components: {
             slideBar

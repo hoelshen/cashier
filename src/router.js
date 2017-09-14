@@ -18,11 +18,6 @@ const config = [
 				component:resolve=>require(['./views/orderManage.vue'],resolve),
 			},
 			{
-				path:'orderInfo/:orderNum',
-				name:'orderInfo',
-				component:resolve=>require(['./views/orderInfo.vue'],resolve),
-			},
-			{
 				path:'waitOrder',
 				component:resolve=>require(['./views/waitOrder.vue'],resolve),
 			},
@@ -35,6 +30,11 @@ const config = [
 				component:resolve=>require(['./views/memberList.vue'],resolve),
 			},
 			{ path: 'storeManage', component: resolve => require(['./views/storeManage.vue'], resolve) },
+			{
+				path:'orderInfo/:purchaseOrderNo/:shopNo',
+				name:'orderInfo',
+				component:resolve=>require(['./views/orderInfo.vue'],resolve),
+			},
 		]
 	},
 ]
