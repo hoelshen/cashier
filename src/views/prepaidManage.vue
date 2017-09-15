@@ -242,22 +242,22 @@ export default {
 	},
 	toFixed1(num){
 		num = Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
-		console.log(num);
-		console.log(String(num).substring(0,1) === '-');
 		if (String(num).substring(0,1) === '-') {
 		}else{
 			num = '+' + num;
-			console.log(num);
 		}
 		return num;
 	},
     },
     created(){
+	var src = window.location.href.split('/');
+            this.searchData.searchId = src[5];
     	this.$getData({
 		url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 		data:{
 			'pager.pageIndex': this.currentPage,
 			'pager.pageSize': this.pageSize,
+			'advanceDeposit.shopNo':this.searchData.searchId,
 		},
 		success(response){
 			this.tableData = response.data.result;

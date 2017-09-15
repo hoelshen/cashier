@@ -26,6 +26,11 @@ const config = [
 				component:resolve=>require(['./views/prepaidManage.vue'],resolve),
 			},
 			{
+				path:'prepaidManage/:shopNo',
+				name:'prepaidManage',
+				component:resolve=>require(['./views/prepaidManage.vue'],resolve),
+			},
+			{
 				path:'memberList',
 				component:resolve=>require(['./views/memberList.vue'],resolve),
 			},
