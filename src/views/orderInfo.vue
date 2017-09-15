@@ -57,6 +57,7 @@
 </template>
 
 <script>
+import mainWrap from '../components/mainWrap.vue'
 export default {
     data(){
         return {
@@ -100,7 +101,6 @@ export default {
             var src = window.location.href.split('/');
             this.orderInfo.purchaseOrderNo = src[5];
             this.orderInfo.shopNo = src[6];
-            console.log(this.orderInfo.purchaseOrderNo);
             const self = this;
 	self.$ajax({
                     url: '/api/http/purchaseOrder/findPurchaseOrderByNo.jhtml',
@@ -121,13 +121,9 @@ export default {
                     }
                 }).then(function(response){
                     if(response.data.success == 1){
-                    	console.log(response);
 		self.tableData=response.data.result.purchaseOrderDetailList;
                     	for(var item in self.tableData){
-			console.log(Number(self.tableData[item].productNum));
-        		 	console.log(self.productAllNum);
                     		 self.productAllNum = self.productAllNum+ Number(self.tableData[item].productNum);
-                    		 console.log(self.productAllNum);
                     	}
                     	self.orderInfo = response.data.result;
                     }else{

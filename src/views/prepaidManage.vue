@@ -9,12 +9,12 @@
 		    			<el-input v-model="searchData.searchId" placeholder="代理商编号"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="5">
+		    		<el-col :span="6">
 		    			<el-form-item label="代理商手机">
 		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="5">
+		    		<el-col :span="6">
 		    			<el-form-item label="变动类型">
 		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
@@ -25,16 +25,6 @@
 		    			</el-form-item>
 		    		</el-col>
 				<el-col :span="6">
-		    			<el-form-item label="变更时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
-		    			</el-form-item>
-		    		</el-col>
-		    		<el-col :span="2">
-		    			<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
-		    		</el-col>
-		    	</el-row>
-		    	<el-row :gutter="20">
-		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
 		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 		    				<el-option label="区域代理" value="265"></el-option>
@@ -42,6 +32,16 @@
 		    				<el-option label="单店代理" value="31"></el-option>
 		    			</el-select>
 		    			</el-form-item>
+		    		</el-col>
+		    	</el-row>
+		    	<el-row :gutter="10">
+				<el-col :span="7" style="margin-left:-15px;">
+		    			<el-form-item label="变更时间">
+		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			</el-form-item>
+		    		</el-col>
+		    		<el-col :span="17">
+		    			<el-button type="primary" style="margin-left:-15px" @click="onSumbit">查询</el-button>
 		    		</el-col>
 		    	</el-row>
 		</el-form>
@@ -117,7 +117,7 @@ export default {
 		console.log(this.searchData.searchTime);
 		console.log(this.searchData.searchTime[0]);
 		var temp = new Date(this.searchData.searchTime[0]);
-		if (temp.getFullYear() > 2016) {
+		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
 			if ((temp.getMonth() + 1)<10) {
 				time1 =  time1+ '-0' + (temp.getMonth() + 1);

@@ -60,7 +60,7 @@
                 }).then(function(response){
                     if(response.data.success == 1){
                         if(window.sessionStorage){
-                            sessionStorage.user = JSON.stringify(response.result);
+                            sessionStorage.user = JSON.stringify(response.data.result);
                             sessionStorage.haha = new Date().getTime();
                         }
                         self.$router.push('/');
