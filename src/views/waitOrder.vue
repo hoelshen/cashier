@@ -53,7 +53,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;" @sort-change='store'>
+		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;" @sort-change='store'>
 			<el-table-column prop="purchaseOrderNo" label="进货单号" width="140">
 			</el-table-column>
 			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
@@ -134,7 +134,7 @@ export default {
 			'purchaseOrder.agentGradeId':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
-			//还有个代理商等级
+			'purchaseOrder.state':'WAIT_CHECK',
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -171,7 +171,7 @@ export default {
 			'purchaseOrder.agentGradeId':this.searchData.level,
 			'advanceDeposit.startTime':this.searchData.searchTime[0],
 			'advanceDeposit.endTime':this.searchData.searchTime[1],
-			//还有个代理商等级
+			'purchaseOrder.state':'WAIT_CHECK',
 		},
 		success(response){
 			this.tableData = response.data.result;

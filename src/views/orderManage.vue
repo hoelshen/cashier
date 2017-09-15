@@ -53,7 +53,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;" @sort-change='store'>
+		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;" @sort-change='store'>
 			<el-table-column prop="purchaseOrderNo" label="进货单号" width="140">
 			</el-table-column>
 			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>

@@ -9,7 +9,7 @@
 		    			<el-input v-model="searchData.searchId" placeholder="代理商编号"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="6">
+		    		<el-col :span="5">
 		    			<el-form-item label="代理商手机">
 		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
 		    			</el-form-item>
@@ -24,7 +24,7 @@
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
-				<el-col :span="6">
+				<el-col :span="7">
 		    			<el-form-item label="代理商等级">
 		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 		    				<el-option label="区域代理" value="265"></el-option>
@@ -47,7 +47,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;">
+		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;">
 			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
 			</el-table-column>
 			</el-table-column>
@@ -58,7 +58,7 @@
 			<el-table-column prop="changeType" label="变更类型" width="100">
 			</el-table-column>
 			<el-table-column prop="alterMoney" label="变更金额" width="100">
-			<template scope="scope"><p>{{ toFixed(scope.row.alterMoney) }}</p></template>
+			<template scope="scope"><p>{{ toFixed1(scope.row.alterMoney) }}</p></template>
 			</el-table-column>
 			<el-table-column prop="afterMoney" label="结余" width="100">
 			<template scope="scope"><p>{{ toFixed(scope.row.afterMoney) }}</p></template>
@@ -163,7 +163,7 @@ export default {
 				'advanceDeposit.changeType':this.searchData.searchStatus,
 				'advanceDeposit.startTime':time1,
 				'advanceDeposit.endTime':time2,
-				'purchaseOrder.agentGradeIds':this.searchData.level,
+				'advanceDeposit.agentGradeIds':this.searchData.level,
 			},
 			success(response){
 				this.tableData = response.data.result;
@@ -215,13 +215,14 @@ export default {
     	this.$getData({
 		url:'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 		data:{
-			'pager.pageIndex': this.currentPage,
+			'pager.pageIndex': val,
 			'pager.pageSize': this.pageSize,
 			'advanceDeposit.shopNo':this.searchData.searchId,
 			'advanceDeposit.phone':this.searchData.searchPhone,
 			'advanceDeposit.changeType':this.searchData.searchStatus,
 			'advanceDeposit.startTime':time1,
 			'advanceDeposit.endTime':time2,
+			'advanceDeposit.agentGradeIds':this.searchData.level,
 		},
 		success(response){
 			this.tableData = response.data.result;
@@ -238,6 +239,17 @@ export default {
 	},
 	toFixed(num){
 		return Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
+	},
+	toFixed1(num){
+		num = Number(num).toFixed(6).substring(0,Number(num).toFixed(6).lastIndexOf('.')+3);
+		console.log(num);
+		console.log(String(num).substring(0,1) === '-');
+		if (String(num).substring(0,1) === '-') {
+		}else{
+			num = '+' + num;
+			console.log(num);
+		}
+		return num;
 	},
     },
     created(){
