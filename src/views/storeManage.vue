@@ -52,7 +52,7 @@
             <el-row class="t-body">
                 <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button>
                 <el-row class="tablebar">
-                    <el-table :data="myData"  border v-loading.fullscreen.lock="loading"  highlight-current-row style="width: 100%"  >
+                    <el-table :data="myData"  border v-loading.fullscreen.lock="loading"  highlight-current-row style="width: 100%" @sort-change='sortAmount' >
                         <el-table-column prop="shopNo" label="代理商编号">
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
@@ -71,7 +71,7 @@
                                 <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable min-width="100" >
+                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" >
                         </el-table-column>
                         <el-table-column prop="signTime" label="注册时间" width="110">
                         </el-table-column>
@@ -274,6 +274,7 @@
 <script>
 import Utils from '../components/tools/Utils';
 import addressComponent from '../components/address.vue';
+import $ from 'jquery';
     export default {
         data(){
             return {
@@ -342,7 +343,8 @@ import addressComponent from '../components/address.vue';
                     agentCounty:'',
                     address:''
                 },
-                isDisable:false
+                isDisable:false,
+                order:''//预存款排序
             }
         },
         components: {
@@ -470,6 +472,10 @@ import addressComponent from '../components/address.vue';
                 const self = this;
                 if(!self.checkSession())return;
                 self.currentPage = 1;
+                //清除排序
+                self.order='';
+                $(".ascending.is-leaf").removeClass("ascending");
+                $(".descending.is-leaf").removeClass("descending");
                 self.loading = true;
                 self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
                     params:{
@@ -481,7 +487,9 @@ import addressComponent from '../components/address.vue';
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
-                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+                        'shop.sort':'depositAmount',
+                        'shop.order':self.order
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -510,7 +518,9 @@ import addressComponent from '../components/address.vue';
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
-                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+                        'shop.sort':'depositAmount',
+                        'shop.order':self.order
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -538,7 +548,9 @@ import addressComponent from '../components/address.vue';
                         'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
                         'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
-                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+                        'shop.sort':'depositAmount',
+                        'shop.order':self.order
                     }
                 }).then(function(response){
                     self.loading = false;
@@ -549,6 +561,42 @@ import addressComponent from '../components/address.vue';
                     self.loading = false;
                     console.log(err);
                 });
+            },
+            // 预存款余额排序
+            sortAmount(row,column){
+                const self = this;
+                if (row.order === 'ascending') {
+                    self.order = 'asc';
+                }
+                if (row.order === 'descending') {
+                    self.order = 'desc';
+                }
+                if(!self.checkSession())return;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+                        'shop.sort':'depositAmount',
+                        'shop.order':self.order
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
+
             },
             //打开新增店铺弹窗
             openAddDialog(){
