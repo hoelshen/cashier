@@ -59,7 +59,10 @@
                         </el-table-column>
                         <el-table-column prop="name" label="姓名">
                         </el-table-column>
-                        <el-table-column prop="shopName" label="店铺名称">
+                        <el-table-column title="shopName"  prop="shopName" label="店铺名称">
+                            <template  scope="scope">
+                                <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="agentGradeId" label="代理商等级">
                             <template  scope="scope">
@@ -85,8 +88,8 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span @click="openEditDialog(scope.row)">修改</span>
-                                    <span>详情</span>
+                                    <span @click="openEditDialog(scope.row,'edit')">修改</span>
+                                    <span @click="openEditDialog(scope.row,'detail')">详情</span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
                             </template>
@@ -156,7 +159,7 @@
         </el-dialog>
         <!-- 新增店铺弹窗 end -->
         <!-- 修改店铺及店铺详情弹窗 start -->
-        <el-dialog title="修改代理商店铺" :visible.sync="editDialogVisible" >
+        <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" >
             <el-form :model="editForm" label-width="120px" ref="editForm">
                 <el-row>
                     <el-col :span="12">
@@ -187,14 +190,15 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24" v-if="editForm.agentGradeId=='265'">
+                    
+                    <el-col :span="24" v-show="editForm.agentGradeId=='265'">
                         <el-form-item label="代理区域：">
-                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='addAgentAddress'  :disabled="isDisable"/>
+                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress'  :disabled="isDisable"/>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24">
+                    <el-col :span="24" v-show="editForm.agentGradeId">
                         <el-form-item label="收件地址：">
-                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode"  ref='addAddress' :disabled="isDisable"/>
+                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode"  ref='editAddress' :disabled="isDisable"/>
                         </el-form-item>
                     </el-col>
                     <el-col :span="24">
@@ -202,10 +206,15 @@
                             <el-input v-model="editForm.address" placeholder="详细地址" :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="24" v-if="isDisable">
+                        <el-form-item label="预存款详情：">
+                            <router-link to="prepaidManage">点击查看</router-link>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addAgent">确 定</el-button>
+                <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
                 <el-button @click="editDialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
@@ -317,6 +326,7 @@ import addressComponent from '../components/address.vue';
                     agentCounty:'',
                     address:''
                 },
+                editFormTitle:'',
                 editForm:{
                     id:'',
                     shopName:'',
@@ -545,8 +555,9 @@ import addressComponent from '../components/address.vue';
                 this.addDialogVisible = true;
             },
             //打开修改店铺及店铺详情弹窗
-            openEditDialog(data){
-                console.log(data)
+            openEditDialog(data,type){
+                type=='edit'?this.isDisable=false:this.isDisable=true
+                this.editFormTitle = type=='edit'?"编辑代理商店铺（编号："+data.shopNo+"）":"查看代理商店铺（编号："+data.shopNo+"）"
                 this.getInfoById(data.id);
                 this.editDialogVisible = true;
             },
@@ -562,7 +573,7 @@ import addressComponent from '../components/address.vue';
                 }).then(function(response){
                     self.loading = false;
                     self.editForm = response.data.result;
-                    console.log(response);
+                    console.log(self.editForm)
                 }).catch(function(err){
                     self.loading = false;
                     console.log(err);
@@ -642,7 +653,7 @@ import addressComponent from '../components/address.vue';
                 });
             },
             //提交字段校验
-            testData(data,addAddress,addAgentAddress){
+            testData(data,Address,AgentAddress){
                 const self = this;
                 let isMobile = /^1\d{10}$/
                 //店铺名判断
@@ -718,7 +729,7 @@ import addressComponent from '../components/address.vue';
                     return false
                 }
                 //收件地址判断
-                if(!addAddress.provinceCode||!addAddress.cityCode||!addAddress.areaCode){
+                if(!Address.provinceCode||!Address.cityCode||!Address.areaCode){
                     self.loading = false;
                     self.$message({
                         message:'收件地址不得为空',
@@ -737,7 +748,7 @@ import addressComponent from '../components/address.vue';
                 }
                 //代理区域判断
                 if(data.agentGradeId==265){
-                    if(!addAgentAddress.provinceCode||!addAgentAddress.cityCode||!addAgentAddress.areaCode){
+                    if(!AgentAddress.provinceCode||!AgentAddress.cityCode||!AgentAddress.areaCode){
                         self.loading = false;
                         self.$message({
                             message:'代理区域不得为空',
@@ -799,8 +810,59 @@ import addressComponent from '../components/address.vue';
                 }).catch(function(err){
                     self.loading = false;
                 });
+            },
+            // 修改店铺
+            editAgent(){
+                const self = this;
+                if(!self.checkSession())return;
+                self.loading = true;
+                const data = self.editForm;
+                let editAddress = self.$refs.editAddress.getData();
+                let editAgentAddress = self.$refs.editAgentAddress.getData();
+                if (!self.testData(data,editAddress,editAgentAddress))return;
+                //请求
+                self.$ajax({
+                    url: '/api/shop/shopManage/modify.jhtml',
+                    method: 'post',
+                    data: {
+                        'shop.id':data.id,
+                        'shop.shopName':data.shopName,
+                        'shop.name':data.name,
+                        'shop.phone':data.phone,
+                        'shop.signedTime':data.signedTime,
+                        'shop.agentGradeId':data.agentGradeId,
+                        'shop.provinceCode':editAddress.provinceCode,
+                        'shop.cityCode':editAddress.cityCode,
+                        'shop.countyCode':editAddress.areaCode,
+                        'shop.agentProvince':data.agentGradeId==265?editAgentAddress.provinceCode:'',
+                        'shop.agentCity':data.agentGradeId==265?editAgentAddress.cityCode:'',
+                        'shop.agentCounty':data.agentGradeId==265?editAgentAddress.areaCode:'',
+                        'shop.address':data.address,
+                    },
+                    transformRequest: [function (data) {
+                        let ret = ''
+                        for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                        return ret
+                    }],
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    console.log(response)
+                    self.$message({
+                        message:response.data.msg,
+                        type:'success'
+                    })
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000)
+                }).catch(function(err){
+                    self.loading = false;
+                });
             }
-
         }
     }
 </script>
