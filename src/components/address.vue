@@ -4448,7 +4448,6 @@
                 return this.DISTRICTS[100000];
             },
             cityList() {
-                console.log("11"+this.provinceCode)
                 this.onSelect.cityCode = this.cityCode;    
                 return this.DISTRICTS[this.onSelect.provinceCode];
             },
@@ -4463,15 +4462,11 @@
                 // 省
                 let provinceCode = this.onSelect.provinceCode;
                 let provinceName = data[100000][provinceCode];
-                console.log(provinceCode);
-                // console.log('A11'+data[provinceCode]);
                 let province = data[provinceCode] ? data[provinceCode] : data[110000]; 
 
                 // 市
                 let cityCode = this.onSelect.cityCode;
                 let cityName = province[cityCode];
-                console.log(cityCode);
-                // console.log('B'+data[cityCode]);
                 let city = data[cityCode] ? data[cityCode] : data[110100];
 
                 // 区
