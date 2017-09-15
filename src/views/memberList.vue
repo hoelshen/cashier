@@ -9,32 +9,32 @@
 		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="5">
+		    		<el-col :span="6">
 		    			<el-form-item label="手机">
 		    			<el-input v-model="searchData.searchPhone" placeholder="手机号"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-		    		<el-col :span="5">
+		    		<el-col :span="6">
 		    			<el-form-item label="姓名">
 		    			<el-input v-model="searchData.searchName" placeholder="姓名"></el-input>
 		    			</el-form-item>
 		    		</el-col>
-				<el-col :span="6">
-		    			<el-form-item label="注册时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
-		    			</el-form-item>
-		    		</el-col>
-		    		<el-col :span="2">
-		    			<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
-		    		</el-col>
-		    	</el-row>
-		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="会员等级">
 		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择">
 		    				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 		    			</el-select>
 		    			</el-form-item>
+		    		</el-col>
+		    	</el-row>
+		    	<el-row :gutter="20">
+				<el-col :span="7" style="margin-left:-15px;">
+		    			<el-form-item label="注册时间">
+		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			</el-form-item>
+		    		</el-col>
+		    		<el-col :span="17">
+		    			<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
 		    		</el-col>
 		    	</el-row>
 		</el-form>
@@ -137,7 +137,7 @@ export default {
     methods: {
     	onSumbit(){
 	var temp = new Date(this.searchData.searchTime[0]);
-		if (temp.getFullYear() > 2016) {
+		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
 			if ((temp.getMonth() + 1)<10) {
 				time1 =  time1+ '-0' + (temp.getMonth() + 1);
@@ -208,7 +208,7 @@ export default {
 	  },
 	handleCurrentChange(val) {
     	var temp = new Date(this.searchData.searchTime[0]);
-		if (temp.getFullYear() > 2016) {
+		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
 			if ((temp.getMonth() + 1)<10) {
 				time1 =  time1+ '-0' + (temp.getMonth() + 1);

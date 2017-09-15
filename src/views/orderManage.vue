@@ -35,11 +35,6 @@
 		    		</el-col>
 		    	</el-row>
 		    	<el-row :gutter="20">
-				<el-col :span="6">
-		    			<el-form-item label="下单时间" label-width="72px">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
-		    			</el-form-item>
-		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
 		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
@@ -47,6 +42,11 @@
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
 		    			</el-select>
+		    			</el-form-item>
+		    		</el-col>
+				<el-col :span="6">
+		    			<el-form-item label="下单时间" label-width="72px">
+		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    	</el-row>
