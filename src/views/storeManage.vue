@@ -61,7 +61,12 @@
                         </el-table-column>
                         <el-table-column prop="shopName" label="店铺名称">
                         </el-table-column>
-                        <el-table-column prop="agentLevelIds" label="代理商等级">
+                        <el-table-column prop="agentGradeId" label="代理商等级">
+                            <template  scope="scope">
+                                <span v-if="scope.row.agentGradeId==31" >单店代理</span>
+                                <span v-if="scope.row.agentGradeId==265" >区域代理</span>
+                                <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable min-width="100" >
                         </el-table-column>
@@ -70,17 +75,17 @@
                         <el-table-column prop="state" label="状态">
                             <template scope="scope">
                                 <p>
-                                    <span v-if="scope.row.state==1" ><span class="green-color"></span>启用</span>
-                                    <span v-if="scope.row.state==0" ><span class="red-color"></span>禁用</span>
+                                    <span v-if="scope.row.state==0" ><span class="green-color"></span>启用</span>
+                                    <span v-if="scope.row.state==1" ><span class="red-color"></span>禁用</span>
                                 </p>
                             </template>
                         </el-table-column>
                         <el-table-column label="操作" width="240">
                             <template scope="scope">
                                 <p class="operation">
-                                    <span v-if="scope.row.state==0">启用</span>
-                                    <span v-if="scope.row.state==1">禁用</span>
-                                    <span>修改</span>
+                                    <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
+                                    <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
+                                    <span @click="openEditDialog(scope.row)">修改</span>
                                     <span>详情</span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
@@ -96,8 +101,8 @@
         </div>
         <!-- 表格 end -->
         <!-- 新增店铺弹窗 start -->
-        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible">
-            <el-form :model="changeForm">
+        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" >
+            <el-form :model="addForm" label-width="120px" ref="addForm">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="店铺名称：">
@@ -109,14 +114,102 @@
                             <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="addForm.phone" placeholder="代理商手机"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="addForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：">
+                            <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable >
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-show="addForm.agentGradeId=='265'">
+                        <el-form-item label="代理区域：">
+                            <addressComponent ref='addAgentAddress'/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent ref='addAddress'/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
+                        </el-form-item>
+                    </el-col>
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addDialogVisible = false">确 定</el-button>
+                <el-button type="primary" @click="addAgent">确 定</el-button>
                 <el-button @click="addDialogVisible = false">取 消</el-button>
             </div>
         </el-dialog>
         <!-- 新增店铺弹窗 end -->
+        <!-- 修改店铺及店铺详情弹窗 start -->
+        <el-dialog title="修改代理商店铺" :visible.sync="editDialogVisible" >
+            <el-form :model="editForm" label-width="120px" ref="editForm">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商姓名：">
+                            <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="editForm.phone" placeholder="代理商手机" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="editForm.signedTime" type="date"  placeholder="选择日期" :picker-options="pickerOptions" disabled>
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：">
+                            <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-if="editForm.agentGradeId=='265'">
+                        <el-form-item label="代理区域：">
+                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='addAgentAddress'  :disabled="isDisable"/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode"  ref='addAddress' :disabled="isDisable"/>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="editForm.address" placeholder="详细地址" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addAgent">确 定</el-button>
+                <el-button @click="editDialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改店铺及店铺详情弹窗 end -->
         <!-- 预存款变更弹窗 start -->
         <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny">
             <el-form :model="changeForm">
@@ -170,7 +263,8 @@
 </template>
 
 <script>
-import levelArray from '../components/config/agentLevel.config';
+import Utils from '../components/tools/Utils';
+import addressComponent from '../components/address.vue';
     export default {
         data(){
             return {
@@ -186,10 +280,10 @@ import levelArray from '../components/config/agentLevel.config';
                     agentLevelIds:[],
                 },
                 myData: [],
-                levelArray, //代理商等级数组
+                levelArray:[], //代理商等级数组
                 stateArray:[
-                    {index:1,name:'启用'},
-                    {index:2,name:'禁用'},
+                    {index:0,name:'启用'},
+                    {index:1,name:'禁用'},
                 ],
                 loading: false,
                 //日期选择器
@@ -199,6 +293,7 @@ import levelArray from '../components/config/agentLevel.config';
                     }
                 },
                 addDialogVisible:false,
+                editDialogVisible:false,
                 dialogFormVisible:false,
                 changeTitle:'',
                 changeForm:{
@@ -208,27 +303,99 @@ import levelArray from '../components/config/agentLevel.config';
                     alterMoney:'',
                     remark:'',
                 },
-                addForm:{}
+                addForm:{
+                    shopName:'',
+                    name:'',
+                    phone:'',
+                    signedTime:'',
+                    agentGradeId:'',
+                    provinceCode:'',
+                    cityCode:'',
+                    countyCode:'',
+                    agentProvince:'',
+                    agentCity:'',
+                    agentCounty:'',
+                    address:''
+                },
+                editForm:{
+                    id:'',
+                    shopName:'',
+                    name:'',
+                    phone:'',
+                    signedTime:'',
+                    agentGradeId:'',
+                    provinceCode:'',
+                    cityCode:'',
+                    countyCode:'',
+                    agentProvince:'',
+                    agentCity:'',
+                    agentCounty:'',
+                    address:''
+                },
+                isDisable:false
             }
         },
+        components: {
+            addressComponent
+        },
         created(){
-                const self = this;
-                self.loading = true;
-                self.$ajax({
-                    url: '/api/shop/ShopManage/search.jhtml',
-                    method: 'get',
-                }).then(function(response){
-                    console.log(response)
-                    self.myData = response.data.rows;
-                    self.totalSize = response.data.total
-                    self.loading = false;
-                }).catch(function(error){
-                    console.log(error)
-                    self.loading = false;
-                    this.dialogFormVisible = true;
-                });
+            const self = this;
+            if(!self.checkSession())return;
+            self.loading = true;
+            //获取代理商等级列表
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml',{
+            }).then(function(response){
+                console.log(response);
+                if(response.data.success==1){
+                    self.levelArray = response.data.result
+                }else{
+                    self.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
+                }
+                
+            }).catch(function(err){
+                console.log(err);
+            });
+            //获取列表数据
+            self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                params:{
+                    'pager.pageIndex':self.currentPage,
+                    'pager.pageSize':self.pageSize
+                }
+            }).then(function(response){
+                self.loading = false;
+                self.myData = response.data.rows;
+                self.totalSize = response.data.total
+                console.log(response);
+            }).catch(function(err){
+                self.loading = false;
+                console.log(err);
+            });
+
         },
         methods: {
+            //判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
             onChange(){
                 if (!this.changeForm.changeType) {
                     alert("请选择一个变动类型！");
@@ -288,34 +455,350 @@ import levelArray from '../components/config/agentLevel.config';
                 this.changeTitle = "编辑代理商店铺（编号："+shopNo+"）"
                 this.dialogFormVisible = true;
             },
+            //查询
             onSubmit:function(){
                 const self = this;
+                if(!self.checkSession())return;
+                self.currentPage = 1;
                 self.loading = true;
-                self.$ajax({
-                    url: '/api/shop/ShopManage/search.jhtml',
-                    method: 'get',
-                    data:{
-                        'page.pageSize':2
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
                     }
                 }).then(function(response){
-                    console.log(response)
+                    self.loading = false;
                     self.myData = response.data.rows;
                     self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
                     self.loading = false;
-                }).catch(function(error){
-                    console.log(error)
-                    self.loading = false;
+                    console.log(err);
                 });
             },
-            handleSizeChange:function(){
-
+            //改变每页显示的条数
+            handleSizeChange:function(val){
+                const self = this;
+                if(!self.checkSession())return;
+                self.pageSize = val;
+                self.currentPage = 1;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
             },
-            handleCurrentChange:function(){
-                
+            //改变当前页
+            handleCurrentChange:function(val){
+                const self = this;
+                if(!self.checkSession())return;
+                self.currentPage = val;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+                    params:{
+                        'pager.pageIndex':self.currentPage,
+                        'pager.pageSize':self.pageSize,
+                        'shop.shopName':self.searchData.shopName,
+                        'shop.phone':self.searchData.phone,
+                        'shop.name':self.searchData.name,
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.state':self.searchData.state,
+                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(',')
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
             },
             //打开新增店铺弹窗
             openAddDialog(){
                 this.addDialogVisible = true;
+            },
+            //打开修改店铺及店铺详情弹窗
+            openEditDialog(data){
+                console.log(data)
+                this.getInfoById(data.id);
+                this.editDialogVisible = true;
+            },
+            // 获取选中店铺信息
+            getInfoById(id){
+                const self = this;
+                if(!self.checkSession())return;
+                self.loading = true;
+                self.$ajax.get('/api/http/shop/searchShop.jhtml',{
+                    params:{
+                        'shopId':id,
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    self.editForm = response.data.result;
+                    console.log(response);
+                }).catch(function(err){
+                    self.loading = false;
+                    console.log(err);
+                });
+            },
+            //修改代理商状态
+            updateAgentState(data){
+                const self =this;
+                if(!self.checkSession())return;
+                const h = self.$createElement;
+                const stateCN = data.state==0?'禁用':'启用';
+                self.$msgbox({
+                title: '确定'+stateCN+'？',
+                message: h('div', {style:'padding:10px'}, [
+                    h('div', {style:data.state==0?'padding:5px':''}, [
+                        h('span',{style:'color:red'},data.state==0?'禁用后门店将无法使用系统':''),
+                        h('span',null,data.state==0?'，你还要继续吗？':''),
+                    ]),
+                    h('div', {style:'padding:5px;display:flex'}, [
+                        h('div',{style:'flex:1'},[
+                            h('span',null,'代理商姓名：'),
+                            h('span',{style:'color:red'},data.name)
+                        ]),
+                        h('div',null,[
+                            h('span',{style:'margin-left:15px'},'代理商手机：'),
+                            h('span',{style:'color:red'},data.phone)
+                        ])
+
+                    ]),
+                    h('div', {style:'padding:5px'}, [
+                        h('span',{style:'padding-left:14px'},'店铺名称：'),
+                        h('span',{style:'color:red'},data.shopName),
+                    ]),
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                }).then(action => {
+                    self.loading = true;
+                    self.$ajax({
+                        url: '/api/shop/shopManage/updateState.jhtml',
+                        method: 'post',
+                        data: {
+                            'shop.id':data.id,
+                            'shop.state':data.state==0?1:0
+                        },
+                        transformRequest: [function (data) {
+                            let ret = ''
+                            for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                            return ret
+                        }],
+                        headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    }).then(function(response){
+                        self.loading = false;
+                        if(response.data.success==1){
+                            self.$message({
+                                message: '编号：'+data.shopNo+' '+stateCN+'成功',
+                                type:'success'
+                            })
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000)
+                        }else{
+                            self.$message({
+                                message:response.data.msg,
+                                type:'error'
+                            })
+                        }
+                    }).catch(function(err){
+                        self.loading = false;
+                    });
+
+                });
+            },
+            //提交字段校验
+            testData(data,addAddress,addAgentAddress){
+                const self = this;
+                let isMobile = /^1\d{10}$/
+                //店铺名判断
+                if(!data.shopName){
+                    self.loading = false;
+                    self.$message({
+                        message:'店铺名不得为空',
+                        type:'error'
+                    })
+                    return false
+                }else{
+                    if(data.shopName.length>50){
+                        self.loading = false;
+                        self.$message({
+                            message:'店铺名长度不得大于50',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                //代理商姓名判断
+                if(!data.name){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商姓名不得为空',
+                        type:'error'
+                    })
+                    return false
+                }else{
+                    if(data.name.length>10){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理商姓名长度不得大于10',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                //代理商手机判断
+                if(!data.phone){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商手机不得为空',
+                        type:'error'
+                    })
+                    return false
+                }else{
+                    if(!isMobile.test(data.phone)){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理商手机格式有误',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                //合同签约日期判断
+                if(!data.signedTime){
+                    self.loading = false;
+                    self.$message({
+                        message:'合同签约日期不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //代理商等级判断
+                if(!data.agentGradeId){
+                    self.loading = false;
+                    self.$message({
+                        message:'代理商等级不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //收件地址判断
+                if(!addAddress.provinceCode||!addAddress.cityCode||!addAddress.areaCode){
+                    self.loading = false;
+                    self.$message({
+                        message:'收件地址不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //详细地址判断
+                if(!data.address){
+                    self.loading = false;
+                    self.$message({
+                        message:'详细地址不得为空',
+                        type:'error'
+                    })
+                    return false
+                }
+                //代理区域判断
+                if(data.agentGradeId==265){
+                    if(!addAgentAddress.provinceCode||!addAgentAddress.cityCode||!addAgentAddress.areaCode){
+                        self.loading = false;
+                        self.$message({
+                            message:'代理区域不得为空',
+                            type:'error'
+                        })
+                        return false
+                    }
+                }
+                return true
+                
+            },
+            // 新增店铺
+            addAgent(){
+                const self = this;
+                if(!self.checkSession())return;
+                self.loading = true;
+                const data = self.addForm;
+                let addAddress = self.$refs.addAddress.getData();
+                let addAgentAddress = self.$refs.addAgentAddress.getData();
+                if (!self.testData(data,addAddress,addAgentAddress))return;
+                //请求
+                self.$ajax({
+                    url: '/api/shop/shopManage/modify.jhtml',
+                    method: 'post',
+                    data: {
+                        'shop.shopName':data.shopName,
+                        'shop.name':data.name,
+                        'shop.phone':data.phone,
+                        'shop.signedTime':Utils.formatDayDate(data.signedTime),
+                        'shop.agentGradeId':data.agentGradeId,
+                        'shop.provinceCode':addAddress.provinceCode,
+                        'shop.cityCode':addAddress.cityCode,
+                        'shop.countyCode':addAddress.areaCode,
+                        'shop.agentProvince':data.agentGradeId==265?addAgentAddress.provinceCode:'',
+                        'shop.agentCity':data.agentGradeId==265?addAgentAddress.cityCode:'',
+                        'shop.agentCounty':data.agentGradeId==265?addAgentAddress.areaCode:'',
+                        'shop.address':data.address,
+                    },
+                    transformRequest: [function (data) {
+                        let ret = ''
+                        for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                        return ret
+                    }],
+                    headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response){
+                    self.loading = false;
+                    console.log(response)
+                    self.$message({
+                        message:response.data.msg,
+                        type:'success'
+                    })
+                    setTimeout(function() {
+                        window.location.reload();
+                    }, 1000)
+                }).catch(function(err){
+                    self.loading = false;
+                });
             }
 
         }
