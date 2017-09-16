@@ -6,17 +6,17 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号"></el-input>
+		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
@@ -112,7 +112,61 @@
             }
         },
         methods: {
+            //判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
             onSumbit() {
+                if(!this.checkSession())return;
+                console.log(this.searchData.searchTime);
+                console.log(this.searchData.searchTime[0]);
+                var temp = new Date(this.searchData.searchTime[0]);
+                if (temp.getFullYear() > 2006) {
+                    var time1 = temp.getFullYear();
+                    if ((temp.getMonth() + 1)<10) {
+                        time1 =  time1+ '-0' + (temp.getMonth() + 1);
+                    }else{
+                        time1 =  time1+ '-' + (temp.getMonth() + 1);
+                    }
+                    if (temp.getDate()<10) {
+                        time1 =  time1+ '-0' + temp.getDate();
+                    }else{
+                        time1 =  time1+ '-' + temp.getDate();
+                    }
+                    console.log(time1);
+                    temp = new Date(this.searchData.searchTime[1]);
+                    var time2 = temp.getFullYear();
+                    if ((temp.getMonth() + 1)<10) {
+                        time2 =  time2+ '-0' + (temp.getMonth() + 1);
+                    }else{
+                        time2 =  time2+ '-' + (temp.getMonth() + 1);
+                    }
+                    if (temp.getDate()<10) {
+                        time2 =  time2+ '-0' + temp.getDate();
+                    }else{
+                        time2 =  time2+ '-' + temp.getDate();
+                    }
+                    console.log(time2);
+                }else{
+                    var time1 = '';
+                    var time2 = '';
+                }
                 if (this.searchData.searchLevel != '') {
                     this.searchData.level = this.searchData.searchLevel.join(',');
                 } else {
@@ -131,8 +185,8 @@
                         'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                         'purchaseOrder.state': this.searchData.searchState,
                         'purchaseOrder.agentGradeIds': this.searchData.level,
-                        'advanceDeposit.startTime': this.searchData.searchTime[0],
-                        'advanceDeposit.endTime': this.searchData.searchTime[1],
+                        'purchaseOrder.startTime': time1,
+                        'purchaseOrder.endTime': time2,
                     },
                     transformRequest: [function(data) {
                         // Do whatever you want to transform the data
@@ -160,6 +214,7 @@
                 console.log(`每页 ${val} 条`);
             },
             handleCurrentChange(val) {
+                if(!this.checkSession())return;
                 if (this.searchData.searchLevel != '') {
                     this.searchData.level = this.searchData.searchLevel.join(',');
                 } else {
@@ -176,8 +231,8 @@
                         'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                         'purchaseOrder.state': this.searchData.searchState,
                         'purchaseOrder.agentGradeIds': this.searchData.level,
-                        'advanceDeposit.startTime': this.searchData.searchTime[0],
-                        'advanceDeposit.endTime': this.searchData.searchTime[1],
+                        'purchaseOrder.startTime': this.searchData.searchTime[0],
+                        'purchaseOrder.endTime': this.searchData.searchTime[1],
                         'purchaseOrder.sort': 'orderSum',
                         'purchaseOrder.order': this.order,
                     },
@@ -195,6 +250,7 @@
                 console.log(`当前页: ${val}`);
             },
             store(row, column) {
+                if(!this.checkSession())return;
                 console.log(row);
                 if (row.order === 'ascending') {
                     this.order = 'asc';
@@ -218,8 +274,8 @@
                         'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                         'purchaseOrder.state': this.searchData.searchState,
                         'purchaseOrder.agentGradeIds': this.searchData.level,
-                        'advanceDeposit.startTime': this.searchData.searchTime[0],
-                        'advanceDeposit.endTime': this.searchData.searchTime[1],
+                        'purchaseOrder.startTime': this.searchData.searchTime[0],
+                        'purchaseOrder.endTime': this.searchData.searchTime[1],
                         'purchaseOrder.sort': 'orderSum',
                         'purchaseOrder.order': this.order,
                     },

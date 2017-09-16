@@ -6,17 +6,17 @@
 		    	<el-row :gutter="10">
 				<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="手机号"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="手机号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="姓名">
-		    			<el-input v-model="searchData.searchName" placeholder="姓名"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="姓名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
@@ -135,7 +135,28 @@ export default {
         }
     },
     methods: {
+	//判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
     	onSumbit(){
+	if(!this.checkSession())return;
 	var temp = new Date(this.searchData.searchTime[0]);
 		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
@@ -207,6 +228,7 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	if(!this.checkSession())return;
     	var temp = new Date(this.searchData.searchTime[0]);
 		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();

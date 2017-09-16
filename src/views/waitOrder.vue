@@ -6,17 +6,17 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号"></el-input>
+		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
@@ -114,7 +114,28 @@ export default {
         }
     },
     methods: {
+	//判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
     	onSumbit(){
+	if(!this.checkSession())return;
 	if (this.searchData.searchLevel !='') {
     		this.searchData.level = this.searchData.searchLevel.join(',');
     	}else{
@@ -132,8 +153,8 @@ export default {
 			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
 			'purchaseOrder.state':this.searchData.searchState,
 			'purchaseOrder.agentGradeId':this.searchData.level,
-			'advanceDeposit.startTime':this.searchData.searchTime[0],
-			'advanceDeposit.endTime':this.searchData.searchTime[1],
+			'purchaseOrder.startTime':this.searchData.searchTime[0],
+			'purchaseOrder.endTime':this.searchData.searchTime[1],
 			'purchaseOrder.state':'WAIT_CHECK',
 		},
 		success(response){
@@ -152,6 +173,7 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	if(!this.checkSession())return;
 	if (this.searchData.searchLevel !='') {
     		this.searchData.level = this.searchData.searchLevel.join(',');
     	}else{
@@ -169,8 +191,8 @@ export default {
 			'purchaseOrder.purchaseOrderNo':this.searchData.searchOrderNo,
 			'purchaseOrder.state':this.searchData.searchState,
 			'purchaseOrder.agentGradeId':this.searchData.level,
-			'advanceDeposit.startTime':this.searchData.searchTime[0],
-			'advanceDeposit.endTime':this.searchData.searchTime[1],
+			'purchaseOrder.startTime':this.searchData.searchTime[0],
+			'purchaseOrder.endTime':this.searchData.searchTime[1],
 			'purchaseOrder.state':'WAIT_CHECK',
 		},
 		success(response){
@@ -187,6 +209,7 @@ export default {
 	    console.log(`当前页: ${val}`);
 	},
 	store(row, column) {
+		if(!this.checkSession())return;
 		console.log(row);
 		if (row.order === 'ascending') {
 			this.order = 'asc';

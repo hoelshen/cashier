@@ -47,9 +47,12 @@
         watch: {
             '$route'(val) {
                 this.contentName = this.configName[val.fullPath];
-            if (/orderInfo/.test(val.fullPath)){
-                this.contentName="进货单详情";
-            }
+                if (/orderInfo/.test(val.fullPath)){
+                    this.contentName="进货单详情";
+                }
+                if (/prepaidManage/.test(val.fullPath)){
+                    this.contentName="预存款查询";
+                }
             },
         },
         created() {

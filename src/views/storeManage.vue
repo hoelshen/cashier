@@ -409,6 +409,7 @@ import $ from 'jquery';
                 }
             },
             onChange(){
+                    if(!this.checkSession())return;
                 if (!this.changeForm.changeType) {
                     alert("请选择一个变动类型！");
                     return;
@@ -421,7 +422,7 @@ import $ from 'jquery';
                     alert("变更金额格式错误！");
                     return;
                 }
-                if (!/^[\u4e00-\u9fa5\，\w\-]{1,50}$/.test(this.changeForm.remark)){
+                if (!/^[\u4e00-\u9fa5\，\w\-]{0,50}$/.test(this.changeForm.remark)){
                     alert("备注长度错误或存在非法字符！");
                     return;
                 }
@@ -461,6 +462,7 @@ import $ from 'jquery';
                 this.dialogFormVisible = false;
             },
             chengPre(id,shopName,shopNo){
+                    if(!this.checkSession())return;
                 console.log(id);
                 this.changeForm.changeShopId = id;
                 this.changeForm.changeShopName = shopName;
