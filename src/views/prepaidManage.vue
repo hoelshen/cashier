@@ -16,7 +16,7 @@
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="变动类型">
-		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择">
+		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
 		    				<el-option label="扣款" value="DEDUCTIONS"></el-option>
 		    				<el-option label="进货" value="PURCHASE"></el-option>
@@ -26,7 +26,7 @@
 		    		</el-col>
 				<el-col :span="7">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" @keyup.enter.native="onSumbit">
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
@@ -37,7 +37,7 @@
 		    	<el-row :gutter="10">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="变更时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -187,12 +187,22 @@ export default {
 			success(response){
 				this.tableData = response.data.result;
 		         		this.totalNums=response.data.totalNums;
+			         	this.$message({
+		                        message:'查询成功',
+		                        type:'success'
+	                    	})
 			},
 			fail(response){
-				alert(response.data.msg);
+			this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+		                    })
 			},
 			error(response){
-				alert(response.data.msg);
+			this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+		                    })
 			}
 	    	});
     	},
@@ -247,12 +257,22 @@ export default {
 		success(response){
 			this.tableData = response.data.result;
 	         		this.totalNums=response.data.totalNums;
+	         		this.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
 		},
 		fail(response){
-			alert(response.data.msg);
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		},
 		error(response){
-			alert(response.data.msg);
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		}
     	});
 		console.log(`当前页: ${val}`);
@@ -282,6 +302,12 @@ export default {
 		success(response){
 			this.tableData = response.data.result;
 	         		this.totalNums=response.data.totalNums;
+		},
+		fail(response){
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		}
     	});
     },

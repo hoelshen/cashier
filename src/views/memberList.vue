@@ -21,7 +21,7 @@
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="会员等级">
-		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择">
+		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
 		    				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 		    			</el-select>
 		    			</el-form-item>
@@ -30,7 +30,7 @@
 		    	<el-row :gutter="20">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="注册时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -217,8 +217,15 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
+		self.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
                     }else{
-                        alert(response.data.msg);
+		self.$message({
+		    message:response.data.msg,
+		    type:'error'
+		})
                     }
                 }).catch(function(error){
 
@@ -289,8 +296,15 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
+		self.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
                     }else{
-                        alert(response.data.msg);
+                        self.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     }
                 }).catch(function(error){
 
@@ -353,6 +367,12 @@ export default {
 			console.log(response);
 			this.tableData = response.data.rows;
 	         		this.totalNums=response.data.total;
+		},
+		fail(response){
+		this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+                    		})
 		}
     	});
     },

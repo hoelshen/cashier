@@ -21,7 +21,7 @@
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="状态" label-width="50px">
-		    			<el-select v-model="searchData.searchState" clearable placeholder="请选择">
+		    			<el-select v-model="searchData.searchState" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
 		    				<el-option label="待审核" value="WAIT_CHECK"></el-option>
 		    				<el-option label="待发货" value="WAIT_SEND"></el-option>
 		    				<el-option label="已发货" value="DELIVERED"></el-option>
@@ -35,20 +35,20 @@
 		    		</el-col>
 		    	</el-row>
 		    	<el-row :gutter="20">
-				<el-col :span="6">
-		    			<el-form-item label="下单时间" label-width="72px">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
-		    			</el-form-item>
-		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" @keyup.enter.native="onSumbit">
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
+                                                    <el-col :span="6">
+                                                    <el-form-item label="下单时间" label-width="72px">
+                                                    <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围" @keyup.enter.native="onSumbit"></el-date-picker>
+                                                    </el-form-item>
+                                                </el-col>
 		    	</el-row>
 		</el-form>
 	</div>
@@ -203,8 +203,15 @@
                     if (response.data.success === 1) {
                         self.tableData = response.data.result;
                         self.totalNums = response.data.totalNums;
+                        self.$message({
+                            message:'查询成功',
+                            type:'success'
+                        })
                     } else {
-                        alert(response.data.msg);
+                            self.$message({
+                            message:response.data.msg,
+                            type:'error'
+                        })
                     }
                 }).catch(function(error) {
 
@@ -239,12 +246,22 @@
                     success(response) {
                         this.tableData = response.data.result;
                         this.totalNums = response.data.totalNums;
+                        this.$message({
+                            message:'查询成功',
+                            type:'success'
+                        })
                     },
                     fail(response) {
-                        alert(response.data.msg);
+                        this.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     },
                     error(response) {
-                        alert(response.data.msg);
+                        this.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     }
                 });
                 console.log(`当前页: ${val}`);
@@ -282,12 +299,22 @@
                     success(response) {
                         this.tableData = response.data.result;
                         this.totalNums = response.data.totalNums;
+                        this.$message({
+                            message:'查询成功',
+                            type:'success'
+                        })
                     },
                     fail(response) {
-                        alert(response.data.msg);
+                        this.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     },
                     error(response) {
-                        alert(response.data.msg);
+                        this.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     }
                 });
             },
@@ -307,7 +334,10 @@
                     this.totalNums = response.data.totalNums;
                 },
                 fail(response) {
-                    alert(response.data.msg);
+                   this.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                 },
             });
         },
