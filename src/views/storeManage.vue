@@ -413,7 +413,6 @@ import $ from 'jquery';
             onChange(){
                 const self = this;
                 if(!self.checkSession())return;
-                
                 if (!self.changeForm.changeType) {
                     self.$message({
                         message:"请选择一个变动类型！",
@@ -435,7 +434,7 @@ import $ from 'jquery';
                     })
                     return;
                 }
-                if (!/^[\u4e00-\u9fa5\，\w\-]{1,50}$/.test(self.changeForm.remark)){
+                if (!/^[\u4e00-\u9fa5\，\w\-]{0,50}$/.test(self.changeForm.remark)){
                     self.$message({
                         message:"备注长度错误或存在非法字符！",
                         type:'error'
@@ -488,6 +487,7 @@ import $ from 'jquery';
                 self.dialogFormVisible = false;
             },
             chengPre(id,shopName,shopNo){
+                if(!this.checkSession())return;
                 this.changeForm.changeShopId = id;
                 this.changeForm.changeShopName = shopName;
                 this.changeTitle = "编辑代理商店铺（编号："+shopNo+"）"
@@ -861,7 +861,6 @@ import $ from 'jquery';
 
                 }
                 return true
-                
             },
             // 新增店铺
             addAgent(){

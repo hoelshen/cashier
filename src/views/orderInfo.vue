@@ -118,7 +118,10 @@ export default {
                         this.shopInfo = response.data.result.shop;
                     },
                     fail(response){
-                            alert(response.data.msg);
+                               this.$message({
+                            message:response.data.msg,
+                            type:'error'
+                        })
                     },
             });
     }
