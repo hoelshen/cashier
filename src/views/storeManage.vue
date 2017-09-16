@@ -97,7 +97,7 @@
                     </el-table>
                 </el-row>
                 <div class="plPage clearfix">
-                    <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page="currentPage" :page-sizes="[10, 20, 30, 40, 50]" :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="totalSize">
+                    <el-pagination  @current-change="handleCurrentChange" :current-page="currentPage"  :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
                     </el-pagination>
                 </div>
             </el-row>
@@ -473,7 +473,7 @@ import $ from 'jquery';
                                 type:'success'
                             })
                             setTimeout(function() {
-                                window.location.reload();
+                                self.handleCurrentChange(self.currentPage);
                             }, 1000)
                         }
                     }else{
@@ -528,36 +528,36 @@ import $ from 'jquery';
                 });
             },
             //改变每页显示的条数
-            handleSizeChange:function(val){
-                const self = this;
-                if(!self.checkSession())return;
-                self.pageSize = val;
-                self.currentPage = 1;
-                self.loading = true;
-                self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
-                    params:{
-                        'pager.pageIndex':self.currentPage,
-                        'pager.pageSize':self.pageSize,
-                        'shop.shopName':self.searchData.shopName,
-                        'shop.phone':self.searchData.phone,
-                        'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
-                        'shop.state':self.searchData.state,
-                        'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
-                        'shop.sort':'depositAmount',
-                        'shop.order':self.order
-                    }
-                }).then(function(response){
-                    self.loading = false;
-                    self.myData = response.data.rows;
-                    self.totalSize = response.data.total
-                    console.log(response);
-                }).catch(function(err){
-                    self.loading = false;
-                    console.log(err);
-                });
-            },
+            // handleSizeChange:function(val){
+            //     const self = this;
+            //     if(!self.checkSession())return;
+            //     self.pageSize = val;
+            //     self.currentPage = 1;
+            //     self.loading = true;
+            //     self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+            //         params:{
+            //             'pager.pageIndex':self.currentPage,
+            //             'pager.pageSize':self.pageSize,
+            //             'shop.shopName':self.searchData.shopName,
+            //             'shop.phone':self.searchData.phone,
+            //             'shop.name':self.searchData.name,
+            //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
+            //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+            //             'shop.state':self.searchData.state,
+            //             'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+            //             'shop.sort':'depositAmount',
+            //             'shop.order':self.order
+            //         }
+            //     }).then(function(response){
+            //         self.loading = false;
+            //         self.myData = response.data.rows;
+            //         self.totalSize = response.data.total
+            //         console.log(response);
+            //     }).catch(function(err){
+            //         self.loading = false;
+            //         console.log(err);
+            //     });
+            // },
             //改变当前页
             handleCurrentChange:function(val){
                 const self = this;
@@ -714,7 +714,7 @@ import $ from 'jquery';
                                 type:'success'
                             })
                             setTimeout(function() {
-                                window.location.reload();
+                                self.handleCurrentChange(self.currentPage);
                             }, 1000)
                         }else{
                             self.$message({
@@ -838,6 +838,14 @@ import $ from 'jquery';
                         type:'error'
                     })
                     return false
+                }else{
+                    if(data.address.length>=100)
+                    self.loading = false;
+                    self.$message({
+                        message:'详细地址长度不得大于100个字符',
+                        type:'error'
+                    })
+                    return false
                 }
                 //代理区域判断
                 if(data.agentGradeId==265){
@@ -908,7 +916,7 @@ import $ from 'jquery';
                         type:'success'
                     })
                     setTimeout(function() {
-                        window.location.reload();
+                        self.handleCurrentChange(self.currentPage);
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
@@ -960,7 +968,7 @@ import $ from 'jquery';
                         type:'success'
                     })
                     setTimeout(function() {
-                        window.location.reload();
+                        self.handleCurrentChange(self.currentPage);
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
