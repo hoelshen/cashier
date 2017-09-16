@@ -408,32 +408,49 @@ import $ from 'jquery';
                     }
                 }
             },
+
+            //预存款变更
             onChange(){
-                if (!this.changeForm.changeType) {
-                    alert("请选择一个变动类型！");
-                    return;
-                }
-                if (!this.changeForm.alterMoney) {
-                    alert("变动金额不能为空！");
-                    return;
-                }
-                if(!/^[0-9\.]*$/.test(this.changeForm.alterMoney)){
-                    alert("变更金额格式错误！");
-                    return;
-                }
-                if (!/^[\u4e00-\u9fa5\，\w\-]{1,50}$/.test(this.changeForm.remark)){
-                    alert("备注长度错误或存在非法字符！");
-                    return;
-                }
                 const self = this;
+                if(!self.checkSession())return;
+                
+                if (!self.changeForm.changeType) {
+                    self.$message({
+                        message:"请选择一个变动类型！",
+                        type:'error'
+                    })
+                    return;
+                }
+                if (!self.changeForm.alterMoney) {
+                    self.$message({
+                        message:"变动金额不能为空！",
+                        type:'error'
+                    })
+                    return;
+                }
+                if(!/^[0-9\.]*$/.test(self.changeForm.alterMoney)){
+                    self.$message({
+                        message:"变更金额格式错误！",
+                        type:'error'
+                    })
+                    return;
+                }
+                if (!/^[\u4e00-\u9fa5\，\w\-]{1,50}$/.test(self.changeForm.remark)){
+                    self.$message({
+                        message:"备注长度错误或存在非法字符！",
+                        type:'error'
+                    })
+                    return;
+                }
+                self.loading = true;
                 self.$ajax({
                     url: '/api/shop/shopManage/updateDepositAmount.jhtml',
                     method: 'post',
                     data: {
-                         'advanceDeposit.shopId':this.changeForm.changeShopId,
-                          'advanceDeposit.changeType':this.changeForm.changeType,
-                          'advanceDeposit.alterMoney':this.changeForm.alterMoney,
-                          'advanceDeposit.remark':this.changeForm.remark,
+                         'advanceDeposit.shopId':self.changeForm.changeShopId,
+                          'advanceDeposit.changeType':self.changeForm.changeType,
+                          'advanceDeposit.alterMoney':self.changeForm.alterMoney,
+                          'advanceDeposit.remark':self.changeForm.remark,
                     },
                     transformRequest: [function (data) {
                         // Do whatever you want to transform the data
@@ -447,21 +464,30 @@ import $ from 'jquery';
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response){
+                    self.loading = false;
                     console.log(response)
                     if(response.data.result === 1){
                         if(window.sessionStorage){
-                            alert(response.data.msg);
+                            self.$message({
+                                message:response.data.msg,
+                                type:'success'
+                            })
+                            setTimeout(function() {
+                                window.location.reload();
+                            }, 1000)
                         }
                     }else{
-                        alert(response.data.msg);
+                        self.$message({
+                            message:response.data.msg,
+                            type:'error'
+                        })
                     }
                 }).catch(function(error){
 
                 });
-                this.dialogFormVisible = false;
+                self.dialogFormVisible = false;
             },
             chengPre(id,shopName,shopNo){
-                console.log(id);
                 this.changeForm.changeShopId = id;
                 this.changeForm.changeShopName = shopName;
                 this.changeTitle = "编辑代理商店铺（编号："+shopNo+"）"
@@ -786,6 +812,23 @@ import $ from 'jquery';
                         type:'error'
                     })
                     return false
+                }else{
+                    if(Address.cityCode==1){
+                        self.loading = false;
+                        self.$message({
+                            message:'请选择具体收件城市',
+                            type:'error'
+                        })
+                        return false
+                    }
+                    if(Address.areaCode==1){
+                        self.loading = false;
+                        self.$message({
+                            message:'请选择具体收件地区',
+                            type:'error'
+                        })
+                        return false
+                    }
                 }
                 //详细地址判断
                 if(!data.address){
@@ -805,7 +848,17 @@ import $ from 'jquery';
                             type:'error'
                         })
                         return false
+                    }else{
+                        if(AgentAddress.cityCode==1){
+                            self.loading = false;
+                            self.$message({
+                                message:'请选择具体代理城市',
+                                type:'error'
+                            })
+                            return false
+                        }
                     }
+
                 }
                 return true
                 
