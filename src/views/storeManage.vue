@@ -213,7 +213,7 @@
                     </el-col>
                 </el-row>
             </el-form>
-            <div slot="footer" class="dialog-footer">
+            <div slot="footer" class="dialog-footer"> 
                 <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
                 <el-button @click="editDialogVisible = false">取 消</el-button>
             </div>
@@ -565,11 +565,13 @@ import $ from 'jquery';
             // 预存款余额排序
             sortAmount(row,column){
                 const self = this;
+                console.log(row.order)
                 if (row.order === 'ascending') {
                     self.order = 'asc';
-                }
-                if (row.order === 'descending') {
+                }else if (row.order === 'descending') {
                     self.order = 'desc';
+                }else{
+                    self.order = '';
                 }
                 if(!self.checkSession())return;
                 self.loading = true;
