@@ -6,17 +6,17 @@
 		    	<el-row :gutter="10">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商编号">
-		    			<el-input v-model="searchData.searchId" placeholder="代理商编号"></el-input>
+		    			<el-input v-model="searchData.searchId" placeholder="代理商编号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="变动类型">
-		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择">
+		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
 		    				<el-option label="扣款" value="DEDUCTIONS"></el-option>
 		    				<el-option label="进货" value="PURCHASE"></el-option>
@@ -26,7 +26,7 @@
 		    		</el-col>
 				<el-col :span="7">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" @keyup.enter.native="onSumbit">
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
@@ -37,7 +37,7 @@
 		    	<el-row :gutter="10">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="变更时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -48,7 +48,7 @@
 	</div>
 	<div class="orderList">
 		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;">
-			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
+			<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
 			</el-table-column>
 			</el-table-column>
 			<el-table-column prop="phone" label="手机号" width="130">
@@ -65,7 +65,7 @@
 			</el-table-column>
 			<el-table-column prop="remark" label="备注/单号" width="180">
 			<template scope="scope"><p :title=scope.row.remark >
-			<router-link v-if="scope.row.remark == ''" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p v-if="scope.row.remark != ''" style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
+			<router-link v-if="scope.row.changeType === '进货' || scope.row.changeType === '退货' " :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
 			</el-table-column>
 			<el-table-column prop="creator" label="变更人" width="90">
 			</el-table-column>
@@ -113,9 +113,28 @@ export default {
         }
     },
     methods: {
+	//判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
     	onSumbit(){
-		console.log(this.searchData.searchTime);
-		console.log(this.searchData.searchTime[0]);
+    		if(!this.checkSession())return;
 		var temp = new Date(this.searchData.searchTime[0]);
 		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
@@ -168,12 +187,22 @@ export default {
 			success(response){
 				this.tableData = response.data.result;
 		         		this.totalNums=response.data.totalNums;
+			         	this.$message({
+		                        message:'查询成功',
+		                        type:'success'
+	                    	})
 			},
 			fail(response){
-				alert(response.data.msg);
+			this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+		                    })
 			},
 			error(response){
-				alert(response.data.msg);
+			this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+		                    })
 			}
 	    	});
     	},
@@ -181,6 +210,7 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	if(!this.checkSession())return;
 	var temp = new Date(this.searchData.searchTime[0]);
 	if (temp.getFullYear() > 2016) {
 		var time1 = temp.getFullYear();
@@ -227,12 +257,22 @@ export default {
 		success(response){
 			this.tableData = response.data.result;
 	         		this.totalNums=response.data.totalNums;
+	         		this.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
 		},
 		fail(response){
-			alert(response.data.msg);
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		},
 		error(response){
-			alert(response.data.msg);
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		}
     	});
 		console.log(`当前页: ${val}`);
@@ -262,6 +302,12 @@ export default {
 		success(response){
 			this.tableData = response.data.result;
 	         		this.totalNums=response.data.totalNums;
+		},
+		fail(response){
+		this.$message({
+	                        message:response.data.msg,
+	                        type:'error'
+	                    })
 		}
     	});
     },

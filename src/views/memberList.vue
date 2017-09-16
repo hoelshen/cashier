@@ -6,22 +6,22 @@
 		    	<el-row :gutter="10">
 				<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名"></el-input>
+		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="手机号"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="手机号" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="姓名">
-		    			<el-input v-model="searchData.searchName" placeholder="姓名"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="姓名" @keyup.enter.native="onSumbit"></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="会员等级">
-		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择">
+		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
 		    				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 		    			</el-select>
 		    			</el-form-item>
@@ -30,7 +30,7 @@
 		    	<el-row :gutter="20">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="注册时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -135,7 +135,28 @@ export default {
         }
     },
     methods: {
+	//判断是否超时
+            checkSession(){
+                const self = this;
+                if(window.sessionStorage){
+                    let nowDate = new Date().getTime();
+                    let time = (nowDate - sessionStorage.haha)/1000
+                    //超过30秒没操作，重新登录
+                    if(time>1800){
+                        self.$router.push('/login');
+                        self.$message({
+                            message:'登录超时，请重新登录',
+                            type:'error'
+                        })
+                        return false;
+                    }else{
+                        sessionStorage.haha = nowDate;
+                        return true;
+                    }
+                }
+            },
     	onSumbit(){
+	if(!this.checkSession())return;
 	var temp = new Date(this.searchData.searchTime[0]);
 		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
@@ -196,8 +217,15 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
+		self.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
                     }else{
-                        alert(response.data.msg);
+		self.$message({
+		    message:response.data.msg,
+		    type:'error'
+		})
                     }
                 }).catch(function(error){
 
@@ -207,6 +235,7 @@ export default {
 	    console.log(`每页 ${val} 条`);
 	  },
 	handleCurrentChange(val) {
+	if(!this.checkSession())return;
     	var temp = new Date(this.searchData.searchTime[0]);
 		if (temp.getFullYear() > 2006) {
 			var time1 = temp.getFullYear();
@@ -267,8 +296,15 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
+		self.$message({
+	                        message:'查询成功',
+	                        type:'success'
+                    	})
                     }else{
-                        alert(response.data.msg);
+                        self.$message({
+                        message:response.data.msg,
+                        type:'error'
+                    })
                     }
                 }).catch(function(error){
 
@@ -331,6 +367,12 @@ export default {
 			console.log(response);
 			this.tableData = response.data.rows;
 	         		this.totalNums=response.data.total;
+		},
+		fail(response){
+		this.$message({
+		                        message:response.data.msg,
+		                        type:'error'
+                    		})
 		}
     	});
     },
