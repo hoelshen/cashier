@@ -40,7 +40,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;" >
+		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;" >
 			<el-table-column label="序号" width="80">
 				<template scope="scope">
 				        <p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1 < 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>

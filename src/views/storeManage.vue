@@ -208,7 +208,7 @@
                     </el-col>
                     <el-col :span="24" v-if="isDisable">
                         <el-form-item label="预存款详情：">
-                            <router-link to="prepaidManage">点击查看</router-link>
+                            <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                         </el-form-item>
                     </el-col>
                 </el-row>

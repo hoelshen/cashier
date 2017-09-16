@@ -14,7 +14,7 @@
 			<el-col :span="8">订单总价：￥{{ orderInfo.orderSum }}</el-col>
 		</el-row>
 		<el-row style="margin:20px auto auto 15px">
-			<el-col :span="8" style="position:relative">代理商：<p class="textBlue1" v-if="orderInfo.agentGradeId === 31">单店</p><p class="textOrange1" v-if="orderInfo.agentGradeId === 265">区域</p><p class="textYellow1" v-if="orderInfo.agentGradeId === 266">专柜</p><span class="agent">{{ orderInfo.agentGradeId }}</span>{{ orderInfo.shopName }}</el-col>
+			<el-col :span="8" style="position:relative">代理商：<p class="textBlue1" v-if="shopInfo.agentGradeId === 31">单店</p><p class="textOrange1" v-if="shopInfo.agentGradeId === 265">区域</p><p class="textYellow1" v-if="shopInfo.agentGradeId === 266">专柜</p><span class="agent">{{ shopInfo.shopNo }}</span>{{ shopInfo.shopName }}</el-col>
 			<el-col :span="8">收件人：{{ orderInfo.receiptName }}</el-col>
 			<el-col :span="8">收件电话：{{ orderInfo.receiptPhone }}</el-col>
 		</el-row>
@@ -29,6 +29,7 @@
 			<el-table-column prop="productName" label="商品名称">
 			</el-table-column>
 			<el-table-column prop="spec" label="规格" width="120">
+                                    <template scope="scope"><p :title=scope.row.spec style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{ scope.row.spec }}</p></template>
 			</el-table-column>
 			<el-table-column prop="unit" label="单位" width="120">
 			</el-table-column>
@@ -62,11 +63,13 @@ export default {
     data(){
         return {
     	productAllNum:0,			//商品总数
+            shopInfo:{
+                agentGradeId:'',        //代理商等级
+                shopName:'',            //代理商店铺名
+                shopNo:'',                               //代理商编号
+            },
             orderInfo:{
             	purchaseOrderNo:'',		//进货单号
-            	shopNo:'',			//代理商编号
-            	shopName:'',			//代理商店铺名
-            	agentGradeId:'',		//代理商等级
             	receiptName:'',		//收件人
             	receiptPhone:'',		//收件电话
             	receiptAddress:'',		//收货地址
@@ -100,38 +103,24 @@ export default {
             //获取id
             var src = window.location.href.split('/');
             this.orderInfo.purchaseOrderNo = src[5];
-            this.orderInfo.shopNo = src[6];
-            const self = this;
-	self.$ajax({
-                    url: '/api/http/purchaseOrder/findPurchaseOrderByNo.jhtml',
-                    method: 'post',
+            this.shopNo = src[6];
+            this.$getData({
+                    url: '/http/purchaseOrder/findPurchaseOrderByNo.jhtml',
                     data: {
-                        purchaseOrderNo:self.orderInfo.purchaseOrderNo
+                            purchaseOrderNo:this.orderInfo.purchaseOrderNo
                     },
-                    transformRequest: [function (data) {
-                        // Do whatever you want to transform the data
-                        let ret = ''
-                        for (let it in data) {
-                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    success(response){
+                            this.tableData=response.data.result.purchaseOrderDetailList;
+                        for(var item in this.tableData){
+                             this.productAllNum = this.productAllNum+ Number(this.tableData[item].productNum);
                         }
-                        return ret;
-                    }],
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }).then(function(response){
-                    if(response.data.success == 1){
-		self.tableData=response.data.result.purchaseOrderDetailList;
-                    	for(var item in self.tableData){
-                    		 self.productAllNum = self.productAllNum+ Number(self.tableData[item].productNum);
-                    	}
-                    	self.orderInfo = response.data.result;
-                    }else{
-                        alert(response.data.msg);
-                    }
-                }).catch(function(error){
-
-                });
+                        this.orderInfo = response.data.result;
+                        this.shopInfo = response.data.result.shop;
+                    },
+                    fail(response){
+                            alert(response.data.msg);
+                    },
+            });
     }
 }
 </script>
