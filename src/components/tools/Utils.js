@@ -22,7 +22,6 @@ let Utils = {
         let hours = date.getHours();
         month = month < 10 ? '0' + month : month;
         day = day < 10 ? '0' + day : day;
-        hours = hours < 10 ? '0' + hours : hours;
         return `${year}-${month}-${day}`
     },
     // 保留小数

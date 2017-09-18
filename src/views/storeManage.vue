@@ -433,9 +433,9 @@ import $ from 'jquery';
                     })
                     return;
                 }
-                if (!/^[\u4e00-\u9fa5\，\w\-]{0,50}$/.test(self.changeForm.remark)){
+                if (self.changeForm.remark.length>50){
                     self.$message({
-                        message:"备注长度错误或存在非法字符！",
+                        message:"备注长度不得超过50个字符！",
                         type:'error'
                     })
                     return;
@@ -509,8 +509,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
@@ -540,8 +540,8 @@ import $ from 'jquery';
             //             'shop.shopName':self.searchData.shopName,
             //             'shop.phone':self.searchData.phone,
             //             'shop.name':self.searchData.name,
-            //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-            //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+            //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+            //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
             //             'shop.state':self.searchData.state,
             //             'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
             //             'shop.sort':'depositAmount',
@@ -570,8 +570,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
@@ -607,8 +607,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
@@ -673,7 +673,7 @@ import $ from 'jquery';
                             h('span',{style:'color:red'},data.name)
                         ]),
                         h('div',null,[
-                            h('span',{style:'margin-left:15px'},'代理商手机：'),
+                            h('span',null,'代理商手机：'),
                             h('span',{style:'color:red'},data.phone)
                         ])
 
@@ -686,6 +686,8 @@ import $ from 'jquery';
                 showCancelButton: true,
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
+                cancelButtonClass:'cancel-button',
+                confirmButtonClass:'confirm-button'
                 }).then(action => {
                     self.loading = true;
                     self.$ajax({
@@ -978,3 +980,14 @@ import $ from 'jquery';
 <style lang="less" scoped>
     @import url('../assets/less/storeManage.less');
 </style>
+<style>
+    .cancel-button {
+        float: right;
+        margin: 0 0 10px 10px!important;
+    }
+    
+    .confirm-button {
+        float: right;
+    }
+</style>
+
