@@ -6,22 +6,22 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="状态" label-width="50px">
-		    			<el-select v-model="searchData.searchState" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
+		    			<el-select v-model="searchData.searchState" clearable placeholder="请选择" >
 		    				<el-option label="待审核" value="WAIT_CHECK"></el-option>
 		    				<el-option label="待发货" value="WAIT_SEND"></el-option>
 		    				<el-option label="已发货" value="DELIVERED"></el-option>
@@ -37,7 +37,7 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" @keyup.enter.native="onSumbit">
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" >
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
@@ -46,17 +46,17 @@
 		    		</el-col>
 				<el-col :span="6">
 		    			<el-form-item label="下单时间" label-width="72px">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime"  type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    	</el-row>
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;" @sort-change='store'>
-			<el-table-column prop="purchaseOrderNo" label="进货单号" width="140">
+		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;" @sort-change='store'>
+			<el-table-column prop="purchaseOrderNo" label="进货单号" width="160">
 			</el-table-column>
-			<el-table-column prop="agentGradeId" label="代理商编号" width="180" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
+			<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
 			</el-table-column>
 			<el-table-column prop="phone" label="手机号" width="140">
 			</el-table-column>
@@ -73,9 +73,11 @@
 			<template scope="scope"><router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link></template>
 			</el-table-column>
 		</el-table>
+                        <div class="page">
+                                <el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
+                                </el-pagination>
+                        </div>
 	</div>
-	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
-	</el-pagination>
 	</div>
 </div>
 </template>
@@ -295,10 +297,6 @@ export default {
                     if (response.data.success === 1) {
                         self.tableData = response.data.result;
                         self.totalNums = response.data.totalNums;
-                        self.$message({
-                            message:'查询成功',
-                            type:'success'
-                        })
                     } else {
                             self.$message({
                             message:response.data.msg,
@@ -367,6 +365,7 @@ export default {
 	},
     },
     created(){
+        if(!this.checkSession())return;
             this.$getData({
                 url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
                 data: {

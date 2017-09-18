@@ -100,6 +100,7 @@ export default {
 	},
     },
     created(){
+            if(!this.checkSession())return;
             //获取id
             var src = window.location.href.split('/');
             this.orderInfo.purchaseOrderNo = src[5];
