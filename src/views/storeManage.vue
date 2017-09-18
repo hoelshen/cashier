@@ -248,7 +248,7 @@
                         </el-col>
                         <el-col :span="15">
                         <el-form-item>
-                           <el-input v-model="changeForm.alterMoney" placeholder="变动金额"></el-input>
+                           <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"></el-input>
                            <p class="yuan">元</p>
                         </el-form-item>
                     </el-col>
@@ -366,7 +366,6 @@ import $ from 'jquery';
                         type:'error'
                     })
                 }
-                
             }).catch(function(err){
                 console.log(err);
             });
@@ -427,9 +426,9 @@ import $ from 'jquery';
                     })
                     return;
                 }
-                if(!/^[0-9\.]*$/.test(self.changeForm.alterMoney)){
+                if(!/^[0-9]*\.*[0-9]{2}$/.test(self.changeForm.alterMoney)){
                     self.$message({
-                        message:"变更金额格式错误！",
+                        message:"变动金额只能为正数，且小数位不能超过两位！",
                         type:'error'
                     })
                     return;

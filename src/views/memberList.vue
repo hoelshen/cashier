@@ -6,22 +6,22 @@
 		    	<el-row :gutter="10">
 				<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="手机号" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="姓名">
-		    			<el-input v-model="searchData.searchName" placeholder="姓名" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchName" placeholder="姓名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="会员等级">
-		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
+		    			<el-select v-model="searchData.searchLevel" clearable placeholder="请选择" >
 		    				<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
 		    			</el-select>
 		    			</el-form-item>
@@ -30,7 +30,7 @@
 		    	<el-row :gutter="20">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="注册时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime"  type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -40,7 +40,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;" >
+		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;" >
 			<el-table-column label="序号" width="80">
 				<template scope="scope">
 				        <p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1 < 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
@@ -58,9 +58,11 @@
 			<el-table-column prop="CREATED_TIME" label="注册时间" width="240">
 			</el-table-column>
 		</el-table>
+		<div class="page">
+			<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
+			</el-pagination>
+		</div>
 	</div>
-	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
-	</el-pagination>
 	</div>
 </div>
 </template>
@@ -296,10 +298,6 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
-		self.$message({
-	                        message:'查询成功',
-	                        type:'success'
-                    	})
                     }else{
                         self.$message({
                         message:response.data.msg,
@@ -357,6 +355,7 @@ export default {
 }
     },
     created(){
+    	if(!this.checkSession())return;
     	this.getData({
 		url:'customerInfo/customerInfo/search.jhtml',
 		data:{
