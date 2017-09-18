@@ -426,7 +426,7 @@ import $ from 'jquery';
                     })
                     return;
                 }
-                if(!/^[0-9]*\.*[0-9]{2}$/.test(self.changeForm.alterMoney)){
+                if(!/^[0-9]*\.*[0-9]{1,2}$/.test(self.changeForm.alterMoney)){
                     self.$message({
                         message:"变动金额只能为正数，且小数位不能超过两位！",
                         type:'error'
