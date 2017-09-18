@@ -6,17 +6,17 @@
 		    	<el-row :gutter="10">
 				<el-col :span="6">
 		    			<el-form-item label="注册店铺名">
-		    			<el-input v-model="searchData.searchShop" placeholder="注册店铺名" ></el-input>
+		    			<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchShop" placeholder="注册店铺名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="手机号" ></el-input>
+		    			<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchPhone" placeholder="手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="姓名">
-		    			<el-input v-model="searchData.searchName" placeholder="姓名" ></el-input>
+		    			<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="姓名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
@@ -41,7 +41,7 @@
 	</div>
 	<div class="orderList">
 		<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;" >
-			<el-table-column label="序号">
+			<el-table-column label="序号" width="80">
 				<template scope="scope">
 				        <p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1 < 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 				</template>
@@ -219,10 +219,6 @@ export default {
                     if(response.data.code === 1){
 		self.tableData = response.data.rows;
          		self.totalNums=response.data.total;
-		self.$message({
-	                        message:'查询成功',
-	                        type:'success'
-                    	})
                     }else{
 		self.$message({
 		    message:response.data.msg,
