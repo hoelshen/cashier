@@ -434,9 +434,9 @@ import $ from 'jquery';
                     })
                     return;
                 }
-                if (!/^[\u4e00-\u9fa5\，\w\-]{0,50}$/.test(self.changeForm.remark)){
+                if (self.changeForm.remark.length>50){
                     self.$message({
-                        message:"备注长度错误或存在非法字符！",
+                        message:"备注长度不得超过50个字符！",
                         type:'error'
                     })
                     return;
@@ -510,8 +510,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
@@ -541,8 +541,8 @@ import $ from 'jquery';
             //             'shop.shopName':self.searchData.shopName,
             //             'shop.phone':self.searchData.phone,
             //             'shop.name':self.searchData.name,
-            //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-            //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+            //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+            //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
             //             'shop.state':self.searchData.state,
             //             'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
             //             'shop.sort':'depositAmount',
@@ -571,8 +571,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
@@ -608,8 +608,8 @@ import $ from 'jquery';
                         'shop.shopName':self.searchData.shopName,
                         'shop.phone':self.searchData.phone,
                         'shop.name':self.searchData.name,
-                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDate(this.searchData.signTime[0]):'',
-                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDate(this.searchData.signTime[1]):'',
+                        'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+                        'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
                         'shop.state':self.searchData.state,
                         'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
                         'shop.sort':'depositAmount',
