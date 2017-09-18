@@ -471,7 +471,7 @@ import $ from 'jquery';
                                 type:'success'
                             })
                             setTimeout(function() {
-                                self.handleCurrentChange(self.currentPage);
+                                window.location.reload();
                             }, 1000)
                         }
                     }else{
@@ -840,13 +840,16 @@ import $ from 'jquery';
                     })
                     return false
                 }else{
-                    if(data.address.length>=100)
-                    self.loading = false;
-                    self.$message({
-                        message:'详细地址长度不得大于100个字符',
-                        type:'error'
-                    })
+                    if(data.address.length>100){
+                        self.loading = false;
+                        self.$message({
+                            message:'详细地址长度不得大于100个字符',
+                            type:'error'
+                        })
+                                            
                     return false
+                    }
+
                 }
                 //代理区域判断
                 if(data.agentGradeId==265){
@@ -916,7 +919,7 @@ import $ from 'jquery';
                         type:'success'
                     })
                     setTimeout(function() {
-                        self.handleCurrentChange(self.currentPage);
+                        window.location.reload();
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
@@ -932,6 +935,7 @@ import $ from 'jquery';
                 let editAgentAddress = self.$refs.editAgentAddress.getData();
                 if (!self.testData(data,editAddress,editAgentAddress))return;
                 //请求
+                console.log(data)
                 self.$ajax({
                     url: '/api/shop/shopManage/modify.jhtml',
                     method: 'post',
@@ -968,7 +972,7 @@ import $ from 'jquery';
                         type:'success'
                     })
                     setTimeout(function() {
-                        self.handleCurrentChange(self.currentPage);
+                        window.location.reload();
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
