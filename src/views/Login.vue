@@ -12,7 +12,7 @@
                 <div class="login-btn">
                     <el-button type="primary" @click="submitForm">登录</el-button>
                 </div>
-                <p style="font-size:12px;line-height:30px;color:#999;">Tips : 用户名和密码随便填。</p>
+                <p style="font-size:12px;line-height:30px;color:#999;">Tips : 仅限公司内部使用。</p>
             </el-form>
         </div>
     </div>
@@ -93,15 +93,17 @@
         position: relative;
         width:100%;
         height:100%;
+        background: #3a8fe0;
     }
     .ms-title{
         position: absolute;
-        top:50%;
+        top:52%;
         width:100%;
         margin-top: -230px;
         text-align: center;
-        font-size:30px;
+        font-size:32px;
         color: #fff;
+        font-weight: bold;
 
     }
     .ms-login{
