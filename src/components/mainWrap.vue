@@ -11,10 +11,13 @@
                         <i class="icon-tongzhi3"></i>
                         <span class="count">0</span>
                     </div>
+                    <div class="login-out">
+                        <span @click="loginOut">退出登录</span>
+                    </div>
                     <div class="userName">
                         <span>{{ user.userName }}</span>
-                        <i class="el-icon-caret-bottom"></i>
                     </div>
+                    
                 </div>
             </div>
             <transition name="fade">
@@ -81,6 +84,12 @@
         },
         components: {
             slideBar
+        },
+        methods:{
+            loginOut(){
+                delete sessionStorage.user;
+                this.$router.push('/login');
+            }
         }
     }
 </script>
