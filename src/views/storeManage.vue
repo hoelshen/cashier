@@ -104,12 +104,12 @@
         </div>
         <!-- 表格 end -->
         <!-- 新增店铺弹窗 start -->
-        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" >
+        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" @open="resetForm">
             <el-form :model="addForm" label-width="120px" ref="addForm">
                 <el-row>
                     <el-col :span="12">
                         <el-form-item label="店铺名称：">
-                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                            <el-input v-model="addForm.shopName"  placeholder="店铺名称"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -119,7 +119,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="addForm.phone" placeholder="代理商手机"></el-input>
+                            <el-input v-model="addForm.phone" maxlength='11' placeholder="代理商手机"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -174,7 +174,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="editForm.phone" placeholder="代理商手机" :disabled="isDisable"></el-input>
+                            <el-input v-model="editForm.phone" placeholder="代理商手机" maxlength='11' :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -220,7 +220,7 @@
         </el-dialog>
         <!-- 修改店铺及店铺详情弹窗 end -->
         <!-- 预存款变更弹窗 start -->
-        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny">
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @open="resetForm">
             <el-form :model="changeForm">
                 <el-row>
                     <el-col :span="22">
@@ -470,8 +470,9 @@ import $ from 'jquery';
                                 message:response.data.msg,
                                 type:'success'
                             })
+                            self.dialogFormVisible = false;
                             setTimeout(function() {
-                                window.location.reload();
+                                self.handleCurrentChange(self.currentPage);
                             }, 1000)
                         }
                     }else{
@@ -918,8 +919,9 @@ import $ from 'jquery';
                         message:response.data.msg,
                         type:'success'
                     })
+                    self.addDialogVisible = false;
                     setTimeout(function() {
-                        window.location.reload();
+                        self.handleCurrentChange(self.currentPage);
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
@@ -972,11 +974,31 @@ import $ from 'jquery';
                         type:'success'
                     })
                     setTimeout(function() {
-                        window.location.reload();
+                        self.handleCurrentChange(self.currentPage);
                     }, 1000)
                 }).catch(function(err){
                     self.loading = false;
                 });
+            },
+            //重置表格内容
+            resetForm(){
+                this.addForm = {
+                    shopName:'',
+                    name:'',
+                    phone:'',
+                    signedTime:'',
+                    agentGradeId:'',
+                    provinceCode:'',
+                    cityCode:'',
+                    countyCode:'',
+                    agentProvince:'',
+                    agentCity:'',
+                    agentCounty:'',
+                    address:''
+                }
+                this.changeForm.changeType = '';
+                this.changeForm.alterMoney = '';
+                this.changeForm.remark = '';
             }
         }
     }
