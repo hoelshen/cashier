@@ -40,22 +40,22 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;" >
-			<el-table-column label="序号" width="80">
+		<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;" >
+			<el-table-column label="序号">
 				<template scope="scope">
 				        <p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1 < 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 				</template>
 			</el-table-column>
-			<el-table-column prop="PHONE" label="手机号" width="180">
+			<el-table-column prop="PHONE" label="手机号">
 			</el-table-column>
 			<el-table-column prop="NAME" label="姓名">
 			</el-table-column>
-			<el-table-column prop="GID" label="会员等级" width="180">
+			<el-table-column prop="GID" label="会员等级">
 			<template scope="scope"><p>{{getLevel(scope.row.GID)}}</p></template>
 			</el-table-column>
-			<el-table-column prop="SHOPNAME" label="注册店铺" width="280">
+			<el-table-column prop="SHOPNAME" label="注册店铺">
 			</el-table-column>
-			<el-table-column prop="CREATED_TIME" label="注册时间" width="240">
+			<el-table-column prop="CREATED_TIME" label="注册时间">
 			</el-table-column>
 		</el-table>
 		<div class="page">

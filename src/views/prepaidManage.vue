@@ -47,29 +47,29 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;">
+		<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 			<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
 			</el-table-column>
 			</el-table-column>
-			<el-table-column prop="phone" label="手机号" width="130">
+			<el-table-column prop="phone" label="手机号">
 			</el-table-column>
 			<el-table-column prop="shopName" label="店铺名称">
 			</el-table-column>
 			<el-table-column prop="changeType" label="变更类型" width="100">
 			</el-table-column>
-			<el-table-column prop="alterMoney" label="变更金额" width="100">
+			<el-table-column prop="alterMoney" label="变更金额">
 			<template scope="scope"><p>{{ toFixed1(scope.row.alterMoney) }}</p></template>
 			</el-table-column>
-			<el-table-column prop="afterMoney" label="结余" width="100">
+			<el-table-column prop="afterMoney" label="结余">
 			<template scope="scope"><p>{{ toFixed(scope.row.afterMoney) }}</p></template>
 			</el-table-column>
 			<el-table-column prop="remark" label="备注/单号" width="180">
-			<template scope="scope"><p :title=scope.row.remark >
-			<router-link v-if="scope.row.changeType === '进货' || scope.row.changeType === '退货' " :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
+			<template scope="scope"><p >
+			<router-link v-if="scope.row.changeType === '进货' || scope.row.changeType === '退货' " :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p :title=scope.row.remark  v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
 			</el-table-column>
 			<el-table-column prop="creator" label="变更人" width="90">
 			</el-table-column>
-			<el-table-column prop="createdTime" label="变更时间" width="180">
+			<el-table-column prop="createdTime" label="变更时间">
 			</el-table-column>
 		</el-table>
 		<div class="page">
