@@ -10,7 +10,7 @@
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
-		    			<el-form-item label="注册店铺名">
+		    			<el-form-item label="注册店铺名" >
 		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
@@ -53,23 +53,23 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;" @sort-change='store'>
-			<el-table-column prop="purchaseOrderNo" label="进货单号" width="160">
+		<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;" @sort-change='store'>
+			<el-table-column prop="purchaseOrderNo" label="进货单号" width="180">
 			</el-table-column>
-			<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
+			<el-table-column prop="agentGradeId" label="代理商编号" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
                                     </el-table-column>
-                                    <el-table-column prop="phone" label="手机号" width="140">
+                                    <el-table-column prop="phone" label="手机号">
                                     </el-table-column>
                                     <el-table-column prop="shopName" label="店铺名称">
                                     </el-table-column>
-                                    <el-table-column prop="stateName" label="状态" width="100">
+                                    <el-table-column prop="stateName" label="状态">
                                     </el-table-column>
-                                    <el-table-column prop="orderTime" label="下单时间" width="180">
+                                    <el-table-column prop="orderTime" label="下单时间">
                                     </el-table-column>
-                                    <el-table-column prop="orderSum" label="金额" sortable="custom" width="140">
+                                    <el-table-column prop="orderSum" label="金额" sortable="custom">
                                         <template scope="scope"><p>{{ toFixed(scope.row.orderSum) }}</p></template>
                                     </el-table-column>
-                                    <el-table-column prop="phone" label="详情" width="100">
+                                    <el-table-column prop="phone" label="详情">
                                         <template scope="scope"><router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link></template>
                                     </el-table-column>
                                     </el-table>
