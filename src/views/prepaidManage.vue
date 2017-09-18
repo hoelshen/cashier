@@ -6,17 +6,17 @@
 		    	<el-row :gutter="10">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商编号">
-		    			<el-input v-model="searchData.searchId" placeholder="代理商编号" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchId" placeholder="代理商编号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" @keyup.enter.native="onSumbit"></el-input>
+		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="变动类型">
-		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择" @keyup.enter.native="onSumbit">
+		    			<el-select v-model="searchData.searchStatus" clearable placeholder="请选择">
 		    				<el-option label="充值" value="TOP_UP"></el-option>
 		    				<el-option label="扣款" value="DEDUCTIONS"></el-option>
 		    				<el-option label="进货" value="PURCHASE"></el-option>
@@ -26,7 +26,7 @@
 		    		</el-col>
 				<el-col :span="7">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部" @keyup.enter.native="onSumbit">
+		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
@@ -37,7 +37,7 @@
 		    	<el-row :gutter="10">
 				<el-col :span="7" style="margin-left:-15px;">
 		    			<el-form-item label="变更时间">
-		    			<el-date-picker width="200" v-model="searchData.searchTime" @keyup.enter.native="onSumbit" type="daterange" placeholder="选择日期范围"></el-date-picker>
+		    			<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="17">
@@ -47,7 +47,7 @@
 		</el-form>
 	</div>
 	<div class="orderList">
-		<el-table :data="tableData" style="width: 95%;margin: 30px auto;font-size: 12px;">
+		<el-table :data="tableData" style="margin: 20px auto;font-size: 14px;">
 			<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative"><template scope="scope">{{ scope.row.shopNo }}<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p><p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p><p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p></template>
 			</el-table-column>
 			</el-table-column>
@@ -72,13 +72,14 @@
 			<el-table-column prop="createdTime" label="变更时间" width="180">
 			</el-table-column>
 		</el-table>
+		<div class="page">
+			<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
+			</el-pagination>
+		</div>
 	</div>
-	<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
-	</el-pagination>
 	</div>
 </div>
 </template>
-
 <script type="text/javascript" src="../router.js"></script>
 <script>
 export default {
@@ -257,10 +258,6 @@ export default {
 		success(response){
 			this.tableData = response.data.result;
 	         		this.totalNums=response.data.totalNums;
-	         		this.$message({
-	                        message:'查询成功',
-	                        type:'success'
-                    	})
 		},
 		fail(response){
 		this.$message({
@@ -313,8 +310,6 @@ export default {
     },
 }
 </script>
-
-
 <style lang="less" scoped>
 	@import url('../assets/less/prepaidManage.less');
 </style>
