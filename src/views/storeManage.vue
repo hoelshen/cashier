@@ -674,7 +674,7 @@ import $ from 'jquery';
                             h('span',{style:'color:red'},data.name)
                         ]),
                         h('div',null,[
-                            h('span',{style:'margin-left:15px'},'代理商手机：'),
+                            h('span',null,'代理商手机：'),
                             h('span',{style:'color:red'},data.phone)
                         ])
 
@@ -687,6 +687,8 @@ import $ from 'jquery';
                 showCancelButton: true,
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
+                cancelButtonClass:'cancel-button',
+                confirmButtonClass:'confirm-button'
                 }).then(action => {
                     self.loading = true;
                     self.$ajax({
@@ -979,3 +981,14 @@ import $ from 'jquery';
 <style lang="less" scoped>
     @import url('../assets/less/storeManage.less');
 </style>
+<style>
+    .cancel-button {
+        float: right;
+        margin: 0 0 10px 10px!important;
+    }
+    
+    .confirm-button {
+        float: right;
+    }
+</style>
+
