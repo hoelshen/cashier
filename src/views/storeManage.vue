@@ -263,7 +263,7 @@
                 </el-row>
             </el-form>
             <div slot="footer" class="dialog-footer">
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button @click="changeCancle">取 消</el-button>
                 <el-button type="primary" @click="onChange">确 定</el-button>
             </div>
         </el-dialog>
@@ -281,6 +281,7 @@ import $ from 'jquery';
                 currentPage: 1,
                 totalSize: 0,
                 pageSize: 30,
+                user:'',
                 searchData: {
                     shopName: '',
                     phone: '',
@@ -410,6 +411,10 @@ import $ from 'jquery';
 
             //预存款变更
             onChange(){
+                if (sessionStorage.user) {
+                    this.user = JSON.parse(sessionStorage.user);
+                    console.log(this.user);
+                }
                 const self = this;
                 if(!self.checkSession())return;
                 if (!self.changeForm.changeType) {
@@ -449,6 +454,8 @@ import $ from 'jquery';
                           'advanceDeposit.changeType':self.changeForm.changeType,
                           'advanceDeposit.alterMoney':self.changeForm.alterMoney,
                           'advanceDeposit.remark':self.changeForm.remark,
+                          'advanceDeposit.creatorId':self.user.id,
+                          'advanceDeposit.updatorId':self.user.id,
                     },
                     transformRequest: [function (data) {
                         // Do whatever you want to transform the data
@@ -491,6 +498,12 @@ import $ from 'jquery';
                 this.changeForm.changeShopName = shopName;
                 this.changeTitle = "编辑代理商店铺（编号："+shopNo+"）"
                 this.dialogFormVisible = true;
+            },
+            changeCancle(){
+                this.dialogFormVisible = false;
+                this.changeForm.changeType='';
+                this.changeForm.alterMoney='';
+                this.changeForm.remark='';
             },
             //查询
             onSubmit:function(){

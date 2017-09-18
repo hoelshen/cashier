@@ -6,17 +6,17 @@
 		    	<el-row :gutter="20">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" ></el-input>
+		    			<el-input v-model="searchData.searchPhone" @keyup.enter.native="onSumbit" placeholder="代理商手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
 		    			<el-form-item label="注册店铺名" >
-		    			<el-input v-model="searchData.searchName" placeholder="注册店铺名" ></el-input>
+		    			<el-input v-model="searchData.searchName" @keyup.enter.native="onSumbit" placeholder="注册店铺名" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="进货单号">
-		    			<el-input v-model="searchData.searchOrderNo" placeholder="进货单号" ></el-input>
+		    			<el-input v-model="searchData.searchOrderNo" @keyup.enter.native="onSumbit" placeholder="进货单号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
@@ -205,10 +205,6 @@
                     if (response.data.success === 1) {
                         self.tableData = response.data.result;
                         self.totalNums = response.data.totalNums;
-                        self.$message({
-                            message:'查询成功',
-                            type:'success'
-                        })
                     } else {
                             self.$message({
                             message:response.data.msg,

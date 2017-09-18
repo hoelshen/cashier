@@ -6,12 +6,12 @@
 		    	<el-row :gutter="10">
 		    		<el-col :span="6">
 		    			<el-form-item label="代理商编号">
-		    			<el-input v-model="searchData.searchId" placeholder="代理商编号" ></el-input>
+		    			<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchId" placeholder="代理商编号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="5">
 		    			<el-form-item label="代理商手机">
-		    			<el-input v-model="searchData.searchPhone" placeholder="代理商手机号" ></el-input>
+		    			<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchPhone" placeholder="代理商手机号" ></el-input>
 		    			</el-form-item>
 		    		</el-col>
 		    		<el-col :span="6">
@@ -26,7 +26,7 @@
 		    		</el-col>
 				<el-col :span="7">
 		    			<el-form-item label="代理商等级">
-		    			<el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+		    			<el-select @keyup.enter.native="onSumbit" v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 		    				<el-option label="区域代理" value="265"></el-option>
 		    				<el-option label="专柜代理" value="266"></el-option>
 		    				<el-option label="单店代理" value="31"></el-option>
@@ -188,10 +188,6 @@ export default {
 			success(response){
 				this.tableData = response.data.result;
 		         		this.totalNums=response.data.totalNums;
-			         	this.$message({
-		                        message:'查询成功',
-		                        type:'success'
-	                    	})
 			},
 			fail(response){
 			this.$message({
