@@ -64,8 +64,8 @@
 			<template scope="scope"><p>{{ toFixed(scope.row.afterMoney) }}</p></template>
 			</el-table-column>
 			<el-table-column prop="remark" label="备注/单号" width="180">
-			<template scope="scope"><p :title=scope.row.remark >
-			<router-link v-if="scope.row.changeType === '进货' || scope.row.changeType === '退货' " :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
+			<template scope="scope"><p >
+			<router-link v-if="scope.row.changeType === '进货' || scope.row.changeType === '退货' " :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link><p :title=scope.row.remark  v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}</p></p></template>
 			</el-table-column>
 			<el-table-column prop="creator" label="变更人" width="90">
 			</el-table-column>
