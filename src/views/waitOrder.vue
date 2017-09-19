@@ -23,10 +23,10 @@
 		    			<el-form-item label="状态" label-width="50px">
 		    			<el-select v-model="searchData.searchState" clearable placeholder="请选择" >
 		    				<el-option label="待审核" value="WAIT_CHECK"></el-option>
-		    				<el-option label="待发货" value="WAIT_SEND"></el-option>
+		    				<!-- <el-option label="待发货" value="WAIT_SEND"></el-option>
 		    				<el-option label="已发货" value="DELIVERED"></el-option>
 		    				<el-option label="已完成" value="FINISH"></el-option>
-		    				<el-option label="退款成功" value="RETURN_FINISH"></el-option>
+		    				<el-option label="退款成功" value="RETURN_FINISH"></el-option> -->
 		    			</el-select>
 		    			</el-form-item>
 		    		</el-col>
@@ -337,10 +337,6 @@ export default {
                     success(response) {
                         this.tableData = response.data.result;
                         this.totalNums = response.data.totalNums;
-                        this.$message({
-                            message:'查询成功',
-                            type:'success'
-                        })
                     },
                     fail(response) {
                         this.$message({
