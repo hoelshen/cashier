@@ -1,5 +1,18 @@
 <template>
-    <div class="content brandTree">
+    <div>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
+        <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
         <el-tree :data="brandClassList" :props="defaultProps" node-key="id" @node-click="handleNodeClick"></el-tree>
     </div>
 </template>
@@ -380,20 +393,20 @@
       created(){
         //获取表格数据
         // getTableData(){
-            this.$ajax({
-                method: 'get',
-                url: `/apitest/propInfo/isCanEditProp?propId=215`             
-            }).then(function(response){
-                if(response.data.status == 1){
-                   console.log(response)
-                }else{
-                    alert(response.data.error_msg);
-                }
-            }).catch(function(error){
+            // this.$ajax({
+            //     method: 'get',
+            //     url: `/apitest/propInfo/isCanEditProp?propId=215`             
+            // }).then(function(response){
+            //     if(response.data.status == 1){
+            //        console.log(response)
+            //     }else{
+            //         alert(response.data.error_msg);
+            //     }
+            // }).catch(function(error){
 
-            });
+            // });
         // },
-        
+        // this.$setContentName('测试树');
       },
       methods: {
         handleNodeClick(data) {

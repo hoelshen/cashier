@@ -1,4 +1,15 @@
-.clearfix{
+@blue:#58B7FF;
+@fff:#fff;
+
+
+//浮动
+.float(l) {
+    float: left;
+}
+.float(r) {
+    float: right;
+}
+.clearfix(){
     *zoom: 1;
     &::after,
     &::before{
@@ -7,12 +18,94 @@
         clear: both;
     }
 }
-.float(l) {
-    float: left;
-}
-.float(r) {
-    float: right;
-}
+
+
+//元素转换
 .display(@dis:block) {
     display: @dis;
+}
+
+
+
+//定位
+.position(r) {
+    position: relative;
+}
+.position(a) {
+    position: absolute;
+}
+.position(f) {
+    position: fixed;
+}
+
+// 文字方向
+.algin(l) {
+    text-align: left;
+}
+.algin(r) {
+    text-align: right;
+}
+.algin(c) {
+    text-align: center;
+}
+
+//字体大小
+.fontSize(@size:12px) {
+    font-size: @size;
+}
+
+// 文字粗细
+.blod() {
+    font-weight: bold;
+}
+.normal(){
+    font-weight: normal;
+}
+
+// 行高
+.line(@line:12px) {
+    line-height: @line;
+}
+
+
+//颜色
+.color(@col:#333) {
+    color: @col;
+}
+
+
+// padding值
+
+.padding(@p) {
+    padding: @p;
+}
+.paddingL(@p){
+    padding-left: @p;
+}
+.paddingR(@p){
+    padding-right: @p;
+}
+.paddingT(@p){
+    padding-top: @p;
+}
+.paddingB(@p){
+    padding-bottom: @p;
+}
+.paddingAll(@t,@r,@b,@l) {
+    padding: @t @r @b @l;
+}
+
+// 背景色
+.bg(@bg) {
+    background-color: @bg;
+}
+
+// 字体图标
+.iconFont() {
+    font-family:"iconfont" !important;
+    font-size:16px;
+    font-style:normal;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    margin-right: 8px;
 }

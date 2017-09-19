@@ -1,31 +1,16 @@
 <template>
-  <div id="app">
-    <img src="./assets/logo.png">
-    <h1>{{ msg }}</h1>
-    <el-button @click.native="startHacking">Yes!</el-button>
-  </div>
+	<div id="app">
+    	<router-view></router-view>
+	</div>
 </template>
 
 <script>
-export default {
-	data () {
-		return {
-			msg: 'Want something new?'
-		}
-	},
 
-  methods: {
-    startHacking () {
-      this.$notify({
-        title: 'Shhh',
-        message: 'Just be patient...',
-        duration: 6000
-      })
-    }
-  }
+export default {
+	
 }
 </script>
 
 <style lang="less">
-  @import './assets/less/common.less';
+	@import './assets/less/common.less';
 </style>
