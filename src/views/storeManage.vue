@@ -6,17 +6,17 @@
                 <el-row :gutter="10" class="searchbar">
                     <el-col :span="6">
                         <el-form-item label="注册店铺名：">
-                            <el-input v-model="searchData.shopName" placeholder="注册店铺名"></el-input>
+                            <el-input v-model="searchData.shopName" @keyup.enter.native="onSubmit" placeholder="注册店铺名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="searchData.phone" placeholder="代理商手机"></el-input>
+                            <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
                         <el-form-item label="代理商姓名：">
-                            <el-input v-model="searchData.name" placeholder="代理商姓名"></el-input>
+                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col  :span="6">
@@ -986,6 +986,7 @@ import $ from 'jquery';
                         message:response.data.msg,
                         type:'success'
                     })
+                    self.editDialogVisible = false;
                     setTimeout(function() {
                         self.handleCurrentChange(self.currentPage);
                     }, 1000)
@@ -1009,6 +1010,7 @@ import $ from 'jquery';
                     agentCounty:'',
                     address:''
                 }
+                this.$refs.addAddress.resetAddress();
                 this.changeForm.changeType = '';
                 this.changeForm.alterMoney = '';
                 this.changeForm.remark = '';
