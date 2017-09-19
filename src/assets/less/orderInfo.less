@@ -1,7 +1,32 @@
 @import url('./tools.less');
 
-.orderInfo{
-        background-color:#fff;
+.orderInfo {
+    background-color: #fff;
+}
+
+.clearfix {
+
+    *zoom: 1;
+}
+
+
+
+.clearfix:before,
+
+.clearfix:after {
+
+    display: table;
+
+    line-height: 0;
+
+    content: "";
+}
+
+
+
+.clearfix:after {
+
+    clear: both;
 }
 
 .orderTitle {
@@ -19,7 +44,7 @@
     height: 210px;
     border: 1px solid rgba(0, 0, 0, 0.15);
     border-radius: 4px;
-    background-color:#fff;
+    background-color: #fff;
 }
 
 .dataTitle {

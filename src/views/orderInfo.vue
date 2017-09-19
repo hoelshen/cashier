@@ -5,7 +5,7 @@
         <h2>状态：{{ orderInfo.state === 'WAIT_SEND' ? '待发货':(orderInfo.state === 'WAIT_CHECK' ? '待审核' : (orderInfo.state === 'DELIVERED' ? '已发货' : (orderInfo.state === 'FINISH' ? '已完成' : (orderInfo.state === 'RETURN_FINISH' ? '退款成功' : '')))) }}</h2>
         <el-button type="primary" @click="toBack" style="margin-left: 720px;">关闭</el-button>
     </div>
-    <div class="data">
+    <div class="data clearfix">
         <el-row>
             <el-col :span="24"><div class="dataTitle">进货单信息</div></el-col>
         </el-row>
