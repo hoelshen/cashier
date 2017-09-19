@@ -104,7 +104,7 @@
         </div>
         <!-- 表格 end -->
         <!-- 新增店铺弹窗 start -->
-        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" @open="resetForm">
+        <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" @close="resetAddForm">
             <el-form :model="addForm" label-width="120px" ref="addForm">
                 <el-row>
                     <el-col :span="12">
@@ -119,7 +119,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="addForm.phone" maxlength='11' placeholder="代理商手机"></el-input>
+                            <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -159,7 +159,7 @@
         </el-dialog>
         <!-- 新增店铺弹窗 end -->
         <!-- 修改店铺及店铺详情弹窗 start -->
-        <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" >
+        <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
             <el-form :model="editForm" label-width="120px" ref="editForm">
                 <el-row>
                     <el-col :span="12">
@@ -174,7 +174,7 @@
                     </el-col>
                     <el-col :span="12">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="editForm.phone" placeholder="代理商手机" maxlength='11' :disabled="isDisable"></el-input>
+                            <el-input v-model="editForm.phone" placeholder="代理商手机" :maxlength='phoneLength' :disabled="isDisable"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="12">
@@ -191,12 +191,12 @@
                         </el-form-item>
                     </el-col>
                     
-                    <el-col :span="24" v-show="editForm.agentGradeId=='265'">
+                    <el-col :span="24" v-if="editForm.agentGradeId=='265'">
                         <el-form-item label="代理区域：">
                             <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress'  :disabled="isDisable"/>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="24" v-show="editForm.agentGradeId">
+                    <el-col :span="24">
                         <el-form-item label="收件地址：">
                             <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode"  ref='editAddress' :disabled="isDisable"/>
                         </el-form-item>
@@ -220,7 +220,7 @@
         </el-dialog>
         <!-- 修改店铺及店铺详情弹窗 end -->
         <!-- 预存款变更弹窗 start -->
-        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @open="resetForm">
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
             <el-form :model="changeForm">
                 <el-row>
                     <el-col :span="22">
@@ -345,7 +345,8 @@ import $ from 'jquery';
                     address:''
                 },
                 isDisable:false,
-                order:''//预存款排序
+                order:'',//预存款排序
+                phoneLength:11
             }
         },
         components: {
@@ -994,9 +995,10 @@ import $ from 'jquery';
                     self.loading = false;
                 });
             },
-            //重置表格内容
-            resetForm(){
-                this.addForm = {
+            //重置新增表格内容
+            resetAddForm(){
+                const self =this;
+                self.addForm = {
                     shopName:'',
                     name:'',
                     phone:'',
@@ -1010,11 +1012,38 @@ import $ from 'jquery';
                     agentCounty:'',
                     address:''
                 }
-                this.$refs.addAddress.resetAddress();
-                this.$refs.addAgentAddress.resetAddress();
-                this.changeForm.changeType = '';
-                this.changeForm.alterMoney = '';
-                this.changeForm.remark = '';
+                self.$refs.addAddress.resetAddress();
+                self.$refs.addAgentAddress.resetAddress();
+
+
+            },
+            //重置修改表格内容
+            resetEditForm(){
+                const self =this;
+                self.editForm = {
+                    id:'',
+                    shopName:'',
+                    name:'',
+                    phone:'',
+                    signedTime:'',
+                    agentGradeId:'',
+                    provinceCode:'',
+                    cityCode:'',
+                    countyCode:'',
+                    agentProvince:'',
+                    agentCity:'',
+                    agentCounty:'',
+                    address:''
+                }
+                self.$refs.editAddress.resetAddress();
+                self.$refs.editAgentAddress.resetAddress();
+            },
+            //重置预存款表格内容
+            resetForm(){
+                const self =this;
+                self.changeForm.changeType = '';
+                self.changeForm.alterMoney = '';
+                self.changeForm.remark = '';
             }
         }
     }
