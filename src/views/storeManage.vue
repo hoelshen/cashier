@@ -1011,6 +1011,7 @@ import $ from 'jquery';
                     address:''
                 }
                 this.$refs.addAddress.resetAddress();
+                this.$refs.addAgentAddress.resetAddress();
                 this.changeForm.changeType = '';
                 this.changeForm.alterMoney = '';
                 this.changeForm.remark = '';
