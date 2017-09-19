@@ -4489,6 +4489,11 @@
             },
             getAddress() {
                 return this.getData().address;
+            },
+            resetAddress(){
+                this.onSelect.provinceCode = '';
+                this.onSelect.cityCode = '';
+                this.onSelect.areaCode = '';
             }
 
         }
