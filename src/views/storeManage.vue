@@ -896,7 +896,7 @@ import $ from 'jquery';
                 self.loading = true;
                 const data = self.addForm;
                 let addAddress = self.$refs.addAddress.getData();
-                let addAgentAddress = self.$refs.addAgentAddress.getData();
+                let addAgentAddress = data.agentGradeId==265?self.$refs.addAgentAddress.getData():null;
                 if (!self.testData(data,addAddress,addAgentAddress))return;
                 //请求
                 self.$ajax({
@@ -948,7 +948,7 @@ import $ from 'jquery';
                 self.loading = true;
                 const data = self.editForm;
                 let editAddress = self.$refs.editAddress.getData();
-                let editAgentAddress = self.$refs.editAgentAddress.getData();
+                let editAgentAddress = data.agentGradeId==265?self.$refs.editAgentAddress.getData():null;
                 if (!self.testData(data,editAddress,editAgentAddress))return;
                 //请求
                 console.log(data)
