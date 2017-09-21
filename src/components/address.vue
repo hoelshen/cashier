@@ -13,6 +13,7 @@
      *
      *      方法：
      *           getAddress     返回省市区详细地址拼接而成的字符串
+     *           resetAddress   清空地址
      *
      *      
      */
@@ -4425,7 +4426,6 @@
                     cityCode: String(this.cityCode),
                     areaCode: String(this.areaCode),
                 }, 
-                isFirst: true
             }
         },
         props:{
@@ -4483,6 +4483,7 @@
                 }
             },
             getAllData(ev) {
+                console.log(this.provinceCode)
                 this.$nextTick(function() {
                     this.$emit('getAllData', this.getData());
                 })
@@ -4491,9 +4492,10 @@
                 return this.getData().address;
             },
             resetAddress(){
-                this.onSelect.provinceCode = '';
-                this.onSelect.cityCode = '';
-                this.onSelect.areaCode = '';
+                const self = this;
+                self.onSelect.provinceCode = '';
+                self.onSelect.cityCode = '';
+                self.onSelect.areaCode = '';
             }
 
         }
