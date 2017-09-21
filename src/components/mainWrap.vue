@@ -43,6 +43,8 @@
                     '/memberList': '会员查询',
                     '/waitOrder': '待审核订单',
                     '/orderInfo/': '进货单详情',
+                    '/drawBack/': '全部退款单',
+                    '/waitdrawBack/': '待审核',
                 },
                 user : {}
             }
