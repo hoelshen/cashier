@@ -5,6 +5,7 @@
     min-width: 1110px;
     font-size: 14px;
 
+    //标题
     .title{
         h2{
             display: inline-block;
@@ -17,6 +18,7 @@
         }
     }
 
+    // 退款单信息
     .info{
         width: 96%;
         margin: 2%;
@@ -31,6 +33,28 @@
             border-top-right-radius: 5px;
         }
 
+        .el-row{
+            margin: 2%;
+        }
+
+        .warp{
+            height: 1px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 20px auto 10px auto;
+        }
+
+        h3{
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        p{
+            height: 36px;
+            line-height: 36px;
+        }
+
+        // 退款单信息主体
         .orderInfo{
             border: 1px solid rgba(0, 0, 0, 0.1);
             padding: 0px 30px;
@@ -122,29 +146,17 @@
                 text-indent: 3px;
                 cursor: pointer;
             }
-        }
-
-        .warp{
-            height: 1px;
-            width: 100%;
-            background-color: rgba(0, 0, 0, 0.1);
-            margin: 20px auto 10px auto;
-        }
-
-        h3{
-            font-weight: 600;
-            font-size: 15px;
-        }
-
-        p{
-            height: 36px;
-            line-height: 36px;
-        }
-        .gallery{
-                display: inline-block;
+            // 弹窗
+            .dialog{
+                span{
+                    display: inline-block;
+                    width: 75%;
+                }
+            }
         }
     }
     
+    // 日志
     .datelog{
         width: 96%;
         margin: 2%;

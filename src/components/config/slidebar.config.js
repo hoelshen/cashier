@@ -54,5 +54,18 @@ export default [{
             }
         ]
     },
-
+    {
+        title: '退款单管理',
+        icon: 'icon-dianpuguanli',
+        children: [{
+                title: '待审核',
+                path: '/waitdrawBack'
+            },
+            {
+                title: '全部退款单',
+                path:'/drawBack'
+            }
+        ]
+    },
+    
 ]
