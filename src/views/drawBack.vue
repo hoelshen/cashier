@@ -4,30 +4,30 @@
             <el-form v-model="searchData">
                 <el-row :gutter="10">
                     <el-col :span="6">
-                        <el-form-item label="代理商手机：" label-width="35%">
-                            <el-input v-model="searchData.searchPhone"></el-input>
+                        <el-form-item label="代理商手机：" label-width="38%">
+                            <el-input v-model="searchData.searchPhone" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="注册店铺名：" label-width="35%">
-                            <el-input v-model="searchData.searchShopName"></el-input>
+                        <el-form-item label="注册店铺名：" label-width="38%">
+                            <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="退款单号：" label-width="35%">
-                            <el-input v-model="searchData.searchNo"></el-input>
+                        <el-form-item label="退款单号：" label-width="38%">
+                            <el-input v-model="searchData.searchNo" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="原进货单号：" label-width="35%">
-                            <el-input v-model="searchData.searchOrderNo"></el-input>
+                        <el-form-item label="原进货单号：" label-width="38%">
+                            <el-input v-model="searchData.searchOrderNo" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="6">
-                        <el-form-item label="状态：" label-width="35%">
-                            <el-select v-model="searchData.searchState">
+                        <el-form-item label="状态：" label-width="38%">
+                            <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
                                 <el-option label="审核通过" value="AUDIT_PASS"></el-option>
                                 <el-option label="退款中" value="REFUNDING"></el-option>
@@ -40,7 +40,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="申请时间：  " label-width="35%">
+                        <el-form-item label="申请时间：  " label-width="38%">
                             <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime"></el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -51,8 +51,8 @@
             </el-form>
         </div>
         <div class="drawBackList">
-            <el-table border :data="tableData" @sort-change='store' @row-dblclick="dbClick">
-                <el-table-column prop="purchaseOrderBackNo" label="退款单单号" width="160px">
+            <el-table border :data="tableData" @sort-change='store'>
+                <el-table-column prop="purchaseOrderBackNo" label="退款单号" width="160px">
                 </el-table-column>
                 <el-table-column prop="shopNo" label="代理商编号" width="110px">
                 </el-table-column>
@@ -127,12 +127,9 @@ export default {
             'pager.pageIndex': 1,
             'pager.pageSize': this.pageSize,
         }).then((res) => {
-            console.log(res);
             this.tableData = res.data.result;
             this.totalNums = res.data.totalNums;
-            console.log(this.totalNums);
         }).catch((err) => {
-            console.log(err);
             this.$message({
                 messgae: err.data.msg,
                 type: 'error',
@@ -141,10 +138,10 @@ export default {
     },
     methods: {
         // 双击跳转
-        dbClick(row, event) {
-            console.log(row);
-            this.$router.push({ name: 'drawBackDetail', params: { purchaseOrderBackNo: row.purchaseOrderBackNo } })
-        },
+        // dbClick(row, event) {
+        //     console.log(row);
+        //     this.$router.push({ name: 'drawBackDetail', params: { purchaseOrderBackNo: row.purchaseOrderBackNo } })
+        // },
         //每页条数选择
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -170,11 +167,9 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                 }).then((res) => {
-                    console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
                 }).catch((err) => {
-                    console.log(err);
                     this.$message({
                         messgae: err.msg,
                         type: 'error',
@@ -216,13 +211,7 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
-                    console.log(this.totalNums);
-                    this.$message({
-                        message: '排序成功',
-                        type: 'success'
-                    });
                 }).catch((err) => {
-                    console.log(err);
                     this.$message({
                         messgae: err.msg,
                         type: 'error',
@@ -290,11 +279,6 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
-                    console.log(this.totalNums);
-                    this.$message({
-                        message: '查询成功',
-                        type: 'success'
-                    });
                 }).catch((err) => {
                     console.log(err);
                     this.$message({
