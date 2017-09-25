@@ -13,7 +13,7 @@
         </div>
         <div class="title">
             <h2>退款单单号：{{ refundInfo.purchaseOrderBackNo }}</h2>
-            <h2>状态：{{ refundInfo.refundState === 'WAIT_AUDIT' ? '待审核':(refundInfo.refundState === 'AUDIT_PASS' ? '审核通过':(refundInfo.refundState === 'REFUNDING' ? '退款中' : (refundInfo.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (refundInfo.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(refundInfo.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (refundInfo.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(refundInfo.refundState === 'CANCEL' ? '退款关闭' :''))))))) }}</h2>
+            <h2>状态：{{ refundInfo.refundState === 'WAIT_AUDIT' ? '待审核':(refundInfo.refundState === 'AUDIT_PASS_REFUNDING' ? '审核通过,退款中':(refundInfo.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (refundInfo.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(refundInfo.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (refundInfo.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(refundInfo.refundState === 'CANCEL' ? '退款关闭' :'')))))) }}</h2>
             <el-button type="primary">关闭</el-button>
         </div>
         <div class="info">
@@ -98,7 +98,7 @@
                 </el-form>
                 <!-- 待审核 End -->
                 <!-- 审核通过，退款中 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 2">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'AUDIT_PASS_REFUNDING'">
                     <el-row :gutter="10">
                         <el-col :span="8">
                             <el-form-item label="申请金额：" label-width="25%">￥{{ toFixed(refundInfo.refundAmount)}}
@@ -132,7 +132,7 @@
                 </el-form>
                 <!-- 审核通过，退款中 End -->
                 <!-- 退款成功 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 6">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'REDUNS_SUCCESS' || refundInfo.refundState === 'CANCEL'">
                     <el-row :gutter="10">
                         <el-col :span="8">
                             <el-form-item label="申请金额：" label-width="25%">￥{{ toFixed(refundInfo.refundAmount)}}
@@ -242,7 +242,7 @@
                 <div class="warp"></div>
                 <h3>客服审核</h3>
                 <!-- 退货退款 待审核 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 1">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'WAIT_AUDIT'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -305,7 +305,7 @@
                 </el-form>
                 <!-- 退货退款 待审核 End -->
                 <!-- 审核通过，请退款 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 2">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'AUDIT_PASS_WAIT_SEND'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -384,8 +384,8 @@
                 </div>
                 <!-- 补充信息弹窗 End -->
                 <!-- 审核通过，请退款 End -->
-                <!-- 已退回，待确认 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 3">
+                <!-- 已退回，待收货 Start -->
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'SEND_WAIT_RECEIVED'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -432,9 +432,9 @@
                         </el-col>
                     </el-row>
                 </el-form>
-                <!-- 已退回，待确认 End -->
+                <!-- 已退回，待收货 End -->
                 <!-- 已退货，确认中 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 4">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'RECEIVED_WAIT_CONFIRM'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -495,7 +495,7 @@
                 </el-form>
                 <!-- 已退货，退款中 End -->
                 <!-- 审核通过，退款中 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 5">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'AUDIT_PASS_REFUNDING'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -556,7 +556,7 @@
                 </el-form>
                 <!-- 审核通过，退款中 End -->
                 <!-- 退款成功 Start -->
-                <el-form v-model="checkData" v-if="onDrawBack === 6">
+                <el-form v-model="checkData" v-if="refundInfo.refundState === 'REDUNS_SUCCESS' || refundInfo.refundState === 'CANCEL'">
                     <el-row>
                         <el-col :span="6">
                             <el-form-item label="退款类型：" label-width="33%">
@@ -634,7 +634,7 @@ import $ from 'jquery'
 export default {
     data() {
         return {
-            onDrawBack: 1,                      
+            onDrawBack: 1,
             changeMoney: true,                  //修改金额
             dialogFormVisible: false,           //补充信息弹窗
             loading: true,
@@ -657,12 +657,16 @@ export default {
             refundInfo: {                       //退款单信息
                 purchaseOrderBackNo: '',        //退款单号
                 purchaseOrderNo: '',            //原订单号
-                refundState: '',                //状态，退货流程 1：待审核（WAIT_AUDIT） 2：审核通过（AUDIT_PASS） 3：退款中（REFUNDING） 4：退款成功（REDUNS_SUCCESS） 5：审核通过，请退货（AUDIT_PASS_WAIT_SEND） 6：已退回，待收获（SEND_WAIT_RECEIVED）   7、已收货，确认中（RECEIVED_WAIT_CONFIRM） 8、退款关闭（CANCEL）
+                refundState: '',                //状态，退货流程 1：待审核（WAIT_AUDIT） 2：审核通过,退款中（AUDIT_PASS_REFUNDING）  3：退款成功（REDUNS_SUCCESS） 4：审核通过，请退货（AUDIT_PASS_WAIT_SEND） 5：已退回，待收获（SEND_WAIT_RECEIVED）   6、已收货，确认中（RECEIVED_WAIT_CONFIRM） 7、退款关闭（CANCEL）
                 createdTime: '',                //申请时间
                 refundAmount: '',               //申请金额
                 refundType: '',                 //退款类型，是否发货；已发货：整单退款（SEND_BEFORE_REFUND）； 未发货：退款退货（REFUND_GOODS）、仅退款（REFUND_AMOUNT）
                 refundReason: '',               //退款原因
                 refundExplain: '',              //退款说明
+                auditExplain: '',               //审核说明
+                refundAmount: '',               //申请金额
+                serviceRemark: '',              //客服备注
+                // 差个实际申请金额
             },
 
             checkData: {                        //客服审核数据
