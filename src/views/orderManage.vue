@@ -229,12 +229,44 @@ export default {
         },
         handleCurrentChange(val) {
             if (!this.checkSession()) return;
+            console.log(this.searchData.searchTime);
+            console.log(this.searchData.searchTime[0]);
+            var temp = new Date(this.searchData.searchTime[0]);
+            if (temp.getFullYear() > 2006) {
+                var time1 = temp.getFullYear();
+                if ((temp.getMonth() + 1) < 10) {
+                    time1 = time1 + '-0' + (temp.getMonth() + 1);
+                } else {
+                    time1 = time1 + '-' + (temp.getMonth() + 1);
+                }
+                if (temp.getDate() < 10) {
+                    time1 = time1 + '-0' + temp.getDate();
+                } else {
+                    time1 = time1 + '-' + temp.getDate();
+                }
+                console.log(time1);
+                temp = new Date(this.searchData.searchTime[1]);
+                var time2 = temp.getFullYear();
+                if ((temp.getMonth() + 1) < 10) {
+                    time2 = time2 + '-0' + (temp.getMonth() + 1);
+                } else {
+                    time2 = time2 + '-' + (temp.getMonth() + 1);
+                }
+                if (temp.getDate() < 10) {
+                    time2 = time2 + '-0' + temp.getDate();
+                } else {
+                    time2 = time2 + '-' + temp.getDate();
+                }
+                console.log(time2);
+            } else {
+                var time1 = '';
+                var time2 = '';
+            }
             if (this.searchData.searchLevel != '') {
                 this.searchData.level = this.searchData.searchLevel.join(',');
             } else {
                 this.searchData.level = '';
             }
-            console.log(this.searchData.searchLevel);
             this.$getData({
                 url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
                 data: {
@@ -245,8 +277,8 @@ export default {
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.startTime': this.searchData.searchTime[0],
-                    'purchaseOrder.endTime': this.searchData.searchTime[1],
+                    'purchaseOrder.startTime': time1,
+                    'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
                 },
@@ -278,12 +310,45 @@ export default {
             if (row.order === 'descending') {
                 this.order = 'desc';
             }
+            if (!this.checkSession()) return;
+            console.log(this.searchData.searchTime);
+            console.log(this.searchData.searchTime[0]);
+            var temp = new Date(this.searchData.searchTime[0]);
+            if (temp.getFullYear() > 2006) {
+                var time1 = temp.getFullYear();
+                if ((temp.getMonth() + 1) < 10) {
+                    time1 = time1 + '-0' + (temp.getMonth() + 1);
+                } else {
+                    time1 = time1 + '-' + (temp.getMonth() + 1);
+                }
+                if (temp.getDate() < 10) {
+                    time1 = time1 + '-0' + temp.getDate();
+                } else {
+                    time1 = time1 + '-' + temp.getDate();
+                }
+                console.log(time1);
+                temp = new Date(this.searchData.searchTime[1]);
+                var time2 = temp.getFullYear();
+                if ((temp.getMonth() + 1) < 10) {
+                    time2 = time2 + '-0' + (temp.getMonth() + 1);
+                } else {
+                    time2 = time2 + '-' + (temp.getMonth() + 1);
+                }
+                if (temp.getDate() < 10) {
+                    time2 = time2 + '-0' + temp.getDate();
+                } else {
+                    time2 = time2 + '-' + temp.getDate();
+                }
+                console.log(time2);
+            } else {
+                var time1 = '';
+                var time2 = '';
+            }
             if (this.searchData.searchLevel != '') {
                 this.searchData.level = this.searchData.searchLevel.join(',');
             } else {
                 this.searchData.level = '';
             }
-            console.log(this.searchData.searchLevel);
             this.$getData({
                 url: 'http/purchaseOrder/queryPurchaseOrderList.jhtml',
                 data: {
@@ -294,8 +359,8 @@ export default {
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.startTime': this.searchData.searchTime[0],
-                    'purchaseOrder.endTime': this.searchData.searchTime[1],
+                    'purchaseOrder.startTime': time1,
+                    'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
                 },
