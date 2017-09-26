@@ -54,5 +54,20 @@ export default [{
             }
         ]
     },
-
+    {
+        title: '退款单管理',
+        icon: 'icon-tuikuandingdan',
+        children: [{
+                title: '待审核',
+                countName: 'waitDrawBack',
+                count: 0,
+                path: '/waitDrawBack'
+            },
+            {
+                title: '全部退款单',
+                path:'/drawBack'
+            }
+        ]
+    },
+    
 ]
