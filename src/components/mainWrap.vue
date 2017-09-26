@@ -90,15 +90,20 @@ export default {
         });
 
         // 待审核退款单数
-        this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', {
+        var qs = require('qs');
+        this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
             'pager.pageIndex': 1,
-            'pager.pageSize': 30,
+            'pager.pageSize': this.pageSize,
             'searchBackVo.isWaitAudit': 1,
-        }).then((res) => {
-            console.log(res.data.totalNums);
-            this.$slide.setCount('waitDrawBack', res.data.totalNums);
-        }).catch((err) => {
-        });
+        }), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }).then((res) => {
+                console.log(res.data.totalNums);
+                this.$slide.setCount('waitDrawBack', res.data.totalNums);
+            }).catch((err) => {
+            });
     },
     components: {
         slideBar

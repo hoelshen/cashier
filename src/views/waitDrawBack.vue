@@ -55,8 +55,14 @@
                 <el-table-column prop="shopName" label="店铺名称">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
+                    <template scope="scope">
+                        {{ scope.row.refundType === 'SEND_BEFORE_REFUND' ? '整单退款' : (scope.row.refundType === 'REFUND_GOODS' ? '退款退货' : (scope.row.refundType === 'REFUND_AMOUNT' ? '仅退款' :'')) }}
+                    </template>
                 </el-table-column>
                 <el-table-column prop="refundState" label="状态">
+                    <template scope="scope">
+                        {{ scope.row.refundState === 'WAIT_AUDIT' ? '待审核':(scope.row.refundState === 'AUDIT_PASS_REFUNDING' ? '审核通过,退款中':(scope.row.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (scope.row.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(scope.row.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (scope.row.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(scope.row.refundState === 'CANCEL' ? '退款关闭' :'')))))) }}
+                    </template>
                 </el-table-column>
                 <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
                 </el-table-column>
@@ -117,20 +123,25 @@ export default {
     },
     created() {
         // 获取页面初始化数据
-        this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', {
+        var qs = require('qs');
+        this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
             'pager.pageIndex': 1,
             'pager.pageSize': this.pageSize,
             'searchBackVo.isWaitAudit': 1,
-        }).then((res) => {
-            console.log(res);
-            this.tableData = res.data.result;
-            this.totalNums = res.data.totalNums;
-        }).catch((err) => {
-            this.$message({
-                messgae: err.data.msg,
-                type: 'error',
+        }), {
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+            }).then((res) => {
+                console.log(res);
+                this.tableData = res.data.result;
+                this.totalNums = res.data.totalNums;
+            }).catch((err) => {
+                this.$message({
+                    messgae: err.data.msg,
+                    type: 'error',
+                });
             });
-        });
     },
     methods: {
         //每页条数选择
