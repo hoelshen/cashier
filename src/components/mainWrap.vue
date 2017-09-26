@@ -93,7 +93,7 @@ export default {
         var qs = require('qs');
         this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
             'pager.pageIndex': 1,
-            'pager.pageSize': this.pageSize,
+            'pager.pageSize': 30,
             'searchBackVo.isWaitAudit': 1,
         }), {
                 headers: {
