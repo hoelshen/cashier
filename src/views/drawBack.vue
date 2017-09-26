@@ -1,5 +1,5 @@
 <template>
-    <div class="drawBack">
+    <div class="drawBack" v-loading="loading">
         <div class="search">
             <el-form v-model="searchData">
                 <el-row :gutter="10">
@@ -29,7 +29,7 @@
                         <el-form-item label="状态：" label-width="38%">
                             <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
-                                <el-option label="审核通过" value="AUDIT_PASS"></el-option>
+                                <el-option label="审核通过,退款中" value="AUDIT_PASS_REFUNDING"></el-option>
                                 <el-option label="退款中" value="REFUNDING"></el-option>
                                 <el-option label="退款成功" value="REDUNS_SUCCESS"></el-option>
                                 <el-option label="审核通过，请退货" value="AUDIT_PASS_WAIT_SEND"></el-option>
@@ -79,7 +79,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template scope="scope">
-                        <router-link :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderBackNo }}">详情</router-link>
+                        <router-link :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderBackNo,purchaseOrderNo: scope.row.purchaseOrderNo }}">详情</router-link>
                         <!-- v-if="备注判断未添加" -->
                         <el-tooltip class="item" effect="light" placement="top" v-if="scope.row.serviceRemark">
                             <div slot="content" class="tooltip">{{ scope.row.serviceRemark }}</div>
@@ -104,6 +104,7 @@ export default {
             currentPage: 1,                 //当前页
             totalNums: 500,                 //总条数
             order: '',                      //排序
+            loading: true,                  //加载
             searchData: {                   //查询数据
                 searchPhone: '',            //代理商手机
                 searchShopName: '',         //注册店铺名
@@ -140,6 +141,7 @@ export default {
             }).then((res) => {
                 this.tableData = res.data.result;
                 this.totalNums = res.data.totalNums;
+                this.loading=false;
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
