@@ -12,7 +12,7 @@
         </div>
         <!-- 退款单信息头 -->
         <div class="title">
-            <h2>退款单单号：{{ refundInfo.purchaseOrderBackNo }}</h2>
+            <h2>退款单号：{{ refundInfo.purchaseOrderBackNo }}</h2>
             <h2>状态：{{ refundInfo.refundState === 'WAIT_AUDIT' ? '待审核':(refundInfo.refundState === 'AUDIT_PASS_REFUNDING' ? '审核通过,退款中':(refundInfo.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (refundInfo.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(refundInfo.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (refundInfo.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(refundInfo.refundState === 'CANCEL' ? '退款关闭' :'')))))) }}</h2>
             <el-button type="primary" @click="goBack">关闭</el-button>
         </div>
@@ -248,7 +248,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="checkData.refundType">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -267,7 +267,7 @@
                                 <div class="changeMoney" v-if="checkData.refundType === 'REFUND_GOODS'" @click="changeMoney = false">修改</div>
                             </el-form-item>
                             <el-form-item label="申请金额：" label-width="25%" v-else>
-                                <el-input v-model="checkData.applyRefundAmount" class="money"></el-input>
+                                <el-input v-model="refundInfo.applyRefundAmount" class="money"></el-input>
                                 <div class="yes" @click="onChangeMoney">✔</div>
                                 <div class="no" @click="cancelChange">✘</div>
                             </el-form-item>
@@ -311,7 +311,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="refundInfo.refundType" disabled="disabled">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -392,7 +392,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="refundInfo.refundType" disabled="disabled">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -441,7 +441,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="refundInfo.refundType" disabled="disabled">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -502,7 +502,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="refundInfo.refundType" disabled="disabled">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -563,7 +563,7 @@
                             <el-form-item label="退款类型：" label-width="33%">
                                 <el-select v-model="refundInfo.refundType" disabled="disabled">
                                     <el-option label="退货退款" value="REFUND_GOODS"></el-option>
-                                    <el-option label="仅退货" value="REFUND_AMOUNT"></el-option>
+                                    <el-option label="仅退款" value="REFUND_AMOUNT"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -640,6 +640,7 @@ export default {
             dialogFormVisible: false,           //补充信息弹窗
             showImages: false,                  //图片展示
             user: '',                           //用户名
+            allTotal: 0,                        //退款总金额
             images: [                           //图片列表
                 {
                     imageUrl: '',
@@ -753,6 +754,7 @@ export default {
                     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
                     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
                     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
+                    this.allTotal += this.shopTableData[i].subtotal;
                 }
             },
             fail(response) {
@@ -782,7 +784,7 @@ export default {
     },
     methods: {
         //返回
-        goBack(){
+        goBack() {
             window.history.go(-1);
         },
         // 提交快递信息
@@ -830,6 +832,13 @@ export default {
         },
         // 已发货二次审核通过
         afterSecondPassCheck() {
+            if (this.checkData.refundAmount > this.refundInfo.applyRefundAmount) {
+                this.$message({
+                    message: '实际退款金额不得超过申请退款金额！',
+                    type: 'error'
+                });
+                return;
+            }
             if (!/^[0-9\.]+$/.test(this.checkData.refundAmount)) {
                 this.$message({
                     message: '退款金额格式错误',
@@ -877,9 +886,6 @@ export default {
         },
         // 已发货审核通过
         afterPassCheck() {
-            
-                console.log(this.checkData.refundType)
-                console.log(this.checkData.refundAmount)
             if (this.checkData.refundType === '') {
                 this.$message({
                     message: '请选择退款类型',
@@ -887,7 +893,7 @@ export default {
                 });
                 return;
             }
-            if (!/^[0-9\.]+$/.test(this.checkData.refundAmount)) {
+            if (!/^[0-9\.]+$/.test(this.refundInfo.applyRefundAmount)) {
                 this.$message({
                     message: '退款金额格式错误',
                     type: 'error'
@@ -900,7 +906,7 @@ export default {
                 method: 'post',
                 data: {
                     'auditBackVo.auditorId': self.user.id,
-                    'auditBackVo.refundAmount': self.checkData.refundAmount,
+                    'auditBackVo.refundAmount': self.refundInfo.applyRefundAmount,
                     'auditBackVo.auditExplain': self.checkData.auditExplain,
                     'auditBackVo.serviceRemark': self.checkData.serviceRemark,
                     'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
@@ -1137,6 +1143,13 @@ export default {
         },
         //变更金额  系统异常待处理
         onChangeMoney() {
+            if (this.refundInfo.applyRefundAmount > this.allTotal) {
+                this.$message({
+                    message: '申请金额不得超过申请的退款金额总价！',
+                    type: 'error'
+                });
+                return;
+            }
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrderBack/updatePurchaseOrderBack.jhtml',

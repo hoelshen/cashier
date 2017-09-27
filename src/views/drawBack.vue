@@ -30,7 +30,6 @@
                             <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
                                 <el-option label="审核通过,退款中" value="AUDIT_PASS_REFUNDING"></el-option>
-                                <el-option label="退款中" value="REFUNDING"></el-option>
                                 <el-option label="退款成功" value="REDUNS_SUCCESS"></el-option>
                                 <el-option label="审核通过，请退货" value="AUDIT_PASS_WAIT_SEND"></el-option>
                                 <el-option label="已退回，待收货" value="SEND_WAIT_RECEIVED"></el-option>
