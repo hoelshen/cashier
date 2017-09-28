@@ -29,12 +29,12 @@
                         <el-form-item label="状态：" label-width="38%">
                             <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
-                                <el-option label="审核通过,退款中" value="AUDIT_PASS_REFUNDING"></el-option>
                                 <el-option label="退款成功" value="REDUNS_SUCCESS"></el-option>
-                                <el-option label="审核通过，请退货" value="AUDIT_PASS_WAIT_SEND"></el-option>
+                                <el-option label="退款关闭" value="CANCEL"></el-option>
                                 <el-option label="已退回，待收货" value="SEND_WAIT_RECEIVED"></el-option>
                                 <el-option label="已收货，确认中" value="RECEIVED_WAIT_CONFIRM"></el-option>
-                                <el-option label="退款关闭" value="CANCEL"></el-option>
+                                <el-option label="审核通过,退款中" value="AUDIT_PASS_REFUNDING"></el-option>
+                                <el-option label="审核通过，请退货" value="AUDIT_PASS_WAIT_SEND"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -140,7 +140,7 @@ export default {
             }).then((res) => {
                 this.tableData = res.data.result;
                 this.totalNums = res.data.totalNums;
-                this.loading=false;
+                this.loading = false;
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
