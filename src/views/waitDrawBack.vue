@@ -56,7 +56,7 @@
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
                     <template scope="scope">
-                        {{ scope.row.refundType === 'SEND_BEFORE_REFUND' ? '整单退款' : (scope.row.refundType === 'REFUND_GOODS' ? '退款退货' : (scope.row.refundType === 'REFUND_AMOUNT' ? '仅退款' :'')) }}
+                        {{ scope.row.refundType === 'SEND_BEFORE_REFUND' ? '整单退款' : (scope.row.refundType === 'REFUND_GOODS' ? '退货退款' : (scope.row.refundType === 'REFUND_AMOUNT' ? '仅退款' :'')) }}
                     </template>
                 </el-table-column>
                 <el-table-column prop="refundState" label="状态">
@@ -128,6 +128,8 @@ export default {
             'pager.pageIndex': 1,
             'pager.pageSize': this.pageSize,
             'searchBackVo.isWaitAudit': 1,
+            'searchBackVo.sort': 'applyTime',
+            'searchBackVo.order': 'desc',
         }), {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
