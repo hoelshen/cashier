@@ -68,7 +68,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="实际退款金额：" label-width="30%">
+                            <el-form-item label="实际退款金额：" label-width="34%">
                                 <el-input v-model="checkData.refundAmount"></el-input>
                             </el-form-item>
                         </el-col>
@@ -105,7 +105,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="实际退款金额：" label-width="30%">
+                            <el-form-item label="实际退款金额：" label-width="34%">
                                 <el-input v-model="refundInfo.refundAmount" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
@@ -139,7 +139,7 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="8">
-                            <el-form-item label="实际退款金额：" label-width="30%">
+                            <el-form-item label="实际退款金额：" label-width="34%">
                                 <el-input v-model="refundInfo.refundAmount" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
@@ -260,7 +260,7 @@
                         <el-col :span="8">
                             <el-form-item label="申请金额：" label-width="35%" v-if="changeMoney">
                                 ￥
-                                <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
+                                <span>{{ toFixed(checkData.applyRefundAmount)}}</span>
                                 <div class="changeMoney" v-if="checkData.refundType === 'REFUND_GOODS'" @click="defaultChange">修改</div>
                             </el-form-item>
                             <el-form-item label="申请金额：" label-width="35%" v-else>
@@ -272,7 +272,7 @@
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
                                 <el-select v-model="checkData.drawBackDepot">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -326,10 +326,10 @@
                                 <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" v-if="checkData.refundType==='REFUND_GOODS'">
+                        <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled="disabled">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                <el-select v-model="checkData.drawBackDepot" disabled>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -360,7 +360,7 @@
                     <el-dialog title="请填写退货信息" :visible.sync="dialogFormVisible" size="tiny">
                         <el-form :model="expressInfo">
                             <el-form-item label="退货地址：" label-width="100px">
-                                <span>厦门市思明区会展南路7号109之五号写字楼4楼醉品 仓储物流 13300009999</span>
+                                <span>福建省厦门市同安区同安工业集中区二环南路399号，闽盛交通机动车检测中心1#厂房三楼</span>
                             </el-form-item>
                             <el-form-item label="选择快递：" label-width="100px">
                                 <el-select v-model="expressInfo.expressType" placeholder="请选择">
@@ -407,10 +407,10 @@
                                 <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" v-if="checkData.refundType==='REFUND_GOODS'">
+                        <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled="disabled">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                <el-select v-model="checkData.drawBackDepot" disabled>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -456,10 +456,10 @@
                                 <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" v-if="checkData.refundType==='REFUND_GOODS'">
+                        <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled="disabled">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                <el-select v-model="checkData.drawBackDepot" disabled>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -517,10 +517,10 @@
                                 <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" v-if="checkData.refundType==='REFUND_GOODS'">
+                        <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled="disabled">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                <el-select v-model="checkData.drawBackDepot" disabled>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -578,10 +578,10 @@
                                 <span>{{ toFixed(refundInfo.applyRefundAmount)}}</span>
                             </el-form-item>
                         </el-col>
-                        <el-col :span="8" v-if="checkData.refundType==='REFUND_GOODS'">
+                        <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled="disabled">
-                                    <el-option label="同安仓" value="1"></el-option>
+                                <el-select v-model="checkData.drawBackDepot" disabled>
+                                    <el-option label="同安仓" value="-1"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -600,9 +600,9 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="30">
+                    <el-row :gutter="30" v-if="refundInfo.refundState === 'REDUNS_SUCCESS'">
                         <el-col :span="8">
-                            <el-form-item label="退款金额：" label-width="36%">
+                            <el-form-item label="实际退款金额：" label-width="36%">
                                 <el-input v-model="refundInfo.refundAmount" class="inputWidth" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
@@ -639,6 +639,7 @@ export default {
             showImages: false,                  //图片展示
             user: '',                           //用户名
             allTotal: 0,                        //退款总金额
+            wantMoney: '',                       //申请金额temp
             images: [                           //图片列表
             ],
 
@@ -665,7 +666,7 @@ export default {
             checkData: {                        //客服审核数据
                 refundType: '',              //退款类型，判断是否是仅退款
                 applyRefundAmount: 0,                  //申请金额
-                drawBackDepot: '1',             //退货仓库
+                drawBackDepot: '-1',             //退货仓库
                 refundAmount: 0,                //实际退款金额
                 auditExplain: '',                   //审核说明
                 serviceRemark: '',                      //备注
@@ -721,9 +722,11 @@ export default {
                 this.tableData = response.data.result.purchaseOrderBackLogs;
                 this.refundInfo = response.data.result;
                 this.checkData = response.data.result;
+                this.checkData.drawBackDepot = '-1';
                 this.refundInfo.applyRefundAmount = this.toFixed(this.refundInfo.applyRefundAmount);
                 this.refundInfo.refundAmount = this.toFixed(this.refundInfo.refundAmount);
                 this.shopTableData = response.data.result.purchaseOrderBackDetails;
+                this.wantMoney = response.data.result.applyRefundAmount;
                 // 日志处理
                 for (let i = 0; i < this.tableData.length; i++) {
                     if (i === 0) {
@@ -763,7 +766,23 @@ export default {
                 purchaseOrderNo: src[6]
             },
             success(response) {
-                this.orderInfo = response.data.result;
+                // this.orderInfo = response.data.result;
+            },
+            fail(response) {
+                this.$message({
+                    message: response.data.msg,
+                    type: 'error'
+                })
+            },
+        });
+
+        //获取仓库数据
+        this.$getData({
+            url: '/http/purchaseOrderBack/queryRepertoryList.jhtml',
+            data: {
+            },
+            success(response) {
+                console.log(response.data.result);
             },
             fail(response) {
                 this.$message({
@@ -777,13 +796,8 @@ export default {
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
             if (item === "REFUND_AMOUNT") {
-                this.checkData.refundAmount = this.allTotal;
-                this.refundInfo.refundAmount = this.allTotal;
-                this.checkData.applyRefundAmount = this.allTotal;
-                this.refundInfo.applyRefundAmount = this.allTotal;
+                this.checkData.applyRefundAmount = this.wantMoney;
                 this.changeMoney = true;
-            } else {
-                this.checkData.drawBackDepot = '1';
             }
         },
         //返回
@@ -832,29 +846,26 @@ export default {
         afterSecondPassCheck() {
             if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                 this.$message({
-                    message: '实际退款金额不得超过申请退款金额！',
+                    message: '实际退款金额不能超过申请金额',
                     type: 'warning'
                 });
                 return;
             }
             if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
                 this.$message({
-                    message: '实际退款金额格式错误',
+                    message: '请输入大于0的数字，且小数位不能超过两位',
                     type: 'warning'
                 });
                 return;
             }
             const self = this;
             self.$ajax({
-                url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
+                url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
                 method: 'post',
                 data: {
                     'auditBackVo.auditorId': self.user.id,
                     'auditBackVo.refundAmount': self.checkData.refundAmount,
-                    'auditBackVo.auditExplain': self.refundInfo.auditExplain,
-                    'auditBackVo.serviceRemark': self.refundInfo.serviceRemark,
                     'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'auditBackVo.refundType': self.refundInfo.refundType,
                     'auditBackVo.auditState': 1,
                 },
                 transformRequest: [function(data) {
@@ -884,7 +895,8 @@ export default {
         },
         // 已发货审核通过
         afterPassCheck() {
-            if (this.checkData.refundType === '') {
+            if (this.checkData.refundType === null) {
+                console.log(111);
                 this.$message({
                     message: '请选择退款类型',
                     type: 'warning'
@@ -893,10 +905,11 @@ export default {
             }
             if (this.checkData.refundType === 'REFUND_AMOUNT') {
                 this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.drawBackDepot = '';
             }
             if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
                 this.$message({
-                    message: '实际退款金额格式错误',
+                    message: '请输入大于0的数字，且小数位不能超过两位',
                     type: 'warning'
                 });
                 return;
@@ -912,6 +925,7 @@ export default {
                     'auditBackVo.serviceRemark': self.checkData.serviceRemark,
                     'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
                     'auditBackVo.refundType': self.checkData.refundType,
+                    'auditBackVo.repertoryId': self.checkData.drawBackDepot,
                     'auditBackVo.auditState': 1,
                 },
                 transformRequest: [function(data) {
@@ -941,19 +955,19 @@ export default {
         },
         // 已发货审核拒绝
         afterNoPassCheck() {
-            // if (this.checkData.refundType === '') {
-            //     this.$message({
-            //         message: '请选择退款类型',
-            //         type: 'warning'
-            //     });
-            //     return;
-            // }
+            if (this.checkData.refundType === null) {
+                this.$message({
+                    message: '请选择退款类型',
+                    type: 'warning'
+                });
+                return;
+            }
             // if (this.checkData.refundType === 'REFUND_AMOUNT') {
             //     this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
             // }
             // if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount)) {
             //     this.$message({
-            //         message: '实际退款金额格式错误',
+            //         message: '请输入大于0的数字，且小数位不能超过两位',
             //         type: 'warning'
             //     });
             //     return;
@@ -969,6 +983,7 @@ export default {
                     'auditBackVo.serviceRemark': self.checkData.serviceRemark,
                     'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
                     'auditBackVo.refundType': self.checkData.refundType,
+                    'auditBackVo.repertoryId': self.checkData.drawBackDepot,
                     'auditBackVo.auditState': 0,
                 },
                 transformRequest: [function(data) {
@@ -1000,14 +1015,14 @@ export default {
         beforePassCheck() {
             if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                 this.$message({
-                    message: '实际退款金额不得超过申请退款金额！',
+                    message: '申请金额不能超过商品明细退款合计',
                     type: 'warning'
                 });
                 return;
             }
             if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
                 this.$message({
-                    message: '实际退款金额格式错误',
+                    message: '请输入大于0的数字，且小数位不能超过两位',
                     type: 'warning'
                 });
                 return;
@@ -1054,14 +1069,14 @@ export default {
         beforeNoPassCheck() {
             // if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
             //     this.$message({
-            //         message: '实际退款金额不得超过申请退款金额！',
+            //         message: '申请金额不能超过商品明细退款合计',
             //         type: 'warning'
             //     });
             //     return;
             // }
             // if (!/^[0-9\.]+$/.test(this.checkData.refundAmount)) {
             //     this.$message({
-            //         message: '实际退款金额格式错误',
+            //         message: '请输入大于0的数字，且小数位不能超过两位',
             //         type: 'warning'
             //     });
             //     return;
@@ -1159,10 +1174,17 @@ export default {
                 }
             }
         },
-        //变更金额  系统异常待处理
+        //变更金额  
         onChangeMoney() {
-            this.refundInfo.applyRefundAmount = this.checkData.applyRefundAmount;
-            if (Number(this.refundInfo.applyRefundAmount) > Number(this.allTotal)) {
+            if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
+                this.$message({
+                    message: '小数位为2位数',
+                    type: 'warning'
+                });
+                return;
+
+            }
+            if (Number(this.checkData.applyRefundAmount) > Number(this.allTotal)) {
                 this.$message({
                     message: '申请金额不得超过申请的退款金额总价！',
                     type: 'warning'
@@ -1170,14 +1192,11 @@ export default {
                 return;
             }
             if (this.checkData.refundType === "REFUND_AMOUNT") {
-                this.checkData.refundAmount = this.allTotal;
-                this.refundInfo.refundAmount = this.allTotal;
-                this.checkData.applyRefundAmount = this.allTotal;
-                this.refundInfo.applyRefundAmount = this.allTotal;
+                this.checkData.applyRefundAmount = this.wantMoney;
             }
             if (Number(this.checkData.refundAmount) === 0 || Number(this.checkData.applyRefundAmount) === 0) {
                 this.$message({
-                    message: '金额格式错误',
+                    message: '金额不能为0',
                     type: 'warning',
                 });
                 return;
@@ -1189,6 +1208,7 @@ export default {
                 data: {
                     'purchaseOrderBack.applyRefundAmount': self.checkData.applyRefundAmount,
                     'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                    'purchaseOrderBack.updatorId': self.user.id,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1215,19 +1235,13 @@ export default {
         },
         // 点击修改
         defaultChange() {
-            this.checkData.refundAmount = this.refundInfo.applyRefundAmount;
-            this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+            this.wantMoney = this.refundInfo.applyRefundAmount;
             this.changeMoney = false;
         },
         // 取消金额修改且复原申请金额
         cancelChange() {
-            this.refundInfo.applyRefundAmount = this.checkData.refundAmount;
-            if (this.checkData.refundType === "REFUND_AMOUNT") {
-                this.checkData.refundAmount = this.allTotal;
-                this.refundInfo.refundAmount = this.allTotal;
-                this.checkData.applyRefundAmount = this.allTotal;
-                this.refundInfo.applyRefundAmount = this.allTotal;
-            }
+            this.checkData.applyRefundAmount =
+                this.wantMoney;
             this.changeMoney = true;
         },
         //合计方法
