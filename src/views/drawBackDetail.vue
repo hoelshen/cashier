@@ -627,7 +627,7 @@
                 </el-table-column>
                 <el-table-column prop="creator" label="操作人" width="100px;" label-class-name="labelCss">
                 </el-table-column>
-                <el-table-column prop="operationState" label="操作内容" label-class-name="labelCss">
+                <el-table-column prop="opteratorContent" label="操作内容" label-class-name="labelCss">
                 </el-table-column>
             </el-table>
         </div>
@@ -704,7 +704,7 @@ export default {
                 {
                     createdTime: '',             //时间
                     creator: '',                 //操作人
-                    operationState: '',           //操作内容
+                    opteratorContent: '',           //操作内容
                 }
             ]
         }
@@ -738,16 +738,17 @@ export default {
                 this.wantMoney = response.data.result.applyRefundAmount;
                 // 日志处理
                 for (let i = 0; i < this.tableData.length; i++) {
-                    if (this.tableData[i].operationState === '审核通过') {
-                        this.tableData[i].operationState = this.refundInfo.opteratorContent;
-                        // this.tableData[i].operationState = '审核通过,申请金额 ' + this.refundInfo.applyRefundAmount;
-                    }
-                    if (this.tableData[i].operationState === '退货') {
-                        this.tableData[i].operationState = this.tableData[i].refundExplain;
-                    }
-                    if (this.tableData[i].operationState === '申请退款') {
-                        this.tableData[i].operationState = this.tableData[i].opteratorContent;
-                    } if (i === 0) {
+                    // if (this.tableData[i].operationState === '审核通过') {
+                    //     this.tableData[i].operationState = this.refundInfo.opteratorContent;
+                    //     // this.tableData[i].operationState = '审核通过,申请金额 ' + this.refundInfo.applyRefundAmount;
+                    // }
+                    // if (this.tableData[i].operationState === '退货') {
+                    //     this.tableData[i].operationState = this.tableData[i].refundExplain;
+                    // }
+                    // if (this.tableData[i].operationState === '申请退款') {
+                    //     this.tableData[i].operationState = this.tableData[i].opteratorContent;
+                    // } 
+                    if (i === 0) {
                         this.tableData[0].creator = '用户';
                         this.tableData[0].operationState = '申请退款';
                     }
