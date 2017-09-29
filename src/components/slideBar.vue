@@ -1,18 +1,20 @@
 <template>
     <div class="slideWrap">
-        <h2><router-link to="/">朴茶门店收银后台</router-link></h2>
+        <h2>
+            <router-link to="/">朴茶门店收银后台</router-link>
+        </h2>
         <el-menu default-active="1" class="slideBar" theme="dark" router unique-opened>
-            
+
             <!-- 一级菜单 -->
             <template v-for="(item,index) in slidebarConfig">
-                
+
                 <!-- 有二级菜单 -->
                 <el-submenu :index="String(index)" v-if="item.children">
                     <template slot="title">
                         <i :class="item.icon" v-if="item.icon"></i>
                         <span>{{ item.title }}</span>
+                        <div class="spot" v-if="item.spot"></div>
                     </template>
-                    
 
                     <template v-for="(todo,i) in item.children">
                         <!-- 有三级菜单 -->
@@ -30,7 +32,7 @@
                                 </el-menu-item>
                             </template>
                         </el-submenu>
-                        
+
                         <!-- 没有三级菜单 -->
                         <el-menu-item :index="todo.path || String(index + 1) + '-' + (i + 1)" v-else>
                             <i :class="todo.icon" v-if="todo.icon"></i>
@@ -53,50 +55,58 @@
 </template>
 
 <script>
-    import Vue from 'vue';
-    import slidebarConfig from './config/slidebar.config.js';
-    export default {
-        data() {
-            return {
-                slidebarConfig,
-                setting: {}
-            }
-        },
-        methods: {
-            //获取所有有count的的下拉菜单
-            getName() {
-                let data = this.setting.slideData;
-                let counts = {};
-                let setName = (obj) =>{
-                    obj.forEach((val) => {
-                        if(val.children) {
-                            setName(val.children);
-                        }else{
-                            if(val.countName) {
-                                counts[val.countName] = val;
-                            }
-                        }
-                    })
-                }
-                setName(data);
-                this.setting.counts = counts;
-            },
-            setCount(name,num) {
-                this.setting.counts[name].count = num;
-                return num;
-            }
-        },
-        created() {
-            this.setting.slideData = this.slidebarConfig;
-            this.getName();
-            this.setting.setCount = this.setCount;
-            Vue.prototype.$slide = this.setting;
+import Vue from 'vue';
+import slidebarConfig from './config/slidebar.config.js';
+export default {
+    data() {
+        return {
+            slidebarConfig,
+            setting: {}
         }
+    },
+    methods: {
+        //获取所有有count的的下拉菜单
+        getName() {
+            let data = this.setting.slideData;
+            let counts = {};
+            let setName = (obj) => {
+                obj.forEach((val) => {
+                    if (val.children) {
+                        setName(val.children);
+                    } else {
+                        if (val.countName) {
+                            counts[val.countName] = val;
+                        }
+                    }
+                })
+            }
+            setName(data);
+            this.setting.counts = counts;
+        },
+        setCount(name, num) {
+            if (num > 99) {
+                num = '99+';
+            }
+            this.setting.counts[name].count = num;
+            for (let i = 0; i < this.setting.slideData.length; i++) {
+                if (this.setting.slideData[i].spotName === name) {
+                    this.setting.slideData[i].spot = true;
+                }
+            }
+            return num;
+        }
+    },
+    created() {
+        this.setting.slideData = this.slidebarConfig;
+        this.getName();
+        this.setting.setCount = this.setCount;
+        Vue.prototype.$slide = this.setting;
     }
+}
 </script>
 
 
 
 <style lang="less" scoped>
-    @import url('../assets/less/slidebar.less');
+@import url('../assets/less/slidebar.less');
 </style>

@@ -8,7 +8,7 @@
  *              countName 用来显示右边的计数，名字具有唯一性，有且只能存在一个
  *              count 表示初始计数
  *              path 表示点击菜单需要跳转到的路由，只能出现在最终极的菜单，否则无效
- * 
+ *              spot 表示一级菜单的红点标志
  * 
  * 
  * 
@@ -23,7 +23,7 @@ export default [{
         icon: 'icon-huiyuanguanli',
         children: [{
             title: '会员管理',
-            path:'/memberList'
+            path: '/memberList'
         }]
     },
     {
@@ -33,13 +33,15 @@ export default [{
                 title: '待审核',
                 countName: 'waitOrder',
                 count: 0,
-                path:'/waitOrder'
+                path: '/waitOrder'
             },
             {
                 title: '全部订单',
-                path:'/orderManage'
+                path: '/orderManage'
             }
-        ]
+        ],
+        spot: false,
+        spotName: 'waitOrder',
     },
     {
         title: '店铺管理',
@@ -50,9 +52,11 @@ export default [{
             },
             {
                 title: '预存款查询',
-                path:'/prepaidManage'
+                path: '/prepaidManage'
             }
-        ]
+        ],
+        spot: false,
+        spotName: 'prepaidManage',
     },
     {
         title: '退款单管理',
@@ -65,9 +69,11 @@ export default [{
             },
             {
                 title: '全部退款单',
-                path:'/drawBack'
+                path: '/drawBack'
             }
-        ]
+        ],
+        spot: false,
+        spotName: 'waitDrawBack',
     },
-    
+
 ]

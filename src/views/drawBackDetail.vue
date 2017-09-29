@@ -4,7 +4,7 @@
         <div class="showImages" v-if="showImages">
             <!-- 展示序号 -->
             <div class="closeButto" @click="showImages = false">✘</div>
-            <el-carousel :interval="5000" arrow="always" height="100%" initial-index="1">
+            <el-carousel :interval="5000" arrow="always" height="100%" :initial-index="imgIndex">
                 <el-carousel-item v-for="(item,index) in images" :key="index">
                     <h3 class="drawBackImgList"><img class="drawBackImg" :src=item alt=""></h3>
                 </el-carousel-item>
@@ -69,21 +69,21 @@
                         </el-col>
                         <el-col :span="8">
                             <el-form-item label="实际退款金额：" label-width="34%">
-                                <el-input v-model="checkData.refundAmount"></el-input>
+                                <el-input v-model="checkData.refundAmount" @keyup.native="checkMoney"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="checkData.auditExplain" maxlength=100></el-input>
+                                <el-input v-model="checkData.auditExplain" :maxlength=100></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="checkData.serviceRemark" maxlength=100></el-input>
+                                <el-input v-model="checkData.serviceRemark" :maxlength=100></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -113,14 +113,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -147,14 +147,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -264,7 +264,7 @@
                                 <div class="changeMoney" v-if="checkData.refundType === 'REFUND_GOODS'" @click="defaultChange">修改</div>
                             </el-form-item>
                             <el-form-item label="申请金额：" label-width="35%" v-else>
-                                <el-input v-model="checkData.applyRefundAmount" class="money"></el-input>
+                                <el-input v-model="checkData.applyRefundAmount" class="money" @keyup.native="checkMoney"></el-input>
                                 <div class="yes" @click="onChangeMoney">✔</div>
                                 <div class="no" @click="cancelChange">✘</div>
                             </el-form-item>
@@ -280,14 +280,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="checkData.auditExplain" maxlength=100></el-input>
+                                <el-input v-model="checkData.auditExplain" :maxlength=100></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="checkData.serviceRemark" maxlength=100></el-input>
+                                <el-input v-model="checkData.serviceRemark" :maxlength=100></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -337,14 +337,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -360,7 +360,7 @@
                     <el-dialog title="请填写退货信息" :visible.sync="dialogFormVisible" size="tiny">
                         <el-form :model="expressInfo">
                             <el-form-item label="退货地址：" label-width="100px">
-                                <span>福建省厦门市同安区同安工业集中区二环南路399号，闽盛交通机动车检测中心1#厂房三楼</span>
+                                <span>{{ recAddress }}</span>
                             </el-form-item>
                             <el-form-item label="选择快递：" label-width="100px">
                                 <el-select v-model="expressInfo.expressType" placeholder="请选择">
@@ -418,14 +418,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -467,21 +467,21 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="30">
                         <el-col :span="8">
                             <el-form-item label="实际退款金额：" label-width="36%">
-                                <el-input v-model="checkData.refundAmount" class="inputWidth"></el-input>
+                                <el-input v-model="checkData.refundAmount" class="inputWidth" @keyup.native="checkMoney"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -528,14 +528,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -589,14 +589,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -640,6 +640,8 @@ export default {
             user: '',                           //用户名
             allTotal: 0,                        //退款总金额
             wantMoney: '',                       //申请金额temp
+            recAddress: '',                        //收货地址
+            imgIndex: 0,                            //图片index
             images: [                           //图片列表
             ],
 
@@ -729,14 +731,17 @@ export default {
                 this.wantMoney = response.data.result.applyRefundAmount;
                 // 日志处理
                 for (let i = 0; i < this.tableData.length; i++) {
-                    if (i === 0) {
-                        this.tableData[0].creator = '用户';
-                    }
                     if (this.tableData[i].operationState === '审核通过') {
                         this.tableData[i].operationState = '审核通过,实际退款金额 ' + this.refundInfo.applyRefundAmount;
                     }
                     if (this.tableData[i].operationState === '退货') {
                         this.tableData[i].operationState = this.tableData[i].refundExplain;
+                    }
+                    if (this.tableData[i].operationState === '申请退款') {
+                        this.tableData[i].operationState = this.tableData[i].opteratorContent;
+                    } if (i === 0) {
+                        this.tableData[0].creator = '用户';
+                        this.tableData[0].operationState = '申请退款';
                     }
                 }
                 // 图片字符串转换数组
@@ -748,7 +753,6 @@ export default {
                     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
                     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
                     this.allTotal = this.allTotal + Number(this.shopTableData[i].subtotal);
-                    console.log(this.allTotal);
                 }
             },
             fail(response) {
@@ -782,7 +786,11 @@ export default {
             data: {
             },
             success(response) {
-                console.log(response.data.result);
+                for (let i = 0; i < response.data.result.length; i++) {
+                    if (response.data.result[i].id === -1) {
+                        this.recAddress = response.data.result[i].address;
+                    }
+                }
             },
             fail(response) {
                 this.$message({
@@ -793,6 +801,37 @@ export default {
         });
     },
     methods: {
+        // 金额校验
+        checkMoney() {
+            if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
+                if (!/\.\d{1,2}$/.test(this.checkData.applyRefundAmount)) {
+                    let arr = this.checkData.applyRefundAmount.split('.');
+                    arr[1] = arr[1].substring(0, 2);
+                    this.checkData.applyRefundAmount = arr.join('.');(this.checkData.applyRefundAmount);
+                }
+            }
+            if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.refundAmount)) {
+                if (!/\.\d{1,2}$/.test(this.checkData.refundAmount)) {
+                    let arr = this.checkData.refundAmount.split('.');
+                    arr[1] = arr[1].substring(0, 2);
+                    this.checkData.refundAmount = arr.join('.');(this.checkData.refundAmount);
+                }
+            }
+            if (!/^\d+(\.\d{1,2})?$/.test(this.refundInfo.applyRefundAmount)) {
+                if (!/\.\d{1,2}$/.test(this.refundInfo.applyRefundAmount)) {
+                    let arr = this.refundInfo.applyRefundAmount.split('.');
+                    arr[1] = arr[1].substring(0, 2);
+                    this.refundInfo.applyRefundAmount = arr.join('.');(this.refundInfo.applyRefundAmount);
+                }
+            }
+            if (!/^\d+(\.\d{1,2})?$/.test(this.refundInfo.refundAmount)) {
+                if (!/\.\d{1,2}$/.test(this.refundInfo.refundAmount)) {
+                    let arr = this.refundInfo.refundAmount.split('.');
+                    arr[1] = arr[1].substring(0, 2);
+                    this.refundInfo.refundAmount = arr.join('.');(this.refundInfo.refundAmount);
+                }
+            }
+        },
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
             if (item === "REFUND_AMOUNT") {
@@ -896,7 +935,6 @@ export default {
         // 已发货审核通过
         afterPassCheck() {
             if (this.checkData.refundType === null) {
-                console.log(111);
                 this.$message({
                     message: '请选择退款类型',
                     type: 'warning'
@@ -1156,6 +1194,7 @@ export default {
         },
         // 展示图片
         showImg(img, index) {
+            this.imgIndex = Number(index);
             this.showImages = true;
         },
         // 小数位补齐
@@ -1277,6 +1316,23 @@ export default {
     },
     components: {
     },
+    // watch: {
+    //     'checkData.applyRefundAmount': {
+    //         handler(curVal, oldVal) {
+    //             if (!/^\d+(\.\d{1,2})?$/.test(curVal)) {
+    //                 if (!/\.\d{1,2}$/.test(curVal)) {
+    //                     // console.log(111);
+    //                     // let arr = curVal.split('.');
+    //                     // arr[1] = arr[1].substring(0, 2);
+    //                     // console.log(arr);
+    //                     // this.checkData.applyRefundAmount = arr.join('.');
+    //                     // console.log(this.checkData.applyRefundAmount);
+    //                 }
+    //             }
+    //         },
+    //         deep: true,
+    //     }
+    // }
 }
 </script>
 

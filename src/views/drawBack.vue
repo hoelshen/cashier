@@ -82,7 +82,7 @@
                         <!-- v-if="备注判断未添加" -->
                         <el-tooltip class="item" effect="light" placement="top" v-if="scope.row.serviceRemark">
                             <div slot="content" class="tooltip">{{ scope.row.serviceRemark }}</div>
-                            <img class="qizi icon iconfont icon-qizi" src="" alt="">
+                            <div class="qizi icon iconfont icon-qizi" src="" alt=""></div>
                         </el-tooltip>
                     </template>
                 </el-table-column>
