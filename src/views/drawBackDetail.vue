@@ -291,6 +291,13 @@
                             </el-form-item>
                         </el-col>
                     </el-row>
+                    <el-row :gutter="10" v-if="checkData.refundType === 'REFUND_AMOUNT'">
+                        <el-col :span="16">
+                            <el-form-item label="实际退款金额：" label-width="17%">
+                                <el-input style="width:20%;" v-model="checkData.refundAmount" @keyup.native="checkMoney"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
                     <el-row :gutter="30">
                         <el-col :span="3">
                             <el-button type="primary" @click="afterPassCheck">审核通过</el-button>
@@ -620,7 +627,7 @@
                 </el-table-column>
                 <el-table-column prop="creator" label="操作人" width="100px;" label-class-name="labelCss">
                 </el-table-column>
-                <el-table-column prop="operationState" label="操作内容" label-class-name="labelCss">
+                <el-table-column prop="opteratorContent" label="操作内容" label-class-name="labelCss">
                 </el-table-column>
             </el-table>
         </div>
@@ -697,7 +704,7 @@ export default {
                 {
                     createdTime: '',             //时间
                     creator: '',                 //操作人
-                    operationState: '',           //操作内容
+                    opteratorContent: '',           //操作内容
                 }
             ]
         }
@@ -731,15 +738,17 @@ export default {
                 this.wantMoney = response.data.result.applyRefundAmount;
                 // 日志处理
                 for (let i = 0; i < this.tableData.length; i++) {
-                    if (this.tableData[i].operationState === '审核通过') {
-                        this.tableData[i].operationState = '审核通过,实际退款金额 ' + this.refundInfo.applyRefundAmount;
-                    }
-                    if (this.tableData[i].operationState === '退货') {
-                        this.tableData[i].operationState = this.tableData[i].refundExplain;
-                    }
-                    if (this.tableData[i].operationState === '申请退款') {
-                        this.tableData[i].operationState = this.tableData[i].opteratorContent;
-                    } if (i === 0) {
+                    // if (this.tableData[i].operationState === '审核通过') {
+                    //     this.tableData[i].operationState = this.refundInfo.opteratorContent;
+                    //     // this.tableData[i].operationState = '审核通过,申请金额 ' + this.refundInfo.applyRefundAmount;
+                    // }
+                    // if (this.tableData[i].operationState === '退货') {
+                    //     this.tableData[i].operationState = this.tableData[i].refundExplain;
+                    // }
+                    // if (this.tableData[i].operationState === '申请退款') {
+                    //     this.tableData[i].operationState = this.tableData[i].opteratorContent;
+                    // } 
+                    if (i === 0) {
                         this.tableData[0].creator = '用户';
                         this.tableData[0].operationState = '申请退款';
                     }
@@ -807,28 +816,28 @@ export default {
                 if (!/\.\d{1,2}$/.test(this.checkData.applyRefundAmount)) {
                     let arr = this.checkData.applyRefundAmount.split('.');
                     arr[1] = arr[1].substring(0, 2);
-                    this.checkData.applyRefundAmount = arr.join('.');(this.checkData.applyRefundAmount);
+                    this.checkData.applyRefundAmount = arr.join('.'); (this.checkData.applyRefundAmount);
                 }
             }
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.refundAmount)) {
                 if (!/\.\d{1,2}$/.test(this.checkData.refundAmount)) {
                     let arr = this.checkData.refundAmount.split('.');
                     arr[1] = arr[1].substring(0, 2);
-                    this.checkData.refundAmount = arr.join('.');(this.checkData.refundAmount);
+                    this.checkData.refundAmount = arr.join('.'); (this.checkData.refundAmount);
                 }
             }
             if (!/^\d+(\.\d{1,2})?$/.test(this.refundInfo.applyRefundAmount)) {
                 if (!/\.\d{1,2}$/.test(this.refundInfo.applyRefundAmount)) {
                     let arr = this.refundInfo.applyRefundAmount.split('.');
                     arr[1] = arr[1].substring(0, 2);
-                    this.refundInfo.applyRefundAmount = arr.join('.');(this.refundInfo.applyRefundAmount);
+                    this.refundInfo.applyRefundAmount = arr.join('.'); (this.refundInfo.applyRefundAmount);
                 }
             }
             if (!/^\d+(\.\d{1,2})?$/.test(this.refundInfo.refundAmount)) {
                 if (!/\.\d{1,2}$/.test(this.refundInfo.refundAmount)) {
                     let arr = this.refundInfo.refundAmount.split('.');
                     arr[1] = arr[1].substring(0, 2);
-                    this.refundInfo.refundAmount = arr.join('.');(this.refundInfo.refundAmount);
+                    this.refundInfo.refundAmount = arr.join('.'); (this.refundInfo.refundAmount);
                 }
             }
         },
@@ -885,7 +894,7 @@ export default {
         afterSecondPassCheck() {
             if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                 this.$message({
-                    message: '实际退款金额不能超过申请金额',
+                    message: '实际退款金额不得超过申请退款金额！',
                     type: 'warning'
                 });
                 return;
@@ -942,8 +951,15 @@ export default {
                 return;
             }
             if (this.checkData.refundType === 'REFUND_AMOUNT') {
-                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
                 this.checkData.drawBackDepot = '';
+                if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    this.$message({
+                        message: '实际退款金额不得超过申请退款金额！',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                this.checkData.applyRefundAmount = this.checkData.refundAmount;
             }
             if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
                 this.$message({
@@ -1053,7 +1069,7 @@ export default {
         beforePassCheck() {
             if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                 this.$message({
-                    message: '申请金额不能超过商品明细退款合计',
+                    message: '实际退款金额不得超过申请的订单总价金额！',
                     type: 'warning'
                 });
                 return;
