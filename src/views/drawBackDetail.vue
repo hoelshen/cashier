@@ -201,7 +201,8 @@
                 <el-row :gutter="10">
                     <el-col :span="8">
                         进货单号：
-                        <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link>
+                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
+                        <a :href="linkTo" target="_Blank">{{ refundInfo.purchaseOrderNo }}</a>
                     </el-col>
                     <el-col :span="8">
                         下单时间：{{ orderInfo.createdTime }}
@@ -367,7 +368,7 @@
                     <el-dialog title="请填写退货信息" :visible.sync="dialogFormVisible" size="tiny">
                         <el-form :model="expressInfo">
                             <el-form-item label="退货地址：" label-width="100px">
-                                <span>{{ recAddress }}</span>
+                                <span>{{ expressInfo.address }} <br> {{ expressInfo.contacts }} {{ expressInfo.contactPhone}}</span>
                             </el-form-item>
                             <el-form-item label="选择快递：" label-width="100px">
                                 <el-select v-model="expressInfo.expressType" placeholder="请选择">
@@ -645,15 +646,17 @@ export default {
             dialogFormVisible: false,           //补充信息弹窗
             showImages: false,                  //图片展示
             user: '',                           //用户名
+            linkTo: 'T111111',                   //链接
             allTotal: 0,                        //退款总金额
             wantMoney: '',                       //申请金额temp
-            recAddress: '',                        //收货地址
             imgIndex: 0,                            //图片index
             images: [                           //图片列表
             ],
 
             orderInfo: {
-                shopNo: '',                     //店铺编号
+                shopNo: [{
+                    shopNo: '',
+                }],                     //店铺编号
                 createdTime: '',                 //下单时间
                 orderSum: 0,              //订单总价
 
@@ -698,6 +701,9 @@ export default {
                 address: '',                    //退货地址
                 expressType: '',                //快递选择
                 expressNo: '',                  //快递单号
+                address: '',                        //收货地址
+                contacts: '',                      //收货人
+                contactPhone: '',                       //收货电话
             },
 
             tableData: [                        //日志
@@ -715,6 +721,8 @@ export default {
         var src = window.location.href.split('/');
         this.id = src[src.length - 2];
         this.orderId = src[src.length - 1];
+        let arr = src;
+        console.log(src);
 
         // 获取用户信息
         if (sessionStorage.user) {
@@ -750,7 +758,7 @@ export default {
                     // } 
                     if (i === 0) {
                         this.tableData[0].creator = '用户';
-                        this.tableData[0].operationState = '申请退款';
+                        this.tableData[0].opteratorContent = '申请退款';
                     }
                 }
                 // 图片字符串转换数组
@@ -779,7 +787,12 @@ export default {
                 purchaseOrderNo: src[6]
             },
             success(response) {
-                // this.orderInfo = response.data.result;
+                this.orderInfo = response.data.result;
+                // 拼接订单号链接
+                arr[4] = 'orderInfo';
+                arr[5] = this.orderInfo.purchaseOrderNo;
+                arr[6] = this.orderInfo.shop.shopNo;
+                this.linkTo = arr.join('/');
             },
             fail(response) {
                 this.$message({
@@ -797,7 +810,7 @@ export default {
             success(response) {
                 for (let i = 0; i < response.data.result.length; i++) {
                     if (response.data.result[i].id === -1) {
-                        this.recAddress = response.data.result[i].address;
+                        this.expressInfo = response.data.result[i];
                     }
                 }
             },
@@ -810,6 +823,10 @@ export default {
         });
     },
     methods: {
+        // 链接拼接
+        toLink() {
+
+        },
         // 金额校验
         checkMoney() {
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
@@ -854,6 +871,13 @@ export default {
         },
         // 提交快递信息
         onExpress() {
+            if (/[\,\.\-]+/g.test(this.expressInfo.expressNo)) {
+                this.$message({
+                    message: '请使用空格分隔单号！',
+                    type: 'warning'
+                });
+                return;
+            }
             this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
             const self = this;
             self.$ajax({
@@ -879,9 +903,9 @@ export default {
                     message: '审核通过',
                     type: 'success',
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000)
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
@@ -1264,6 +1288,7 @@ export default {
                     'purchaseOrderBack.applyRefundAmount': self.checkData.applyRefundAmount,
                     'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
                     'purchaseOrderBack.updatorId': self.user.id,
+                    'purchaseOrderBack.refundType':self.checkData.refundType,
                 },
                 transformRequest: [function(data) {
                     let ret = ''

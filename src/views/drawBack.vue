@@ -1,5 +1,6 @@
 <template>
-    <div class="drawBack" v-loading="loading">
+    <!-- v-loading="loading" -->
+    <div class="drawBack">
         <div class="search">
             <el-form v-model="searchData">
                 <el-row :gutter="10">
@@ -73,7 +74,8 @@
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template scope="scope">
-                        <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link>
+                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
+                        <a :href="scope.row.linkTo" target="_Blank">{{ scope.row.purchaseOrderNo }}</a>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -123,11 +125,19 @@ export default {
                     applyTime: '',                      //申请时间
                     purchaseOrderNo: '',                //原进货单号
                     serviceRemark: '',                  //客服备注
+                    linkTo: 'ttttttt1',                  //跳转链接
                 }
             ]
         }
     },
     created() {
+        this.uri = this.getUri();
+        //获取id
+        var src = window.location.href.split('/');
+        this.id = src[src.length - 2];
+        this.orderId = src[src.length - 1];
+        console.log(src);
+
         // 获取页面初始化数据
         var qs = require('qs');
         this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
@@ -142,7 +152,15 @@ export default {
             }).then((res) => {
                 this.tableData = res.data.result;
                 this.totalNums = res.data.totalNums;
-                this.loading = false;
+                // 拼接订单号链接
+                src[4] = 'orderInfo';
+                for (let i = 0; i < this.tableData.length; i++) {
+                    src[5]=this.tableData[i].purchaseOrderNo;
+                    src[6]=this.tableData[i].shopNo;
+                    this.tableData[i].linkTo=src.join('/');
+                    console.log(this.tableData[i].linkTo);
+                }
+                // this.loading = false;
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
@@ -151,6 +169,18 @@ export default {
             });
     },
     methods: {
+        //获取url
+        getUri() {
+            if (document.cookie) {
+                var cookie = document.cookie.split(";");
+                for (var index = 0; index < cookie.length; index++) {
+                    var cookies = cookie[index].split("=");
+                    if (cookies[0] == 'adminUri') {
+                        return cookies[1];
+                    }
+                }
+            }
+        },
         // 双击跳转
         // dbClick(row, event) {
         //     console.log(row);
