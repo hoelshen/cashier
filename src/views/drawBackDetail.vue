@@ -1,4 +1,4 @@
-    <template>
+<template>
     <div class="drawBackDetail">
         <!-- 退款图片展示 -->
         <div class="showImages" v-if="showImages">
@@ -49,7 +49,8 @@
                 <el-row :gutter="10">
                     <el-col :span="8">
                         进货单号：
-                        <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link>
+                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
+                        <a :href="linkTo" target="_Blank">{{ refundInfo.purchaseOrderNo }}</a>
                     </el-col>
                     <el-col :span="8">
                         下单时间：{{ orderInfo.createdTime }}
@@ -634,7 +635,6 @@
         </div>
     </div>
 </template>
-
     <script type="text/javascript" src="../router.js"></script>
     <script>
 import $ from 'jquery'
@@ -674,7 +674,6 @@ export default {
                 refundAmount: 0,               //申请金额
                 serviceRemark: '',              //客服备注
             },
-
             checkData: {                        //客服审核数据
                 refundType: '',              //退款类型，判断是否是仅退款
                 applyRefundAmount: 0,                  //申请金额
@@ -683,7 +682,6 @@ export default {
                 auditExplain: '',                   //审核说明
                 serviceRemark: '',                      //备注
             },
-
             shopTableData: [                    //退款商品明细表
                 {
                     proSku: '',                 //商品编码
@@ -696,7 +694,6 @@ export default {
                     subtotal: 0,               //退货金额
                 }
             ],
-
             expressInfo: {                      //补充快递信息
                 address: '',                    //退货地址
                 expressType: '',                //快递选择
@@ -705,7 +702,6 @@ export default {
                 contacts: '',                      //收货人
                 contactPhone: '',                       //收货电话
             },
-
             tableData: [                        //日志
                 {
                     createdTime: '',             //时间
@@ -722,13 +718,11 @@ export default {
         this.id = src[src.length - 2];
         this.orderId = src[src.length - 1];
         let arr = src;
-        console.log(src);
 
         // 获取用户信息
         if (sessionStorage.user) {
             this.user = JSON.parse(sessionStorage.user);
         }
-
         // 获取退货信息
         this.$getData({
             url: 'http/purchaseOrderBack/findPurchaseOrderBackByNo.jhtml',
@@ -779,7 +773,6 @@ export default {
                 })
             },
         });
-
         // 获取进货单信息
         this.$getData({
             url: '/http/purchaseOrder/findPurchaseOrderByNo.jhtml',
@@ -801,7 +794,6 @@ export default {
                 })
             },
         });
-
         //获取仓库数据
         this.$getData({
             url: '/http/purchaseOrderBack/queryRepertoryList.jhtml',
@@ -823,10 +815,6 @@ export default {
         });
     },
     methods: {
-        // 链接拼接
-        toLink() {
-
-        },
         // 金额校验
         checkMoney() {
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
@@ -887,6 +875,7 @@ export default {
                     'purchaseOrderBack.expressNo': this.expressInfo.expressNo,
                     'purchaseOrderBack.expressCode': this.expressInfo.expressType,
                     'purchaseOrderBack.purchaseOrderBackNo': this.refundInfo.purchaseOrderBackNo,
+                    'purchaseOrderBack.refundType':self.checkData.refundType,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1261,7 +1250,6 @@ export default {
                     type: 'warning'
                 });
                 return;
-
             }
             if (Number(this.checkData.applyRefundAmount) > Number(this.allTotal)) {
                 this.$message({
@@ -1288,7 +1276,6 @@ export default {
                     'purchaseOrderBack.applyRefundAmount': self.checkData.applyRefundAmount,
                     'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
                     'purchaseOrderBack.updatorId': self.user.id,
-                    'purchaseOrderBack.refundType':self.checkData.refundType,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1351,7 +1338,6 @@ export default {
                     sums[index] = this.toFixed(sums[index]);
                 }
             });
-
             return sums;
         }
     },
@@ -1376,7 +1362,6 @@ export default {
     // }
 }
 </script>
-
     <style lang="less" scoped>
 @import url('../assets/less/drawBackDetail.less');
 </style>
