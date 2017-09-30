@@ -1,6 +1,5 @@
 <template>
-    <!-- v-loading="loading" -->
-    <div class="drawBack">
+    <div class="drawBack" v-loading="loading">
         <div class="search">
             <el-form v-model="searchData">
                 <el-row :gutter="10">
@@ -155,12 +154,12 @@ export default {
                 // 拼接订单号链接
                 src[4] = 'orderInfo';
                 for (let i = 0; i < this.tableData.length; i++) {
-                    src[5]=this.tableData[i].purchaseOrderNo;
-                    src[6]=this.tableData[i].shopNo;
-                    this.tableData[i].linkTo=src.join('/');
+                    src[5] = this.tableData[i].purchaseOrderNo;
+                    src[6] = this.tableData[i].shopNo;
+                    this.tableData[i].linkTo = src.join('/');
                     console.log(this.tableData[i].linkTo);
                 }
-                // this.loading = false;
+                this.loading = false;
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
