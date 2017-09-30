@@ -187,7 +187,7 @@ export default {
         // },
         //每页条数选择
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            console.log(`每页 ${val} 条`); 
         },
         //当前页跳转，在排序完后做
         handleCurrentChange(val) {
