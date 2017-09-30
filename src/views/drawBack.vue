@@ -1,6 +1,5 @@
 <template>
-    <!-- v-loading="loading" -->
-    <div class="drawBack">
+    <div class="drawBack" v-loading="loading">
         <div class="search">
             <el-form v-model="searchData">
                 <el-row :gutter="10">
@@ -160,7 +159,7 @@ export default {
                     this.tableData[i].linkTo=src.join('/');
                     console.log(this.tableData[i].linkTo);
                 }
-                // this.loading = false;
+                this.loading = false;
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
