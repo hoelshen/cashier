@@ -903,9 +903,9 @@ export default {
                     message: '审核通过',
                     type: 'success',
                 });
-                // setTimeout(() => {
-                //     window.location.reload();
-                // }, 1000)
+                setTimeout(() => {
+                    window.location.reload();
+                }, 1000)
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
