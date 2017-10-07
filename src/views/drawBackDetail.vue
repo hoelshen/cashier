@@ -372,11 +372,9 @@
                                 <span>{{ expressInfo.address }} <br> {{ expressInfo.contacts }} {{ expressInfo.contactPhone}}</span>
                             </el-form-item>
                             <el-form-item label="选择快递：" label-width="100px">
-                                <el-select v-model="expressInfo.expressType" placeholder="请选择">
-                                    <el-option value="STO" label="申通快递"></el-option>
-                                    <el-option value="EMS" label="EMS"></el-option>
-                                    <el-option value="SF" label="顺丰速运"></el-option>
-                                    <el-option value="QT" label="其他"></el-option>
+                                <el-select v-model="toExpressType" placeholder="请选择">
+                                    <el-option v-for="item in expressTypeList" :key="item.value" :label="item.label" :value="item.value" :disabled="item.disabled">
+                                    </el-option>
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="快递单号：" label-width="100px">
@@ -653,6 +651,25 @@ export default {
             images: [                           //图片列表
             ],
 
+            expressTypeList: [
+                {
+                    value: 'STO',
+                    label: '申通快递',
+                },
+                {
+                    value: 'EMS',
+                    label: 'EMS',
+                },
+                {
+                    value: 'SF',
+                    label: '顺丰速运',
+                },
+                {
+                    value: 'QT',
+                    label: '其他',
+                },
+            ],
+
             orderInfo: {
                 shopNo: [{
                     shopNo: '',
@@ -694,9 +711,9 @@ export default {
                     subtotal: 0,               //退货金额
                 }
             ],
+            toExpressType: '',               //快递选择
             expressInfo: {                      //补充快递信息
                 address: '',                    //退货地址
-                expressType: '',                //快递选择
                 expressNo: '',                  //快递单号
                 address: '',                        //收货地址
                 contacts: '',                      //收货人
@@ -872,10 +889,11 @@ export default {
                 url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
                 method: 'post',
                 data: {
-                    'purchaseOrderBack.expressNo': this.expressInfo.expressNo,
-                    'purchaseOrderBack.expressCode': this.expressInfo.expressType,
-                    'purchaseOrderBack.purchaseOrderBackNo': this.refundInfo.purchaseOrderBackNo,
-                    'purchaseOrderBack.refundType':self.checkData.refundType,
+                    'purchaseOrderBack.expressNo': self.expressInfo.expressNo,
+                    'purchaseOrderBack.expressCode': self.toExpressType,
+                    'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                    'purchaseOrderBack.refundType': self.checkData.refundType,
+                    'purchaseOrderBack.updatorId': self.user.id,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
