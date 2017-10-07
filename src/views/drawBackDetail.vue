@@ -1047,16 +1047,24 @@ export default {
                 });
                 return;
             }
-            // if (this.checkData.refundType === 'REFUND_AMOUNT') {
-            //     this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
-            // }
-            // if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount)) {
-            //     this.$message({
-            //         message: '请输入大于0的数字，且小数位不能超过两位',
-            //         type: 'warning'
-            //     });
-            //     return;
-            // }
+            if (this.checkData.refundType === 'REFUND_AMOUNT') {
+                this.checkData.drawBackDepot = '';
+                if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    this.$message({
+                        message: '实际退款金额不得超过申请退款金额！',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                this.checkData.applyRefundAmount = this.checkData.refundAmount;
+            }
+            if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
+                this.$message({
+                    message: '请输入大于0的数字，且小数位不能超过两位',
+                    type: 'warning'
+                });
+                return;
+            }
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1086,9 +1094,9 @@ export default {
                     message: '审核拒绝',
                     type: 'success',
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
+                // setTimeout(() => {
+                //     window.location.reload();
+                // }, 1000)
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
@@ -1152,20 +1160,20 @@ export default {
         },
         // 未发货审核拒绝
         beforeNoPassCheck() {
-            // if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
-            //     this.$message({
-            //         message: '申请金额不能超过商品明细退款合计',
-            //         type: 'warning'
-            //     });
-            //     return;
-            // }
-            // if (!/^[0-9\.]+$/.test(this.checkData.refundAmount)) {
-            //     this.$message({
-            //         message: '请输入大于0的数字，且小数位不能超过两位',
-            //         type: 'warning'
-            //     });
-            //     return;
-            // }
+            if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
+                this.$message({
+                    message: '实际退款金额不得超过申请的订单总价金额！',
+                    type: 'warning'
+                });
+                return;
+            }
+            if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
+                this.$message({
+                    message: '请输入大于0的数字，且小数位不能超过两位',
+                    type: 'warning'
+                });
+                return;
+            }
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
