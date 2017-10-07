@@ -1294,6 +1294,7 @@ export default {
                     'purchaseOrderBack.applyRefundAmount': self.checkData.applyRefundAmount,
                     'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
                     'purchaseOrderBack.updatorId': self.user.id,
+                    'purchaseOrderBack.refundType':self.checkData.refundType,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
