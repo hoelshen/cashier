@@ -891,6 +891,14 @@ export default {
                 return;
             }
             this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
+            for (var index = 0; index < this.expressInfo.expressNo.split(',').length; index++) {
+                if (this.expressInfo.expressNo.split(',')[index] === '')
+                    this.$message({
+                        message: '请使用空格分隔单号！',
+                        type: 'warning'
+                    });
+                return;
+            }
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
