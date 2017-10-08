@@ -1,10 +1,10 @@
 <template>
-    <div class="drawBackDetail">
+    <div class="drawBackDetail" v-loading.fullscreen="loading">
         <!-- 退款图片展示 -->
         <div class="showImages" v-if="showImages">
             <!-- 展示序号 -->
             <div class="closeButto" @click="showImages = false">✘</div>
-            <el-carousel :interval="5000" arrow="always" height="100%" :initial-index="imgIndex">
+            <el-carousel :interval="10000" arrow="always" height="100%" :initial-index="imgIndex">
                 <el-carousel-item v-for="(item,index) in images" :key="index">
                     <h3 class="drawBackImgList"><img class="drawBackImg" :src=item alt=""></h3>
                 </el-carousel-item>
@@ -646,8 +646,12 @@ export default {
             user: '',                           //用户名
             linkTo: 'T111111',                   //链接
             allTotal: 0,                        //退款总金额
+            forPass: true,
+            forNoPass: true,
             wantMoney: '',                       //申请金额temp
             imgIndex: 0,                            //图片index
+            loading: true,                          //遮罩
+            done: 0,                             //遮罩判断
             images: [                           //图片列表
             ],
 
@@ -747,6 +751,7 @@ export default {
                 'purchaseOrderBackNo': src[5],
             },
             success(response) {
+                this.done++;
                 this.tableData = response.data.result.purchaseOrderBackLogs;
                 this.refundInfo = response.data.result;
                 this.checkData = response.data.result;
@@ -797,6 +802,7 @@ export default {
                 purchaseOrderNo: src[6]
             },
             success(response) {
+                this.done++;
                 this.orderInfo = response.data.result;
                 // 拼接订单号链接
                 arr[4] = 'orderInfo';
@@ -817,6 +823,7 @@ export default {
             data: {
             },
             success(response) {
+                this.done++;
                 for (let i = 0; i < response.data.result.length; i++) {
                     if (response.data.result[i].id === -1) {
                         this.expressInfo = response.data.result[i];
@@ -866,7 +873,7 @@ export default {
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
             if (item === "REFUND_AMOUNT") {
-                this.checkData.applyRefundAmount = this.wantMoney;
+                this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
                 this.changeMoney = true;
             }
         },
@@ -907,12 +914,14 @@ export default {
                 }
             }).then(function(response) {
                 self.$message({
-                    message: '审核通过',
+                    message: '提交成功',
                     type: 'success',
                 });
                 setTimeout(() => {
+                    self.loading = true;
                     window.location.reload();
                 }, 1000)
+                self.loading = false;
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
@@ -923,18 +932,7 @@ export default {
         },
         // 已发货二次审核通过
         afterSecondPassCheck() {
-            const h = this.$createElement;
-            this.$msgbox({
-                title: '消息',
-                message: h('p', null, [
-                    h('span', null, '退款金额： '),
-                    h('span', null, this.checkData.refundAmount),
-                    h('span', null, ' 元，请确认 '),
-                ]),
-                showCancelButton: true,
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-            }).then(() => {
+            if (this.forPass) {
                 if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                     this.$message({
                         message: '实际退款金额不得超过申请退款金额！',
@@ -949,14 +947,108 @@ export default {
                     });
                     return;
                 }
+                const h = this.$createElement;
+                this.$msgbox({
+                    title: '消息',
+                    message: h('p', null, [
+                        h('span', null, '退款金额： '),
+                        h('span', null, this.checkData.refundAmount),
+                        h('span', null, ' 元，请确认 '),
+                    ]),
+                    showCancelButton: true,
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                }).then(() => {
+                    const self = this;
+                    self.$ajax({
+                        url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
+                        method: 'post',
+                        data: {
+                            'auditBackVo.auditorId': self.user.id,
+                            'auditBackVo.refundAmount': self.checkData.refundAmount,
+                            'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                            'auditBackVo.auditState': 1,
+                        },
+                        transformRequest: [function(data) {
+                            let ret = ''
+                            for (let it in data) {
+                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                            }
+                            return ret
+                        }],
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded'
+                        }
+                    }).then(function(response) {
+                        self.$message({
+                            message: '审核通过',
+                            type: 'success',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }).catch(function(err) {
+                        self.$message({
+                            message: err.data.msg,
+                            type: 'error',
+                        })
+                    });
+                    // this.$message({
+                    //     type: 'success',
+                    //     message: '删除成功!'
+                    // });
+                }).catch(() => {
+                    // this.$message({
+                    //     type: 'info',
+                    //     message: '已取消删除'
+                    // });
+                });
+                this.forPass = false;
+            }
+        },
+        // 已发货审核通过
+        afterPassCheck() {
+            if (this.forPass) {
+                if (this.checkData.refundType === null) {
+                    this.$message({
+                        message: '请选择退款类型',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (this.checkData.refundType === 'REFUND_AMOUNT') {
+                    this.checkData.drawBackDepot = '';
+                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                        this.$message({
+                            message: '实际退款金额不得超过申请退款金额！',
+                            type: 'warning'
+                        });
+                        return;
+                    }
+                    this.checkData.applyRefundAmount = this.checkData.refundAmount;
+                }
+                if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
+                    this.$message({
+                        message: '请输入大于0的数字，且小数位不能超过两位',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
                 const self = this;
                 self.$ajax({
-                    url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
+                    url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
                     method: 'post',
                     data: {
                         'auditBackVo.auditorId': self.user.id,
-                        'auditBackVo.refundAmount': self.checkData.refundAmount,
+                        'auditBackVo.refundAmount': self.checkData.applyRefundAmount,
+                        'auditBackVo.auditExplain': self.checkData.auditExplain,
+                        'auditBackVo.serviceRemark': self.checkData.serviceRemark,
                         'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.refundType': self.checkData.refundType,
+                        'auditBackVo.repertoryId': self.checkData.drawBackDepot,
                         'auditBackVo.auditState': 1,
                     },
                     transformRequest: [function(data) {
@@ -975,286 +1067,235 @@ export default {
                         type: 'success',
                     });
                     setTimeout(() => {
+                        self.loading = true;
                         window.location.reload();
                     }, 1000)
+                    self.loading = false;
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
                         type: 'error',
                     })
                 });
-                // this.$message({
-                //     type: 'success',
-                //     message: '删除成功!'
-                // });
-            }).catch(() => {
-                // this.$message({
-                //     type: 'info',
-                //     message: '已取消删除'
-                // });
-            });
-
-        },
-        // 已发货审核通过
-        afterPassCheck() {
-            if (this.checkData.refundType === null) {
-                this.$message({
-                    message: '请选择退款类型',
-                    type: 'warning'
-                });
-                return;
+                this.forPass = false;
             }
-            if (this.checkData.refundType === 'REFUND_AMOUNT') {
-                this.checkData.drawBackDepot = '';
-                if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
-                    this.$message({
-                        message: '实际退款金额不得超过申请退款金额！',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                this.checkData.applyRefundAmount = this.checkData.refundAmount;
-            }
-            if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
-                this.$message({
-                    message: '请输入大于0的数字，且小数位不能超过两位',
-                    type: 'warning'
-                });
-                return;
-            }
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
-                method: 'post',
-                data: {
-                    'auditBackVo.auditorId': self.user.id,
-                    'auditBackVo.refundAmount': self.checkData.applyRefundAmount,
-                    'auditBackVo.auditExplain': self.checkData.auditExplain,
-                    'auditBackVo.serviceRemark': self.checkData.serviceRemark,
-                    'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'auditBackVo.refundType': self.checkData.refundType,
-                    'auditBackVo.repertoryId': self.checkData.drawBackDepot,
-                    'auditBackVo.auditState': 1,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(function(response) {
-                self.$message({
-                    message: '审核通过',
-                    type: 'success',
-                });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
         },
         // 已发货审核拒绝
         afterNoPassCheck() {
-            if (this.checkData.refundType === null) {
-                this.$message({
-                    message: '请选择退款类型',
-                    type: 'warning'
-                });
-                return;
-            }
-            if (this.checkData.refundType === 'REFUND_AMOUNT') {
-                this.checkData.drawBackDepot = '';
-                if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+            if (this.forNoPass) {
+                if (this.checkData.refundType === null) {
                     this.$message({
-                        message: '实际退款金额不得超过申请退款金额！',
+                        message: '请选择退款类型',
                         type: 'warning'
                     });
                     return;
                 }
-                this.checkData.applyRefundAmount = this.checkData.refundAmount;
-            }
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
-                method: 'post',
-                data: {
-                    'auditBackVo.auditorId': self.user.id,
-                    'auditBackVo.refundAmount': self.checkData.applyRefundAmount,
-                    'auditBackVo.auditExplain': self.checkData.auditExplain,
-                    'auditBackVo.serviceRemark': self.checkData.serviceRemark,
-                    'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'auditBackVo.refundType': self.checkData.refundType,
-                    'auditBackVo.repertoryId': self.checkData.drawBackDepot,
-                    'auditBackVo.auditState': 0,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                if (this.checkData.refundType === 'REFUND_AMOUNT') {
+                    this.checkData.drawBackDepot = '';
+                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                        this.$message({
+                            message: '实际退款金额不得超过申请退款金额！',
+                            type: 'warning'
+                        });
+                        return;
                     }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    this.checkData.applyRefundAmount = this.checkData.refundAmount;
                 }
-            }).then(function(response) {
-                self.$message({
-                    message: '审核拒绝',
-                    type: 'success',
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'auditBackVo.auditorId': self.user.id,
+                        'auditBackVo.refundAmount': self.checkData.applyRefundAmount,
+                        'auditBackVo.auditExplain': self.checkData.auditExplain,
+                        'auditBackVo.serviceRemark': self.checkData.serviceRemark,
+                        'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.refundType': self.checkData.refundType,
+                        'auditBackVo.repertoryId': self.checkData.drawBackDepot,
+                        'auditBackVo.auditState': 0,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '审核拒绝',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
+                this.forNoPass = false;
+            }
         },
         // 未发货审核通过
         beforePassCheck() {
-            if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
-                this.$message({
-                    message: '实际退款金额不得超过申请的订单总价金额！',
-                    type: 'warning'
-                });
-                return;
-            }
-            if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
-                this.$message({
-                    message: '请输入大于0的数字，且小数位不能超过两位',
-                    type: 'warning'
-                });
-                return;
-            }
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
-                method: 'post',
-                data: {
-                    'auditBackVo.auditorId': self.user.id,
-                    'auditBackVo.refundAmount': self.checkData.refundAmount,
-                    'auditBackVo.auditExplain': self.checkData.auditExplain,
-                    'auditBackVo.serviceRemark': self.checkData.serviceRemark,
-                    'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'auditBackVo.refundType': self.refundInfo.refundType,
-                    'auditBackVo.auditState': 1,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+            if (this.forPass) {
+                if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
+                    this.$message({
+                        message: '实际退款金额不得超过申请的订单总价金额！',
+                        type: 'warning'
+                    });
+                    return;
                 }
-            }).then(function(response) {
-                self.$message({
-                    message: '审核通过',
-                    type: 'success',
+                if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
+                    this.$message({
+                        message: '请输入大于0的数字，且小数位不能超过两位',
+                        type: 'warning'
+                    });
+                    return;
+                }
+
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'auditBackVo.auditorId': self.user.id,
+                        'auditBackVo.refundAmount': self.checkData.refundAmount,
+                        'auditBackVo.auditExplain': self.checkData.auditExplain,
+                        'auditBackVo.serviceRemark': self.checkData.serviceRemark,
+                        'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.refundType': self.refundInfo.refundType,
+                        'auditBackVo.auditState': 1,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '审核通过',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
+                this.forPass = false;
+            }
         },
         // 未发货审核拒绝
         beforeNoPassCheck() {
-            if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
-                this.$message({
-                    message: '实际退款金额不得超过申请的订单总价金额！',
-                    type: 'warning'
-                });
-                return;
-            }
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
-                method: 'post',
-                data: {
-                    'auditBackVo.auditorId': self.user.id,
-                    'auditBackVo.refundAmount': self.checkData.refundAmount,
-                    'auditBackVo.auditExplain': self.checkData.auditExplain,
-                    'auditBackVo.serviceRemark': self.checkData.serviceRemark,
-                    'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'auditBackVo.refundType': self.refundInfo.refundType,
-                    'auditBackVo.auditState': 0,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+            if (this.forNoPass) {
+                if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
+                    this.$message({
+                        message: '实际退款金额不得超过申请的订单总价金额！',
+                        type: 'warning'
+                    });
+                    return;
                 }
-            }).then(function(response) {
-                self.$message({
-                    message: '审核拒绝',
-                    type: 'success',
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'auditBackVo.auditorId': self.user.id,
+                        'auditBackVo.refundAmount': self.checkData.refundAmount,
+                        'auditBackVo.auditExplain': self.checkData.auditExplain,
+                        'auditBackVo.serviceRemark': self.checkData.serviceRemark,
+                        'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.refundType': self.refundInfo.refundType,
+                        'auditBackVo.auditState': 0,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '审核拒绝',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    console.log(err);
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
+                this.forNoPass = false;
+            }
         },
         //退款成功
         drawBackSuccess() {
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doFinishPurchaseOrderBack.jhtml',
-                method: 'post',
-                data: {
-                    'purchaseOrderBack.updatorId': self.user.id,
-                    'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+            if (this.forPass) {
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doFinishPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'purchaseOrderBack.updatorId': self.user.id,
+                        'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(function(response) {
-                self.$message({
-                    message: '退款成功',
-                    type: 'success',
+                }).then(function(response) {
+                    self.$message({
+                        message: '退款成功',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
                 });
-                setTimeout(() => {
-                    window.location.reload();
-                }, 1000)
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
+                this.forPass = false;
+            }
         },
         // 展示图片
         showImg(img, index) {
@@ -1303,6 +1344,7 @@ export default {
                 });
                 return;
             }
+
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrderBack/updatePurchaseOrderBack.jhtml',
@@ -1325,12 +1367,14 @@ export default {
                 }
             }).then(function(response) {
                 self.$message({
-                    message: '修改成功',
+                    message: '变更成功',
                     type: 'success',
                 });
                 setTimeout(() => {
+                    self.loading = true;
                     window.location.reload();
-                }, 1000);
+                }, 1000)
+                self.loading = false;
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
@@ -1382,23 +1426,28 @@ export default {
     },
     components: {
     },
-    // watch: {
-    //     'checkData.applyRefundAmount': {
-    //         handler(curVal, oldVal) {
-    //             if (!/^\d+(\.\d{1,2})?$/.test(curVal)) {
-    //                 if (!/\.\d{1,2}$/.test(curVal)) {
-    //                     // console.log(111);
-    //                     // let arr = curVal.split('.');
-    //                     // arr[1] = arr[1].substring(0, 2);
-    //                     // console.log(arr);
-    //                     // this.checkData.applyRefundAmount = arr.join('.');
-    //                     // console.log(this.checkData.applyRefundAmount);
-    //                 }
-    //             }
-    //         },
-    //         deep: true,
-    //     }
-    // }
+    watch: {
+        // 'checkData.applyRefundAmount': {
+        //     handler(curVal, oldVal) {
+        //         if (!/^\d+(\.\d{1,2})?$/.test(curVal)) {
+        //             if (!/\.\d{1,2}$/.test(curVal)) {
+        //                 // console.log(111);
+        //                 // let arr = curVal.split('.');
+        //                 // arr[1] = arr[1].substring(0, 2);
+        //                 // console.log(arr);
+        //                 // this.checkData.applyRefundAmount = arr.join('.');
+        //                 // console.log(this.checkData.applyRefundAmount);
+        //             }
+        //         }
+        //     },
+        //     deep: true,
+        // },
+        done(val) {
+            if (val === 3) {
+                this.loading = false;
+            }
+        }
+    }
 }
 </script>
     <style lang="less" scoped>
