@@ -68,7 +68,8 @@
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template scope="scope">
-                        <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link>
+                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
+                        <a :href="scope.row.linkTo" target="_Blank">{{ scope.row.purchaseOrderNo }}</a>
                     </template>
                 </el-table-column>
                 <el-table-column label="操作">
@@ -122,6 +123,11 @@ export default {
         }
     },
     created() {
+        this.uri = this.getUri();
+        //获取id
+        var src = window.location.href.split('/');
+        this.id = src[src.length - 2];
+
         // 获取页面初始化数据
         var qs = require('qs');
         this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
@@ -138,6 +144,17 @@ export default {
                 console.log(res);
                 this.tableData = res.data.result;
                 this.totalNums = res.data.totalNums;
+                // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
             }).catch((err) => {
                 this.$message({
                     messgae: err.data.msg,
@@ -146,6 +163,18 @@ export default {
             });
     },
     methods: {
+        //获取url
+        getUri() {
+            if (document.cookie) {
+                var cookie = document.cookie.split(";");
+                for (var index = 0; index < cookie.length; index++) {
+                    var cookies = cookie[index].split("=");
+                    if (cookies[0] == 'adminUri') {
+                        return cookies[1];
+                    }
+                }
+            }
+        },
         //每页条数选择
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
@@ -174,6 +203,17 @@ export default {
                 }).then((res) => {
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     this.$message({
                         messgae: err.msg,
@@ -216,6 +256,17 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     console.log(err);
                     this.$message({
@@ -286,6 +337,17 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     console.log(err);
                     this.$message({

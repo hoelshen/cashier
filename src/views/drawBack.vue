@@ -33,7 +33,7 @@
                                 <el-option label="退款关闭" value="CANCEL"></el-option>
                                 <el-option label="已退回，待收货" value="SEND_WAIT_RECEIVED"></el-option>
                                 <el-option label="已收货，确认中" value="RECEIVED_WAIT_CONFIRM"></el-option>
-                                <el-option label="审核通过,退款中" value="AUDIT_PASS_REFUNDING"></el-option>
+                                <el-option label="审核通过，退款中" value="AUDIT_PASS_REFUNDING"></el-option>
                                 <el-option label="审核通过，请退货" value="AUDIT_PASS_WAIT_SEND"></el-option>
                             </el-select>
                         </el-form-item>
@@ -134,8 +134,6 @@ export default {
         //获取id
         var src = window.location.href.split('/');
         this.id = src[src.length - 2];
-        this.orderId = src[src.length - 1];
-        console.log(src);
 
         // 获取页面初始化数据
         var qs = require('qs');
@@ -152,6 +150,9 @@ export default {
                 this.tableData = res.data.result;
                 this.totalNums = res.data.totalNums;
                 // 拼接订单号链接
+                var src = window.location.href.split('/');
+                this.orderId = src[src.length - 1];
+                console.log(src);
                 src[4] = 'orderInfo';
                 for (let i = 0; i < this.tableData.length; i++) {
                     src[5] = this.tableData[i].purchaseOrderNo;
@@ -187,7 +188,7 @@ export default {
         // },
         //每页条数选择
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`); 
+            console.log(`每页 ${val} 条`);
         },
         //当前页跳转，在排序完后做
         handleCurrentChange(val) {
@@ -212,6 +213,17 @@ export default {
                 }).then((res) => {
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     this.$message({
                         messgae: err.msg,
@@ -254,6 +266,17 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     this.$message({
                         messgae: err.msg,
@@ -322,6 +345,17 @@ export default {
                     console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
+                    // 拼接订单号链接
+                    var src = window.location.href.split('/');
+                    this.orderId = src[src.length - 1];
+                    console.log(src);
+                    src[4] = 'orderInfo';
+                    for (let i = 0; i < this.tableData.length; i++) {
+                        src[5] = this.tableData[i].purchaseOrderNo;
+                        src[6] = this.tableData[i].shopNo;
+                        this.tableData[i].linkTo = src.join('/');
+                        console.log(this.tableData[i].linkTo);
+                    }
                 }).catch((err) => {
                     console.log(err);
                     this.$message({
