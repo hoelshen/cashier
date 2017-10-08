@@ -79,7 +79,7 @@
                 </el-table-column>
                 <el-table-column label="操作">
                     <template scope="scope">
-                        <router-link :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderBackNo,purchaseOrderNo: scope.row.purchaseOrderNo }}">详情</router-link>
+                        <router-link :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderBackNo}}">详情</router-link>
                         <!-- v-if="备注判断未添加" -->
                         <el-tooltip class="item" effect="light" placement="top" v-if="scope.row.serviceRemark">
                             <div slot="content" class="tooltip">{{ scope.row.serviceRemark }}</div>

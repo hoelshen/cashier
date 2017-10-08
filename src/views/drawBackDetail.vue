@@ -56,7 +56,7 @@
                         下单时间：{{ orderInfo.createdTime }}
                     </el-col>
                     <el-col :span="8">
-                        订单总价：￥{{ toFixed(orderInfo.orderSum) }}
+                        订单总价：￥{{ toFixed(orderInfo.totalAmount) }}
                     </el-col>
                 </el-row>
                 <div class="warp"></div>
@@ -760,6 +760,12 @@ export default {
                 this.refundInfo.refundAmount = this.toFixed(this.refundInfo.refundAmount);
                 this.shopTableData = response.data.result.purchaseOrderBackDetails;
                 this.wantMoney = response.data.result.applyRefundAmount;
+                this.orderInfo = response.data.result;
+                // 拼接订单号链接
+                arr[4] = 'orderInfo';
+                arr[5] = this.orderInfo.purchaseOrderNo;
+                arr[6] = this.orderInfo.shopId.shopNo;
+                this.linkTo = arr.join('/');
                 // 日志处理
                 for (let i = 0; i < this.tableData.length; i++) {
                     // if (this.tableData[i].operationState === '审核通过') {
@@ -787,28 +793,6 @@ export default {
                     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
                     this.allTotal = this.allTotal + Number(this.shopTableData[i].subtotal);
                 }
-            },
-            fail(response) {
-                this.$message({
-                    message: response.data.msg,
-                    type: 'error'
-                })
-            },
-        });
-        // 获取进货单信息
-        this.$getData({
-            url: '/http/purchaseOrder/findPurchaseOrderByNo.jhtml',
-            data: {
-                purchaseOrderNo: src[6]
-            },
-            success(response) {
-                this.done++;
-                this.orderInfo = response.data.result;
-                // 拼接订单号链接
-                arr[4] = 'orderInfo';
-                arr[5] = this.orderInfo.purchaseOrderNo;
-                arr[6] = this.orderInfo.shop.shopNo;
-                this.linkTo = arr.join('/');
             },
             fail(response) {
                 this.$message({
@@ -1457,7 +1441,7 @@ export default {
         //     deep: true,
         // },
         done(val) {
-            if (val === 3) {
+            if (val === 2) {
                 this.loading = false;
             }
         }
