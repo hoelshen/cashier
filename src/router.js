@@ -41,7 +41,7 @@ const config = [{
 			},
 			{
 				// 退货单详情
-				path: 'drawBackDetail/:purchaseOrderBackNo/:purchaseOrderNo',
+				path: 'drawBackDetail/:purchaseOrderBackNo',
 				name:'drawBackDetail',
 				component: resolve => require(['./views/drawBackDetail.vue'], resolve),
 			},
