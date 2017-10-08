@@ -875,6 +875,8 @@ export default {
             if (item === "REFUND_AMOUNT") {
                 this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
                 this.changeMoney = true;
+            }else{
+                this.checkData.applyRefundAmount = this.refundInfo.refundAmount;
             }
         },
         //返回
