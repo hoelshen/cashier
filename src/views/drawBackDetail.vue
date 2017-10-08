@@ -875,7 +875,7 @@ export default {
             if (item === "REFUND_AMOUNT") {
                 this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
                 this.changeMoney = true;
-            }else{
+            } else {
                 this.checkData.applyRefundAmount = this.refundInfo.refundAmount;
             }
         },
@@ -885,59 +885,63 @@ export default {
         },
         // 提交快递信息
         onExpress() {
-            if (/[\，\,\.\-]+/g.test(this.expressInfo.expressNo)) {
-                this.$message({
-                    message: '请使用空格分隔单号！',
-                    type: 'warning'
-                });
-                return;
-            }
-            this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
-            for (var index = 0; index < this.expressInfo.expressNo.split(',').length; index++) {
-                if (this.expressInfo.expressNo.split(',')[index] === '')
+            if (this.forPass) {
+                if (this.expressInfo.expressNo.trim() === '') {
+                    this.$message({
+                        message: '请输入单号',
+                        type: 'warning'
+                    });
+                    return;
+                }
+                if (/[\，\,\.\-]+/g.test(this.expressInfo.expressNo.trim())) {
                     this.$message({
                         message: '请使用空格分隔单号！',
                         type: 'warning'
                     });
-                return;
-            }
-            const self = this;
-            self.$ajax({
-                url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
-                method: 'post',
-                data: {
-                    'purchaseOrderBack.expressNo': self.expressInfo.expressNo,
-                    'purchaseOrderBack.expressCode': self.toExpressType,
-                    'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                    'purchaseOrderBack.refundType': self.checkData.refundType,
-                    'purchaseOrderBack.updatorId': self.user.id,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
+                    return;
                 }
-            }).then(function(response) {
-                self.$message({
-                    message: '提交成功',
-                    type: 'success',
+                this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
+                this.expressInfo.expressNo = this.expressInfo.expressNo.substring(1, this.expressInfo.expressNo.length - 1);
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
+                    method: 'post',
+                    data: {
+                        'purchaseOrderBack.expressNo': self.expressInfo.expressNo,
+                        'purchaseOrderBack.expressCode': self.toExpressType,
+                        'purchaseOrderBack.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'purchaseOrderBack.refundType': self.checkData.refundType,
+                        'purchaseOrderBack.updatorId': self.user.id,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '提交成功',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
                 });
-                setTimeout(() => {
-                    self.loading = true;
-                    window.location.reload();
-                }, 1000)
-                self.loading = false;
-            }).catch(function(err) {
-                self.$message({
-                    message: err.data.msg,
-                    type: 'error',
-                })
-            });
+                this.forPass = false;
+                dialogFormVisible = false;
+            }
             dialogFormVisible = false;
         },
         // 已发货二次审核通过
