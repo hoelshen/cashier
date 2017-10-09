@@ -209,7 +209,7 @@
                         下单时间：{{ orderInfo.createdTime }}
                     </el-col>
                     <el-col :span="8">
-                        订单总价：￥{{ toFixed(orderInfo.orderSum) }}
+                        订单总价：￥{{ toFixed(orderInfo.totalAmount) }}
                     </el-col>
                 </el-row>
                 <div class="warp"></div>
@@ -930,81 +930,78 @@ export default {
         },
         // 已发货二次审核通过
         afterSecondPassCheck() {
-            if (this.forPass) {
-                if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
-                    this.$message({
-                        message: '实际退款金额不得超过申请退款金额！',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
-                    this.$message({
-                        message: '请输入大于0的数字，且小数位不能超过两位',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                const h = this.$createElement;
-                this.$msgbox({
-                    title: '消息',
-                    message: h('p', null, [
-                        h('span', null, '退款金额： '),
-                        h('span', null, this.checkData.refundAmount),
-                        h('span', null, ' 元，请确认 '),
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                }).then(() => {
-                    const self = this;
-                    self.$ajax({
-                        url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
-                        method: 'post',
-                        data: {
-                            'auditBackVo.auditorId': self.user.id,
-                            'auditBackVo.refundAmount': self.checkData.refundAmount,
-                            'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                            'auditBackVo.auditState': 1,
-                        },
-                        transformRequest: [function(data) {
-                            let ret = ''
-                            for (let it in data) {
-                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                            }
-                            return ret
-                        }],
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        }
-                    }).then(function(response) {
-                        self.$message({
-                            message: '审核通过',
-                            type: 'success',
-                        });
-                        setTimeout(() => {
-                            self.loading = true;
-                            window.location.reload();
-                        }, 1000)
-                        self.loading = false;
-                    }).catch(function(err) {
-                        self.$message({
-                            message: err.data.msg,
-                            type: 'error',
-                        })
-                    });
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    // this.$message({
-                    //     type: 'info',
-                    //     message: '已取消删除'
-                    // });
+            if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
+                this.$message({
+                    message: '实际退款金额不得超过申请退款金额！',
+                    type: 'warning'
                 });
-                this.forPass = false;
+                return;
             }
+            if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
+                this.$message({
+                    message: '请输入大于0的数字，且小数位不能超过两位',
+                    type: 'warning'
+                });
+                return;
+            }
+            const h = this.$createElement;
+            this.$msgbox({
+                title: '消息',
+                message: h('p', null, [
+                    h('span', null, '退款金额： '),
+                    h('span', null, this.checkData.refundAmount),
+                    h('span', null, ' 元，请确认 '),
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(() => {
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'auditBackVo.auditorId': self.user.id,
+                        'auditBackVo.refundAmount': self.checkData.refundAmount,
+                        'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.auditState': 1,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '审核通过',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
+                });
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // });
+            });
         },
         // 已发货审核通过
         afterPassCheck() {
