@@ -110,3 +110,11 @@ export default {
 <style lang="less" scoped>
 @import url('../assets/less/slidebar.less');
 </style>
+<style>
+    .el-submenu__icon-arrow{
+        transform: rotateZ(270deg);
+    }
+    .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
+        transform: rotateZ(360deg);
+    }
+</style>
