@@ -857,10 +857,12 @@ export default {
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
             if (item === "REFUND_AMOUNT") {
-                this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
+                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.refundAmount = '';
                 this.changeMoney = true;
             } else {
-                this.checkData.applyRefundAmount = this.refundInfo.refundAmount;
+                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.refundAmount = this.refundInfo.applyRefundAmount;
             }
         },
         //返回
