@@ -786,13 +786,13 @@ export default {
                 // 图片字符串转换数组
                 this.images = response.data.result.imgUrl.split(',');
                 // 列表金额格式化
-                for (let i = 0; i < this.shopTableData.length; i++) {
-                    this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-                    this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
-                    this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
-                    this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-                    this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
-                }
+                // for (let i = 0; i < this.shopTableData.length; i++) {
+                //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
+                //     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
+                //     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
+                //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
+                //     this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
+                // }
             },
             fail(response) {
                 this.$message({
