@@ -694,7 +694,7 @@ export default {
                 auditExplain: '',               //审核说明
                 refundAmount: 0,               //申请金额
                 serviceRemark: '',              //客服备注
-                orderSum:'',                    //原订单总价
+                orderSum: '',                    //原订单总价
 
             },
             checkData: {                        //客服审核数据
@@ -948,6 +948,12 @@ export default {
                 });
                 return;
             }
+            if (this.checkData.auditExplain === null) {
+                this.checkData.auditExplain = '';
+            }
+            if (this.checkData.serviceRemark === null) {
+                this.checkData.serviceRemark = '';
+            }
             const h = this.$createElement;
             this.$msgbox({
                 title: '消息',
@@ -1035,7 +1041,12 @@ export default {
                     });
                     return;
                 }
-
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
+                }
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1101,6 +1112,12 @@ export default {
                     }
                     this.checkData.applyRefundAmount = this.checkData.refundAmount;
                 }
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
+                }
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1161,7 +1178,12 @@ export default {
                     });
                     return;
                 }
-
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
+                }
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1213,6 +1235,12 @@ export default {
                         type: 'warning'
                     });
                     return;
+                }
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
                 }
                 const self = this;
                 self.$ajax({
