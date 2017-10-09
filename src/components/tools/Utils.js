@@ -68,7 +68,7 @@ let Utils = {
             result.push(data.slice(i, i + l));
         }
         return result;
-    }
+    },
 }
 
 export default Utils
