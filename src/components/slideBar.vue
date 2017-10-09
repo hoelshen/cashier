@@ -3,7 +3,7 @@
         <h2>
             <router-link to="/">朴茶门店收银后台</router-link>
         </h2>
-        <el-menu default-active="1" class="slideBar" theme="dark" router unique-opened>
+        <el-menu default-active="2" class="slideBar" theme="dark" router unique-opened>
 
             <!-- 一级菜单 -->
             <template v-for="(item,index) in slidebarConfig">
@@ -25,7 +25,7 @@
                             </template>
 
                             <template v-for="(t,j) in todo.children">
-                                <el-menu-item :index="t.path || String(index + 1) + '-' + String(i + 1) + '-' + String(j + 1)">
+                                <el-menu-item :index="t.path || String(index + 1) + '-' + String(i + 1) + '-' + String(j + 1)" :route="t.path">
                                     <i :class="t.icon" v-if="t.icon"></i>
                                     <span slot="title">{{ t.title }}</span>
                                     <span class="count" v-if="t.countName">{{ t.count }}</span>
@@ -34,7 +34,7 @@
                         </el-submenu>
 
                         <!-- 没有三级菜单 -->
-                        <el-menu-item :index="todo.path || String(index + 1) + '-' + (i + 1)" v-else>
+                        <el-menu-item :index="todo.path || String(index + 1) + '-' + (i + 1)" v-else >
                             <i :class="todo.icon" v-if="todo.icon"></i>
                             <span slot="title">{{ todo.title }}</span>
                             <span class="count" v-if="todo.countName">{{ todo.count }}</span>
@@ -61,7 +61,9 @@ export default {
     data() {
         return {
             slidebarConfig,
-            setting: {}
+            setting: {},
+            url: [],
+            index: '',
         }
     },
     methods: {
@@ -94,6 +96,12 @@ export default {
                 }
             }
             return num;
+        },
+        handleOpen(key, keyPath) {
+            console.log(key, keyPath);
+        },
+        handleClose(key, keyPath) {
+            console.log(key, keyPath);
         }
     },
     created() {
@@ -101,6 +109,42 @@ export default {
         this.getName();
         this.setting.setCount = this.setCount;
         Vue.prototype.$slide = this.setting;
+
+        //获取地址
+        this.url = window.location.href.split('/');
+        console.log(this.url);
+        if (this.url[4] === 'memberList') {
+            this.index = '1-1';
+        }
+        else if (this.url[4] === 'waitOrder') {
+            this.index = '2-1';
+        }
+        else if (this.url[4] === 'orderManage') {
+            this.index = '2-2';
+        }
+        else if (this.url[4] === 'storeManage') {
+            this.index = '3-1';
+        }
+        else if (this.url[4] === 'prepaidManage') {
+            this.index = '3-2';
+        }
+        else if (this.url[4] === 'waitDrawBack') {
+            this.index = '4-1';
+        }
+        else if (this.url[4] === 'drawBack') {
+            this.index = '4-2';
+        }
+        console.log(this.index);
+    },
+    watch: {
+        //监控url
+        '$route': {
+            handler: (oldValue, newValue) => {
+                console.log(oldValue, newValue);
+            },
+            // 深度观察
+            deep: true
+        }
     }
 }
 </script>
@@ -111,10 +155,11 @@ export default {
 @import url('../assets/less/slidebar.less');
 </style>
 <style>
-    .el-submenu__icon-arrow{
-        transform: rotateZ(270deg);
-    }
-    .el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow{
-        transform: rotateZ(360deg);
-    }
+.el-submenu__icon-arrow {
+    transform: rotateZ(270deg);
+}
+
+.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+    transform: rotateZ(360deg);
+}
 </style>
