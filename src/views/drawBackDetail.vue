@@ -49,7 +49,7 @@
                 <el-row :gutter="10">
                     <el-col :span="8">
                         进货单号：
-                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
+                        <!-- <router-link target="_blank" :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
                         <a :href="linkTo" target="_Blank">{{ refundInfo.purchaseOrderNo }}</a>
                     </el-col>
                     <el-col :span="8">
