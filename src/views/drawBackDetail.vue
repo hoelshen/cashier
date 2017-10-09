@@ -791,7 +791,7 @@ export default {
                     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
                     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
                     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-                    this.allTotal = this.allTotal + Number(this.shopTableData[i].subtotal);
+                    this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
                 }
             },
             fail(response) {
@@ -1015,7 +1015,7 @@ export default {
                 }
                 if (this.checkData.refundType === 'REFUND_AMOUNT') {
                     this.checkData.drawBackDepot = '';
-                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    if (Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount)) {
                         this.$message({
                             message: '实际退款金额不得超过申请退款金额！',
                             type: 'warning'
@@ -1087,7 +1087,8 @@ export default {
                 }
                 if (this.checkData.refundType === 'REFUND_AMOUNT') {
                     this.checkData.drawBackDepot = '';
-                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    console.log(Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount));
+                    if (Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount)) {
                         this.$message({
                             message: '实际退款金额不得超过申请退款金额！',
                             type: 'warning'
@@ -1322,7 +1323,7 @@ export default {
                 });
                 return;
             }
-            if (Number(this.checkData.applyRefundAmount) > Number(this.allTotal)) {
+            if (Number(this.checkData.applyRefundAmount) > Number(this.refundInfo.totalAmount)) {
                 this.$message({
                     message: '申请金额不得超过申请的退款金额总价！',
                     type: 'warning'
