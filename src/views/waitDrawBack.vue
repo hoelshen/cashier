@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template scope="scope">
-                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
+                        <!-- <router-link target="_blank" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
                         <a :href="scope.row.linkTo" target="_Blank">{{ scope.row.purchaseOrderNo }}</a>
                     </template>
                 </el-table-column>

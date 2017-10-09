@@ -73,7 +73,7 @@
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template scope="scope">
-                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
+                        <!-- <router-link target="_blank" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
                         <a :href="scope.row.linkTo" target="_Blank">{{ scope.row.purchaseOrderNo }}</a>
                     </template>
                 </el-table-column>
@@ -152,13 +152,11 @@ export default {
                 // 拼接订单号链接
                 var src = window.location.href.split('/');
                 this.orderId = src[src.length - 1];
-                console.log(src);
                 src[4] = 'orderInfo';
                 for (let i = 0; i < this.tableData.length; i++) {
                     src[5] = this.tableData[i].purchaseOrderNo;
                     src[6] = this.tableData[i].shopNo;
                     this.tableData[i].linkTo = src.join('/');
-                    console.log(this.tableData[i].linkTo);
                 }
                 this.loading = false;
             }).catch((err) => {
@@ -216,13 +214,11 @@ export default {
                     // 拼接订单号链接
                     var src = window.location.href.split('/');
                     this.orderId = src[src.length - 1];
-                    console.log(src);
                     src[4] = 'orderInfo';
                     for (let i = 0; i < this.tableData.length; i++) {
                         src[5] = this.tableData[i].purchaseOrderNo;
                         src[6] = this.tableData[i].shopNo;
                         this.tableData[i].linkTo = src.join('/');
-                        console.log(this.tableData[i].linkTo);
                     }
                 }).catch((err) => {
                     this.$message({
@@ -235,7 +231,6 @@ export default {
         // 传递字段未定，未做完
         store(row, column) {
             // if (!this.checkSession()) return;
-            console.log(row);
             if (row.order === 'ascending') {
                 this.order = 'asc';
             }
@@ -243,7 +238,6 @@ export default {
                 this.order = 'desc';
             }
             var time = this.dealTime();
-            console.log(time);
             //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
             var qs = require('qs');
             this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
@@ -263,19 +257,16 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                 }).then((res) => {
-                    console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
                     // 拼接订单号链接
                     var src = window.location.href.split('/');
                     this.orderId = src[src.length - 1];
-                    console.log(src);
                     src[4] = 'orderInfo';
                     for (let i = 0; i < this.tableData.length; i++) {
                         src[5] = this.tableData[i].purchaseOrderNo;
                         src[6] = this.tableData[i].shopNo;
                         this.tableData[i].linkTo = src.join('/');
-                        console.log(this.tableData[i].linkTo);
                     }
                 }).catch((err) => {
                     this.$message({
@@ -298,7 +289,6 @@ export default {
                 } else {
                     time1 = time1 + '-' + temp.getDate();
                 }
-                console.log(time1);
                 temp = new Date(this.searchData.searchTime[1]);
                 var time2 = temp.getFullYear();
                 if ((temp.getMonth() + 1) < 10) {
@@ -311,7 +301,6 @@ export default {
                 } else {
                     time2 = time2 + '-' + temp.getDate();
                 }
-                console.log(time2);
             } else {
                 var time1 = '';
                 var time2 = '';
@@ -324,7 +313,6 @@ export default {
         // 查询
         onSubmit() {
             var time = this.dealTime();
-            console.log(time);
             //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
             var qs = require('qs');
             this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
@@ -342,22 +330,18 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded',
                     },
                 }).then((res) => {
-                    console.log(res);
                     this.tableData = res.data.result;
                     this.totalNums = res.data.totalNums;
                     // 拼接订单号链接
                     var src = window.location.href.split('/');
                     this.orderId = src[src.length - 1];
-                    console.log(src);
                     src[4] = 'orderInfo';
                     for (let i = 0; i < this.tableData.length; i++) {
                         src[5] = this.tableData[i].purchaseOrderNo;
                         src[6] = this.tableData[i].shopNo;
                         this.tableData[i].linkTo = src.join('/');
-                        console.log(this.tableData[i].linkTo);
                     }
                 }).catch((err) => {
-                    console.log(err);
                     this.$message({
                         messgae: err.msg,
                         type: 'error',
