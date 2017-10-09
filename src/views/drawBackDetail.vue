@@ -888,8 +888,8 @@ export default {
                     });
                     return;
                 }
+                this.expressInfo.expressNo = this.expressInfo.expressNo.trim();
                 this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
-                this.expressInfo.expressNo = this.expressInfo.expressNo.substring(1, this.expressInfo.expressNo.length - 1);
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
