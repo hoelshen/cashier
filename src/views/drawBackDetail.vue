@@ -41,7 +41,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="8">
-                        退款说明：{{ refundInfo.refundExplain}}
+                        退款说明：{{ refundInfo.refundExplain === '' ? '-':refundInfo.refundExplain }}
                     </el-col>
                 </el-row>
                 <div class="warp"></div>
@@ -186,7 +186,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="8">
-                        退款说明：{{ refundInfo.refundExplain}}
+                        退款说明：{{ refundInfo.refundExplain === '' ? '-':refundInfo.refundExplain}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
