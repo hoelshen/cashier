@@ -141,6 +141,7 @@ export default {
                 } else {
                     sessionStorage.haha = nowDate;
                     return true;
+                    
                 }
             }
         },
