@@ -136,12 +136,12 @@ export default {
                     self.$router.push('/login');
                     self.$message({
                         message: '登录超时，请重新登录',
-                        type: 'error'
                     })
                     return false;
                 } else {
                     sessionStorage.haha = nowDate;
                     return true;
+                    
                 }
             }
         },
