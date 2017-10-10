@@ -174,7 +174,7 @@ export default {
 			if (window.sessionStorage) {
 				let nowDate = new Date().getTime();
 				let time = (nowDate - sessionStorage.haha) / 1000
-				//超过30秒没操作，重新登录
+				//超过30分钟没操作，重新登录
 				if (time > 1800) {
 					self.$router.push('/login');
 					self.$message({
