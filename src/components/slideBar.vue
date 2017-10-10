@@ -87,7 +87,7 @@ export default {
         },
         setCount(name, num) {
             if (num > 99) {
-                num = '99+';
+                num = '99+' ;
             }
             this.setting.counts[name].count = num;
             if (num === 0) {
