@@ -3,7 +3,7 @@
         <h2>
             <router-link to="/">朴茶门店收银后台</router-link>
         </h2>
-        <el-menu default-active="2" class="slideBar" theme="dark" router unique-opened>
+        <el-menu :default-active="getDefault" class="slideBar" theme="dark" router unique-opened>
 
             <!-- 一级菜单 -->
             <template v-for="(item,index) in slidebarConfig">
@@ -87,7 +87,7 @@ export default {
         },
         setCount(name, num) {
             if (num > 99) {
-                num = '99+' ;
+                num = '99+';
             }
             this.setting.counts[name].count = num;
             if (num === 0) {
@@ -103,12 +103,19 @@ export default {
             }
             return num;
         },
+        
+    },
+    computed:{
+        getDefault() {
+            return this.$route.path
+        }
     },
     created() {
         this.setting.slideData = this.slidebarConfig;
         this.getName();
         this.setting.setCount = this.setCount;
         Vue.prototype.$slide = this.setting;
+            console.log(this.$route);
 
     }
 }
