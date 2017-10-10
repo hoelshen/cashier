@@ -34,7 +34,7 @@
                         </el-submenu>
 
                         <!-- 没有三级菜单 -->
-                        <el-menu-item :index="todo.path || String(index + 1) + '-' + (i + 1)" v-else >
+                        <el-menu-item :index="todo.path || String(index + 1) + '-' + (i + 1)" v-else>
                             <i :class="todo.icon" v-if="todo.icon"></i>
                             <span slot="title">{{ todo.title }}</span>
                             <span class="count" v-if="todo.countName">{{ todo.count }}</span>
@@ -90,19 +90,19 @@ export default {
                 num = '99+';
             }
             this.setting.counts[name].count = num;
+            if (num === 0) {
+                this.setting.counts[name].count = '';
+            }
             for (let i = 0; i < this.setting.slideData.length; i++) {
                 if (this.setting.slideData[i].spotName === name) {
                     this.setting.slideData[i].spot = true;
+                    if (num === 0) {
+                        this.setting.slideData[i].spot = false;
+                    }
                 }
             }
             return num;
         },
-        handleOpen(key, keyPath) {
-            console.log(key, keyPath);
-        },
-        handleClose(key, keyPath) {
-            console.log(key, keyPath);
-        }
     },
     created() {
         this.setting.slideData = this.slidebarConfig;
@@ -110,41 +110,6 @@ export default {
         this.setting.setCount = this.setCount;
         Vue.prototype.$slide = this.setting;
 
-        //获取地址
-        this.url = window.location.href.split('/');
-        console.log(this.url);
-        if (this.url[4] === 'memberList') {
-            this.index = '1-1';
-        }
-        else if (this.url[4] === 'waitOrder') {
-            this.index = '2-1';
-        }
-        else if (this.url[4] === 'orderManage') {
-            this.index = '2-2';
-        }
-        else if (this.url[4] === 'storeManage') {
-            this.index = '3-1';
-        }
-        else if (this.url[4] === 'prepaidManage') {
-            this.index = '3-2';
-        }
-        else if (this.url[4] === 'waitDrawBack') {
-            this.index = '4-1';
-        }
-        else if (this.url[4] === 'drawBack') {
-            this.index = '4-2';
-        }
-        console.log(this.index);
-    },
-    watch: {
-        //监控url
-        '$route': {
-            handler: (oldValue, newValue) => {
-                console.log(oldValue, newValue);
-            },
-            // 深度观察
-            deep: true
-        }
     }
 }
 </script>
