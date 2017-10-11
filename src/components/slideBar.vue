@@ -3,7 +3,7 @@
         <h2>
             <router-link to="/">朴茶门店收银后台</router-link>
         </h2>
-        <el-menu default-active="1" class="slideBar" theme="dark" router unique-opened>
+        <el-menu :default-active="getDefault" class="slideBar" theme="dark" router unique-opened>
 
             <!-- 一级菜单 -->
             <template v-for="(item,index) in slidebarConfig">
@@ -25,7 +25,7 @@
                             </template>
 
                             <template v-for="(t,j) in todo.children">
-                                <el-menu-item :index="t.path || String(index + 1) + '-' + String(i + 1) + '-' + String(j + 1)">
+                                <el-menu-item :index="t.path || String(index + 1) + '-' + String(i + 1) + '-' + String(j + 1)" :route="t.path">
                                     <i :class="t.icon" v-if="t.icon"></i>
                                     <span slot="title">{{ t.title }}</span>
                                     <span class="count" v-if="t.countName">{{ t.count }}</span>
@@ -61,7 +61,9 @@ export default {
     data() {
         return {
             slidebarConfig,
-            setting: {}
+            setting: {},
+            url: [],
+            index: '',
         }
     },
     methods: {
@@ -88,12 +90,24 @@ export default {
                 num = '99+';
             }
             this.setting.counts[name].count = num;
+            if (num === 0) {
+                this.setting.counts[name].count = '';
+            }
             for (let i = 0; i < this.setting.slideData.length; i++) {
                 if (this.setting.slideData[i].spotName === name) {
                     this.setting.slideData[i].spot = true;
+                    if (num === 0) {
+                        this.setting.slideData[i].spot = false;
+                    }
                 }
             }
             return num;
+        },
+        
+    },
+    computed:{
+        getDefault() {
+            return this.$route.path
         }
     },
     created() {
@@ -101,6 +115,8 @@ export default {
         this.getName();
         this.setting.setCount = this.setCount;
         Vue.prototype.$slide = this.setting;
+            console.log(this.$route);
+
     }
 }
 </script>
@@ -109,4 +125,13 @@ export default {
 
 <style lang="less" scoped>
 @import url('../assets/less/slidebar.less');
+</style>
+<style>
+.el-submenu__icon-arrow {
+    transform: rotateZ(270deg);
+}
+
+.el-submenu.is-opened>.el-submenu__title .el-submenu__icon-arrow {
+    transform: rotateZ(360deg);
+}
 </style>

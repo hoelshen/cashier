@@ -41,7 +41,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="8">
-                        退款说明：{{ refundInfo.refundExplain}}
+                        退款说明：{{ refundInfo.refundExplain === '' ? '-':refundInfo.refundExplain }}
                     </el-col>
                 </el-row>
                 <div class="warp"></div>
@@ -49,14 +49,14 @@
                 <el-row :gutter="10">
                     <el-col :span="8">
                         进货单号：
-                        <!-- <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
+                        <!-- <router-link target="_blank" :to="{ name: 'orderInfo', params: { purchaseOrderNo: refundInfo.purchaseOrderNo,shopNo:orderInfo.shop.shopNo }}">{{ refundInfo.purchaseOrderNo }}</router-link> -->
                         <a :href="linkTo" target="_Blank">{{ refundInfo.purchaseOrderNo }}</a>
                     </el-col>
                     <el-col :span="8">
                         下单时间：{{ orderInfo.createdTime }}
                     </el-col>
                     <el-col :span="8">
-                        订单总价：￥{{ toFixed(orderInfo.totalAmount) }}
+                        订单总价：￥{{ toFixed(orderInfo.orderSum) }}
                     </el-col>
                 </el-row>
                 <div class="warp"></div>
@@ -77,14 +77,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="checkData.auditExplain" :maxlength=100></el-input>
+                                <el-input v-model="checkData.auditExplain" :maxlength="100"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="checkData.serviceRemark" :maxlength=100></el-input>
+                                <el-input v-model="checkData.serviceRemark" :maxlength="100"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -114,14 +114,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -148,14 +148,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="13%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="13%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -186,7 +186,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="8">
-                        退款说明：{{ refundInfo.refundExplain}}
+                        退款说明：{{ refundInfo.refundExplain === '' ? '-':refundInfo.refundExplain}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -282,14 +282,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="checkData.auditExplain" :maxlength=100></el-input>
+                                <el-input v-model="checkData.auditExplain" :maxlength="100"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="checkData.serviceRemark" :maxlength=100></el-input>
+                                <el-input v-model="checkData.serviceRemark" :maxlength="100"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -346,14 +346,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -425,14 +425,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -474,14 +474,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -535,14 +535,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -596,14 +596,14 @@
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="审核说明：" label-width="17%">
-                                <el-input v-model="refundInfo.auditExplain" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.auditExplain" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="16">
                             <el-form-item label="客服备注：" label-width="17%">
-                                <el-input v-model="refundInfo.serviceRemark" :maxlength=100 disabled="disabled"></el-input>
+                                <el-input v-model="refundInfo.serviceRemark" :maxlength="100" disabled="disabled"></el-input>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -694,6 +694,8 @@ export default {
                 auditExplain: '',               //审核说明
                 refundAmount: 0,               //申请金额
                 serviceRemark: '',              //客服备注
+                orderSum: '',                    //原订单总价
+
             },
             checkData: {                        //客服审核数据
                 refundType: '',              //退款类型，判断是否是仅退款
@@ -733,6 +735,7 @@ export default {
         }
     },
     created() {
+        if(!this.checkSession())return;
         this.uri = this.getUri();
         //获取id
         var src = window.location.href.split('/');
@@ -786,13 +789,13 @@ export default {
                 // 图片字符串转换数组
                 this.images = response.data.result.imgUrl.split(',');
                 // 列表金额格式化
-                for (let i = 0; i < this.shopTableData.length; i++) {
-                    this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-                    this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
-                    this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
-                    this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-                    this.allTotal = this.allTotal + Number(this.shopTableData[i].subtotal);
-                }
+                // for (let i = 0; i < this.shopTableData.length; i++) {
+                //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
+                //     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
+                //     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
+                //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
+                //     this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
+                // }
             },
             fail(response) {
                 this.$message({
@@ -823,6 +826,25 @@ export default {
         });
     },
     methods: {
+        //判断是否超时
+		checkSession() {
+			const self = this;
+			if (window.sessionStorage) {
+				let nowDate = new Date().getTime();
+				let time = (nowDate - sessionStorage.haha) / 1000
+				//超过30秒没操作，重新登录
+				if (time > 1800) {
+					self.$router.push('/login');
+					self.$message({
+						message: '登录超时，请重新登录',
+					})
+					return false;
+				} else {
+					sessionStorage.haha = nowDate;
+					return true;
+				}
+			}
+		},
         // 金额校验
         checkMoney() {
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
@@ -856,19 +878,24 @@ export default {
         },
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
+            if(!this.checkSession())return;
             if (item === "REFUND_AMOUNT") {
-                this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
+                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.refundAmount = '';
                 this.changeMoney = true;
             } else {
-                this.checkData.applyRefundAmount = this.refundInfo.refundAmount;
+                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.refundAmount = this.refundInfo.applyRefundAmount;
             }
         },
         //返回
         goBack() {
+            if(!this.checkSession())return;
             window.history.go(-1);
         },
         // 提交快递信息
         onExpress() {
+            if(!this.checkSession())return;
             if (this.forPass) {
                 if (this.expressInfo.expressNo.trim() === '') {
                     this.$message({
@@ -884,8 +911,8 @@ export default {
                     });
                     return;
                 }
+                this.expressInfo.expressNo = this.expressInfo.expressNo.trim();
                 this.expressInfo.expressNo = this.expressInfo.expressNo.replace(/\s+/g, ',');
-                this.expressInfo.expressNo = this.expressInfo.expressNo.substring(1, this.expressInfo.expressNo.length - 1);
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doFillInExpressNo.jhtml',
@@ -930,84 +957,89 @@ export default {
         },
         // 已发货二次审核通过
         afterSecondPassCheck() {
-            if (this.forPass) {
-                if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
-                    this.$message({
-                        message: '实际退款金额不得超过申请退款金额！',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
-                    this.$message({
-                        message: '请输入大于0的数字，且小数位不能超过两位',
-                        type: 'warning'
-                    });
-                    return;
-                }
-                const h = this.$createElement;
-                this.$msgbox({
-                    title: '消息',
-                    message: h('p', null, [
-                        h('span', null, '退款金额： '),
-                        h('span', null, this.checkData.refundAmount),
-                        h('span', null, ' 元，请确认 '),
-                    ]),
-                    showCancelButton: true,
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                }).then(() => {
-                    const self = this;
-                    self.$ajax({
-                        url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
-                        method: 'post',
-                        data: {
-                            'auditBackVo.auditorId': self.user.id,
-                            'auditBackVo.refundAmount': self.checkData.refundAmount,
-                            'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
-                            'auditBackVo.auditState': 1,
-                        },
-                        transformRequest: [function(data) {
-                            let ret = ''
-                            for (let it in data) {
-                                ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                            }
-                            return ret
-                        }],
-                        headers: {
-                            'Content-Type': 'application/x-www-form-urlencoded'
-                        }
-                    }).then(function(response) {
-                        self.$message({
-                            message: '审核通过',
-                            type: 'success',
-                        });
-                        setTimeout(() => {
-                            self.loading = true;
-                            window.location.reload();
-                        }, 1000)
-                        self.loading = false;
-                    }).catch(function(err) {
-                        self.$message({
-                            message: err.data.msg,
-                            type: 'error',
-                        })
-                    });
-                    // this.$message({
-                    //     type: 'success',
-                    //     message: '删除成功!'
-                    // });
-                }).catch(() => {
-                    // this.$message({
-                    //     type: 'info',
-                    //     message: '已取消删除'
-                    // });
+            if(!this.checkSession())return;
+            if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
+                this.$message({
+                    message: '实际退款金额不得超过申请退款金额！',
+                    type: 'warning'
                 });
-                this.forPass = false;
+                return;
             }
+            if (!/^[0-9\.]+$/.test(this.checkData.refundAmount) || Number(this.checkData.refundAmount) === 0) {
+                this.$message({
+                    message: '请输入大于0的数字，且小数位不能超过两位',
+                    type: 'warning'
+                });
+                return;
+            }
+            if (this.checkData.auditExplain === null) {
+                this.checkData.auditExplain = '';
+            }
+            if (this.checkData.serviceRemark === null) {
+                this.checkData.serviceRemark = '';
+            }
+            const h = this.$createElement;
+            this.$msgbox({
+                title: '消息',
+                message: h('p', null, [
+                    h('span', null, '退款金额： '),
+                    h('span', null, this.checkData.refundAmount),
+                    h('span', null, ' 元，请确认 '),
+                ]),
+                showCancelButton: true,
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+            }).then(() => {
+                const self = this;
+                self.$ajax({
+                    url: '/api/http/purchaseOrderBack/doAuditAmountPurchaseOrderBack.jhtml',
+                    method: 'post',
+                    data: {
+                        'auditBackVo.auditorId': self.user.id,
+                        'auditBackVo.refundAmount': self.checkData.refundAmount,
+                        'auditBackVo.purchaseOrderBackNo': self.refundInfo.purchaseOrderBackNo,
+                        'auditBackVo.auditState': 1,
+                    },
+                    transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+                }).then(function(response) {
+                    self.$message({
+                        message: '审核通过',
+                        type: 'success',
+                    });
+                    setTimeout(() => {
+                        self.loading = true;
+                        window.location.reload();
+                    }, 1000)
+                    self.loading = false;
+                }).catch(function(err) {
+                    self.$message({
+                        message: err.data.msg,
+                        type: 'error',
+                    })
+                });
+                // this.$message({
+                //     type: 'success',
+                //     message: '删除成功!'
+                // });
+            }).catch(() => {
+                // this.$message({
+                //     type: 'info',
+                //     message: '已取消删除'
+                // });
+            });
         },
         // 已发货审核通过
         afterPassCheck() {
+            if(!this.checkSession())return;
             if (this.forPass) {
                 if (this.checkData.refundType === null) {
                     this.$message({
@@ -1018,7 +1050,7 @@ export default {
                 }
                 if (this.checkData.refundType === 'REFUND_AMOUNT') {
                     this.checkData.drawBackDepot = '';
-                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    if (Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount)) {
                         this.$message({
                             message: '实际退款金额不得超过申请退款金额！',
                             type: 'warning'
@@ -1034,7 +1066,12 @@ export default {
                     });
                     return;
                 }
-
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
+                }
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1080,6 +1117,7 @@ export default {
         },
         // 已发货审核拒绝
         afterNoPassCheck() {
+            if(!this.checkSession())return;
             if (this.forNoPass) {
                 if (this.checkData.refundType === null) {
                     this.$message({
@@ -1090,7 +1128,8 @@ export default {
                 }
                 if (this.checkData.refundType === 'REFUND_AMOUNT') {
                     this.checkData.drawBackDepot = '';
-                    if (Number(this.checkData.refundAmount) > Number(this.allTotal)) {
+                    console.log(Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount));
+                    if (Number(this.checkData.refundAmount) > Number(this.refundInfo.totalAmount)) {
                         this.$message({
                             message: '实际退款金额不得超过申请退款金额！',
                             type: 'warning'
@@ -1098,6 +1137,12 @@ export default {
                         return;
                     }
                     this.checkData.applyRefundAmount = this.checkData.refundAmount;
+                }
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
                 }
                 const self = this;
                 self.$ajax({
@@ -1144,6 +1189,7 @@ export default {
         },
         // 未发货审核通过
         beforePassCheck() {
+            if(!this.checkSession())return;
             if (this.forPass) {
                 if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                     this.$message({
@@ -1159,7 +1205,12 @@ export default {
                     });
                     return;
                 }
-
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
+                }
                 const self = this;
                 self.$ajax({
                     url: '/api/http/purchaseOrderBack/doAuditPurchaseOrderBack.jhtml',
@@ -1204,6 +1255,7 @@ export default {
         },
         // 未发货审核拒绝
         beforeNoPassCheck() {
+            if(!this.checkSession())return;
             if (this.forNoPass) {
                 if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                     this.$message({
@@ -1211,6 +1263,12 @@ export default {
                         type: 'warning'
                     });
                     return;
+                }
+                if (this.checkData.auditExplain === null) {
+                    this.checkData.auditExplain = '';
+                }
+                if (this.checkData.serviceRemark === null) {
+                    this.checkData.serviceRemark = '';
                 }
                 const self = this;
                 self.$ajax({
@@ -1257,6 +1315,7 @@ export default {
         },
         //退款成功
         drawBackSuccess() {
+            if(!this.checkSession())return;
             if (this.forPass) {
                 const self = this;
                 self.$ajax({
@@ -1304,7 +1363,7 @@ export default {
         toFixed(num) {
             return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3)
         },
-        //获取url
+        //获取uri
         getUri() {
             if (document.cookie) {
                 var cookie = document.cookie.split(";");
@@ -1318,6 +1377,7 @@ export default {
         },
         //变更金额  
         onChangeMoney() {
+            if(!this.checkSession())return;
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
                 this.$message({
                     message: '小数位为2位数',
@@ -1325,7 +1385,7 @@ export default {
                 });
                 return;
             }
-            if (Number(this.checkData.applyRefundAmount) > Number(this.allTotal)) {
+            if (Number(this.checkData.applyRefundAmount) > Number(this.refundInfo.totalAmount)) {
                 this.$message({
                     message: '申请金额不得超过申请的退款金额总价！',
                     type: 'warning'
@@ -1383,11 +1443,13 @@ export default {
         },
         // 点击修改
         defaultChange() {
+            if(!this.checkSession())return;
             this.wantMoney = this.refundInfo.applyRefundAmount;
             this.changeMoney = false;
         },
         // 取消金额修改且复原申请金额
         cancelChange() {
+            if(!this.checkSession())return;
             this.checkData.applyRefundAmount =
                 this.wantMoney;
             this.changeMoney = true;

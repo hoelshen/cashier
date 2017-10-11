@@ -7,10 +7,10 @@
                     {{ contentName }}
                 </div>
                 <div class="user">
-                    <div class="noti">
+                    <!-- <div class="noti">
                         <i class="icon-tongzhi3"></i>
                         <span class="count">0</span>
-                    </div>
+                    </div> -->
                     <div class="login-out">
                         <span @click="loginOut">退出登录</span>
                     </div>
