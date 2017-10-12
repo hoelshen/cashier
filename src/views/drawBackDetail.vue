@@ -735,7 +735,7 @@ export default {
         }
     },
     created() {
-        if(!this.checkSession())return;
+        if (!this.checkSession()) return;
         this.uri = this.getUri();
         //获取id
         var src = window.location.href.split('/');
@@ -827,24 +827,24 @@ export default {
     },
     methods: {
         //判断是否超时
-		checkSession() {
-			const self = this;
-			if (window.sessionStorage) {
-				let nowDate = new Date().getTime();
-				let time = (nowDate - sessionStorage.haha) / 1000
-				//超过30秒没操作，重新登录
-				if (time > 1800) {
-					self.$router.push('/login');
-					self.$message({
-						message: '登录超时，请重新登录',
-					})
-					return false;
-				} else {
-					sessionStorage.haha = nowDate;
-					return true;
-				}
-			}
-		},
+        checkSession() {
+            const self = this;
+            if (window.sessionStorage) {
+                let nowDate = new Date().getTime();
+                let time = (nowDate - sessionStorage.haha) / 1000
+                //超过30秒没操作，重新登录
+                if (time > 1800) {
+                    self.$router.push('/login');
+                    self.$message({
+                        message: '登录超时，请重新登录',
+                    })
+                    return false;
+                } else {
+                    sessionStorage.haha = nowDate;
+                    return true;
+                }
+            }
+        },
         // 金额校验
         checkMoney() {
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
@@ -878,7 +878,7 @@ export default {
         },
         // 下拉框选择仅退款时，固定申请金额
         selectChange(item) {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (item === "REFUND_AMOUNT") {
                 this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
                 this.checkData.refundAmount = '';
@@ -890,12 +890,12 @@ export default {
         },
         //返回
         goBack() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             window.history.go(-1);
         },
         // 提交快递信息
         onExpress() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forPass) {
                 if (this.expressInfo.expressNo.trim() === '') {
                     this.$message({
@@ -957,7 +957,7 @@ export default {
         },
         // 已发货二次审核通过
         afterSecondPassCheck() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                 this.$message({
                     message: '实际退款金额不得超过申请退款金额！',
@@ -1039,7 +1039,7 @@ export default {
         },
         // 已发货审核通过
         afterPassCheck() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forPass) {
                 if (this.checkData.refundType === null) {
                     this.$message({
@@ -1057,6 +1057,7 @@ export default {
                         });
                         return;
                     }
+                    this.checkData.applyRefundAmount = this.checkData.refundAmount;
                 }
                 if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
                     this.$message({
@@ -1116,7 +1117,7 @@ export default {
         },
         // 已发货审核拒绝
         afterNoPassCheck() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forNoPass) {
                 if (this.checkData.refundType === null) {
                     this.$message({
@@ -1188,7 +1189,7 @@ export default {
         },
         // 未发货审核通过
         beforePassCheck() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forPass) {
                 if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                     this.$message({
@@ -1254,7 +1255,7 @@ export default {
         },
         // 未发货审核拒绝
         beforeNoPassCheck() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forNoPass) {
                 if (Number(this.checkData.refundAmount) > Number(this.refundInfo.applyRefundAmount)) {
                     this.$message({
@@ -1314,7 +1315,7 @@ export default {
         },
         //退款成功
         drawBackSuccess() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (this.forPass) {
                 const self = this;
                 self.$ajax({
@@ -1376,7 +1377,7 @@ export default {
         },
         //变更金额  
         onChangeMoney() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             if (!/^\d+(\.\d{1,2})?$/.test(this.checkData.applyRefundAmount)) {
                 this.$message({
                     message: '小数位为2位数',
@@ -1442,13 +1443,13 @@ export default {
         },
         // 点击修改
         defaultChange() {
-            if(!this.checkSession())return;
+            if (!this.checkSession()) return;
             this.wantMoney = this.refundInfo.applyRefundAmount;
             this.changeMoney = false;
         },
         // 取消金额修改且复原申请金额
         cancelChange() {
-            if(!this.checkSession())return; 
+            if (!this.checkSession()) return;
             this.checkData.applyRefundAmount =
                 this.wantMoney;
             this.changeMoney = true;
