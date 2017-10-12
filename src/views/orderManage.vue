@@ -97,7 +97,7 @@ export default {
     data() {
         return {
             currentPage: 1, //当前页
-            totalNums: '', //数据总数
+            totalNums: 0, //数据总数
             pageSize: 30, //当前页数
             total: '', //数据总数
             order: '', //排序方式

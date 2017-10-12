@@ -62,7 +62,7 @@
 					</el-table-column>
 				</el-table>
 				<div class="page">
-					<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
+					<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total , prev, pager, next, jumper" :total="totalNums">
 					</el-pagination>
 				</div>
 			</div>
@@ -76,7 +76,7 @@ export default {
 	data() {
 		return {
 			currentPage: 1,			//当前页
-			totalNums: '',				//数据总数
+			totalNums: 0,				//数据总数
 			pageSize: 30,			//当前页数
 			options: [{				//会员等级
 				value: '13',
@@ -126,7 +126,7 @@ export default {
 				searchShop: '',		//注册店铺名
 				searchName: '',		//姓名
 				searchTime: '',		//注册时间
-				searchLevel: [],		//代理商等级
+				searchLevel: '',		//代理商等级
 			},
 			tableData: [
 				{
