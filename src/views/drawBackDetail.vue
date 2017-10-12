@@ -1057,7 +1057,6 @@ export default {
                         });
                         return;
                     }
-                    this.checkData.applyRefundAmount = this.checkData.refundAmount;
                 }
                 if (!/^[0-9\.]+$/.test(this.checkData.applyRefundAmount) || Number(this.checkData.refundAmount) === 0) {
                     this.$message({
@@ -1449,7 +1448,7 @@ export default {
         },
         // 取消金额修改且复原申请金额
         cancelChange() {
-            if(!this.checkSession())return;
+            if(!this.checkSession())return; 
             this.checkData.applyRefundAmount =
                 this.wantMoney;
             this.changeMoney = true;
