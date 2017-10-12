@@ -935,15 +935,28 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    self.$message({
-                        message: '提交成功',
-                        type: 'success',
-                    });
-                    setTimeout(() => {
-                        self.loading = true;
-                        window.location.reload();
-                    }, 1000)
-                    self.loading = false;
+                    if (response.data.msg === 1) {
+                        self.$message({
+                            message: '提交成功',
+                            type: 'success',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
+                    else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'warning',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
@@ -1011,15 +1024,28 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    self.$message({
-                        message: '审核通过',
-                        type: 'success',
-                    });
-                    setTimeout(() => {
-                        self.loading = true;
-                        window.location.reload();
-                    }, 1000)
-                    self.loading = false;
+                    if (response.data.msg === 1) {
+                        self.$message({
+                            message: '审核通过',
+                            type: 'success',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
+                    else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'warning',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
@@ -1098,15 +1124,28 @@ export default {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
                     }).then(function(response) {
-                        self.$message({
-                            message: '审核通过',
-                            type: 'success',
-                        });
-                        setTimeout(() => {
-                            self.loading = true;
-                            window.location.reload();
-                        }, 1000)
-                        self.loading = false;
+                        if (response.data.msg === 1) {
+                            self.$message({
+                                message: '审核通过',
+                                type: 'success',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
+                        else {
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
                     }).catch(function(err) {
                         self.$message({
                             message: err.data.msg,
@@ -1140,15 +1179,28 @@ export default {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
                     }).then(function(response) {
-                        self.$message({
-                            message: '审核通过',
-                            type: 'success',
-                        });
-                        setTimeout(() => {
-                            self.loading = true;
-                            window.location.reload();
-                        }, 1000)
-                        self.loading = false;
+                        if (response.data.msg === 1) {
+                            self.$message({
+                                message: '审核通过',
+                                type: 'success',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
+                        else {
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
                     }).catch(function(err) {
                         self.$message({
                             message: err.data.msg,
@@ -1213,15 +1265,28 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    self.$message({
-                        message: '审核拒绝',
-                        type: 'success',
-                    });
-                    setTimeout(() => {
-                        self.loading = true;
-                        window.location.reload();
-                    }, 1000)
-                    self.loading = false;
+                    if (response.data.msg === 1) {
+                        self.$message({
+                            message: '审核拒绝',
+                            type: 'success',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
+                    else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'warning',
+                        });
+                        setTimeout(() => {
+                            self.loading = true;
+                            window.location.reload();
+                        }, 1000)
+                        self.loading = false;
+                    }
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
@@ -1279,6 +1344,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
+                    if (response.data.msg === 1) {
                     self.$message({
                         message: '审核通过',
                         type: 'success',
@@ -1287,7 +1353,18 @@ export default {
                         self.loading = true;
                         window.location.reload();
                     }, 1000)
-                    self.loading = false;
+                    self.loading = false;}
+                    else{
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
@@ -1338,6 +1415,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
+                    if (response.data.msg === 1) {
                     self.$message({
                         message: '审核拒绝',
                         type: 'success',
@@ -1346,7 +1424,18 @@ export default {
                         self.loading = true;
                         window.location.reload();
                     }, 1000)
-                    self.loading = false;
+                    self.loading = false;}
+                    else{
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
                 }).catch(function(err) {
                     console.log(err);
                     self.$message({
@@ -1380,6 +1469,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
+                    if (response.data.msg === 1) {
                     self.$message({
                         message: '退款成功',
                         type: 'success',
@@ -1388,7 +1478,18 @@ export default {
                         self.loading = true;
                         window.location.reload();
                     }, 1000)
-                    self.loading = false;
+                    self.loading = false;}
+                    else{
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
                 }).catch(function(err) {
                     self.$message({
                         message: err.data.msg,
@@ -1468,6 +1569,7 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
+                if (response.data.msg === 1) {
                 self.$message({
                     message: '变更成功',
                     type: 'success',
@@ -1476,7 +1578,18 @@ export default {
                     self.loading = true;
                     window.location.reload();
                 }, 1000)
-                self.loading = false;
+                self.loading = false;}
+                else{
+                            self.$message({
+                                message: response.data.msg,
+                                type: 'warning',
+                            });
+                            setTimeout(() => {
+                                self.loading = true;
+                                window.location.reload();
+                            }, 1000)
+                            self.loading = false;
+                        }
             }).catch(function(err) {
                 self.$message({
                     message: err.data.msg,
