@@ -880,7 +880,7 @@ export default {
         selectChange(item) {
             if (!this.checkSession()) return;
             if (item === "REFUND_AMOUNT") {
-                this.checkData.applyRefundAmount = this.refundInfo.applyRefundAmount;
+                this.checkData.applyRefundAmount = this.refundInfo.totalAmount;
                 this.checkData.refundAmount = '';
                 this.changeMoney = true;
             } else {
@@ -935,7 +935,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                         self.$message({
                             message: '提交成功',
                             type: 'success',
@@ -1024,7 +1024,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                         self.$message({
                             message: '审核通过',
                             type: 'success',
@@ -1124,7 +1124,7 @@ export default {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
                     }).then(function(response) {
-                        if (response.data.msg === 1) {
+                        if (response.data.success === 1) {
                             self.$message({
                                 message: '审核通过',
                                 type: 'success',
@@ -1179,7 +1179,7 @@ export default {
                             'Content-Type': 'application/x-www-form-urlencoded'
                         }
                     }).then(function(response) {
-                        if (response.data.msg === 1) {
+                        if (response.data.success === 1) {
                             self.$message({
                                 message: '审核通过',
                                 type: 'success',
@@ -1265,7 +1265,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                         self.$message({
                             message: '审核拒绝',
                             type: 'success',
@@ -1344,7 +1344,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                     self.$message({
                         message: '审核通过',
                         type: 'success',
@@ -1415,7 +1415,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                     self.$message({
                         message: '审核拒绝',
                         type: 'success',
@@ -1469,7 +1469,7 @@ export default {
                         'Content-Type': 'application/x-www-form-urlencoded'
                     }
                 }).then(function(response) {
-                    if (response.data.msg === 1) {
+                    if (response.data.success === 1) {
                     self.$message({
                         message: '退款成功',
                         type: 'success',
@@ -1569,7 +1569,7 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
-                if (response.data.msg === 1) {
+                if (response.data.success === 1) {
                 self.$message({
                     message: '变更成功',
                     type: 'success',
