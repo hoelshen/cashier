@@ -898,7 +898,7 @@ export default {
         this.checkData.refundAmount = "";
         this.changeMoney = true;
       } else {
-        this.checkData.applyRefundAmount = this.wantMoney; 
+        this.checkData.applyRefundAmount = this.wantMoney;
       }
     },
     //返回
@@ -1147,7 +1147,7 @@ export default {
             return;
           }
         }
-        if (this.checkData.refundAmount != "") {
+        if (this.checkData.refundType === "REFUND_AMOUNT") {
           const self = this;
           self
             .$ajax({
@@ -1291,16 +1291,19 @@ export default {
         }
         if (this.checkData.refundType === "REFUND_AMOUNT") {
           this.checkData.drawBackDepot = "";
-          console.log(
-            Number(this.checkData.refundAmount) >
-              Number(this.refundInfo.totalAmount)
-          );
           if (
             Number(this.checkData.refundAmount) >
             Number(this.refundInfo.totalAmount)
           ) {
             this.$message({
               message: "实际退款金额不得超过申请退款金额！",
+              type: "warning"
+            });
+            return;
+          }
+          if (this.checkData.refundAmount === "") {
+            this.$message({
+              message: "退款金额不能为空！",
               type: "warning"
             });
             return;
@@ -1671,10 +1674,7 @@ export default {
       if (this.checkData.refundType === "REFUND_AMOUNT") {
         this.checkData.applyRefundAmount = this.wantMoney;
       }
-      if (
-        Number(this.checkData.refundAmount) === 0 ||
-        Number(this.checkData.applyRefundAmount) === 0
-      ) {
+      if (Number(this.checkData.applyRefundAmount) === 0) {
         this.$message({
           message: "金额不能为0",
           type: "warning"
