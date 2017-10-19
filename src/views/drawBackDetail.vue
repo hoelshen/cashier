@@ -898,7 +898,7 @@ export default {
         this.checkData.refundAmount = "";
         this.changeMoney = true;
       } else {
-        this.checkData.applyRefundAmount = this.wantMoney;
+        this.checkData.applyRefundAmount = this.wantMoney; 
       }
     },
     //返回
