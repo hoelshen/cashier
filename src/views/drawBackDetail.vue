@@ -787,13 +787,6 @@ export default {
         arr[5] = this.orderInfo.purchaseOrderNo;
         arr[6] = this.orderInfo.shopId.shopNo;
         this.linkTo = arr.join("/");
-        //判断修改金额刷新
-        if (
-          this.refundInfo.applyRefundAmount != this.refundInfo.orderSum &&
-          (this.refundInfo.refundState = "WAIT_AUDIT")
-        ) {
-          this.checkData.refundType = "REFUND_GOODS";
-        }
         // 日志处理
         for (let i = 0; i < this.tableData.length; i++) {
           if (i === 0) {
