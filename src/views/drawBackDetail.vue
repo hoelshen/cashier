@@ -273,8 +273,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot">
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot">
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -337,8 +337,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled>
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot" disabled>
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -359,7 +359,7 @@
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="2">
-                            <el-button type="primary" @click="dialogFormVisible = true">补充退货信息</el-button>
+                            <el-button type="primary" @click="openDialog">补充退货信息</el-button>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -369,7 +369,7 @@
                     <el-dialog title="请填写退货信息" :visible.sync="dialogFormVisible" size="tiny">
                         <el-form :model="expressInfo">
                             <el-form-item label="退货地址：" label-width="100px">
-                                <span>{{ expressInfo.address }} <br> {{ expressInfo.contacts }} {{ expressInfo.contactPhone}}</span>
+                                <span>{{ refundInfo.receiveAddress }} <br> {{ refundInfo.receiveName }} {{ refundInfo.receivePhone}}</span>
                             </el-form-item>
                             <el-form-item label="选择快递：" label-width="100px">
                                 <el-select v-model="toExpressType" placeholder="请选择">
@@ -416,8 +416,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled>
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot" disabled>
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -465,8 +465,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled>
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot" disabled>
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -526,8 +526,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled>
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot" disabled>
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -587,8 +587,8 @@
                         </el-col>
                         <el-col :span="8" v-if="checkData.refundType === 'REFUND_GOODS'">
                             <el-form-item label="退款仓库：" label-width="40%">
-                                <el-select v-model="checkData.drawBackDepot" disabled>
-                                    <el-option label="同安仓" value="-1"></el-option>
+                                <el-select v-model="drawBackDepot" disabled>
+                                    <el-option v-for="item in repertory" :key="item.id" :label="item.name" :value="item.id"></el-option>
                                 </el-select>
                             </el-form-item>
                         </el-col>
@@ -652,6 +652,7 @@ export default {
       imgIndex: 0, //图片index
       loading: true, //遮罩
       done: 0, //遮罩判断
+      drawBackDepot: "", //退货仓库
       images: [
         //图片列表
       ],
@@ -697,13 +698,13 @@ export default {
         auditExplain: "", //审核说明
         refundAmount: 0, //申请金额
         serviceRemark: "", //客服备注
-        orderSum: "" //原订单总价
+        orderSum: "", //原订单总价
+        repertoryId: null //仓库编号
       },
       checkData: {
         //客服审核数据
         refundType: "", //退款类型，判断是否是仅退款
         applyRefundAmount: 0, //申请金额
-        drawBackDepot: "-1", //退货仓库
         refundAmount: 0, //实际退款金额
         auditExplain: "", //审核说明
         serviceRemark: "" //备注
@@ -724,12 +725,20 @@ export default {
       toExpressType: "", //快递选择
       expressInfo: {
         //补充快递信息
-        address: "", //退货地址
         expressNo: "", //快递单号
-        address: "", //收货地址
+        address: "", //退货地址
         contacts: "", //收货人
         contactPhone: "" //收货电话
       },
+      repertory: [
+        {
+          address: "", //退货地址
+          contacts: "", //收货人
+          contactPhone: "", //收货电话
+          name: "", //仓库名称
+          remark: "" //备注名称
+        }
+      ],
       tableData: [
         //日志
         {
@@ -764,7 +773,6 @@ export default {
         this.tableData = response.data.result.purchaseOrderBackLogs;
         this.refundInfo = response.data.result;
         this.checkData = response.data.result;
-        this.checkData.drawBackDepot = "-1";
         this.refundInfo.applyRefundAmount = this.toFixed(
           this.refundInfo.applyRefundAmount
         );
@@ -820,11 +828,8 @@ export default {
       data: {},
       success(response) {
         this.done++;
-        for (let i = 0; i < response.data.result.length; i++) {
-          if (response.data.result[i].id === -1) {
-            this.expressInfo = response.data.result[i];
-          }
-        }
+        this.repertory = response.data.result;
+        this.drawBackDepot = -1;
       },
       fail(response) {
         this.$message({
@@ -835,6 +840,12 @@ export default {
     });
   },
   methods: {
+    openDialog() {
+      this.dialogFormVisible = true;
+      if (this.refundInfo.repertoryId != null) {
+        this.expressInfo = this.repertory[this.refundInfo.repertoryId + 1];
+      }
+    },
     //判断是否超时
     checkSession() {
       const self = this;
@@ -898,7 +909,9 @@ export default {
         this.checkData.refundAmount = "";
         this.changeMoney = true;
       } else {
+        this.drawBackDepot = -1;
         this.checkData.applyRefundAmount = this.wantMoney;
+        this.checkData.refundAmount = this.wantMoney;
       }
     },
     //返回
@@ -1126,6 +1139,7 @@ export default {
             message: "请输入大于0的数字，且小数位不能超过两位",
             type: "warning"
           });
+          console.log(this.checkData.refundAmount);
           return;
         }
         if (this.checkData.auditExplain === null) {
@@ -1134,8 +1148,8 @@ export default {
         if (this.checkData.serviceRemark === null) {
           this.checkData.serviceRemark = "";
         }
+
         if (this.checkData.refundType === "REFUND_AMOUNT") {
-          this.checkData.drawBackDepot = "";
           if (
             Number(this.checkData.refundAmount) >
             Number(this.refundInfo.totalAmount)
@@ -1161,7 +1175,7 @@ export default {
                 "auditBackVo.purchaseOrderBackNo":
                   self.refundInfo.purchaseOrderBackNo,
                 "auditBackVo.refundType": self.checkData.refundType,
-                "auditBackVo.repertoryId": self.checkData.drawBackDepot,
+                "auditBackVo.repertoryId": -1,
                 "auditBackVo.auditState": 1
               },
               transformRequest: [
@@ -1225,7 +1239,7 @@ export default {
                 "auditBackVo.purchaseOrderBackNo":
                   self.refundInfo.purchaseOrderBackNo,
                 "auditBackVo.refundType": self.checkData.refundType,
-                "auditBackVo.repertoryId": self.checkData.drawBackDepot,
+                "auditBackVo.repertoryId": self.drawBackDepot,
                 "auditBackVo.auditState": 1
               },
               transformRequest: [
@@ -1290,7 +1304,6 @@ export default {
           return;
         }
         if (this.checkData.refundType === "REFUND_AMOUNT") {
-          this.checkData.drawBackDepot = "";
           if (
             Number(this.checkData.refundAmount) >
             Number(this.refundInfo.totalAmount)
@@ -1329,7 +1342,7 @@ export default {
               "auditBackVo.purchaseOrderBackNo":
                 self.refundInfo.purchaseOrderBackNo,
               "auditBackVo.refundType": self.checkData.refundType,
-              "auditBackVo.repertoryId": self.checkData.drawBackDepot,
+              "auditBackVo.repertoryId": -1,
               "auditBackVo.auditState": 0
             },
             transformRequest: [
