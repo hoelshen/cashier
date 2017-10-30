@@ -9,7 +9,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="注册店铺名：" label-width="38%">
+                        <el-form-item label="代理商名称：" label-width="38%">
                             <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
@@ -57,7 +57,7 @@
                 </el-table-column>
                 <el-table-column prop="phone" label="手机号">
                 </el-table-column>
-                <el-table-column prop="shopName" label="店铺名称">
+                <el-table-column prop="name" label="代理商名称">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
                     <template scope="scope">
@@ -98,284 +98,314 @@
 <script type="text/javascript" src="../router.js"></script>
 <script>
 export default {
-    data() {
-        return {
-            pageSize: 30,                   //当前条数
-            currentPage: 1,                 //当前页
-            totalNums: 500,                 //总条数
-            order: '',                      //排序
-            loading: true,                  //加载
-            searchData: {                   //查询数据
-                searchPhone: '',            //代理商手机
-                searchShopName: '',         //注册店铺名
-                searchNo: '',               //退款单号
-                searchOrderNo: '',          //原进货单号
-                searchState: '',            //状态
-                searchTime: '',             //申请时间
-            },
-            tableData: [
-                {
-                    purchaseOrderBackNo: '',            //退款单号
-                    shopNo: '',                         //代理商编号
-                    phone: '',                          //手机号
-                    shopName: '',                       //店铺名称
-                    refundType: '',                     //类型
-                    refundState: '',                    //状态
-                    applyTime: '',                      //申请时间
-                    purchaseOrderNo: '',                //原进货单号
-                    serviceRemark: '',                  //客服备注
-                    linkTo: 'ttttttt1',                  //跳转链接
-                }
-            ]
+  data() {
+    return {
+      pageSize: 30, //当前条数
+      currentPage: 1, //当前页
+      totalNums: 500, //总条数
+      order: "", //排序
+      loading: true, //加载
+      searchData: {
+        //查询数据
+        searchPhone: "", //代理商手机
+        searchShopName: "", //代理商名称
+        searchNo: "", //退款单号
+        searchOrderNo: "", //原进货单号
+        searchState: "", //状态
+        searchTime: "" //申请时间
+      },
+      tableData: [
+        {
+          purchaseOrderBackNo: "", //退款单号
+          shopNo: "", //代理商编号
+          phone: "", //手机号
+          shopName: "", //店铺名称.
+          name: "",//代理商名
+          refundType: "", //类型
+          refundState: "", //状态
+          applyTime: "", //申请时间
+          purchaseOrderNo: "", //原进货单号
+          serviceRemark: "", //客服备注
+          linkTo: "ttttttt1" //跳转链接
         }
-    },
-    created() {
-        if(!this.checkSession())return;
-        this.uri = this.getUri();
-        //获取id
-        var src = window.location.href.split('/');
-        this.id = src[src.length - 2];
+      ]
+    };
+  },
+  created() {
+    if (!this.checkSession()) return;
+    this.uri = this.getUri();
+    //获取id
+    var src = window.location.href.split("/");
+    this.id = src[src.length - 2];
 
-        // 获取页面初始化数据
-        var qs = require('qs');
-        this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
-            'pager.pageIndex': 1,
-            'pager.pageSize': this.pageSize,
-            'searchBackVo.sort': 'applyTime',
-            'searchBackVo.order': 'desc',
-        }), {
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
-                },
-            }).then((res) => {
-                this.tableData = res.data.result;
-                this.totalNums = res.data.totalNums;
-                // 拼接订单号链接
-                var src = window.location.href.split('/');
-                this.orderId = src[src.length - 1];
-                src[4] = 'orderInfo';
-                for (let i = 0; i < this.tableData.length; i++) {
-                    src[5] = this.tableData[i].purchaseOrderNo;
-                    src[6] = this.tableData[i].shopNo;
-                    this.tableData[i].linkTo = src.join('/');
-                }
-                this.loading = false;
-            }).catch((err) => {
-                this.$message({
-                    messgae: err.data.msg,
-                    type: 'error',
-                });
-            });
+    // 获取页面初始化数据
+    var qs = require("qs");
+    this.$ajax
+      .post(
+        "api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml",
+        qs.stringify({
+          "pager.pageIndex": 1,
+          "pager.pageSize": this.pageSize,
+          "searchBackVo.sort": "applyTime",
+          "searchBackVo.order": "desc"
+        }),
+        {
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+          }
+        }
+      )
+      .then(res => {
+        this.tableData = res.data.result;
+        this.totalNums = res.data.totalNums;
+        // 拼接订单号链接
+        var src = window.location.href.split("/");
+        this.orderId = src[src.length - 1];
+        src[4] = "orderInfo";
+        for (let i = 0; i < this.tableData.length; i++) {
+          src[5] = this.tableData[i].purchaseOrderNo;
+          src[6] = this.tableData[i].shopNo;
+          this.tableData[i].linkTo = src.join("/");
+        }
+        this.loading = false;
+      })
+      .catch(err => {
+        this.$message({
+          messgae: err.data.msg,
+          type: "error"
+        });
+      });
+  },
+  methods: {
+    //判断是否超时
+    checkSession() {
+      const self = this;
+      if (window.sessionStorage) {
+        let nowDate = new Date().getTime();
+        let time = (nowDate - sessionStorage.haha) / 1000;
+        //超过30分钟没操作，重新登录
+        if (time > 1800) {
+          self.$router.push("/login");
+          self.$message({
+            message: "登录超时，请重新登录"
+          });
+          return false;
+        } else {
+          sessionStorage.haha = nowDate;
+          return true;
+        }
+      }
     },
-    methods: {
-        //判断是否超时
-		checkSession() {
-			const self = this;
-			if (window.sessionStorage) {
-				let nowDate = new Date().getTime();
-				let time = (nowDate - sessionStorage.haha) / 1000
-				//超过30分钟没操作，重新登录
-				if (time > 1800) {
-					self.$router.push('/login');
-					self.$message({
-						message: '登录超时，请重新登录',
-					})
-					return false;
-				} else {
-					sessionStorage.haha = nowDate;
-					return true;
-				}
-			}
-		},
-        //获取url
-        getUri() {
-            if (document.cookie) {
-                var cookie = document.cookie.split(";");
-                for (var index = 0; index < cookie.length; index++) {
-                    var cookies = cookie[index].split("=");
-                    if (cookies[0] == 'adminUri') {
-                        return cookies[1];
-                    }
-                }
-            }
-        },
-        // 双击跳转
-        // dbClick(row, event) {
-        //     console.log(row);
-        //     this.$router.push({ name: 'drawBackDetail', params: { purchaseOrderBackNo: row.purchaseOrderBackNo } })
-        // },
-        //每页条数选择
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        //当前页跳转，在排序完后做
-        handleCurrentChange(val) {
-            if(!this.checkSession())return;
-            // if (!this.checkSession()) return;
-            var time = this.dealTime();
-            //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
-            var qs = require('qs');
-            this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
-                'pager.pageIndex': val,
-                'pager.pageSize': this.pageSize,
-                'searchBackVo.phone': this.searchData.searchPhone,
-                'searchBackVo.shopName': this.searchData.searchShopName,
-                'searchBackVo.purchaseOrderBackNo': this.searchData.searchNo,
-                'searchBackVo.purchaseOrderNo': this.searchData.searchOrderNo,
-                'searchBackVo.purchaseOrderState': this.searchData.searchState,
-                'searchBackVo.startTime': time[0],
-                'searchBackVo.endTime': time[1],
-            }), {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }).then((res) => {
-                    this.tableData = res.data.result;
-                    this.totalNums = res.data.totalNums;
-                    // 拼接订单号链接
-                    var src = window.location.href.split('/');
-                    this.orderId = src[src.length - 1];
-                    src[4] = 'orderInfo';
-                    for (let i = 0; i < this.tableData.length; i++) {
-                        src[5] = this.tableData[i].purchaseOrderNo;
-                        src[6] = this.tableData[i].shopNo;
-                        this.tableData[i].linkTo = src.join('/');
-                    }
-                }).catch((err) => {
-                    this.$message({
-                        messgae: err.msg,
-                        type: 'error',
-                    });
-                });
-        },
-        //排序
-        // 传递字段未定，未做完
-        store(row, column) {
-            if(!this.checkSession())return;
-            // if (!this.checkSession()) return;
-            if (row.order === 'ascending') {
-                this.order = 'asc';
-            }
-            if (row.order === 'descending') {
-                this.order = 'desc';
-            }
-            var time = this.dealTime();
-            //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
-            var qs = require('qs');
-            this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
-                'pager.pageIndex': this.currentPage,
-                'pager.pageSize': this.pageSize,
-                'searchBackVo.phone': this.searchData.searchPhone,
-                'searchBackVo.shopName': this.searchData.searchShopName,
-                'searchBackVo.purchaseOrderBackNo': this.searchData.searchNo,
-                'searchBackVo.purchaseOrderNo': this.searchData.searchOrderNo,
-                'searchBackVo.purchaseOrderState': this.searchData.searchState,
-                'searchBackVo.startTime': time[0],
-                'searchBackVo.endTime': time[1],
-                'searchBackVo.sort': 'applyTime',
-                'searchBackVo.order': this.order,
-            }), {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }).then((res) => {
-                    this.tableData = res.data.result;
-                    this.totalNums = res.data.totalNums;
-                    // 拼接订单号链接
-                    var src = window.location.href.split('/');
-                    this.orderId = src[src.length - 1];
-                    src[4] = 'orderInfo';
-                    for (let i = 0; i < this.tableData.length; i++) {
-                        src[5] = this.tableData[i].purchaseOrderNo;
-                        src[6] = this.tableData[i].shopNo;
-                        this.tableData[i].linkTo = src.join('/');
-                    }
-                }).catch((err) => {
-                    this.$message({
-                        messgae: err.msg,
-                        type: 'error',
-                    });
-                });
-        },
-        dealTime() {
-            if(!this.checkSession())return;
-            var temp = new Date(this.searchData.searchTime[0]);
-            if (temp.getFullYear() > 2000) {
-                var time1 = temp.getFullYear();
-                if ((temp.getMonth() + 1) < 10) {
-                    time1 = time1 + '-0' + (temp.getMonth() + 1);
-                } else {
-                    time1 = time1 + '-' + (temp.getMonth() + 1);
-                }
-                if (temp.getDate() < 10) {
-                    time1 = time1 + '-0' + temp.getDate();
-                } else {
-                    time1 = time1 + '-' + temp.getDate();
-                }
-                temp = new Date(this.searchData.searchTime[1]);
-                var time2 = temp.getFullYear();
-                if ((temp.getMonth() + 1) < 10) {
-                    time2 = time2 + '-0' + (temp.getMonth() + 1);
-                } else {
-                    time2 = time2 + '-' + (temp.getMonth() + 1);
-                }
-                if (temp.getDate() < 10) {
-                    time2 = time2 + '-0' + temp.getDate();
-                } else {
-                    time2 = time2 + '-' + temp.getDate();
-                }
-            } else {
-                var time1 = '';
-                var time2 = '';
-            }
-            var time = new Array();
-            time[0] = time1;
-            time[1] = time2;
-            return time;
-        },
-        // 查询
-        onSubmit() {
-            if(!this.checkSession())return;
-            var time = this.dealTime();
-            //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
-            var qs = require('qs');
-            this.$ajax.post('api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml', qs.stringify({
-                'pager.pageIndex': this.currentPage,
-                'pager.pageSize': this.pageSize,
-                'searchBackVo.phone': this.searchData.searchPhone,
-                'searchBackVo.shopName': this.searchData.searchShopName,
-                'searchBackVo.purchaseOrderBackNo': this.searchData.searchNo,
-                'searchBackVo.purchaseOrderNo': this.searchData.searchOrderNo,
-                'searchBackVo.purchaseOrderState': this.searchData.searchState,
-                'searchBackVo.startTime': time[0],
-                'searchBackVo.endTime': time[1],
-            }), {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }).then((res) => {
-                    this.tableData = res.data.result;
-                    this.totalNums = res.data.totalNums;
-                    // 拼接订单号链接
-                    var src = window.location.href.split('/');
-                    this.orderId = src[src.length - 1];
-                    src[4] = 'orderInfo';
-                    for (let i = 0; i < this.tableData.length; i++) {
-                        src[5] = this.tableData[i].purchaseOrderNo;
-                        src[6] = this.tableData[i].shopNo;
-                        this.tableData[i].linkTo = src.join('/');
-                    }
-                }).catch((err) => {
-                    this.$message({
-                        messgae: err.msg,
-                        type: 'error',
-                    });
-                });
-        },
+    //获取url
+    getUri() {
+      if (document.cookie) {
+        var cookie = document.cookie.split(";");
+        for (var index = 0; index < cookie.length; index++) {
+          var cookies = cookie[index].split("=");
+          if (cookies[0] == "adminUri") {
+            return cookies[1];
+          }
+        }
+      }
     },
-}
+    // 双击跳转
+    // dbClick(row, event) {
+    //     console.log(row);
+    //     this.$router.push({ name: 'drawBackDetail', params: { purchaseOrderBackNo: row.purchaseOrderBackNo } })
+    // },
+    //每页条数选择
+    handleSizeChange(val) {
+      console.log(`每页 ${val} 条`);
+    },
+    //当前页跳转，在排序完后做
+    handleCurrentChange(val) {
+      if (!this.checkSession()) return;
+      // if (!this.checkSession()) return;
+      var time = this.dealTime();
+      //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
+      var qs = require("qs");
+      this.$ajax
+        .post(
+          "api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml",
+          qs.stringify({
+            "pager.pageIndex": val,
+            "pager.pageSize": this.pageSize,
+            "searchBackVo.phone": this.searchData.searchPhone,
+            "searchBackVo.name": this.searchData.searchShopName,
+            "searchBackVo.purchaseOrderBackNo": this.searchData.searchNo,
+            "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
+            "searchBackVo.purchaseOrderState": this.searchData.searchState,
+            "searchBackVo.startTime": time[0],
+            "searchBackVo.endTime": time[1]
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        )
+        .then(res => {
+          this.tableData = res.data.result;
+          this.totalNums = res.data.totalNums;
+          // 拼接订单号链接
+          var src = window.location.href.split("/");
+          this.orderId = src[src.length - 1];
+          src[4] = "orderInfo";
+          for (let i = 0; i < this.tableData.length; i++) {
+            src[5] = this.tableData[i].purchaseOrderNo;
+            src[6] = this.tableData[i].shopNo;
+            this.tableData[i].linkTo = src.join("/");
+          }
+        })
+        .catch(err => {
+          this.$message({
+            messgae: err.msg,
+            type: "error"
+          });
+        });
+    },
+    //排序
+    // 传递字段未定，未做完
+    store(row, column) {
+      if (!this.checkSession()) return;
+      // if (!this.checkSession()) return;
+      if (row.order === "ascending") {
+        this.order = "asc";
+      }
+      if (row.order === "descending") {
+        this.order = "desc";
+      }
+      var time = this.dealTime();
+      //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
+      var qs = require("qs");
+      this.$ajax
+        .post(
+          "api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml",
+          qs.stringify({
+            "pager.pageIndex": this.currentPage,
+            "pager.pageSize": this.pageSize,
+            "searchBackVo.phone": this.searchData.searchPhone,
+            "searchBackVo.name": this.searchData.searchShopName,
+            "searchBackVo.purchaseOrderBackNo": this.searchData.searchNo,
+            "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
+            "searchBackVo.purchaseOrderState": this.searchData.searchState,
+            "searchBackVo.startTime": time[0],
+            "searchBackVo.endTime": time[1],
+            "searchBackVo.sort": "applyTime",
+            "searchBackVo.order": this.order
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        )
+        .then(res => {
+          this.tableData = res.data.result;
+          this.totalNums = res.data.totalNums;
+          // 拼接订单号链接
+          var src = window.location.href.split("/");
+          this.orderId = src[src.length - 1];
+          src[4] = "orderInfo";
+          for (let i = 0; i < this.tableData.length; i++) {
+            src[5] = this.tableData[i].purchaseOrderNo;
+            src[6] = this.tableData[i].shopNo;
+            this.tableData[i].linkTo = src.join("/");
+          }
+        })
+        .catch(err => {
+          this.$message({
+            messgae: err.msg,
+            type: "error"
+          });
+        });
+    },
+    dealTime() {
+      if (!this.checkSession()) return;
+      var temp = new Date(this.searchData.searchTime[0]);
+      if (temp.getFullYear() > 2000) {
+        var time1 = temp.getFullYear();
+        if (temp.getMonth() + 1 < 10) {
+          time1 = time1 + "-0" + (temp.getMonth() + 1);
+        } else {
+          time1 = time1 + "-" + (temp.getMonth() + 1);
+        }
+        if (temp.getDate() < 10) {
+          time1 = time1 + "-0" + temp.getDate();
+        } else {
+          time1 = time1 + "-" + temp.getDate();
+        }
+        temp = new Date(this.searchData.searchTime[1]);
+        var time2 = temp.getFullYear();
+        if (temp.getMonth() + 1 < 10) {
+          time2 = time2 + "-0" + (temp.getMonth() + 1);
+        } else {
+          time2 = time2 + "-" + (temp.getMonth() + 1);
+        }
+        if (temp.getDate() < 10) {
+          time2 = time2 + "-0" + temp.getDate();
+        } else {
+          time2 = time2 + "-" + temp.getDate();
+        }
+      } else {
+        var time1 = "";
+        var time2 = "";
+      }
+      var time = new Array();
+      time[0] = time1;
+      time[1] = time2;
+      return time;
+    },
+    // 查询
+    onSubmit() {
+      if (!this.checkSession()) return;
+      var time = this.dealTime();
+      //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify
+      var qs = require("qs");
+      this.$ajax
+        .post(
+          "api/http/purchaseOrderBack/queryPurchaseOrderBackList.jhtml",
+          qs.stringify({
+            "pager.pageIndex": this.currentPage,
+            "pager.pageSize": this.pageSize,
+            "searchBackVo.phone": this.searchData.searchPhone,
+            "searchBackVo.name": this.searchData.searchShopName,
+            "searchBackVo.purchaseOrderBackNo": this.searchData.searchNo,
+            "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
+            "searchBackVo.purchaseOrderState": this.searchData.searchState,
+            "searchBackVo.startTime": time[0],
+            "searchBackVo.endTime": time[1]
+          }),
+          {
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded"
+            }
+          }
+        )
+        .then(res => {
+          this.tableData = res.data.result;
+          this.totalNums = res.data.totalNums;
+          // 拼接订单号链接
+          var src = window.location.href.split("/");
+          this.orderId = src[src.length - 1];
+          src[4] = "orderInfo";
+          for (let i = 0; i < this.tableData.length; i++) {
+            src[5] = this.tableData[i].purchaseOrderNo;
+            src[6] = this.tableData[i].shopNo;
+            this.tableData[i].linkTo = src.join("/");
+          }
+        })
+        .catch(err => {
+          this.$message({
+            messgae: err.msg,
+            type: "error"
+          });
+        });
+    }
+  }
+};
 </script>
 
 <style lang="less" scoped>
-@import url('../assets/less/drawBack.less');
+@import url("../assets/less/drawBack.less");
 </style>
