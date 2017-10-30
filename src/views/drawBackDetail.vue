@@ -787,18 +787,15 @@ export default {
         arr[5] = this.orderInfo.purchaseOrderNo;
         arr[6] = this.orderInfo.shopId.shopNo;
         this.linkTo = arr.join("/");
+        //判断修改金额刷新
+        if (
+          this.refundInfo.applyRefundAmount != this.refundInfo.orderSum &&
+          (this.refundInfo.refundState = "WAIT_AUDIT")
+        ) {
+          this.checkData.refundType = "REFUND_GOODS";
+        }
         // 日志处理
         for (let i = 0; i < this.tableData.length; i++) {
-          // if (this.tableData[i].operationState === '审核通过') {
-          //     this.tableData[i].operationState = this.refundInfo.opteratorContent;
-          //     // this.tableData[i].operationState = '审核通过,申请金额 ' + this.refundInfo.applyRefundAmount;
-          // }
-          // if (this.tableData[i].operationState === '退货') {
-          //     this.tableData[i].operationState = this.tableData[i].refundExplain;
-          // }
-          // if (this.tableData[i].operationState === '申请退款') {
-          //     this.tableData[i].operationState = this.tableData[i].opteratorContent;
-          // }
           if (i === 0) {
             this.tableData[0].creator = "用户";
             this.tableData[0].opteratorContent = "申请退款";
@@ -806,14 +803,6 @@ export default {
         }
         // 图片字符串转换数组
         this.images = response.data.result.imgUrl.split(",");
-        // 列表金额格式化
-        // for (let i = 0; i < this.shopTableData.length; i++) {
-        //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-        //     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
-        //     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
-        //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-        //     this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
-        // }
       },
       fail(response) {
         this.$message({
