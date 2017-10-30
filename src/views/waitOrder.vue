@@ -10,8 +10,8 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="注册店铺名">
-                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="注册店铺名"></el-input>
+                            <el-form-item label="代理商名称">
+                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="代理商名称"></el-input>
                             </el-form-item>
                         </el-col>
                         <el-col :span="5">
@@ -65,7 +65,7 @@
                     </el-table-column>
                     <el-table-column prop="phone" label="手机号">
                     </el-table-column>
-                    <el-table-column prop="shopName" label="店铺名称">
+                    <el-table-column prop="name" label="代理商名称">
                     </el-table-column>
                     <el-table-column prop="stateName" label="状态">
                     </el-table-column>
@@ -103,7 +103,7 @@ export default {
             order: '',				//排序方式
             searchData: {
                 searchPhone: '',		//代理商手机
-                searchName: '',		//注册店铺名
+                searchName: '',		//代理商名称
                 searchOrderNo: '',		//进货单号
                 searchState: '',		//订单状态
                 searchTime: '',		//下单时间
@@ -116,7 +116,7 @@ export default {
                     agentGradeId: '',		//代理商等级
                     shopNo: '',			//代理商编号
                     phone: '',			//手机号
-                    shopName: '',			//店铺名称
+                    name: '',			//代理商名称
                     stateName: '',			//状态
                     orderTime: '',			//下单时间
                     orderSum: '',			//金额
@@ -194,7 +194,7 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
@@ -279,7 +279,7 @@ export default {
                     'pager.pageIndex': val,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
@@ -368,7 +368,7 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
