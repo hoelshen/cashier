@@ -367,7 +367,7 @@
                 <!-- 补充信息弹窗 Start -->
                 <div class="dialog">
                     <el-dialog title="请填写退货信息" :visible.sync="dialogFormVisible" size="tiny">
-                        <el-form :model="expressInfo">
+                        <el-form :model="refundInfo">
                             <el-form-item label="退货地址：" label-width="100px">
                                 <span>{{ refundInfo.receiveAddress }} <br> {{ refundInfo.receiveName }} {{ refundInfo.receivePhone}}</span>
                             </el-form-item>
@@ -378,7 +378,7 @@
                                 </el-select>
                             </el-form-item>
                             <el-form-item label="快递单号：" label-width="100px">
-                                <el-input v-model="expressInfo.expressNo" placeholder="多个快递单号请用空格隔开"></el-input>
+                                <el-input v-model="refundInfo.expressNo" placeholder="多个快递单号请用空格隔开"></el-input>
                             </el-form-item>
                         </el-form>
                         <div slot="footer" class="dialog-footer">
@@ -699,7 +699,8 @@ export default {
         refundAmount: 0, //申请金额
         serviceRemark: "", //客服备注
         orderSum: "", //原订单总价
-        repertoryId: null //仓库编号
+        repertoryId: null, //仓库编号
+        expressNo: "", //快递单号
       },
       checkData: {
         //客服审核数据
@@ -726,9 +727,6 @@ export default {
       expressInfo: {
         //补充快递信息
         expressNo: "", //快递单号
-        address: "", //退货地址
-        contacts: "", //收货人
-        contactPhone: "" //收货电话
       },
       repertory: [
         {
@@ -782,6 +780,7 @@ export default {
         this.shopTableData = response.data.result.purchaseOrderBackDetails;
         this.wantMoney = response.data.result.applyRefundAmount;
         this.orderInfo = response.data.result;
+        this.expressInfo = response.data.result;
         // 拼接订单号链接
         arr[4] = "orderInfo";
         arr[5] = this.orderInfo.purchaseOrderNo;
@@ -789,16 +788,6 @@ export default {
         this.linkTo = arr.join("/");
         // 日志处理
         for (let i = 0; i < this.tableData.length; i++) {
-          // if (this.tableData[i].operationState === '审核通过') {
-          //     this.tableData[i].operationState = this.refundInfo.opteratorContent;
-          //     // this.tableData[i].operationState = '审核通过,申请金额 ' + this.refundInfo.applyRefundAmount;
-          // }
-          // if (this.tableData[i].operationState === '退货') {
-          //     this.tableData[i].operationState = this.tableData[i].refundExplain;
-          // }
-          // if (this.tableData[i].operationState === '申请退款') {
-          //     this.tableData[i].operationState = this.tableData[i].opteratorContent;
-          // }
           if (i === 0) {
             this.tableData[0].creator = "用户";
             this.tableData[0].opteratorContent = "申请退款";
@@ -806,14 +795,6 @@ export default {
         }
         // 图片字符串转换数组
         this.images = response.data.result.imgUrl.split(",");
-        // 列表金额格式化
-        // for (let i = 0; i < this.shopTableData.length; i++) {
-        //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-        //     this.shopTableData[i].purchasePrice = this.toFixed(this.shopTableData[i].purchasePrice);
-        //     this.shopTableData[i].salesPrice = this.toFixed(this.shopTableData[i].salesPrice);
-        //     this.shopTableData[i].subtotal = this.toFixed(this.shopTableData[i].subtotal);
-        //     this.refundInfo.totalAmount = this.refundInfo.totalAmount + Number(this.shopTableData[i].subtotal);
-        // }
       },
       fail(response) {
         this.$message({
@@ -923,22 +904,22 @@ export default {
     onExpress() {
       if (!this.checkSession()) return;
       if (this.forPass) {
-        if (this.expressInfo.expressNo.trim() === "") {
+        if (this.refundInfo.expressNo.trim() === "") {
           this.$message({
             message: "请输入单号",
             type: "warning"
           });
           return;
         }
-        if (/[\，\,\.\-]+/g.test(this.expressInfo.expressNo.trim())) {
+        if (/[\，\,\.\-]+/g.test(this.refundInfo.expressNo.trim())) {
           this.$message({
             message: "请使用空格分隔单号！",
             type: "warning"
           });
           return;
         }
-        this.expressInfo.expressNo = this.expressInfo.expressNo.trim();
-        this.expressInfo.expressNo = this.expressInfo.expressNo.replace(
+        this.refundInfo.expressNo = this.refundInfo.expressNo.trim();
+        this.refundInfo.expressNo = this.refundInfo.expressNo.replace(
           /\s+/g,
           ","
         );
@@ -948,7 +929,7 @@ export default {
             url: "/api/http/purchaseOrderBack/doFillInExpressNo.jhtml",
             method: "post",
             data: {
-              "purchaseOrderBack.expressNo": self.expressInfo.expressNo,
+              "purchaseOrderBack.expressNo": self.refundInfo.expressNo,
               "purchaseOrderBack.expressCode": self.toExpressType,
               "purchaseOrderBack.purchaseOrderBackNo":
                 self.refundInfo.purchaseOrderBackNo,
