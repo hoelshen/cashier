@@ -771,6 +771,10 @@ export default {
         this.tableData = response.data.result.purchaseOrderBackLogs;
         this.refundInfo = response.data.result;
         this.checkData = response.data.result;
+        this.drawBackDepot = response.data.result.repertoryId;
+        if (this.drawBackDepot === null) {
+          this.drawBackDepot = -1;
+        }
         this.refundInfo.applyRefundAmount = this.toFixed(
           this.refundInfo.applyRefundAmount
         );
@@ -808,16 +812,8 @@ export default {
       url: "/http/purchaseOrderBack/queryRepertoryList.jhtml",
       data: {},
       success(response) {
-        this.done++;
         this.repertory = response.data.result;
-        this.drawBackDepot = -1;
-        for (var index = 0; index < this.repertory.length; index++) {
-          var element = this.repertory[index];
-          if (element.id === this.refundInfo.repertoryId) {
-            console.log(element.id);
-            this.drawBackDepot = element.id;
-          }
-        }
+        this.done++;
       },
       fail(response) {
         this.$message({
