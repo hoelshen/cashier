@@ -700,7 +700,7 @@ export default {
         serviceRemark: "", //客服备注
         orderSum: "", //原订单总价
         repertoryId: null, //仓库编号
-        expressNo: "", //快递单号
+        expressNo: "" //快递单号
       },
       checkData: {
         //客服审核数据
@@ -726,7 +726,7 @@ export default {
       toExpressType: "", //快递选择
       expressInfo: {
         //补充快递信息
-        expressNo: "", //快递单号
+        expressNo: "" //快递单号
       },
       repertory: [
         {
@@ -771,6 +771,10 @@ export default {
         this.tableData = response.data.result.purchaseOrderBackLogs;
         this.refundInfo = response.data.result;
         this.checkData = response.data.result;
+        this.drawBackDepot = response.data.result.repertoryId;
+        if (this.drawBackDepot === null) {
+          this.drawBackDepot = -1;
+        }
         this.refundInfo.applyRefundAmount = this.toFixed(
           this.refundInfo.applyRefundAmount
         );
@@ -808,9 +812,8 @@ export default {
       url: "/http/purchaseOrderBack/queryRepertoryList.jhtml",
       data: {},
       success(response) {
-        this.done++;
         this.repertory = response.data.result;
-        this.drawBackDepot = -1;
+        this.done++;
       },
       fail(response) {
         this.$message({
@@ -890,7 +893,7 @@ export default {
         this.checkData.refundAmount = "";
         this.changeMoney = true;
       } else {
-        this.drawBackDepot = -1;
+        // this.drawBackDepot = -1;
         this.checkData.applyRefundAmount = this.wantMoney;
         this.checkData.refundAmount = this.wantMoney;
       }
