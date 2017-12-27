@@ -307,6 +307,7 @@ export default {
 				'advanceDeposit.shopNo': this.searchData.searchId,
 			},
 			success(response) {
+				console.log(response.data.result)
 				this.tableData = response.data.result;
 				this.totalNums = response.data.totalNums;
 			},

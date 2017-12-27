@@ -45,6 +45,7 @@ export default {
                 '/orderInfo': '进货单详情',
                 '/drawBack': '全部退款单',
                 '/waitDrawBack': '待审核退款单',
+                '/area': '区域订单核算',
             },
             user: {}
         }
