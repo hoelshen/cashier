@@ -16,6 +16,7 @@ let Utils = {
     },
     //格式化日期成字符串(年月日)
     formatDayDate(date) {
+
         let year = date.getFullYear();
         let month = date.getMonth() + 1;
         let day = date.getDate();
@@ -23,6 +24,19 @@ let Utils = {
         month = month < 10 ? '0' + month : month;
         day = day < 10 ? '0' + day : day;
         return `${year}-${month}-${day}`
+    },
+    //格式化月份(年月)
+    formatMonthDate(data) {
+        if (data) {
+            let date = new Date(data)
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            month = month < 10 ? '0' + month : month;
+            return year + '-' + month
+        } else {
+            return ''
+        }
+
     },
     // 保留小数
     toFiexd(num, n = 2) {

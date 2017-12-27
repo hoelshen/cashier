@@ -56,7 +56,7 @@
                     <el-table-column prop="shopNo" label="代理商编号">
                         <template scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
-                                <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">自营</span>
+                                <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                     </el-table-column>
                     <el-table-column prop="phone" label="手机号" width="125">
@@ -114,7 +114,7 @@
                 <el-col :span="12">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">自营店铺</el-radio>
+                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -190,7 +190,7 @@
                 <el-col :span="12">
                     <el-form-item label="店铺类型：">
                         <el-radio disabled v-model="editForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio disabled v-model="editForm.shopType" label="SELF_SUPPORT">自营店铺</el-radio>
+                        <el-radio disabled v-model="editForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -379,8 +379,8 @@ export default {
                 agentCity: '',
                 agentCounty: '',
                 address: '',
-                shopType:'',
-                isShow:''
+                shopType: '',
+                isShow: ''
             },
             editFormTitle: '',
             editForm: {
@@ -397,8 +397,8 @@ export default {
                 agentCity: '',
                 agentCounty: '',
                 address: '',
-                shopType:'',
-                isShow:''
+                shopType: '',
+                isShow: ''
             },
             isDisable: false,
             order: '', //预存款排序
@@ -771,17 +771,27 @@ export default {
                             style: 'color:red'
                         }, data.shopName),
                     ]),
-                    h('div', {style: 'padding:5px;margin-top: 20px;'}, data.state == 0 ?'一旦禁用店铺后：':'启用店铺后'),
-                    h('div', {style: 'padding-left:19px'}, data.state == 0 ?'1.门店将无法使用系统':'1.门店将可继续使用系统'),
-                    h('div', {style: 'padding-left:19px'}, data.state == 0 ?'2.店铺绑定的微信分销账号会被置为普通会员分组(绑定关系不变)':'2.店铺绑定的微信分销账号会被置为代理商分组(绑定关系不变)'),
-                    h('div', {style: 'padding-left:19px'}, data.state == 0 ?'3.店铺地址将不会展示到醉品平台':'3.如果设置了显示到平台，则店铺地址将会展示到醉品平台'),
-                    h('div', {style: 'padding:0 5px;margin-top: 15px;'}, '请谨慎操作。'),
+                    h('div', {
+                        style: 'padding:5px;margin-top: 20px;'
+                    }, data.state == 0 ? '一旦禁用店铺后：' : '启用店铺后'),
+                    h('div', {
+                        style: 'padding-left:19px'
+                    }, data.state == 0 ? '1.门店将无法使用系统' : '1.门店将可继续使用系统'),
+                    h('div', {
+                        style: 'padding-left:19px'
+                    }, data.state == 0 ? '2.店铺绑定的微信分销账号会被置为普通会员分组(绑定关系不变)' : '2.店铺绑定的微信分销账号会被置为代理商分组(绑定关系不变)'),
+                    h('div', {
+                        style: 'padding-left:19px'
+                    }, data.state == 0 ? '3.店铺地址将不会展示到醉品平台' : '3.如果设置了显示到平台，则店铺地址将会展示到醉品平台'),
+                    h('div', {
+                        style: 'padding:0 5px;margin-top: 15px;'
+                    }, '请谨慎操作。'),
                 ]),
                 showCancelButton: true,
                 confirmButtonText: stateCN,
                 cancelButtonText: '取消',
                 cancelButtonClass: 'cancel-button',
-                confirmButtonClass: data.state == 0 ?'forbidden-button':''
+                confirmButtonClass: data.state == 0 ? 'forbidden-button' : ''
             }).then(action => {
                 self.loading = true;
                 self.$ajax({
@@ -994,8 +1004,8 @@ export default {
                     'shop.agentCity': data.agentGradeId == 265 ? addAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
-                    'shop.shopType':data.shopType,
-                    'shop.isShow':data.isShow,
+                    'shop.shopType': data.shopType,
+                    'shop.isShow': data.isShow,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1050,8 +1060,8 @@ export default {
                     'shop.agentCity': data.agentGradeId == 265 ? editAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
-                    'shop.shopType':data.shopType,
-                    'shop.isShow':data.isShow,
+                    'shop.shopType': data.shopType,
+                    'shop.isShow': data.isShow,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1095,7 +1105,7 @@ export default {
                 agentCounty: '',
                 address: ''
             }
-            if(self.$refs.addAddress.resetAddress()&&self.$refs.addAgentAddress.resetAddress()){
+            if (self.$refs.addAddress.resetAddress() && self.$refs.addAgentAddress.resetAddress()) {
                 self.$refs.addAddress.resetAddress();
                 self.$refs.addAgentAddress.resetAddress();
             }
@@ -1121,7 +1131,7 @@ export default {
                 agentCounty: '',
                 address: ''
             }
-            if(self.$refs.editAddress.resetAddress()&&self.$refs.editAgentAddress.resetAddress()){
+            if (self.$refs.editAddress.resetAddress() && self.$refs.editAgentAddress.resetAddress()) {
                 self.$refs.editAddress.resetAddress();
                 self.$refs.editAgentAddress.resetAddress();
             }
@@ -1141,22 +1151,26 @@ export default {
 @import url('../assets/less/storeManage.less');
 </style>
 <style>
-.el-message-box{
+.el-message-box {
     width: 500px;
 }
-.el-message-box__btns{
+
+.el-message-box__btns {
     text-align: left;
 }
-.forbidden-button{
+
+.forbidden-button {
     background-color: #fe5500;
     border-color: #fe5500;
 }
-.forbidden-button:hover{
+
+.forbidden-button:hover {
     background-color: #fe5500;
     opacity: 0.7;
     border-color: #fe5500;
 }
-.forbidden-button:active{
+
+.forbidden-button:active {
     background-color: #fe5500;
     border-color: #fe5500;
 }
