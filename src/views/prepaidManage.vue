@@ -21,6 +21,7 @@
 									<el-option label="扣款" value="DEDUCTIONS"></el-option>
 									<el-option label="进货" value="PURCHASE"></el-option>
 									<el-option label="退货" value="SALES_RETURN"></el-option>
+									<el-option label="订单分成" value="ORDER_COMMISSOM"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
@@ -78,6 +79,8 @@
 								<router-link target="_blank" v-if="scope.row.changeType === '进货'" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link>
 								<router-link target="_blank" v-if="scope.row.changeType === '退货' " :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderNo}}">{{scope.row.purchaseOrderNo}}</router-link>
 								<p :title=scope.row.remark v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}
+								</p>
+								<p :title=scope.row.remark v-if="scope.row.changeType === '订单分成' ">{{scope.row.purchaseOrderNo}}
 								</p>
 							</p>
 						</template>

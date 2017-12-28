@@ -16,9 +16,9 @@
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="7">
-                        <el-form-item label="状态：">
-                            <el-select v-model="searchData.status" placeholder="状态" clearable>
+                    <el-col :span="6">
+                        <el-form-item label="核销状态：">
+                            <el-select v-model="searchData.status" placeholder="核销状态" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
@@ -28,6 +28,8 @@
                             <el-input v-model="searchData.payOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
                         </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row :gutter="10" class="searchbar">
                     <el-col :span="6">
                         <el-form-item label="代理商编号：">
                             <el-input v-model="searchData.shopNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
@@ -108,7 +110,7 @@ export default {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: '',
+                status: 0,
                 createMonth: '',
             },
             myData: [],
@@ -126,7 +128,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() < date.getMonth() - 2 && time.getYear() <= date.getYear();
+                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据
@@ -344,6 +346,7 @@ export default {
         },
         // 导出明细
         outputExcel(id, shopNo, createMonth) {
+            console.log(id)
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -364,21 +367,28 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                console.log(response.data.result)
+                console.log(response)
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
-                    require.ensure([], () => {
-                        const {
-                            export_json_to_excel
-                        } = require('../components/tools/Export2Excel')
-                        const tHeader = ['代理商编号', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                        const filterVal = ['shopNo', '', 'orderNo', 'createTime', 'productPaySum', 'freightSum', 'payOrderSum', 'income', 'orderStatus', 'finishTime', 'provinceName',
-                            'cityName', 'countyName'
-                        ]
-                        const list = self.downData;
-                        const data = self.formatJson(filterVal, list)
-                        export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
-                    })
+                    if(self.downData.length>0){
+                        require.ensure([], () => {
+                            const {
+                                export_json_to_excel
+                            } = require('../components/tools/Export2Excel')
+                            const tHeader = ['代理商编号', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
+                            const filterVal = ['shopNo', 'createMonth', 'orderNo', 'createTime', 'productPaySum', 'freightSum', 'payOrderSum', 'income', 'orderStatus', 'finishTime', 'provinceName',
+                                'cityName', 'countyName'
+                            ]
+                            const list = self.downData;
+                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+                        })
+                    }else{
+                        self.$message({
+                            message: '订单暂无明细',
+                            type: 'error'
+                        })
+                    }
+
                 } else {
                     self.$message({
                         message: response.data.msg,

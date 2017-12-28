@@ -2,6 +2,7 @@
 require('script-loader!file-saver');
 require('script-loader!./Blob');
 require('script-loader!xlsx/dist/xlsx.core.min');
+
 function generateArray(table) {
     var out = [];
     var rows = table.querySelectorAll('tr');
@@ -18,7 +19,7 @@ function generateArray(table) {
             if (cellValue !== "" && cellValue == +cellValue) cellValue = +cellValue;
 
             //Skip ranges
-            ranges.forEach(function (range) {
+            ranges.forEach(function(range) {
                 if (R >= range.s.r && R <= range.e.r && outRow.length >= range.s.c && outRow.length <= range.e.c) {
                     for (var i = 0; i <= range.e.c - range.s.c; ++i) outRow.push(null);
                 }
@@ -28,15 +29,24 @@ function generateArray(table) {
             if (rowspan || colspan) {
                 rowspan = rowspan || 1;
                 colspan = colspan || 1;
-                ranges.push({s: {r: R, c: outRow.length}, e: {r: R + rowspan - 1, c: outRow.length + colspan - 1}});
-            }
-            ;
+                ranges.push({
+                    s: {
+                        r: R,
+                        c: outRow.length
+                    },
+                    e: {
+                        r: R + rowspan - 1,
+                        c: outRow.length + colspan - 1
+                    }
+                });
+            };
 
             //Handle Value
             outRow.push(cellValue !== "" ? cellValue : null);
 
             //Handle Colspan
-            if (colspan) for (var k = 0; k < colspan - 1; ++k) outRow.push(null);
+            if (colspan)
+                for (var k = 0; k < colspan - 1; ++k) outRow.push(null);
         }
         out.push(outRow);
     }
@@ -51,16 +61,30 @@ function datenum(v, date1904) {
 
 function sheet_from_array_of_arrays(data, opts) {
     var ws = {};
-    var range = {s: {c: 10000000, r: 10000000}, e: {c: 0, r: 0}};
+    var range = {
+        s: {
+            c: 10000000,
+            r: 10000000
+        },
+        e: {
+            c: 0,
+            r: 0
+        }
+    };
     for (var R = 0; R != data.length; ++R) {
         for (var C = 0; C != data[R].length; ++C) {
             if (range.s.r > R) range.s.r = R;
             if (range.s.c > C) range.s.c = C;
             if (range.e.r < R) range.e.r = R;
             if (range.e.c < C) range.e.c = C;
-            var cell = {v: data[R][C]};
+            var cell = {
+                v: data[R][C]
+            };
             if (cell.v == null) continue;
-            var cell_ref = XLSX.utils.encode_cell({c: C, r: R});
+            var cell_ref = XLSX.utils.encode_cell({
+                c: C,
+                r: R
+            });
 
             if (typeof cell.v === 'number') cell.t = 'n';
             else if (typeof cell.v === 'boolean') cell.t = 'b';
@@ -68,8 +92,7 @@ function sheet_from_array_of_arrays(data, opts) {
                 cell.t = 'n';
                 cell.z = XLSX.SSF._table[14];
                 cell.v = datenum(cell.v);
-            }
-            else cell.t = 's';
+            } else cell.t = 's';
 
             ws[cell_ref] = cell;
         }
@@ -102,7 +125,8 @@ export function export_table_to_excel(id) {
     var ws_name = "SheetJS";
     console.log(data);
 
-    var wb = new Workbook(), ws = sheet_from_array_of_arrays(data);
+    var wb = new Workbook(),
+        ws = sheet_from_array_of_arrays(data);
 
     /* add ranges to worksheet */
     // ws['!cols'] = ['apple', 'banan'];
@@ -112,30 +136,45 @@ export function export_table_to_excel(id) {
     wb.SheetNames.push(ws_name);
     wb.Sheets[ws_name] = ws;
 
-    var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+    var wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: false,
+        type: 'binary'
+    });
 
-    saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), "test.xlsx")
+    saveAs(new Blob([s2ab(wbout)], {
+        type: "application/octet-stream"
+    }), "test.xlsx")
 }
 
-function formatJson(jsonData) {
-    console.log(jsonData)
+function formatJson(filterVal, jsonData) {
+    return jsonData.map(v => filterVal.map(j => v[j]))
 }
-export function export_json_to_excel(th, jsonData, defaultTitle) {
+// 区域订单导出自定义
+export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     /* original data */
 
-    var data = jsonData;
-    data.unshift(th);
-    var ws_name = "SheetJS";
+    var list = jsonData;
+    var wb = new Workbook();
+    for (var i = 0; i < list.length; i++) {
+        var data = formatJson(filterVal, list[i].areaOrderVos)
+        data.unshift(th);
+        var ws_name = list[i].areaOrderVos[0].shopNo + "_" + list[i].areaOrderVos[0].createMonth + "_" + "区域订单明细";
+        var ws = sheet_from_array_of_arrays(data);
 
-    var wb = new Workbook(), ws = sheet_from_array_of_arrays(data);
+        /* add worksheet to workbook */
+        wb.SheetNames.push(ws_name);
+        wb.Sheets[ws_name] = ws;
+    }
 
-
-    /* add worksheet to workbook */
-    wb.SheetNames.push(ws_name);
-    wb.Sheets[ws_name] = ws;
-
-    var wbout = XLSX.write(wb, {bookType: 'xlsx', bookSST: false, type: 'binary'});
+    var wbout = XLSX.write(wb, {
+        bookType: 'xlsx',
+        bookSST: false,
+        type: 'binary'
+    });
     var title = defaultTitle || '列表'
-    saveAs(new Blob([s2ab(wbout)], {type: "application/octet-stream"}), title + ".xlsx")
+    saveAs(new Blob([s2ab(wbout)], {
+        type: "application/octet-stream"
+    }), title + ".xlsx")
 }
