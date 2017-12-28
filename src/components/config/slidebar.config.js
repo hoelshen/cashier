@@ -20,7 +20,7 @@
 
 export default [{
         title: '会员管理',
-        icon: 'icon-huiyuanguanli',
+        icon: 'icon-yonghuguanli',
         children: [{
             title: '会员管理',
             path: '/memberList'
@@ -77,7 +77,7 @@ export default [{
     },
     {
         title: '分成核算',
-        icon: 'icon-tuikuandingdan',
+        icon: 'icon-fenchenghesuan',
         children: [{
             title: '区域订单',
             path: '/area'

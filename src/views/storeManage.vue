@@ -53,7 +53,7 @@
             <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button>
             <el-row class="tablebar">
                 <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
-                    <el-table-column prop="shopNo" label="代理商编号">
+                    <el-table-column prop="shopNo" label="代理商编号" width="115">
                         <template scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
@@ -68,7 +68,7 @@
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                     </el-table-column>
-                    <el-table-column prop="agentGradeId" label="代理商等级">
+                    <el-table-column prop="agentGradeId" label="代理商等级"  width="110">
                         <template scope="scope">
                                 <span v-if="scope.row.agentGradeId==31" >单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265" >区域代理</span>
@@ -108,7 +108,7 @@
     </div>
     <!-- 表格 end -->
     <!-- 新增店铺弹窗 start -->
-    <el-dialog title="新增代理商店铺" :visible.sync="addDialogVisible" @close="resetAddForm">
+    <el-dialog title="新增店铺" :visible.sync="addDialogVisible" @close="resetAddForm">
         <el-form :model="addForm" label-width="120px" ref="addForm">
             <el-row>
                 <el-col :span="12">
@@ -151,13 +151,13 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
-                    <el-form-item label="代理商等级：">
+                    <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable>
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="24" v-show="addForm.agentGradeId=='265'">
+                <el-col :span="24" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent ref='addAgentAddress' />
                     </el-form-item>
@@ -202,6 +202,8 @@
                         </div>
                     </el-form-item>
                 </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="12">
                     <el-form-item label="店铺名称：">
                         <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
@@ -212,6 +214,8 @@
                         <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="12">
                     <el-form-item label="代理商手机：">
                         <el-input v-model="editForm.phone" placeholder="代理商手机" :maxlength='phoneLength' :disabled="isDisable"></el-input>
@@ -226,15 +230,17 @@
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
+            </el-row>
+            <el-row>
                 <el-col :span="24">
-                    <el-form-item label="代理商等级：">
+                    <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="24" v-if="editForm.agentGradeId=='265'">
+                <el-col :span="24" v-if="editForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :disabled="isDisable" />
                     </el-form-item>
@@ -379,8 +385,8 @@ export default {
                 agentCity: '',
                 agentCounty: '',
                 address: '',
-                shopType: '',
-                isShow: ''
+                shopType: 'AGENT',
+                isShow: '1'
             },
             editFormTitle: '',
             editForm: {
@@ -701,7 +707,7 @@ export default {
         //打开修改店铺及店铺详情弹窗
         openEditDialog(data, type) {
             type == 'edit' ? this.isDisable = false : this.isDisable = true
-            this.editFormTitle = type == 'edit' ? "编辑代理商店铺（编号：" + data.shopNo + "）" : "查看代理商店铺（编号：" + data.shopNo + "）"
+            this.editFormTitle = type == 'edit' ? "编辑店铺（编号：" + data.shopNo + "）" : "查看店铺（编号：" + data.shopNo + "）"
             this.getInfoById(data.id);
             this.editDialogVisible = true;
         },
@@ -730,18 +736,11 @@ export default {
             const h = self.$createElement;
             const stateCN = data.state == 0 ? '禁用' : '启用';
             self.$msgbox({
-                title: '确定' + stateCN + '？',
+                title:  stateCN + '店铺？',
                 message: h('div', {
                     style: 'padding:10px'
                 }, [
-                    h('div', {
-                        style: data.state == 0 ? 'padding:5px' : ''
-                    }, [
-                        h('span', {
-                            style: 'color:red'
-                        }, data.state == 0 ? '禁用后门店将无法使用系统' : ''),
-                        h('span', null, data.state == 0 ? '，你还要继续吗？' : ''),
-                    ]),
+
                     h('div', {
                         style: 'padding:5px;display:flex'
                     }, [
@@ -1000,9 +999,9 @@ export default {
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265 ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 ? addAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1020,14 +1019,21 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response)
-                self.$message({
-                    message: response.data.msg,
-                    type: 'success'
-                })
-                self.addDialogVisible = false;
-                setTimeout(function() {
-                    self.handleCurrentChange(self.currentPage);
-                }, 1000)
+                if(response.data.result==0){
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }else{
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'success'
+                    })
+                    self.addDialogVisible = false;
+                    setTimeout(function() {
+                        self.handleCurrentChange(self.currentPage);
+                    }, 1000)
+                }
             }).catch(function(err) {
                 self.loading = false;
             });
@@ -1056,9 +1062,9 @@ export default {
                     'shop.provinceCode': editAddress.provinceCode,
                     'shop.cityCode': editAddress.cityCode,
                     'shop.countyCode': editAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265 ? editAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 ? editAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 ? editAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1076,14 +1082,22 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response)
-                self.$message({
-                    message: response.data.msg,
-                    type: 'success'
-                })
-                self.editDialogVisible = false;
-                setTimeout(function() {
-                    self.handleCurrentChange(self.currentPage);
-                }, 1000)
+                if(response.data.result==0){
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }else{
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'success'
+                    })
+                    self.editDialogVisible = false;
+                    setTimeout(function() {
+                        self.handleCurrentChange(self.currentPage);
+                    }, 1000)
+                }
+
             }).catch(function(err) {
                 self.loading = false;
             });
@@ -1103,7 +1117,9 @@ export default {
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
-                address: ''
+                address: '',
+                shopType: 'AGENT',
+                isShow: '1'
             }
             if (self.$refs.addAddress.resetAddress() && self.$refs.addAgentAddress.resetAddress()) {
                 self.$refs.addAddress.resetAddress();
