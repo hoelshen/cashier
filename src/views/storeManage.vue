@@ -517,6 +517,7 @@ export default {
                     'advanceDeposit.remark': self.changeForm.remark,
                     'advanceDeposit.creatorId': self.user.id,
                     'advanceDeposit.updatorId': self.user.id,
+                    'advanceDeposit.isBackground':1
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -1121,8 +1122,11 @@ export default {
                 shopType: 'AGENT',
                 isShow: '1'
             }
-            if (self.$refs.addAddress.resetAddress() && self.$refs.addAgentAddress.resetAddress()) {
+            if (self.$refs.addAddress.resetAddress()) {
                 self.$refs.addAddress.resetAddress();
+
+            }
+            if( self.$refs.addAgentAddress.resetAddress()){
                 self.$refs.addAgentAddress.resetAddress();
             }
 
@@ -1147,8 +1151,10 @@ export default {
                 agentCounty: '',
                 address: ''
             }
-            if (self.$refs.editAddress.resetAddress() && self.$refs.editAgentAddress.resetAddress()) {
+            if (self.$refs.editAddress.resetAddress()) {
                 self.$refs.editAddress.resetAddress();
+            }
+            if( self.$refs.editAgentAddress.resetAddress()){
                 self.$refs.editAgentAddress.resetAddress();
             }
 
