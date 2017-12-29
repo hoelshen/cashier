@@ -65,7 +65,7 @@
 					</el-table-column>
 					<el-table-column prop="alterMoney" label="变更金额">
 						<template scope="scope">
-							<p>{{ toFixed(scope.row.alterMoney) }}</p>
+							<p>{{ toFixed1(scope.row.alterMoney) }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterMoney" label="结余">
@@ -293,7 +293,7 @@ export default {
 		toFixed1(num) {
 			num = Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
 			if (String(num).substring(0, 1) === '-') {
-			} else {
+			}else if(num != 0){
 				num = '+' + num;
 			}
 			return num;
