@@ -233,14 +233,14 @@
             </el-row>
             <el-row>
                 <el-col :span="24">
-                    <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
+                    <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="24" v-if="editForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="24" v-if="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :disabled="isDisable" />
                     </el-form-item>
@@ -999,9 +999,9 @@ export default {
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? addAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1062,9 +1062,9 @@ export default {
                     'shop.provinceCode': editAddress.provinceCode,
                     'shop.cityCode': editAddress.cityCode,
                     'shop.countyCode': editAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265&&addForm.shopType!='SELF_SUPPORT' ? editAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1189,5 +1189,12 @@ export default {
 .forbidden-button:active {
     background-color: #fe5500;
     border-color: #fe5500;
+}
+.el-message-box__header{
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+.el-message-box__content {
+    padding: 0px 20px 30px;
 }
 </style>
