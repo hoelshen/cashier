@@ -65,7 +65,7 @@
 					</el-table-column>
 					<el-table-column prop="alterMoney" label="变更金额">
 						<template scope="scope">
-							<p>{{ toFixed1(scope.row.alterMoney) }}</p>
+							<p>{{ toFixed(scope.row.alterMoney) }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterMoney" label="结余">
