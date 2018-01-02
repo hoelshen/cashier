@@ -1,6 +1,6 @@
 /*
  *      配置说明
- * 
+ *
  *          []中每一个对象表示一个一级菜单
  *              title 表示菜单的名字
  *              icon 表示菜单使用icon雷鸣
@@ -9,9 +9,9 @@
  *              count 表示初始计数
  *              path 表示点击菜单需要跳转到的路由，只能出现在最终极的菜单，否则无效
  *              spot 表示一级菜单的红点标志
- * 
- * 
- * 
+ *
+ *
+ *
  */
 
 
@@ -20,7 +20,7 @@
 
 export default [{
         title: '会员管理',
-        icon: 'icon-huiyuanguanli',
+        icon: 'icon-yonghuguanli',
         children: [{
             title: '会员管理',
             path: '/memberList'
@@ -75,5 +75,13 @@ export default [{
         spot: false,
         spotName: 'waitDrawBack',
     },
+    {
+        title: '分成核算',
+        icon: 'icon-fenchenghesuan',
+        children: [{
+            title: '区域订单',
+            path: '/area'
+        }]
+    }
 
 ]
