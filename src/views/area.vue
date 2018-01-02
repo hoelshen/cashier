@@ -376,7 +376,7 @@ export default {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excel')
                             const tHeader = ['代理商编号', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                            const filterVal = ['shopNo', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', '	freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
+                            const filterVal = ['shopNo', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
                                 'cityName', 'countyName'
                             ]
                             const list = self.downData;
