@@ -68,11 +68,12 @@
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                     </el-table-column>
-                    <el-table-column prop="agentGradeId" label="代理商等级"  width="110">
+                    <el-table-column prop="agentGradeId" label="代理商等级" width="110">
                         <template scope="scope">
                                 <span v-if="scope.row.agentGradeId==31" >单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265" >区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
+                                <span v-if="!scope.row.agentGradeId">-</span>
                             </template>
                     </el-table-column>
                     <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100">
@@ -517,7 +518,7 @@ export default {
                     'advanceDeposit.remark': self.changeForm.remark,
                     'advanceDeposit.creatorId': self.user.id,
                     'advanceDeposit.updatorId': self.user.id,
-                    'advanceDeposit.isBackground':1
+                    'advanceDeposit.isBackground': 1
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -737,7 +738,7 @@ export default {
             const h = self.$createElement;
             const stateCN = data.state == 0 ? '禁用' : '启用';
             self.$msgbox({
-                title:  stateCN + '店铺？',
+                title: stateCN + '店铺？',
                 message: h('div', {
                     style: 'padding:10px'
                 }, [
@@ -900,6 +901,10 @@ export default {
                 })
                 return false
             }
+            // 如果是直营直接转成区域代理
+            if (data.shopType == 'SELF_SUPPORT') {
+                data.agentGradeId = 265;
+            }
             //代理商等级判断
             if (!data.agentGradeId) {
                 self.loading = false;
@@ -956,7 +961,7 @@ export default {
 
             }
             //代理区域判断
-            if (data.agentGradeId == 265) {
+            if (data.agentGradeId == 265&& data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -985,7 +990,7 @@ export default {
             self.loading = true;
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
-            let addAgentAddress = data.agentGradeId == 265 ? self.$refs.addAgentAddress.getData() : null;
+            let addAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
             if (!self.testData(data, addAddress, addAgentAddress)) return;
             //请求
             self.$ajax({
@@ -1000,9 +1005,9 @@ export default {
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? addAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1020,12 +1025,12 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response)
-                if(response.data.result==0){
+                if (response.data.result == 0) {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
-                }else{
+                } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
@@ -1046,7 +1051,7 @@ export default {
             self.loading = true;
             const data = self.editForm;
             let editAddress = self.$refs.editAddress.getData();
-            let editAgentAddress = data.agentGradeId == 265 ? self.$refs.editAgentAddress.getData() : null;
+            let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
             if (!self.testData(data, editAddress, editAgentAddress)) return;
             //请求
             console.log(data)
@@ -1063,9 +1068,9 @@ export default {
                     'shop.provinceCode': editAddress.provinceCode,
                     'shop.cityCode': editAddress.cityCode,
                     'shop.countyCode': editAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265&&data.shopType!='SELF_SUPPORT' ? editAgentAddress.areaCode : '',
+                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -1083,12 +1088,12 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response)
-                if(response.data.result==0){
+                if (response.data.result == 0) {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
-                }else{
+                } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
@@ -1126,7 +1131,7 @@ export default {
                 self.$refs.addAddress.resetAddress();
 
             }
-            if( self.$refs.addAgentAddress.resetAddress()){
+            if (self.$refs.addAgentAddress.resetAddress()) {
                 self.$refs.addAgentAddress.resetAddress();
             }
 
@@ -1154,7 +1159,7 @@ export default {
             if (self.$refs.editAddress.resetAddress()) {
                 self.$refs.editAddress.resetAddress();
             }
-            if( self.$refs.editAgentAddress.resetAddress()){
+            if (self.$refs.editAgentAddress.resetAddress()) {
                 self.$refs.editAgentAddress.resetAddress();
             }
 
@@ -1196,10 +1201,12 @@ export default {
     background-color: #fe5500;
     border-color: #fe5500;
 }
-.el-message-box__header{
+
+.el-message-box__header {
     padding: 20px;
     border-bottom: 1px solid #e0e0e0;
 }
+
 .el-message-box__content {
     padding: 0px 20px 30px;
 }
