@@ -73,6 +73,7 @@
                                 <span v-if="scope.row.agentGradeId==31" >单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265" >区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
+                                <span v-if="!scope.row.agentGradeId">-</span>
                             </template>
                     </el-table-column>
                     <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100">
