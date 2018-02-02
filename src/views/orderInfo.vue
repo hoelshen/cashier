@@ -28,7 +28,7 @@
                 <el-col :span="8">收件电话：{{ orderInfo.receiptPhone }}</el-col>
             </el-row>
             <el-row style="margin:20px auto auto 15px">
-                <el-col :span="24">收货地址：{{ orderInfo.receiptAddress }}</el-col>
+                <el-col :span="24">收货地址：{{ orderInfo.provinceName + orderInfo.cityName+ orderInfo.countyName + orderInfo.receiptAddress }}</el-col>
             </el-row>
         </div>
         <div class="tableInfo">
