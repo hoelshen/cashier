@@ -27,7 +27,7 @@
 <template>
     <div class="zp-address">
         <div class="address-select">
-            <el-select v-model="onSelect.provinceCode" placeholder="请选择" @change="getAllData" :disabled='disabled'>
+            <el-select v-model="onSelectprovinceCode" placeholder="请选择" @change="getAllData()"  :disabled='disabled'>
                 <el-option
                 v-for="(value,key) in provinceList"
                 :key="key"
@@ -37,7 +37,7 @@
             </el-select>
         </div>
         <div class="address-select">
-            <el-select v-model="onSelect.cityCode" placeholder="请选择" @change="getAllData" :disabled='disabled'>
+            <el-select v-model="onSelectcityCode" placeholder="请选择" @change="getAllData()"  :disabled='disabled'>
                 <el-option
                 v-for="(value,key) in cityList"
                 :key="key"
@@ -47,7 +47,7 @@
             </el-select>
         </div>
         <div class="address-select">
-            <el-select v-model="onSelect.areaCode" placeholder="请选择" @change="getAllData" :disabled='disabled'>
+            <el-select v-model="onSelectareaCode" placeholder="请选择" @change="getAllData()" :disabled='disabled'>
                 <el-option
                 v-for="(value,key) in areaList"
                 :key="key"
@@ -4619,11 +4619,9 @@
         data() {
             return {
                 DISTRICTS,
-                onSelect: {
-                    provinceCode: String(this.provinceCode),
-                    cityCode: String(this.cityCode),
-                    areaCode: String(this.areaCode),
-                },
+                onSelectprovinceCode: this.provinceCode,
+                onSelectcityCode: this.cityCode,
+                onSelectareaCode: this.areaCode,
             }
         },
         props: {
@@ -4640,36 +4638,63 @@
                 default: false
             }
         },
+        watch: {
+            'onSelectprovinceCode':{
+
+                handler(val,oldVal){
+                    if(oldVal){
+                        this.onSelectcityCode = '1'
+                    }
+                },
+                deep:true
+            },
+            'onSelectcityCode':{
+                handler(val,oldVal){
+                    console.log(oldVal)
+                    if(oldVal){
+                        this.onSelectareaCode = '1'
+                    }
+
+                },
+                deep:true
+            }
+        },
         computed: {
             provinceList() {
-                this.onSelect.provinceCode = this.provinceCode;
+                if(!this.onSelectprovinceCode){
+                    this.onSelectprovinceCode = this.provinceCode;
+                }
                 return this.DISTRICTS[100000];
             },
             cityList() {
-                this.onSelect.cityCode = this.cityCode;
-                return this.DISTRICTS[this.onSelect.provinceCode];
+                if(!this.onSelectcityCode){
+                    this.onSelectcityCode = this.cityCode;
+                }
+                return this.DISTRICTS[this.onSelectprovinceCode];
             },
             areaList() {
-                this.onSelect.areaCode = this.areaCode;
-                return this.DISTRICTS[this.onSelect.cityCode];
+                if(!this.onSelectareaCode){
+                    this.onSelectareaCode = this.areaCode;
+                }
+                return this.DISTRICTS[this.onSelectcityCode];
             }
         },
         methods: {
             getData() {
                 let data = this.DISTRICTS;
                 // 省
-                let provinceCode = this.onSelect.provinceCode;
+                let provinceCode = this.onSelectprovinceCode;
                 let provinceName = data[100000][provinceCode];
                 let province = data[provinceCode] ? data[provinceCode] : data[110000];
 
                 // 市
-                let cityCode = this.onSelect.cityCode;
-                let cityName = province[cityCode];
+                let cityCode = this.onSelectcityCode;
+                let cityName = province[cityCode]?province[cityCode]:province[1];
                 let city = data[cityCode] ? data[cityCode] : data[110100];
 
                 // 区
-                let areaCode = this.onSelect.areaCode;
-                let areaName = city[areaCode];
+                let areaCode = this.onSelectareaCode;
+                let areaName = city[areaCode] ? city[areaCode] : city[1];
                 return {
                     provinceCode,
                     provinceName,
@@ -4680,8 +4705,7 @@
                     address: String(provinceName) + String(cityName) + String(areaName)
                 }
             },
-            getAllData(ev) {
-                console.log(this.provinceCode)
+            getAllData() {
                 this.$nextTick(function() {
                     this.$emit('getAllData', this.getData());
                 })
@@ -4691,9 +4715,9 @@
             },
             resetAddress() {
                 const self = this;
-                self.onSelect.provinceCode = '';
-                self.onSelect.cityCode = '';
-                self.onSelect.areaCode = '';
+                self.onSelectprovinceCode = '';
+                self.onSelectcityCode = '';
+                self.onSelectareaCode = '';
             }
 
         }
