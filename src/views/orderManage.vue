@@ -57,7 +57,7 @@
                     <el-table-column prop="purchaseOrderNo" label="进货单号" width="180">
                     </el-table-column>
                     <el-table-column prop="agentGradeId" label="代理商编号" style="position: relative">
-                        <template scope="scope">{{ scope.row.shopNo }}
+                        <template slot-scope="scope">{{ scope.row.shopNo }}
                             <p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
                             <p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
                             <p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
@@ -72,12 +72,12 @@
                     <el-table-column prop="orderTime" label="下单时间">
                     </el-table-column>
                     <el-table-column prop="orderSum" label="金额" sortable="custom">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="phone" label="详情">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link>
                         </template>
                     </el-table-column>

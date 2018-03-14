@@ -50,7 +50,7 @@
 			<div class="orderList">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative">
-						<template scope="scope">{{ scope.row.shopNo }}
+						<template slot-scope="scope">{{ scope.row.shopNo }}
 							<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
 							<p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
 							<p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
@@ -64,17 +64,17 @@
 					<el-table-column prop="changeType" label="变更类型" width="100">
 					</el-table-column>
 					<el-table-column prop="alterMoney" label="变更金额">
-						<template scope="scope">
+						<template slot-scope="scope">
 							<p>{{ toFixed1(scope.row.alterMoney) }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="afterMoney" label="结余">
-						<template scope="scope">
+						<template slot-scope="scope">
 							<p>{{ toFixed(scope.row.afterMoney) }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="remark" label="备注/单号" width="180">
-						<template scope="scope">
+						<template slot-scope="scope">
 							<p>
 								<router-link target="_blank" v-if="scope.row.changeType === '进货'" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link>
 								<router-link target="_blank" v-if="scope.row.changeType === '退货' " :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderNo}}">{{scope.row.purchaseOrderNo}}</router-link>
@@ -189,7 +189,6 @@ export default {
 			} else {
 				this.searchData.level = '';
 			}
-			console.log(this.searchData.searchLevel);
 			this.$getData({
 				url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 				data: {

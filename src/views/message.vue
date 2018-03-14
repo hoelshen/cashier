@@ -1,45 +1,44 @@
 <template>
-	<div class="prepaidManage">
+	<div class="prepaidManage messageList">
 		<div class="warp">
 			<div id="search">
 				<el-form label-width="85px" ref="form" :model="searchData">
 					<el-row :gutter="10">
-						<el-col :span="6">
-							<el-form-item label="注册店铺名">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchShop" placeholder="注册店铺名"></el-input>
+						<el-col :span="5">
+							<el-form-item label="通知标题">
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.title" placeholder="通知标题"></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="6">
-							<el-form-item label="手机">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchPhone" placeholder="手机号"></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="6">
-							<el-form-item label="姓名">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="姓名"></el-input>
-							</el-form-item>
-						</el-col>
-						<el-col :span="6">
-							<el-form-item label="会员等级">
-								<el-select v-model="searchData.searchLevel" clearable placeholder="请选择">
-									<el-option v-for="item in options" :key="item.value" :label="item.label" :value="item.value"></el-option>
+						<el-col :span="5">
+							<el-form-item label="通知类型">
+								<el-select v-model="searchData.type" clearable placeholder="请选择">
+									<el-option value="ALL" label="全部"></el-option>
+									<el-option value="NEW" label="新品"></el-option>
+									<el-option value="NEWS" label="系统公告"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
-					</el-row>
-					<el-row :gutter="20">
-						<el-col :span="7" style="margin-left:-15px;">
-							<el-form-item label="注册时间">
-								<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+						<el-col :span="5">
+							<el-form-item label="通知状态">
+								<el-select v-model="searchData.status" clearable placeholder="请选择">
+									<el-option value="ALL" label="全部"></el-option>
+									<el-option value="ENABLE" label="启用"></el-option>
+									<el-option value="DISENABLE" label="禁用"></el-option>
+								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="17">
+						<el-col :span="7">
+							<el-form-item label="发布时间">
+								<el-date-picker v-model="searchData.time" type="daterange"  start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
+							</el-form-item>
+						</el-col>
+						<el-col :span="2">
 							<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
 						</el-col>
 					</el-row>
 				</el-form>
 			</div>
-			<div class="orderList">
+			<div class="tableInfo">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column label="序号" width="80">
 						<template slot-scope="scope">
@@ -47,18 +46,51 @@
 								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="PHONE" label="手机号">
+					<el-table-column prop="PHONE" label="通知标题">
 					</el-table-column>
-					<el-table-column prop="NAME" label="姓名">
+					<el-table-column prop="NAME" label="通知类型">
 					</el-table-column>
-					<el-table-column prop="GID" label="会员等级">
+					<el-table-column prop="GID" label="发布时间" sortable>
+					</el-table-column>
+					<el-table-column prop="SHOPNAME" label="发布人">
+					</el-table-column>
+					<el-table-column prop="CREATED_TIME" label="操作">
 						<template slot-scope="scope">
-							<p>{{getLevel(scope.row.GID)}}</p>
+							<el-tooltip placement="top" effect="light" >
+								<div slot="content">
+									<i class="el-icon-warning table_icon"></i>
+									<span class="table_enable_text">你确定要启用该通知吗？</span>
+									<div class="table_button_group">
+										<el-button size="small">确定</el-button>
+										<el-button size="small">取消</el-button>
+									</div>
+								</div>
+								<span class="table_buleTxt">启用</span>
+							</el-tooltip>
+							<el-tooltip placement="top" effect="light">
+								<div slot="content">
+									<i class="el-icon-warning table_icon"></i>
+									<span class="table_enable_text">你确定要禁用该通知吗？</span>
+									<div class="table_button_group">
+										<el-button size="small">确定</el-button>
+										<el-button size="small">取消</el-button>
+									</div>
+								</div>
+								<span class="table_buleTxt">禁用</span>
+							</el-tooltip>
+							<span class="table_buleTxt">预览</span>
+							<el-tooltip placement="top" effect="light">
+								<div slot="content">
+									<i class="el-icon-warning table_icon"></i>
+									<span class="table_enable_text">你确定要删除该通知吗？</span>
+									<div class="table_button_group">
+										<el-button size="small">确定</el-button>
+										<el-button size="small">取消</el-button>
+									</div>
+								</div>
+								<span class="table_buleTxt">删除</span>
+							</el-tooltip>
 						</template>
-					</el-table-column>
-					<el-table-column prop="SHOPNAME" label="注册店铺">
-					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="注册时间">
 					</el-table-column>
 				</el-table>
 				<div class="page">
@@ -76,57 +108,13 @@ export default {
 	data() {
 		return {
 			currentPage: 1,			//当前页
-			totalNums: 0,				//数据总数
+			totalNums: 0,		    //数据总数
 			pageSize: 30,			//当前页数
-			options: [{				//会员等级
-				value: '13',
-				label: 'v0'
-			}, {
-				value: '14',
-				label: 'v1'
-			}, {
-				value: '15',
-				label: 'v2'
-			}, {
-				value: '16',
-				label: 'v3'
-			}, {
-				value: '17',
-				label: 'v4'
-			}, {
-				value: '18',
-				label: 'v5'
-			}, {
-				value: '19',
-				label: 'v6'
-			}, {
-				value: '20',
-				label: 'v7'
-			}, {
-				value: '21',
-				label: 'v8'
-			}, {
-				value: '22',
-				label: 'v9'
-			}, {
-				value: '23',
-				label: 'v10'
-			}, {
-				value: '24',
-				label: 'v11'
-			}, {
-				value: '25',
-				label: 'v12'
-			}, {
-				value: '26',
-				label: 'v13'
-			}],
 			searchData: {
-				searchPhone: '',		//代理商手机
-				searchShop: '',		//注册店铺名
-				searchName: '',		//姓名
-				searchTime: '',		//注册时间
-				searchLevel: '',		//代理商等级
+				title: '',		    //标题
+				type: '',		    //类型
+				status: '',		    //状态
+				time: [],		    //时间
 			},
 			tableData: [
 				{
@@ -310,15 +298,6 @@ export default {
 		toFixed(num) {
 			return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
 		},
-		getLevel(num) {
-			// console.log(num);
-			for (var i = this.options.length - 1; i >= 0; i--) {
-				// console.log(this.options[i].value == num);
-				if (this.options[i].value == num) {
-					return this.options[i].label;
-				}
-			}
-		},
 		getData(obj) {
 			const self = this;
 			obj.method = obj.method || 'get';
@@ -377,5 +356,52 @@ export default {
 </script>
 
 <style lang="less" scoped>
-@import url('../assets/less/member.less');
+.tableInfo {
+    margin: 20px 15px;
+    padding: 1px 15px;
+    background-color: white;
+}
+
+.page {
+    width: 100%;
+    padding: 10px 0px 60px 0px;
+    background-color: white;
+}
+
+#search {
+    background-color: #fff;
+    padding: 5px;
+    margin: 20px 15px auto 15px;
+}
+
+
+#search {
+    .el-form {
+        margin: 30px 18px auto 18px;
+    }
+}
+.table_buleTxt{
+	color: #20a0ff;
+	cursor: pointer;
+	margin-left: 10px;
+}
+.table_icon{
+	color: red;
+	font-size: 16px;
+	vertical-align: middle;
+}
+.table_enable_text{
+	margin-top: 5px;
+    display: inline-block;
+}
+.table_button_group{
+	margin-top: 10px;
+	text-align: right;
+}
+</style>
+
+<style lang="less">
+.el-tooltip__popper.is-light{
+	border-color:#cccccc;
+}
 </style>
