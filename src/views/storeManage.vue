@@ -54,7 +54,7 @@
             <el-row class="tablebar">
                 <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
                     <el-table-column prop="shopNo" label="代理商编号" width="115">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
@@ -64,12 +64,12 @@
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
                     <el-table-column title="shopName" prop="shopName" label="店铺名称">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                     </el-table-column>
                     <el-table-column prop="agentGradeId" label="代理商等级" width="110">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                                 <span v-if="scope.row.agentGradeId==31" >单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265" >区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266" >专柜代理</span>
@@ -81,7 +81,7 @@
                     <el-table-column prop="signTime" label="注册时间" width="110">
                     </el-table-column>
                     <el-table-column prop="state" label="状态">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                                 <p>
                                     <span v-if="scope.row.state==0" ><span class="green-color"></span>启用</span>
                                     <span v-if="scope.row.state==1" ><span class="red-color"></span>禁用</span>
@@ -89,7 +89,7 @@
                             </template>
                     </el-table-column>
                     <el-table-column label="操作" width="240">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>

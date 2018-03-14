@@ -71,6 +71,16 @@ const config = [{
                 // 区域订单核算
                 path: 'area',
                 component: resolve => require(['./views/area.vue'], resolve),
+            },
+            {
+                // 通知管理
+                path: 'message',
+                component: resolve => require(['./views/message.vue'], resolve),
+            },
+            {
+                // 添加通知
+                path: 'messageAdd',
+                component: resolve => require(['./views/messageAdd.vue'], resolve),
             }
         ]
     },

@@ -38,21 +38,21 @@
                 <el-table-column prop="productName" label="商品名称">
                 </el-table-column>
                 <el-table-column prop="spec" label="规格" width="120">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p :title=scope.row.spec style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{ scope.row.spec }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column prop="unit" label="单位" width="120">
                 </el-table-column>
                 <el-table-column prop="purchasePrice" label="进货价" width="120">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p>{{ toFixed(scope.row.purchasePrice) }}</p>
                     </template>
                 </el-table-column>
                 <el-table-column prop="productNum" label="进货数量" width="120">
                 </el-table-column>
                 <el-table-column prop="subtotal" label="小计" width="120">
-                    <template scope="scope">
+                    <template slot-scope="scope">
                         <p>{{ toFixed(scope.row.subtotal) }}</p>
                     </template>
                 </el-table-column>
@@ -147,5 +147,5 @@ export default {
 }
 </script>
 <style type="less" scoped>
-@import url('../assets/less/orderInfo.less');
+@import url("../assets/less/orderInfo.less");
 </style>

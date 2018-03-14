@@ -46,6 +46,8 @@ export default {
                 '/drawBack': '全部退款单',
                 '/waitDrawBack': '待审核退款单',
                 '/area': '区域订单核算',
+                '/message': '通知管理',
+                '/messageAdd': '通知新增',
             },
             user: {}
         }
@@ -61,6 +63,9 @@ export default {
             }
             if (/drawBackDetail/.test(val.fullPath)) {
                 this.contentName = "退款单详情";
+            }
+            if (/messageAdd/.test(val.fullPath)) {
+                this.contentName = "通知新增";
             }
         },
     },
