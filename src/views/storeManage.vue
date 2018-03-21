@@ -3,46 +3,59 @@
     <!-- 搜索 start -->
     <div class="searchwrap">
         <el-form ref="form" label-width="100px" :model="searchData">
-            <el-row :gutter="10" class="searchbar">
-                <el-col :span="6">
-                    <el-form-item label="注册店铺名：">
+            <el-row :gutter="5" class="searchbar">
+                <el-col :span="5">
+                    <el-form-item label="注册店铺名：" style="width:94%">
                         <el-input v-model="searchData.shopName" @keyup.enter.native="onSubmit" placeholder="注册店铺名"></el-input>
                     </el-form-item>
                 </el-col>
+
                 <el-col :span="6">
-                    <el-form-item label="代理商手机：">
-                        <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机"></el-input>
+                    <el-form-item label="代理商姓名：" style="margin-left:16%;">
+                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" style="width:100%"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
-                    <el-form-item label="代理商姓名：">
-                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="6">
-                    <el-form-item label="状态：">
-                        <el-select v-model="searchData.state" placeholder="状态" clearable>
+
+                <el-col :span="5">
+                    <el-form-item label="状态：" label-width="40%">
+                        <el-select v-model="searchData.state" placeholder="请选择" clearable>
                             <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="6">
-                    <el-form-item label="代理商等级：">
-                        <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                    <el-form-item label="注册时间： ">
+                <el-col :span="5">
+                    <el-form-item label="注册时间： " label-width="40%">
                         <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="2">
-                    <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                <el-col :span="2"  style="margin-left:3%">
+                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
                 </el-col>
+               
+            </el-row>
+            <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="店铺类型："  style="width:100%">
+                            <el-select v-model="searchData.state" @keyup.enter.native="onSubmit" placeholder="请选择">
+                                <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                                 <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
+                                <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>                                
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                     <el-col :span="5">
+                        <el-form-item label="运营人员：">
+                            <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                     <el-col :span="5">
+                        <el-form-item label="业务人员：" label-width="40%">
+                            <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                   
             </el-row>
         </el-form>
     </div>
@@ -58,8 +71,6 @@
                                 <span>{{scope.row.shopNo}}</span>
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
-                    </el-table-column>
-                    <el-table-column prop="phone" label="手机号" width="125">
                     </el-table-column>
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
@@ -87,6 +98,10 @@
                                     <span v-if="scope.row.state==1" ><span class="red-color"></span>禁用</span>
                                 </p>
                             </template>
+                    </el-table-column>
+                     <el-table-column prop="operator" label="运营人员">
+                    </el-table-column>
+                     <el-table-column prop="salesMan" label="业务人员">
                     </el-table-column>
                     <el-table-column label="操作" width="240">
                         <template scope="scope">
