@@ -65,14 +65,14 @@
                     <el-table-column prop="orderTime" label="下单时间">
                     </el-table-column>
                     <el-table-column prop="orderSum" label="金额" sortable="custom">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="updator" label="运营人员">
                     </el-table-column>                    
                     <el-table-column prop="phone" label="操作">
-                        <template scope="scope">
+                        <template slot-scope="scope">
                             <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link>
                         </template>
                     </el-table-column>

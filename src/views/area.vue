@@ -50,7 +50,7 @@
                         <el-table-column type="selection" width="50">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                     <span>{{scope.row.shopNo}}</span>
                                 </template>
                         </el-table-column>
@@ -61,19 +61,19 @@
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
                         <el-table-column prop="verifiAmount" label="分成金额">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="status" label="状态">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="payOrderNo" label="付款单号">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
-                            <template scope="scope">
+                            <template slot-scope="scope">
                                     <p class="operation">
                                         <span @click="outputExcel(scope.row.id,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
