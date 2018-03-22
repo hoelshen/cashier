@@ -35,6 +35,11 @@
                             <el-input v-model="searchData.shopNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
                         </el-form-item>
                     </el-col>
+                     <el-col :span="6">
+                        <el-form-item label="代理商姓名：" style="width:73%">
+                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                        </el-form-item>
+                    </el-col>
                     <el-col :span="2" :offset="1">
                         <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
                     </el-col>
@@ -54,11 +59,21 @@
                                     <span>{{scope.row.shopNo}}</span>
                                 </template>
                         </el-table-column>
+                        <el-table-column prop="name" label="代理商姓名">
+                            <template slot-scope="scope">
+                                    <span>{{scope.row.name}}</span>
+                            </template>
+                        </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
                         <el-table-column prop="createMonth" label="月份">
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
+                        </el-table-column>
+                        <el-table-column prop="productTotalAmount" label="商品总金额">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="verifiAmount" label="分成金额">
                             <template slot-scope="scope">
@@ -75,7 +90,7 @@
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.name,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -112,6 +127,7 @@ export default {
                 payOrderNo: '',
                 status: 0,
                 createMonth: '',
+                name:'',
             },
             myData: [],
             stateArray: [{
@@ -160,6 +176,7 @@ export default {
                     'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
                     'verifiOrderVo.status': self.searchData.status,
                     'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
+                    'verifiOrderVo.name': self.searchData.name,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -202,6 +219,7 @@ export default {
                     'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
                     'verifiOrderVo.status': self.searchData.status,
                     'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
+                    'verifiOrderVo.name': self.searchData.name,                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -345,8 +363,9 @@ export default {
 
         },
         // 导出明细
-        outputExcel(id, shopNo, createMonth) {
+        outputExcel(id, name, shopNo, createMonth) {
             console.log(id)
+            console.log(name);
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -354,6 +373,8 @@ export default {
                 method: 'post',
                 data: {
                     'verifiOrder.verifiOrderIds': id,
+                    'verifiOrderVo.name': name,
+                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -375,12 +396,13 @@ export default {
                             const {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excel')
-                            const tHeader = ['代理商编号', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                            const filterVal = ['shopNo', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
+                            const tHeader = ['代理商编号', '代理商姓名', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
+                            const filterVal = ['shopNo', 'name', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
                                 'cityName', 'countyName'
                             ]
                             const list = self.downData;
-                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+                            console.log(list)
+                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
                         })
                     }else{
                         self.$message({
