@@ -22,7 +22,7 @@
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
-                                    <el-option label="全部" value="WAIT_CHECK"></el-option>     
+                                    <el-option label="全部" value=""></el-option>   
                                     <el-option label="待审核" value="WAIT_CHECK"></el-option>
 
                                     <!-- <el-option label="待发货" value="WAIT_SEND"></el-option>
@@ -183,7 +183,7 @@ export default {
                 this.searchData.level = '';
             }
             console.log(this.searchData.searchLevel);
-            console.log("yunyingrenyuan:",this.serachData)
+            console.log("yunyingrenyuan:",this.searchData.searchUpdator)
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
@@ -196,10 +196,9 @@ export default {
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.stateName': 'WAIT_CHECK',
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.updator': this.searchData.searchUpdator,
+                    'purchaseOrder.upator': this.searchData.searchUpdator,
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -282,10 +281,9 @@ export default {
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.stateName': 'WAIT_CHECK',
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.updator': this.serachData.searchUpdator,                    
+                    'purchaseOrder.updator': this.searchData.searchUpdator,                    
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -376,7 +374,7 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
-                    'purchaseOrder.updator': this.serachData.searchUpdator,
+                    'purchaseOrder.updator': this.searchData.searchUpdator,
                 },
                 success(response) {
                     this.tableData = response.data.result;
@@ -407,7 +405,7 @@ export default {
             data: {
                 pageIndex: this.currentPage,
                 pageSize: this.pageSize,
-                'purchaseOrder.state': 'WAIT_CHECK',
+                'purchaseOrder.state': '',
             },
             success(response) {
                 this.tableData = response.data.result;

@@ -37,11 +37,9 @@
             </el-row>
             <el-row>
                     <el-col :span="6">
-                        <el-form-item label="店铺类型："  style="width:100%">
-                            <el-select v-model="searchData.state" @keyup.enter.native="onSubmit" placeholder="请选择">
-                                <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                                 <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                                <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>                                
+                        <el-form-item label="代理商等级：">
+                            <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
@@ -191,6 +189,16 @@
                         </div>
                     </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                    <el-form-item label="运营人员">
+                        <el-input v-model="addForm.operator" placeholder="运营人员"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="业务人员">
+                        <el-input v-model="addForm.salesMan" placeholder="业务人员"></el-input>
+                    </el-form-item>
+                </el-col>                    
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -279,6 +287,16 @@
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                     </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                    <el-form-item label="运营人员">
+                        <el-input v-model="editForm.operator" placeholder="运营人员"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="业务人员">
+                        <el-input v-model="editForm.salesMan" placeholder="业务人员"></el-input>
+                    </el-form-item>
+                </el-col>  
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -358,6 +376,8 @@ export default {
                 state: '',
                 signTime: [],
                 agentLevelIds: [],
+                operator:'',
+                salesMan:'',
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -402,7 +422,10 @@ export default {
                 agentCounty: '',
                 address: '',
                 shopType: 'AGENT',
-                isShow: '1'
+                isShow: '1',
+                salesMan:'',
+                operator:'',
+
             },
             editFormTitle: '',
             editForm: {
@@ -420,7 +443,9 @@ export default {
                 agentCounty: '',
                 address: '',
                 shopType: '',
-                isShow: ''
+                isShow: '',
+                operator:'',
+                salesMan:'',
             },
             isDisable: false,
             order: '', //预存款排序
@@ -605,8 +630,10 @@ export default {
                     'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
                     'shop.state': self.searchData.state,
                     'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                    'shop.sort': 'depositAmount',
-                    'shop.order': self.order
+                    // 'shop.sort': 'depositAmount',
+                    'shop.order': self.order,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 }
             }).then(function(response) {
                 self.loading = false;
@@ -667,7 +694,9 @@ export default {
                     'shop.state': self.searchData.state,
                     'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
                     'shop.sort': 'depositAmount',
-                    'shop.order': self.order
+                    'shop.order': self.order,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 }
             }).then(function(response) {
                 self.loading = false;
