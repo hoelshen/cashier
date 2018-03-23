@@ -359,7 +359,7 @@ export default {
                     let ids = self.allId;
                     self.outputExcel(ids);
                 })
-            );
+        );
 
         },
         // 导出明细
@@ -388,7 +388,8 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                console.log(response)
+                console.log(response.data)
+                debugger
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
                     if(self.downData.length>0){
