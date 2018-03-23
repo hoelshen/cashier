@@ -9,7 +9,7 @@
 								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchId" placeholder="代理商编号"></el-input>
 							</el-form-item>
 						</el-col>
-						<el-col :span="5">
+						<el-col :span="6">
 							<el-form-item label="代理商姓名">
 								<el-input @keyup.enter.native="onSumbit" v-model="searchData.name" placeholder="代理商姓名"></el-input>
 							</el-form-item>
@@ -25,7 +25,7 @@
 								</el-select>
 							</el-form-item>
 						</el-col>
-						<el-col :span="7">
+						<el-col :span="6">
 							<el-form-item label="代理商等级">
 								<el-select @keyup.enter.native="onSumbit" v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 									<el-option label="区域代理" value="265"></el-option>
@@ -36,17 +36,23 @@
 						</el-col>
 					</el-row>
 					<el-row :gutter="10">
-						<el-col :span="7" style="margin-left:-15px;">
-							<el-form-item label="变更时间">
-								<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+						<el-col :span="6" >
+							<el-form-item label="变更时间"  >
+								<el-date-picker style="width:100%" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 							</el-form-item>
 						</el-col>
-						<el-col :span="17">
-							<el-button type="primary" style="margin-left:-15px" @click="onSumbit">查询</el-button>
+						<el-col :span="6">
+							<el-button type="primary" style="margin-left:15px" @click="onSumbit">查询</el-button>
+						</el-col>
+					</el-row>
+					<el-row :gutter="10">
+						<el-col :span="6" >
+							<el-button  type="primary" @click="allOutputExcel()">导出明细</el-button>
 						</el-col>
 					</el-row>
 				</el-form>
 			</div>
+			<!-- table -->
 			<div class="orderList">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative">
@@ -95,7 +101,7 @@
 				<div class="page">
 					<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
 					</el-pagination>
-				</div>
+				</div>				
 			</div>
 		</div>
 	</div>
@@ -109,7 +115,7 @@ export default {
 			totalNums: 0,				//数据总数
 			pageSize: 30,			//当前页数
 			searchData: {
-				searchPhone: '',		//代理商手机
+				// searchPhone: '',		//代理商手机
 				searchId: '',			//代理商编号
 				searchStatus: '',		//订单状态
 				searchTime: '',			//下单时间
@@ -121,7 +127,7 @@ export default {
 				{
 					purchaseOrderNo: '',		//单号
 					shopNo: '',			//代理商编号
-					phone: '',			//手机号
+					// phone: '',			//手机号
 					shopName: '',			//店铺名称
 					changeType: '',		//变更类型
 					alterMoney: '',			//变更金额
@@ -133,7 +139,9 @@ export default {
 					name:'',             //代理商姓名
 					updator:'',           //运营人员
 				}
-			]
+			],
+			allId: '',
+			loading:false,
 		}
 	},
 	methods: {
@@ -209,6 +217,7 @@ export default {
 					
 				},
 				success(response) {
+					console.log(response.data.result)
 					this.tableData = response.data.result;
 					this.totalNums = response.data.totalNums;
 				},
@@ -275,8 +284,11 @@ export default {
 					'advanceDeposit.agentGradeIds': this.searchData.level,
 					'advanceDeposit.name': this.searchData.name,
 					'advanceDeposit.updator': this.searchData.updator,
+					
 				},
 				success(response) {
+					console.log(response)
+					debugger
 					this.tableData = response.data.result;
 					this.totalNums = response.data.totalNums;
 				},
@@ -305,6 +317,78 @@ export default {
 				num = '+' + num;
 			}
 			return num;
+		},
+		 // 格式化json
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
+		//导出全部明细
+		allOutputExcel() {
+         this.outputExcel()
+        },
+		//导出所选明细
+		outputExcel() {
+            let self = this;
+            self.loading = true;
+            self.$ajax({
+                url: '/api/http/advanceDeposit/queryAdvanceDepositList.jhtml',
+                method: 'post',
+                data: {	
+				    'pager.pageIndex': self.currentPage,
+					'pager.pageSize': self.pageSize,
+					'advanceDeposit.shopNo': self.searchData.searchshopNo,
+					'advanceDeposit.phone': self.searchData.searchPhone,
+					'advanceDeposit.changeType': self.searchData.searchStatus,
+					'advanceDeposit.agentGradeIds': self.searchData.level,
+					'advanceDeposit.name': self.searchData.name,
+					'advanceDeposit.updator': self.searchData.updator, 
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            }).then(function(response) {
+                self.loading = false;
+                console.log(response)
+                if (response.data.success === 1) {
+					console.log(response.data.result)
+					self.downData = response.data.result;
+					console.log(self.downData)
+                    if(self.downData.length>0){
+                        require.ensure([], () => {
+                            const {
+                                export_json_to_excel
+                            } = require('../components/tools/Export2Excel')
+                            const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额',  '结余', '备注/单号', '变更人', '变更时间', '运营人员']
+                            const filterVal = ['shopNo', 'Level', 'shopName', 'name', 'changeType', 'alterMoney', 'afterMoney', 'remark', 'creator', 'createdTime', 'updator']
+                            const list = self.downData;
+							console.log(list)
+							console.log(filterVal)
+							debugger
+                            export_json_to_excel(tHeader, list,filterVal, (name ? name + '_' : '') + '预存款明细')
+                        })
+                    }else{
+                        self.$message({
+                            message: '预存款暂无明细',
+                            type: 'error'
+                        })
+                    }
+
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function(error) {
+
+            });
 		},
 	},
 	created() {

@@ -204,7 +204,7 @@
                         <!-- <el-input v-model="addForm.salesMan" placeholder="业务人员"></el-input> -->
                         <el-autocomplete 
                         v-model="addForm.salesMan" 
-                        :fetch-suggestions="querySearchAsync(salesMan)" 
+                        :fetch-suggestions="querySearchAsync()" 
                         @select="handleSelect"
                         placeholder="业务人员"
                         >
@@ -527,7 +527,9 @@ export default {
                 }
             }
         },
+        querySearchAsync(){
 
+        },
         //预存款变更
         onChange() {
             if (sessionStorage.user) {
@@ -775,40 +777,40 @@ export default {
             //do something
         },
         //新增页面列表
-        querySearchAsync(queryString, callback ,aa) {
-            var list = [{}];
-            //调用的后台接口
+        // querySearchAsync(queryString, callback ,aa) {
+        //     var list = [{}];
+        //     //调用的后台接口
             
-            if(aa===salesMan){
-                let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit='+'salesMan' +queryString;
-                //从后台获取到对象数组
-                axios.get( url ).then((response)=>{
-                    //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                    for(let i of response.data){
-                        i.value = i.CUSTOMER_NAME;  //将CUSTOMER_NAME作为value
-                    }
-                    list = response.data;
-                    callback(list);
-                }).catch((error)=>{
-                console.log(error);
-                });
-            }
-            if(aa===salesMan){
-                let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=salesMan' +queryString;
-                //从后台获取到对象数组
-                axios.get( url ).then((response)=>{
-                    //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                    for(let i of response.data){
-                        i.value = i.CUSTOMER_NAME;  //将CUSTOMER_NAME作为value
-                    }
-                    list = response.data;
-                    callback(list);
-                }).catch((error)=>{
-                console.log(error);
-                });
-                }
+        //     if(aa===salesMan){
+        //         let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit='+'salesMan' +queryString;
+        //         //从后台获取到对象数组
+        //         axios.get( url ).then((response)=>{
+        //             //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+        //             for(let i of response.data){
+        //                 i.value = i.CUSTOMER_NAME;  //将CUSTOMER_NAME作为value
+        //             }
+        //             list = response.data;
+        //             callback(list);
+        //         }).catch((error)=>{
+        //         console.log(error);
+        //         });
+        //     }
+        //     if(aa===salesMan){
+        //         let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=salesMan' +queryString;
+        //         //从后台获取到对象数组
+        //         axios.get( url ).then((response)=>{
+        //             //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+        //             for(let i of response.data){
+        //                 i.value = i.CUSTOMER_NAME;  //将CUSTOMER_NAME作为value
+        //             }
+        //             list = response.data;
+        //             callback(list);
+        //         }).catch((error)=>{
+        //         console.log(error);
+        //         });
+        //         }
      
-        },
+        // },
         //打开修改店铺及店铺详情弹窗
         openEditDialog(data, type) {
             type == 'edit' ? this.isDisable = false : this.isDisable = true
