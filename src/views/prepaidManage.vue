@@ -10,8 +10,8 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
-							<el-form-item label="代理商手机">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
+							<el-form-item label="代理商姓名">
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.name" placeholder="代理商姓名"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
@@ -50,14 +50,14 @@
 			<div class="orderList">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative">
-						<template slot-scope="scope">{{ scope.row.shopNo }}
+						<!-- <template slot-scope="scope">{{ scope.row.shopNo }}
 							<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
 							<p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
 							<p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
-						</template>
+						</template> -->
 					</el-table-column>
 					</el-table-column>
-					<el-table-column prop="phone" label="手机号">
+					<el-table-column prop="name" label="代理商姓名">
 					</el-table-column>
 					<el-table-column prop="shopName" label="店铺名称">
 					</el-table-column>
@@ -89,6 +89,8 @@
 					</el-table-column>
 					<el-table-column prop="createdTime" label="变更时间">
 					</el-table-column>
+					<el-table-column prop="updator" label="运营人员">
+					</el-table-column>
 				</el-table>
 				<div class="page">
 					<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total,prev, pager, next, jumper" :total="totalNums">
@@ -113,6 +115,7 @@ export default {
 				searchTime: '',			//下单时间
 				searchLevel: [],		//代理商等级
 				Level: [],			//代理商等级替代
+				name:'',        //代理商姓名
 			},
 			tableData: [
 				{
@@ -127,6 +130,8 @@ export default {
 					creator: '',			//变更人
 					orderStatus: '',		//状态
 					createdTime: '',		//变更时间
+					name:'',             //代理商姓名
+					updator:'',           //运营人员
 				}
 			]
 		}
@@ -199,7 +204,9 @@ export default {
 					'advanceDeposit.changeType': this.searchData.searchStatus,
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
-					'advanceDeposit.agentGradeIds': this.searchData.level,
+					'advanceDeposit.name': this.searchData.name,
+					'advanceDeposit.updator': this.searchData.updator,
+					
 				},
 				success(response) {
 					this.tableData = response.data.result;
@@ -266,6 +273,8 @@ export default {
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.agentGradeIds': this.searchData.level,
+					'advanceDeposit.name': this.searchData.name,
+					'advanceDeposit.updator': this.searchData.updator,
 				},
 				success(response) {
 					this.tableData = response.data.result;
@@ -307,6 +316,7 @@ export default {
 				'pager.pageIndex': this.currentPage,
 				'pager.pageSize': this.pageSize,
 				'advanceDeposit.shopNo': this.searchData.searchId,
+				
 			},
 			success(response) {
 				console.log(response.data.result)
