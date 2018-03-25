@@ -374,7 +374,6 @@ export default {
                 data: {
                     'verifiOrder.verifiOrderIds': id,
                     'verifiOrderVo.name': name,
-                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -389,7 +388,6 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response.data)
-                debugger
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
                     if(self.downData.length>0){

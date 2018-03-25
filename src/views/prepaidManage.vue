@@ -11,7 +11,7 @@
 						</el-col>
 						<el-col :span="6">
 							<el-form-item label="代理商姓名">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.name" placeholder="代理商姓名"></el-input>
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.salesMan" placeholder="代理商姓名"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
@@ -63,7 +63,7 @@
 						</template> -->
 					</el-table-column>
 					</el-table-column>
-					<el-table-column prop="name" label="代理商姓名">
+					<el-table-column prop="salesMan" label="代理商姓名">
 					</el-table-column>
 					<el-table-column prop="shopName" label="店铺名称">
 					</el-table-column>
@@ -95,7 +95,7 @@
 					</el-table-column>
 					<el-table-column prop="createdTime" label="变更时间">
 					</el-table-column>
-					<el-table-column prop="updator" label="运营人员">
+					<el-table-column prop="operator" label="运营人员">
 					</el-table-column>
 				</el-table>
 				<div class="page">
@@ -121,7 +121,7 @@ export default {
 				searchTime: '',			//下单时间
 				searchLevel: [],		//代理商等级
 				Level: [],			//代理商等级替代
-				name:'',        //代理商姓名
+				salesMan:'',        //代理商姓名
 			},
 			tableData: [
 				{
@@ -136,8 +136,8 @@ export default {
 					creator: '',			//变更人
 					orderStatus: '',		//状态
 					createdTime: '',		//变更时间
-					name:'',             //代理商姓名
-					updator:'',           //运营人员
+					salesMan:'',             //代理商姓名
+					operator:'',           //运营人员
 				}
 			],
 			allId: '',
@@ -212,8 +212,8 @@ export default {
 					'advanceDeposit.changeType': this.searchData.searchStatus,
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
-					'advanceDeposit.name': this.searchData.name,
-					'advanceDeposit.updator': this.searchData.updator,
+					'advanceDeposit.salesMan': this.searchData.salesMan,
+					'advanceDeposit.operator': this.searchData.operator,
 					
 				},
 				success(response) {
@@ -282,13 +282,12 @@ export default {
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.agentGradeIds': this.searchData.level,
-					'advanceDeposit.name': this.searchData.name,
-					'advanceDeposit.updator': this.searchData.updator,
+					'advanceDeposit.salesMan': this.searchData.salesMan,
+					'advanceDeposit.operator': this.searchData.operator,
 					
 				},
 				success(response) {
 					console.log(response)
-					debugger
 					this.tableData = response.data.result;
 					this.totalNums = response.data.totalNums;
 				},
@@ -325,70 +324,103 @@ export default {
 		//导出全部明细
 		allOutputExcel() {
          this.outputExcel()
-        },
+		},
+		formatJson(filterVal, jsonData) {
+				return jsonData.map(v => filterVal.map(j => v[j]))
+		},
 		//导出所选明细
 		outputExcel() {
-            let self = this;
-            self.loading = true;
-            self.$ajax({
-                url: '/api/http/advanceDeposit/queryAdvanceDepositList.jhtml',
-                method: 'post',
-                data: {	
-				    'pager.pageIndex': self.currentPage,
-					'pager.pageSize': self.pageSize,
-					'advanceDeposit.shopNo': self.searchData.searchshopNo,
-					'advanceDeposit.phone': self.searchData.searchPhone,
-					'advanceDeposit.changeType': self.searchData.searchStatus,
-					'advanceDeposit.agentGradeIds': self.searchData.level,
-					'advanceDeposit.name': self.searchData.name,
-					'advanceDeposit.updator': self.searchData.updator, 
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-            }).then(function(response) {
-                self.loading = false;
-                console.log(response)
-                if (response.data.success === 1) {
-					console.log(response.data.result)
-					self.downData = response.data.result;
-					console.log(self.downData)
-                    if(self.downData.length>0){
-                        require.ensure([], () => {
-                            const {
-                                export_json_to_excel
-                            } = require('../components/tools/Export2Excel')
-                            const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额',  '结余', '备注/单号', '变更人', '变更时间', '运营人员']
-                            const filterVal = ['shopNo', 'Level', 'shopName', 'name', 'changeType', 'alterMoney', 'afterMoney', 'remark', 'creator', 'createdTime', 'updator']
-                            const list = self.downData;
-							console.log(list)
-							console.log(filterVal)
-							debugger
-                            export_json_to_excel(tHeader, list,filterVal, (name ? name + '_' : '') + '预存款明细')
-                        })
-                    }else{
-                        self.$message({
-                            message: '预存款暂无明细',
-                            type: 'error'
-                        })
-                    }
+		if (!this.checkSession()) return;
+			var temp = new Date(this.searchData.searchTime[0]);
+			if (temp.getFullYear() > 2006) {
+				var time1 = temp.getFullYear();
+				if ((temp.getMonth() + 1) < 10) {
+					time1 = time1 + '-0' + (temp.getMonth() + 1);
+				} else {
+					time1 = time1 + '-' + (temp.getMonth() + 1);
+				}
+				if (temp.getDate() < 10) {
+					time1 = time1 + '-0' + temp.getDate();
+				} else {
+					time1 = time1 + '-' + temp.getDate();
+				}
+				console.log(time1);
+				temp = new Date(this.searchData.searchTime[1]);
+				var time2 = temp.getFullYear();
+				if ((temp.getMonth() + 1) < 10) {
+					time2 = time2 + '-0' + (temp.getMonth() + 1);
+				} else {
+					time2 = time2 + '-' + (temp.getMonth() + 1);
+				}
+				if (temp.getDate() < 10) {
+					time2 = time2 + '-0' + temp.getDate();
+				} else {
+					time2 = time2 + '-' + temp.getDate();
+				}
+				console.log(time2);
+			} else {
+				var time1 = '';
+				var time2 = '';
+			}
+			if (this.searchData.searchLevel != '') {
+				this.searchData.level = this.searchData.searchLevel.join(',');
+			} else {
+				this.searchData.level = '';
+			}
+			this.$getData({
+				url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
+				data: {
+					'pager.pageIndex': this.currentPage,
+					'pager.pageSize': this.pageSize,
+					'advanceDeposit.shopNo': this.searchData.searchId,
+					'advanceDeposit.phone': this.searchData.searchPhone,
+					'advanceDeposit.changeType': this.searchData.searchStatus,
+					'advanceDeposit.startTime': time1,
+					'advanceDeposit.endTime': time2,
+					'advanceDeposit.salesMan': this.searchData.salesMan,
+					'advanceDeposit.operator': this.searchData.operator,
+				},
+				success(response) {
+					console.log(response.data.success)
+					if (response.data.success === 1) {
+							self.tableData = response.data.result;
+							if(self.tableData.length>0){
+										require.ensure([], () => {
+											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
+											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额', '备注/单号', '变更人', '变更时间', '运营人员']
+											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'remark', 'creator', 'createdTime', 'operator']
 
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
-            }).catch(function(error) {
-
-            });
+											const list = self.tableData;
+											console.log(list)
+											const data = this.formatJson(filterVal, list);
+											export_json_to_excel(tHeader, data, '预存款明细');
+										})
+							}else{
+								self.$message({
+									message: '订单暂无明细',
+									type: 'error'
+								})
+							}
+						} else {
+							self.$message({
+								message: response.data.msg,
+								type: 'error'
+							})
+						}
+				},
+				fail(response) {
+					this.$message({
+						message: response.data.msg,
+						type: 'error'
+					})
+				},
+				error(response) {
+					this.$message({
+						message: response.data.msg,
+						type: 'error'
+					})
+				}
+			});
 		},
 	},
 	created() {
