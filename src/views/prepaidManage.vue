@@ -42,6 +42,11 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
+							<el-form-item label="运营人员">
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.operator" placeholder="运营人员"></el-input>
+							</el-form-item>
+						</el-col>
+						<el-col :span="6">
 							<el-button type="primary" style="margin-left:15px" @click="onSumbit">查询</el-button>
 						</el-col>
 					</el-row>
@@ -56,11 +61,11 @@
 			<div class="orderList">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column prop="agentGradeId" label="代理商编号" width="120" style="position: relative">
-						<!-- <template slot-scope="scope">{{ scope.row.shopNo }}
+						<template slot-scope="scope">{{ scope.row.shopNo }}
 							<p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
 							<p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
 							<p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
-						</template> -->
+						</template>
 					</el-table-column>
 					</el-table-column>
 					<el-table-column prop="salesMan" label="代理商姓名">
@@ -122,6 +127,7 @@ export default {
 				searchLevel: [],		//代理商等级
 				Level: [],			//代理商等级替代
 				salesMan:'',        //代理商姓名
+				operator:"" ,       //运营人员
 			},
 			tableData: [
 				{

@@ -33,7 +33,7 @@
             </el-row>
             <el-row>
                     <el-col :span="6">
-                        <el-form-item label="代理商等级：" style="width:120%">
+                        <el-form-item label="代理商等级：" >
                             <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
                                 <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
@@ -189,24 +189,27 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="运营人员">
-                        <!-- <el-input v-model="addForm.operator" placeholder="运营人员"></el-input> -->
+                        <span  class="down_left" v-if="addForm.operator===''"></span>
+                        <span class="delete_left" v-else @click="deleteOperator">X</span>                        
                         <el-autocomplete 
-                        v-model="addForm.operator" 
-                        :fetch-suggestions="querySearchAsync" 
-                        @select="handleSelect"
-                        placeholder="运营人员"
+                        v-model="addForm.operator"                  
+                        :fetch-suggestions="operatorQuerySearchAsync" 
+                        @select="handleoperatorSelect"
+                        placeholder="请选择"
                         >
                         </el-autocomplete>
+                     
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="业务人员">
-                        <!-- <el-input v-model="addForm.salesMan" placeholder="业务人员"></el-input> -->
+                        <span  class="down_right" v-if="addForm.salesMan===''"></span>
+                        <span class="delete_right" v-else @click="deleteSalesMan">X</span>                                                                      
                         <el-autocomplete 
                         v-model="addForm.salesMan" 
-                        :fetch-suggestions="querySearchAsync" 
-                        @select="handleSelect"
-                        placeholder="业务人员"
+                        :fetch-suggestions="salesManQuerySearchAsync" 
+                        @select="handlesalesManSelect"
+                        placeholder="请选择"
                         >
                         </el-autocomplete>
                     </el-form-item>
@@ -298,17 +301,17 @@
                     <el-form-item label="预存款详情：">
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                     </el-form-item>
-                </el-col>
+                </el-col> 
                 <el-col :span="12">
                     <el-form-item label="运营人员">
-                        <el-input v-model="editForm.operator" placeholder="运营人员"></el-input>
-                    </el-form-item>
+                    <el-input v-model="editForm.operator" placeholder="运营人员" :disabled="isDisable"></el-input>                   
+                    </el-form-item>  
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="业务人员">
-                        <el-input v-model="editForm.salesMan" placeholder="业务人员"></el-input>
+                        <el-input v-model="editForm.salesMan" placeholder="业务人员" :disabled="isDisable"></el-input>
                     </el-form-item>
-                </el-col>  
+                </el-col> 
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -395,6 +398,8 @@ export default {
                 agentLevelIds: [],
                 operator:'',
                 salesMan:'',
+                operatorId:'',
+                salesManId:''
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -426,6 +431,8 @@ export default {
                 remark: '',
                 salesMan:'',
                 operator:'',
+                salesManId:'',
+                operatorId:'',
             },
             addForm: {
                 shopName: '',
@@ -444,7 +451,9 @@ export default {
                 isShow: '1',
                 salesMan:'',
                 operator:'',
-
+                salesManId:'',
+                operatorId:'',
+    
             },
             editFormTitle: '',
             editForm: {
@@ -464,7 +473,10 @@ export default {
                 shopType: '',
                 isShow: '',
                 operator:'',
+                operatorId:'',
                 salesMan:'',
+                salesManId:'',
+                
             },
             isDisable: false,
             order: '', //预存款排序
@@ -528,9 +540,6 @@ export default {
                     return true;
                 }
             }
-        },
-        querySearchAsync(){
-
         },
         //预存款变更
         onChange() {
@@ -718,6 +727,8 @@ export default {
                     'shop.order': self.order,
                     'shop.operator':self.searchData.operator,
                     'shop.salesMan':self.searchData.salesMan,
+                    'shop.salesManId':this.salesManId,
+                    'shop.salesManId':this.salesManId,
                 }
             }).then(function(response) {
                 self.loading = false;
@@ -774,24 +785,49 @@ export default {
             this.addDialogVisible = true;
         },
         //点击选中
-        handleSelect(item) {
-            console.log(item);
+        handleoperatorSelect(item) {
+            console.log(item);                
+               this.operatorId= item.id
+               console.log(item.id)
+            //do something
+        },
+        handlesalesManSelect(item) {
+            console.log(item);                
+                this.salesManId = item.id
+                console.log(item.id)
             //do something
         },
         //新增页面列表
-        querySearchAsync(queryString, callback) {
+        operatorQuerySearchAsync(queryString, callback) {
             var list = [{}];
             //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + queryString;
+            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
             // console.log(url);
             //从后台获取到对象数组
             axios.get( url ).then((response)=>{
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                console.log(response);
-                // for(let i=0; i < response.data.result.length; i++ ){
-                    for (let i of response.data.result){
-                    console.log(123123123,i)
+                for (let i of response.data.result){
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
+
+                }
+                list = response.data.result;
+                // console.log(list)
+                callback(list);
+            }).catch((error)=>{
+                console.log(error);
+            });
+        },
+        salesManQuerySearchAsync(queryString, callback) {
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
+            // console.log(url);
+            //从后台获取到对象数组
+            axios.get( url ).then((response)=>{
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                    for (let i of response.data.result){
+                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+
                 }
                 list = response.data.result;
                 // console.log(list)
@@ -1105,8 +1141,10 @@ export default {
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
-                    'operator':data.operator,
-                    'salesMan':data.salesMan,
+                    'shop.operator':data.operator,
+                    'shop.salesMan':data.salesMan,
+                    'shop.salesManId':this.salesManId,
+                    'shop.operatorId':this.operatorId, 
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1170,8 +1208,10 @@ export default {
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
-                    'shop.operator':self.searchData.operator,
-                    'shop.salesMan':self.searchData.salesMan,
+                    'shop.operator':data.operator,
+                    'shop.salesMan':data.salesMan,
+                    'shop.salesManId':this.salesManId,
+                    'shop.operatorId':this.operatorId,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1226,6 +1266,8 @@ export default {
                 isShow: '1',
                 operator:'',
                 salesMan:'',
+                salesManId:'',    
+                operatorId:'',
 
             }
             if (self.$refs.addAddress.resetAddress()) {
@@ -1258,6 +1300,8 @@ export default {
                 address: '',
                 operator:'',
                 salesMan:'',
+                salesManId:'',    
+                operatorId:'',
             }
             if (self.$refs.editAddress.resetAddress()) {
                 self.$refs.editAddress.resetAddress();
@@ -1273,7 +1317,14 @@ export default {
             self.changeForm.changeType = '';
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
+        },
+        deleteSalesMan(){
+            this.addForm.salesMan='';
+        },
+        deleteOperator(){
+            this.addForm.operator='';
         }
+        
     }
 }
 </script>
@@ -1312,5 +1363,35 @@ export default {
 
 .el-message-box__content {
     padding: 0px 20px 30px;
+}
+.delete_left{
+    position: fixed;
+    top: 74%;
+    left: 33%;
+    z-index: 999;
+}
+.delete_right{
+    position: fixed;
+    top: 74%;
+    left: 81%;
+    z-index: 999;
+}
+.down_left{
+    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
+    position: fixed;
+    width: 2%;
+    height: 5%;
+    top: 74%;
+    left: 32%;
+    z-index: 999;
+}
+.down_right{
+    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
+    position: fixed;
+    width: 2%;
+    height: 5%;
+    top: 74%;
+    left: 80%;
+    z-index: 999;
 }
 </style>
