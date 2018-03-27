@@ -48,6 +48,8 @@ export default {
                 '/area': '区域订单核算',
                 '/message': '通知管理',
                 '/messageAdd': '通知新增',
+                '/updateMsg': '修改通知',
+                '/updateMsg': '修改通知',
             },
             user: {}
         }
@@ -66,6 +68,9 @@ export default {
             }
             if (/messageAdd/.test(val.fullPath)) {
                 this.contentName = "通知新增";
+            }
+            if (/updateMsg/.test(val.fullPath)) {
+                this.contentName = "修改通知";
             }
         },
     },
