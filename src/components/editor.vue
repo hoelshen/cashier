@@ -8,7 +8,7 @@
 
 
     method
-    getContent                                     获取内容
+    contentData                                     获取内容
     clearContent                                   清除editor内容
 -->
 <template>
@@ -28,7 +28,7 @@
             <el-button @click="addCardVisible = true">添加卡片</el-button>
         </div>
         <!-- 编辑器 -->
-        <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
+        <quill-editor v-model="contentData" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
         <!-- 插入卡片dialog -->
         <el-dialog title="插入卡片" :visible.sync="addCardVisible">
             <label>链接：</label>
@@ -86,10 +86,6 @@
 </template>
 
 <script>
-// 导入编辑器样式
-// import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-// import "quill/dist/quill.bubble.css";
 // 导入编辑器
 import { quillEditor } from "vue-quill-editor";
 export default {
@@ -98,7 +94,7 @@ export default {
             type: Number,
             default: 10485760
         },
-        getContent: {
+        contentData: {
             type: String,
             default: ''
         },
@@ -114,7 +110,7 @@ export default {
     data() {
         return {
             btnLoading: false,
-            content: ``,                        //编辑器内容
+            content:``,
             addCardVisible: false,              //dialog显示
             selectCardVisible: false,           //dialog显示
             url: "",                            //dialog输入的url
@@ -136,11 +132,10 @@ export default {
         quillEditor
     },
     methods: {
+        // 移除卡片
         closeCard(index) {
-            console.log(index);
             this.urlData.productList.splice(index, 1);
         },
-
         // url获取卡片信息
         doSearch() {
             this.addCardVisible = false;
@@ -164,10 +159,8 @@ export default {
         // 插入卡片
         insertCard() {
             this.selectCardVisible = false;
-            console.log(this.urlData.productList);
             // 插入卡片
             this.urlData.productList.map(v => {
-                console.log(v);
                 this.editor.focus();
                 this.editor.insertText(this.editor.getSelection().index, `<卡片>\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${v.salesPrice}\n进货价：${v.purchasePrice}\n链接：${v.cardUrl}\nsku：${v.proSku}\n</卡片>`, {});
             })
@@ -221,16 +214,15 @@ export default {
         },
         // 编辑器光标离开 将编辑器内容发射给父组件
         onEditorBlur() {
-            this.$emit('getContent', this.editor.getText())
+            this.$emit('emitContent', this.editor.getContents())
         },
+        // 编辑器文本改变，传递数据给父组件
         onEditorChange(v) {
-            this.$emit('getContent', v.text)
+            this.$emit('emitContent', v.html)
         },
+        // 清除内容
         clearContent() {
             this.content = '';
-        },
-        setContent(){
-            this.editor.setText(this.getContent);
         }
     },
     computed: {
@@ -238,13 +230,9 @@ export default {
             return this.$refs.myQuillEditor.quill;
         }
     },
-    // created() {
-    //     this.$refs.myQuillEditor.quill.setText(this.getContent);
-    // },
     mounted() {
         // 绑定toolbar的image图标handler
         this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", this.imgHandler);
-        this.editor.setText(this.getContent);
     }
 }
 </script>
@@ -252,9 +240,6 @@ export default {
 
 
 <style lang="less" scoped>
-.quill-editor {
-    height: 450px;
-}
 hr {
     margin: 20px auto;
 }
@@ -342,6 +327,12 @@ hr {
 }
 </style>
 <style>
+.editor {
+    width: 1032px;
+}
+.quill-editor {
+    height: 450px;
+}
 .editor .el-dialog__wrapper .el-dialog {
     width: 720px;
 }

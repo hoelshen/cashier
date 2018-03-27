@@ -35,43 +35,29 @@ export default {
         return {
             contentName: '主页',
             configName: {
-                '/': '主页',
-                '/testTree': '测试树',
-                '/storeManage': '店铺管理',
-                '/prepaidManage': '预存款查询',
-                '/orderManage': '进货单管理',
-                '/memberList': '会员查询',
-                '/waitOrder': '待审核订单',
-                '/orderInfo': '进货单详情',
-                '/drawBack': '全部退款单',
-                '/waitDrawBack': '待审核退款单',
-                '/area': '区域订单核算',
-                '/message': '通知管理',
-                '/messageAdd': '通知新增',
-                '/updateMsg': '修改通知',
-                '/updateMsg': '修改通知',
+                'index': '主页',
+                'testTree': '测试树',
+                'storeManage': '店铺管理',
+                'prepaidManage': '预存款查询',
+                'orderManage': '进货单管理',
+                'memberList': '会员管理',
+                'waitOrder': '待审核订单',
+                'orderInfo': '进货单详情',
+                'drawBack': '全部退款单',
+                'waitDrawBack': '待审核退款单',
+                'drawBackDetail': '退款单详情',
+                'area': '区域订单核算',
+                'message': '通知管理',
+                'messageAdd': '通知新增',
+                'updateMsg': '修改通知',
+                'lookMsg': '通知预览',
             },
             user: {}
         }
     },
     watch: {
         '$route'(val) {
-            this.contentName = this.configName[val.fullPath];
-            if (/orderInfo/.test(val.fullPath)) {
-                this.contentName = "进货单详情";
-            }
-            if (/prepaidManage/.test(val.fullPath)) {
-                this.contentName = "预存款查询";
-            }
-            if (/drawBackDetail/.test(val.fullPath)) {
-                this.contentName = "退款单详情";
-            }
-            if (/messageAdd/.test(val.fullPath)) {
-                this.contentName = "通知新增";
-            }
-            if (/updateMsg/.test(val.fullPath)) {
-                this.contentName = "修改通知";
-            }
+            this.contentName = this.configName[val.name];
         },
     },
     created() {
@@ -81,7 +67,7 @@ export default {
             delete sessionStorage.user;
             this.$router.push('/login');
         }
-        this.contentName = this.configName[this.$route.fullPath];
+        this.contentName = this.configName[this.$route.name];
 
         // 待审核订单数
         this.$getData({
@@ -93,7 +79,6 @@ export default {
             },
             success(response) {
                 this.$slide.setCount('waitOrder', response.data.totalNums);
-                console.log(response.data.totalNums);
             },
             fail(response) {
                 alert(response.data.msg);
@@ -111,7 +96,6 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded',
                 },
             }).then((res) => {
-                console.log(res.data.totalNums);
                 this.$slide.setCount('waitDrawBack', res.data.totalNums);
             }).catch((err) => {
             });
