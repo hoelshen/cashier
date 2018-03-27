@@ -190,7 +190,7 @@
                 <el-col :span="12">
                     <el-form-item label="运营人员">
                         <span  class="down_left" v-if="addForm.operator===''"></span>
-                        <span class="delete_left" v-else @click="deleteOperator">X</span>                        
+                        <span class="delete_left" v-else @click="deleteOperator"></span>                        
                         <el-autocomplete 
                         v-model="addForm.operator"                  
                         :fetch-suggestions="operatorQuerySearchAsync" 
@@ -204,7 +204,7 @@
                 <el-col :span="12">
                     <el-form-item label="业务人员">
                         <span  class="down_right" v-if="addForm.salesMan===''"></span>
-                        <span class="delete_right" v-else @click="deleteSalesMan">X</span>                                                                      
+                        <span class="delete_right" v-else @click="deleteSalesMan"></span>                                                                      
                         <el-autocomplete 
                         v-model="addForm.salesMan" 
                         :fetch-suggestions="salesManQuerySearchAsync" 
@@ -802,16 +802,24 @@ export default {
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
-            // console.log(url);
             //从后台获取到对象数组
             axios.get( url ).then((response)=>{
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
                 for (let i of response.data.result){
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
-
                 }
-                list = response.data.result;
-                // console.log(list)
+
+                let  QS =  queryString.toLocaleLowerCase();
+                
+                for(let item of response.data.result){
+                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+                        list.push(item)
+                    }
+                }
+                // console.log(list);
+                if(list.length==1){
+                    list.push({value:`没有找到${queryString}`}); 
+                }
                 callback(list);
             }).catch((error)=>{
                 console.log(error);
@@ -821,16 +829,23 @@ export default {
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
-            // console.log(url);
             //从后台获取到对象数组
             axios.get( url ).then((response)=>{
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                    for (let i of response.data.result){
+                for (let i of response.data.result){
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
-
                 }
-                list = response.data.result;
-                // console.log(list)
+
+                let  QS =  queryString.toLocaleLowerCase();
+                
+                for(let item of response.data.result){
+                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+                        list.push(item)
+                    }
+                }
+                if(list.length==1){
+                    list.push({value:`没有找到${queryString}`}); 
+                }
                 callback(list);
             }).catch((error)=>{
                 console.log(error);
@@ -1365,15 +1380,23 @@ export default {
     padding: 0px 20px 30px;
 }
 .delete_left{
+    background:url("../assets/images/清除.png") no-repeat  center;
+    background-size: 20px 20px;  
     position: fixed;
+    width: 2%;
+    height: 5%;
     top: 74%;
-    left: 33%;
+    left: 32%;
     z-index: 999;
 }
 .delete_right{
+    background:url("../assets/images/清除.png") no-repeat  center;
+    background-size: 20px 20px;    
     position: fixed;
+    width: 2%;
+    height: 5%;
     top: 74%;
-    left: 81%;
+    left: 80%;
     z-index: 999;
 }
 .down_left{
