@@ -4651,7 +4651,6 @@
             },
             'onSelectcityCode':{
                 handler(val,oldVal){
-                    console.log(oldVal)
                     if(oldVal){
                         this.onSelectareaCode = '1'
                     }

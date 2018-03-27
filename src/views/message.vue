@@ -88,7 +88,7 @@
 								</div>
 								<span class="table_buleTxt">禁用</span>
 							</el-tooltip>
-							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', params: { id: scope.row.id }}">预览</router-link>
+							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
 							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
 							<el-tooltip placement="top" effect="light">
 								<div slot="content">

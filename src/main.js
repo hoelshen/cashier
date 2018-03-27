@@ -5,6 +5,10 @@ import App from './App.vue'
 import router from './router';
 import axios from 'axios';
 import getData from './getData.js'
+// 导入编辑器样式
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
 
 
 Vue.prototype.$ajax = axios;

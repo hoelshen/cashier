@@ -7,7 +7,7 @@
         <el-form ref="form" v-model="contentData" label-width="90px">
             <el-row>
                 <el-col :span="16">
-                    <el-form-item label="通知标题:">
+                    <el-form-item label="通知标题：">
                         <el-input v-model="contentData.title"></el-input>
                     </el-form-item>
                 </el-col>
@@ -39,7 +39,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <quill-editor ref="myEditor" :getContent="contentData.content" @getContent="getContent"></quill-editor>
+            <quill-editor ref="myEditor" :contentData="contentData.content" @emitContent="emitContent"></quill-editor>
             <el-row style="margin-top:20px;">
                 <el-button type="primary" @click="save">保存</el-button>
                 <el-button @click="look">预览</el-button>
@@ -62,7 +62,7 @@ export default {
                 type: "",       //通知类型
                 status: "",     //通知状态
                 agent: "",      //代理商类型
-                content:'',     //内容
+                content: '',     //内容
                 url: "",        //url
             },
             content: "",
@@ -91,7 +91,7 @@ export default {
                 }
             }
         },
-        getContent(data) {
+        emitContent(data) {
             this.content = data;
         },
         save() {
@@ -104,7 +104,7 @@ export default {
             }
             this.$ajax.post('/api/http/NoticeInfo/saveOrUpdateNoticeInfo.jhtml',
                 qs.stringify({
-                    'noticeInfo.id':this.user.id,
+                    'noticeInfo.id': this.$route.params.id ? this.$route.params.id : null,
                     'noticeInfo.noticeTitle': this.contentData.title,
                     'noticeInfo.noticeType': this.contentData.type,
                     'noticeInfo.noticeContent': this.content,
@@ -118,7 +118,6 @@ export default {
                     },
                 }
             ).then(res => {
-                console.log(res);
                 if (res.data.success === 1) {
                     this.$message({
                         message: res.data.msg,
@@ -143,9 +142,6 @@ export default {
             window.open(routerNow.href, '_blank');
         }
     },
-    computed: {
-
-    },
     created() {
         if (!this.checkSession()) return;
         this.id = this.$route.params.id;
@@ -163,13 +159,12 @@ export default {
                     },
                 }
             ).then(res => {
-                console.log(res);
                 if (res.data.success === 1) {
                     this.contentData.content = res.data.result.noticeContent;
                     this.contentData.title = res.data.result.noticeTitle;
                     this.contentData.type = res.data.result.noticeType;
                     this.contentData.status = res.data.result.status.toString();
-                    this.contentData.agent.push(res.data.result.agentType);
+                    this.contentData.agent = this.contentData.agent.concat(res.data.result.agentType.split(','));
                 } else {
                     this.$message({
                         message: res.data.msg,
