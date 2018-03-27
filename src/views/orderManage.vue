@@ -310,8 +310,6 @@ export default {
                 this.order = 'desc';
             }
             if (!this.checkSession()) return;
-            console.log(this.searchData.searchTime);
-            console.log(this.searchData.searchTime[0]);
             var temp = new Date(this.searchData.searchTime[0]);
             if (temp.getFullYear() > 2006) {
                 var time1 = temp.getFullYear();
