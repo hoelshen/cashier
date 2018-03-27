@@ -3,46 +3,55 @@
     <!-- 搜索 start -->
     <div class="searchwrap">
         <el-form ref="form" label-width="100px" :model="searchData">
-            <el-row :gutter="10" class="searchbar">
+            <el-row :gutter="5" class="searchbar">
                 <el-col :span="6">
-                    <el-form-item label="注册店铺名：">
+                    <el-form-item label="注册店铺名：" >
                         <el-input v-model="searchData.shopName" @keyup.enter.native="onSubmit" placeholder="注册店铺名"></el-input>
                     </el-form-item>
                 </el-col>
+
                 <el-col :span="6">
-                    <el-form-item label="代理商手机：">
-                        <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机"></el-input>
+                    <el-form-item label="代理商姓名：" >
+                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" style="width:100%"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
-                    <el-form-item label="代理商姓名：">
-                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
-                    </el-form-item>
-                </el-col>
+
                 <el-col :span="6">
                     <el-form-item label="状态：">
-                        <el-select v-model="searchData.state" placeholder="状态" clearable>
+                        <el-select v-model="searchData.state" placeholder="请选择" clearable>
                             <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
 
                 <el-col :span="6">
-                    <el-form-item label="代理商等级：">
-                        <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                        </el-select>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="7">
-                    <el-form-item label="注册时间： ">
+                    <el-form-item label="注册时间：">
                         <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>
-                </el-col>
-                <el-col :span="2">
-                    <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
-                </el-col>
+                </el-col>   
+            </el-row>
+            <el-row>
+                    <el-col :span="6">
+                        <el-form-item label="代理商等级：" style="width:120%">
+                            <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                     <el-col :span="6">
+                        <el-form-item label="运营人员：">
+                            <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                     <el-col :span="6">
+                        <el-form-item label="业务人员：" style="width:80%">
+                            <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6" style="padding-left:1.5%" >
+                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                    </el-col>
             </el-row>
         </el-form>
     </div>
@@ -58,8 +67,6 @@
                                 <span>{{scope.row.shopNo}}</span>
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
-                    </el-table-column>
-                    <el-table-column prop="phone" label="手机号" width="125">
                     </el-table-column>
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
@@ -88,16 +95,20 @@
                                 </p>
                             </template>
                     </el-table-column>
+                     <el-table-column prop="operator" label="运营人员">
+                    </el-table-column>
+                     <el-table-column prop="salesMan" label="业务人员">
+                    </el-table-column>
                     <el-table-column label="操作" width="240">
                         <template slot-scope="scope">
-                                <p class="operation">
-                                    <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
-                                    <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span @click="openEditDialog(scope.row,'edit')">修改</span>
-                                    <span @click="openEditDialog(scope.row,'detail')">详情</span>
-                                    <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
-                                </p>
-                            </template>
+                            <p class="operation">
+                                <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
+                                <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
+                                <span @click="openEditDialog(scope.row,'edit')">修改</span>
+                                <span @click="openEditDialog(scope.row,'detail')">详情</span>
+                                <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
+                            </p>
+                        </template>
                     </el-table-column>
                 </el-table>
             </el-row>
@@ -176,6 +187,30 @@
                         </div>
                     </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                    <el-form-item label="运营人员">
+                        <!-- <el-input v-model="addForm.operator" placeholder="运营人员"></el-input> -->
+                        <el-autocomplete 
+                        v-model="addForm.operator" 
+                        :fetch-suggestions="querySearchAsync" 
+                        @select="handleSelect"
+                        placeholder="运营人员"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>                    
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="业务人员">
+                        <!-- <el-input v-model="addForm.salesMan" placeholder="业务人员"></el-input> -->
+                        <el-autocomplete 
+                        v-model="addForm.salesMan" 
+                        :fetch-suggestions="querySearchAsync" 
+                        @select="handleSelect"
+                        placeholder="业务人员"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>
+                </el-col>                    
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -264,6 +299,16 @@
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                     </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                    <el-form-item label="运营人员">
+                        <el-input v-model="editForm.operator" placeholder="运营人员"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="业务人员">
+                        <el-input v-model="editForm.salesMan" placeholder="业务人员"></el-input>
+                    </el-form-item>
+                </el-col>  
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -328,6 +373,11 @@
 <script>
 import Utils from '../components/tools/Utils';
 import addressComponent from '../components/address.vue';
+import axios from 'axios';
+
+// import ElSearchTablePagination from 'el-search-table-pagination';
+
+
 import $ from 'jquery';
 export default {
     data() {
@@ -343,6 +393,8 @@ export default {
                 state: '',
                 signTime: [],
                 agentLevelIds: [],
+                operator:'',
+                salesMan:'',
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -372,6 +424,8 @@ export default {
                 changeType: '',
                 alterMoney: '',
                 remark: '',
+                salesMan:'',
+                operator:'',
             },
             addForm: {
                 shopName: '',
@@ -387,7 +441,10 @@ export default {
                 agentCounty: '',
                 address: '',
                 shopType: 'AGENT',
-                isShow: '1'
+                isShow: '1',
+                salesMan:'',
+                operator:'',
+
             },
             editFormTitle: '',
             editForm: {
@@ -405,7 +462,9 @@ export default {
                 agentCounty: '',
                 address: '',
                 shopType: '',
-                isShow: ''
+                isShow: '',
+                operator:'',
+                salesMan:'',
             },
             isDisable: false,
             order: '', //预存款排序
@@ -470,7 +529,9 @@ export default {
                 }
             }
         },
+        querySearchAsync(){
 
+        },
         //预存款变更
         onChange() {
             if (sessionStorage.user) {
@@ -590,8 +651,10 @@ export default {
                     'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
                     'shop.state': self.searchData.state,
                     'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                    'shop.sort': 'depositAmount',
-                    'shop.order': self.order
+                    // 'shop.sort': 'depositAmount',
+                    'shop.order': self.order,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 }
             }).then(function(response) {
                 self.loading = false;
@@ -652,7 +715,9 @@ export default {
                     'shop.state': self.searchData.state,
                     'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
                     'shop.sort': 'depositAmount',
-                    'shop.order': self.order
+                    'shop.order': self.order,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 }
             }).then(function(response) {
                 self.loading = false;
@@ -689,7 +754,9 @@ export default {
                     'shop.state': self.searchData.state,
                     'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
                     'shop.sort': 'depositAmount',
-                    'shop.order': self.order
+                    'shop.order': self.order,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 }
             }).then(function(response) {
                 self.loading = false;
@@ -705,6 +772,33 @@ export default {
         //打开新增店铺弹窗
         openAddDialog() {
             this.addDialogVisible = true;
+        },
+        //点击选中
+        handleSelect(item) {
+            console.log(item);
+            //do something
+        },
+        //新增页面列表
+        querySearchAsync(queryString, callback) {
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + queryString;
+            // console.log(url);
+            //从后台获取到对象数组
+            axios.get( url ).then((response)=>{
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                console.log(response);
+                // for(let i=0; i < response.data.result.length; i++ ){
+                    for (let i of response.data.result){
+                    console.log(123123123,i)
+                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+                }
+                list = response.data.result;
+                // console.log(list)
+                callback(list);
+            }).catch((error)=>{
+                console.log(error);
+            });
         },
         //打开修改店铺及店铺详情弹窗
         openEditDialog(data, type) {
@@ -1011,6 +1105,8 @@ export default {
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
+                    'operator':data.operator,
+                    'salesMan':data.salesMan,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1074,6 +1170,8 @@ export default {
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
+                    'shop.operator':self.searchData.operator,
+                    'shop.salesMan':self.searchData.salesMan,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1125,7 +1223,10 @@ export default {
                 agentCounty: '',
                 address: '',
                 shopType: 'AGENT',
-                isShow: '1'
+                isShow: '1',
+                operator:'',
+                salesMan:'',
+
             }
             if (self.$refs.addAddress.resetAddress()) {
                 self.$refs.addAddress.resetAddress();
@@ -1154,7 +1255,9 @@ export default {
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
-                address: ''
+                address: '',
+                operator:'',
+                salesMan:'',
             }
             if (self.$refs.editAddress.resetAddress()) {
                 self.$refs.editAddress.resetAddress();

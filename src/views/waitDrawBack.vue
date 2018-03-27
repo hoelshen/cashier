@@ -2,20 +2,15 @@
     <div class="drawBack">
         <div class="search">
             <el-form v-model="searchData">
-                <el-row :gutter="10">
+                <el-row :gutter="20">
                     <el-col :span="6">
-                        <el-form-item label="代理商手机：" label-width="38%">
-                            <el-input v-model="searchData.searchPhone" @keyup.enter.native="onSubmit"></el-input>
+                        <el-form-item label="申请时间: " label-width="27%">
+                            <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime"></el-date-picker>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="代理商名称：" label-width="38%">
+                        <el-form-item label="注册店铺名：" label-width="38%">
                             <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="退款单号：" label-width="38%">
-                            <el-input v-model="searchData.searchNo" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -23,24 +18,30 @@
                             <el-input v-model="searchData.searchOrderNo" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="6">
-                        <el-form-item label="状态：" label-width="38%">
+                    <el-col :span="4">
+                          <el-form-item label="状态：" label-width="38%">
                             <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
                                 <el-option label="已收货，确认中" value="RECEIVED_WAIT_CONFIRM"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="申请时间：  " label-width="38%">
-                            <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6" style="margin-left:5%;">
+                    <el-col :span="2">
                         <el-button type="primary" @click="onSubmit">查询</el-button>
                     </el-col>
+                </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="6">
+                        <el-form-item label="退款单号：" label-width="30%">
+                            <el-input v-model="searchData.searchNo" @keyup.enter.native="onSubmit"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="运营人员：" label-width="38%">
+                            <el-input v-model="searchData.searchUpdator" @keyup.enter.native="onSubmit"></el-input>
+                        </el-form-item>
+                    </el-col>
+                     
                 </el-row>
             </el-form>
         </div>
@@ -50,9 +51,9 @@
                 </el-table-column>
                 <el-table-column prop="shopNo" label="代理商编号" width="110px">
                 </el-table-column>
-                <el-table-column prop="phone" label="手机号">
-                </el-table-column>
-                <el-table-column prop="name" label="代理商名称">
+                <!-- <el-table-column prop="phone" label="手机号"> -->
+                <!-- </el-table-column> -->
+                <el-table-column prop="name" label="店铺名称">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
                     <template slot-scope="scope">
@@ -65,6 +66,8 @@
                     </template>
                 </el-table-column>
                 <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
+                </el-table-column>
+                <el-table-column prop="updator" label="运营人员">                  
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template slot-scope="scope">
@@ -101,12 +104,13 @@ export default {
       order: "", //排序
       searchData: {
         //查询数据
-        searchPhone: "", //代理商手机
+        // searchPhone: "", //代理商手机
         searchShopName: "", //代理商名称
         searchNo: "", //退款单号
         searchOrderNo: "", //原进货单号
         searchState: "", //状态
-        searchTime: "" //申请时间
+        searchTime: "" ,//申请时间
+        searchUpdator:"" //运营人员
       },
       tableData: [
         {
@@ -119,7 +123,8 @@ export default {
           refundState: "", //状态
           applyTime: "", //申请时间
           purchaseOrderNo: "", //原进货单号
-          serviceRemark: "" //客服备注
+          serviceRemark: "" ,//客服备注
+          updator:""  //运营人员
         }
       ]
     };
@@ -222,6 +227,7 @@ export default {
             "searchBackVo.purchaseOrderBackNo": this.searchData.searchNo,
             "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
             "searchBackVo.purchaseOrderState": this.searchData.searchState,
+            "searchBackVo.updator": this.searchData.searchUpdator,            
             "searchBackVo.isWaitAudit": 1,
             "searchBackVo.startTime": time[0],
             "searchBackVo.endTime": time[1]
@@ -361,7 +367,9 @@ export default {
             "searchBackVo.purchaseOrderState": this.searchData.searchState,
             "searchBackVo.startTime": time[0],
             "searchBackVo.isWaitAudit": 1,
-            "searchBackVo.endTime": time[1]
+            "searchBackVo.endTime": time[1],
+            "searchBackVo.updator": this.searchData.searchUpdator,            
+            
           }),
           {
             headers: {

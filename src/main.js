@@ -6,9 +6,12 @@ import router from './router';
 import axios from 'axios';
 import getData from './getData.js'
 
+
 Vue.prototype.$ajax = axios;
 Vue.prototype.$getData = getData;
 Vue.use(ElementUI)
+
+
 
 new Vue({
     el: '#app',

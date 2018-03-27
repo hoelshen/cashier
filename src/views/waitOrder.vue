@@ -5,8 +5,8 @@
                 <el-form label-width="85px" ref="form" :model="searchData">
                     <el-row :gutter="20">
                         <el-col :span="6">
-                            <el-form-item label="代理商手机">
-                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchPhone" placeholder="代理商手机号"></el-input>
+                            <el-form-item label="下单时间" label-width="72px">
+                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
@@ -22,7 +22,9 @@
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
+                                    <el-option label="全部" value=""></el-option>   
                                     <el-option label="待审核" value="WAIT_CHECK"></el-option>
+
                                     <!-- <el-option label="待发货" value="WAIT_SEND"></el-option>
         		    				<el-option label="已发货" value="DELIVERED"></el-option>
         		    				<el-option label="已完成" value="FINISH"></el-option>
@@ -36,17 +38,8 @@
                     </el-row>
                     <el-row :gutter="20">
                         <el-col :span="6">
-                            <el-form-item label="代理商等级">
-                                <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
-                                    <el-option label="区域代理" value="265"></el-option>
-                                    <el-option label="专柜代理" value="266"></el-option>
-                                    <el-option label="单店代理" value="31"></el-option>
-                                </el-select>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
-                            <el-form-item label="下单时间" label-width="72px">
-                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                                 <el-form-item label="运营人员" label-width="72px">
+                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -57,15 +50,15 @@
                     <el-table-column prop="purchaseOrderNo" label="进货单号" width="180">
                     </el-table-column>
                     <el-table-column prop="agentGradeId" label="代理商编号" style="position: relative">
-                        <template slot-scope="scope">{{ scope.row.shopNo }}
+                        <!-- <template scope="scope">{{ scope.row.shopNo }}
                             <p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
                             <p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
                             <p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
-                        </template>
+                        </template> -->
                     </el-table-column>
-                    <el-table-column prop="phone" label="手机号">
+                    <el-table-column prop="shopName" label="代理商名称">
                     </el-table-column>
-                    <el-table-column prop="name" label="代理商名称">
+                    <el-table-column prop="peceiptName" label="收件人">
                     </el-table-column>
                     <el-table-column prop="stateName" label="状态">
                     </el-table-column>
@@ -76,7 +69,9 @@
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phone" label="详情">
+                    <el-table-column prop="updator" label="运营人员">
+                    </el-table-column>                    
+                    <el-table-column prop="phone" label="操作">
                         <template slot-scope="scope">
                             <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link>
                         </template>
@@ -109,6 +104,7 @@ export default {
                 searchTime: '',		//下单时间
                 searchLevel: [],		//代理商等级
                 Level: [],			//代理商等级替代
+                searchUpdator:'',     //运营人员   
             },
             tableData: [
                 {
@@ -120,6 +116,7 @@ export default {
                     stateName: '',			//状态
                     orderTime: '',			//下单时间
                     orderSum: '',			//金额
+                    updator:'',          //运营人员
                 }
             ]
         }
@@ -147,7 +144,7 @@ export default {
         },
         onSumbit() {
             if (!this.checkSession()) return;
-            console.log(this.searchData.searchTime);
+            console.log(this.searchData);
             console.log(this.searchData.searchTime[0]);
             var temp = new Date(this.searchData.searchTime[0]);
             if (temp.getFullYear() > 2006) {
@@ -186,6 +183,7 @@ export default {
                 this.searchData.level = '';
             }
             console.log(this.searchData.searchLevel);
+            console.log("yunyingrenyuan:",this.searchData.searchUpdator)
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
@@ -194,13 +192,13 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.name': this.searchData.searchName,
+                    'purchaseOrder.shopName': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.state': 'WAIT_CHECK',
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
+                    'purchaseOrder.upator': this.searchData.searchUpdator,
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -279,13 +277,13 @@ export default {
                     'pager.pageIndex': val,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.name': this.searchData.searchName,
+                    'purchaseOrder.shopName': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
-                    'purchaseOrder.state': 'WAIT_CHECK',
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
+                    'purchaseOrder.updator': this.searchData.searchUpdator,                    
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -368,7 +366,7 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.name': this.searchData.searchName,
+                    'purchaseOrder.shopName': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
@@ -376,6 +374,7 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
+                    'purchaseOrder.updator': this.searchData.searchUpdator,
                 },
                 success(response) {
                     this.tableData = response.data.result;
@@ -406,7 +405,7 @@ export default {
             data: {
                 pageIndex: this.currentPage,
                 pageSize: this.pageSize,
-                'purchaseOrder.state': 'WAIT_CHECK',
+                'purchaseOrder.state': '',
             },
             success(response) {
                 this.tableData = response.data.result;
