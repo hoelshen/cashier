@@ -40,29 +40,29 @@
         </el-dialog>
         <!-- 卡片选择dialog -->
         <el-dialog title="商品信息" :visible.sync="selectCardVisible">
-            <div v-if="urlData.errorUrl.length > 0">
-                <label>以下的商品链接不正确，请检查后再试</label>
-                <p v-for="url in urlData.errorUrl">商品链接：{{ url }}</p>
+            <label class="card-box-error">以下商品存在问题,请检查后重试</label>
+            <div class="card-error" v-if="urlData.errorUrl.length > 0">
+                <label style="color:rgba(255, 51, 51, 0.83)">链接不正确</label>
+                <p v-for="url in urlData.errorUrl">{{ url }}</p>
             </div>
-            <div style="margin-top:20px;" v-if="urlData.errorProduct.length > 0">
-                <label>以下的商品不存在，请检查后再试</label>
-                <p v-for="url in urlData.errorProduct">商品链接：{{ url }}</p>
+            <div class="card-error" v-if="urlData.errorProduct.length > 0">
+                <label style="color:rgba(255, 51, 51, 0.83)">商品不存在</label>
+                <p v-for="url in urlData.errorProduct">{{ url }}</p>
             </div>
-            <hr>
-            <label v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片：</label>
+            <div class="card-box-hr"></div>
+            <label class="card-box-true" v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片</label>
             <div class="cardWarp" v-if="urlData.productList.length > 0 " v-for="(item,index) in urlData.productList">
                 <template>
                     <div class="cardBox">
                         <div class="closeBtn" @click="closeCard(index)">X</div>
-                        <p class="cardLink">链接：
-                            <el-input style="width:85%" v-model="item.cardUrl" disabled>item.cardUrl</el-input>
+                        <p class="cardLink">链接：{{item.cardUrl}}
                         </p>
                         <div class="cardMain">
                             <img class="cardImg" :src="item.imgUrl">
                             <div class="cardInfo">
                                 <div class="cardTitle" :title="item.proName">{{ item.proName }}</div>
                                 <div class="cardSubTitle" :title="item.catName">item.catName</div>
-                                <hr>
+                                <div class="card-box-hr"></div>
                                 <div class="price">醉品价
                                     <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
                                 </div>
@@ -223,10 +223,6 @@ export default {
         // 编辑器文本改变，传递数据给父组件
         onEditorChange(v) {
             this.$emit('emitContent', v.html)
-        },
-        // 清除内容
-        clearContent() {
-            this.content = '';
         }
     },
     computed: {
@@ -235,6 +231,7 @@ export default {
         }
     },
     mounted() {
+        console.log(this.contentData);
         // 绑定toolbar的image图标handler
         this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", this.imgHandler);
     }
@@ -245,20 +242,48 @@ export default {
 
 <style lang="less" scoped>
 hr {
-    margin: 20px auto;
+    margin: 19px auto;
 }
 .cardWarp:hover .closeBtn {
     display: inline;
 }
+.card-box-error::before {
+    content: "\FF01";
+    width: 16px;
+    display: inline-block;
+    text-align: center;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ff3333;
+    color: #ffffff;
+    margin-right: 5px;
+    line-height: 16px;
+}
+.card-box-true {
+    padding-left: 22px;
+    background: url("../assets/images/sy_ic_zq.png") no-repeat;
+}
+.card-box-hr {
+    background-color: #e6e6e6;
+    width: 820px;
+    height: 1px;
+    margin: 20px auto 20px 2px;
+}
+.card-error {
+    padding-left: 13px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 15px;
+    width: 820px;
+    background-color: #fff6eb;
+}
 .cardWarp {
-    background-color: #cccccc;
-    margin: 10px auto;
-    padding: 20px;
-    width: 650px;
+    background-color: #f2f4f5;
+    margin-top: 18px;
+    width: 820px;
     position: relative;
     .closeBtn {
         background-color: #ff0000e3;
-        color: #ffffff;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -274,34 +299,37 @@ hr {
         background-color: #ff0000d5;
     }
     .cardBox {
-        background-color: #ffffff;
         .cardLink {
-            padding: 20px;
+            padding: 18px 20px;
         }
         .cardMain {
-            padding: 0px 15px 15px 15px;
+            width: 786px;
+            margin: 13px 15px 0px 15px;
+            padding-bottom: 18px;
             .cardImg {
-                width: 180px;
+                width: 128px;
                 vertical-align: top;
                 display: inline-block;
             }
             .cardInfo {
-                height: 150px;
                 display: inline-block;
                 margin-left: 20px;
+                .card-box-hr{
+                    width: 90%;
+                    margin:19px auto 19px 0px;
+                }
                 .cardTitle {
-                    width: 370px;
-                    margin-top: 20px;
-                    font-size: 18px;
+                    width: 550px;
+                    font-size: 14px;
                     font-weight: normal;
-                    line-height: 19px;
+                    line-height: 14px;
                     color: #333333;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                 }
                 .cardSubTitle {
-                    margin-top: 10px;
+                    margin-top: 14px;
                     font-size: 14px;
                     font-weight: normal;
                     line-height: 15px;
@@ -311,17 +339,17 @@ hr {
                     font-size: 14px;
                     line-height: 14px;
                     color: #999999;
-                    margin: 0px 0px 19px 0px;
+                    margin: 0px 0px 14px 0px;
                     .ZPPrice {
                         color: #333333;
                         font-weight: 600;
                         margin-left: 20px;
                     }
                     .InPrice {
-                        color: #ff0000e3;
+                        color: #ff9819;
                         font-weight: 600;
-                        font-size: 16px;
-                        line-height: 16px;
+                        font-size: 14px;
+                        line-height: 14px;
                         margin-left: 20px;
                     }
                 }
@@ -338,7 +366,7 @@ hr {
     height: 450px;
 }
 .editor .el-dialog__wrapper .el-dialog {
-    width: 720px;
+    width: 888px;
 }
 .editor .el-dialog__body {
     line-height: 20px;

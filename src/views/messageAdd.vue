@@ -66,7 +66,7 @@ export default {
                 content: '',     //内容
                 url: "",        //url
             },
-            content: "",
+            nowContent: "",
         };
     },
     components: {
@@ -103,10 +103,10 @@ export default {
             }
         },
         emitContent(data) {
-            this.content = data;
+            this.contentData.content = data;
         },
         save() {
-            if (!this.contentData.title || !this.contentData.type || !this.content || this.contentData.agent.length < 1) {
+            if (!this.contentData.title || !this.contentData.type || !this.contentData.content || this.contentData.agent.length < 1) {
                 this.$message({
                     message: "保存失败！必填项未填写",
                     type: 'warning'
@@ -120,7 +120,7 @@ export default {
                 })
                 return;
             }
-            this.$confirm(`你确定要保存${this.contentData.status === '1' ? '并启用' : null}该通知吗？`, '提示', {
+            this.$confirm(`你确定要保存${this.contentData.status === '1' ? '并启用' : ''}该通知吗？`, '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
@@ -130,7 +130,7 @@ export default {
                         'noticeInfo.id': this.$route.params.id ? this.$route.params.id : null,
                         'noticeInfo.noticeTitle': this.contentData.title,
                         'noticeInfo.noticeType': this.contentData.type,
-                        'noticeInfo.noticeContent': this.content,
+                        'noticeInfo.noticeContent': this.contentData.content,
                         'noticeInfo.status': this.contentData.status,
                         'noticeInfo.agentType': this.contentData.agent.length > 1 ? this.contentData.agent.join(',') : this.contentData.agent[0],
                         'noticeInfo.updateId': this.user.id
@@ -160,7 +160,7 @@ export default {
             let routerNow = this.$router.resolve({
                 path: '/lookMsg',
                 query: {
-                    content: this.content
+                    content: this.contentData.content
                 }
             });
             window.open(routerNow.href, '_blank');
