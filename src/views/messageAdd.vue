@@ -62,7 +62,7 @@ export default {
                 title: "",      //标题
                 type: "",       //通知类型
                 status: "1",     //通知状态
-                agent: ['31,265,266'],      //代理商类型
+                agent: '',      //代理商类型
                 content: '',     //内容
                 url: "",        //url
             },
