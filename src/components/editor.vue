@@ -64,10 +64,10 @@
                                 <div class="cardSubTitle" :title="item.catName">item.catName</div>
                                 <hr>
                                 <div class="price">醉品价
-                                    <span class="ZPPrice">￥{{ item.salesPrice }}</span>
+                                    <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
                                 </div>
                                 <div class="price">进货价
-                                    <span class="InPrice">￥{{ item.purchasePrice }}</span>
+                                    <span class="InPrice">￥{{ toFixed(item.purchasePrice) }}</span>
                                 </div>
                             </div>
                         </div>
@@ -110,7 +110,7 @@ export default {
     data() {
         return {
             btnLoading: false,
-            content:``,
+            content: ``,
             addCardVisible: false,              //dialog显示
             selectCardVisible: false,           //dialog显示
             url: "",                            //dialog输入的url
@@ -132,6 +132,10 @@ export default {
         quillEditor
     },
     methods: {
+        // 保留两位小数
+        toFixed(num) {
+            return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
+        },
         // 移除卡片
         closeCard(index) {
             this.urlData.productList.splice(index, 1);
@@ -162,7 +166,7 @@ export default {
             // 插入卡片
             this.urlData.productList.map(v => {
                 this.editor.focus();
-                this.editor.insertText(this.editor.getSelection().index, `<卡片>\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${v.salesPrice}\n进货价：${v.purchasePrice}\n链接：${v.cardUrl}\nsku：${v.proSku}\n</卡片>`, {});
+                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
             })
         },
         // 点击icon触发事件

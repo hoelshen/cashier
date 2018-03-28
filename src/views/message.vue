@@ -47,14 +47,17 @@
 								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="noticeTitle" label="通知标题" align="center">
+					<el-table-column prop="noticeTitle" label="通知标题" align="center" width="300px">
+						<template slot-scope="scope">
+							<div class="noticeTitle" :title="scope.row.noticeTitle">{{scope.row.noticeTitle}}</div>
+						</template>
 					</el-table-column>
 					<el-table-column prop="noticeType" label="通知类型" align="center">
 						<template slot-scope="scoped">
 							{{ scoped.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
 						</template>
 					</el-table-column>
-					<el-table-column prop="publishTime" label="发布时间" align="center" sortable>
+					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width="100px">
 					</el-table-column>
 					<el-table-column prop="status" label="状态" align="center">
 						<template slot-scope="scoped">
@@ -64,7 +67,7 @@
 					</el-table-column>
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="center" min-width="100px">
+					<el-table-column prop="CREATED_TIME" label="操作" align="center" min-width="120px">
 						<template slot-scope="scope">
 							<el-tooltip placement="top" effect="light" v-if="scope.row.status === 2">
 								<div slot="content">
@@ -229,7 +232,7 @@ export default {
 				}
 			})
 		},
-		goEdit(target){
+		goEdit(target) {
 			console.log(target);
 			this.$router.push('/');
 		},
@@ -326,16 +329,22 @@ export default {
 .tableInfo .redColor {
     background-color: red;
 }
-.el-icon-plus:before{
-	padding-right: 5px;
+.el-icon-plus:before {
+    padding-right: 5px;
 }
-.el-icon-plus{
-	margin-top: 10px;
+.el-icon-plus {
+    margin-top: 10px;
 }
 </style>
 
 <style lang="less">
 .el-tooltip__popper.is-light {
     border-color: #cccccc;
+}
+.noticeTitle {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>
