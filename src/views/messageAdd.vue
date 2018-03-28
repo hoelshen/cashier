@@ -2,7 +2,7 @@
     <div id="addMessage">
         <el-row class="content_title">
             <h2>基本信息</h2>
-            <router-link class="content_closeBtn" :to="{path:'message'}">X</router-link>
+            <div class="content_closeBtn" @click="goBack">X</div>
         </el-row>
         <el-form ref="form" v-model="contentData" label-width="90px">
             <el-row>
@@ -32,6 +32,7 @@
                 <el-col :span="12">
                     <el-form-item label="代理商类型：" label-width="110px">
                         <el-select v-model="contentData.agent" clearable placeholder="请选择" multiple>
+                            <el-option value="31,265,266" label="全部"></el-option>
                             <el-option value="31" label="单店代理"></el-option>
                             <el-option value="265" label="区域代理"></el-option>
                             <el-option value="266" label="专柜代理"></el-option>
@@ -43,7 +44,7 @@
             <el-row style="margin-top:20px;">
                 <el-button type="primary" @click="save">保存</el-button>
                 <el-button @click="look">预览</el-button>
-                <el-button @click="$router.go(-1)">取消</el-button>
+                <el-button @click="goBack">取消</el-button>
             </el-row>
         </el-form>
     </div>
@@ -60,8 +61,8 @@ export default {
             contentData: {
                 title: "",      //标题
                 type: "",       //通知类型
-                status: "",     //通知状态
-                agent: "",      //代理商类型
+                status: "1",     //通知状态
+                agent: ['31,265,266'],      //代理商类型
                 content: '',     //内容
                 url: "",        //url
             },
@@ -72,6 +73,16 @@ export default {
         quillEditor
     },
     methods: {
+        goBack() {
+            this.$confirm(`你确定要放弃编辑该通知吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$router.push('/message');
+                this.$message('取消成功')
+            })
+        },
         //判断是否超时
         checkSession() {
             const self = this;
@@ -97,39 +108,52 @@ export default {
         save() {
             if (!this.contentData.title || !this.contentData.type || !this.content || this.contentData.agent.length < 1) {
                 this.$message({
-                    message: "必填项不能为空",
+                    message: "保存失败！必填项未填写",
                     type: 'warning'
                 })
                 return;
             }
-            this.$ajax.post('/api/http/NoticeInfo/saveOrUpdateNoticeInfo.jhtml',
-                qs.stringify({
-                    'noticeInfo.id': this.$route.params.id ? this.$route.params.id : null,
-                    'noticeInfo.noticeTitle': this.contentData.title,
-                    'noticeInfo.noticeType': this.contentData.type,
-                    'noticeInfo.noticeContent': this.content,
-                    'noticeInfo.status': this.contentData.status,
-                    'noticeInfo.agentType': this.contentData.agent.length > 1 ? this.contentData.agent.join(',') : this.contentData.agent[0],
-                    'noticeInfo.updateId': this.user.id
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }
-            ).then(res => {
-                if (res.data.success === 1) {
-                    this.$message({
-                        message: res.data.msg,
-                        type: 'success'
-                    });
-                    this.$router.push('/message');
-                } else {
-                    this.$message({
-                        message: res.data.msg,
-                        type: 'error'
-                    });
-                }
+            if (this.contentData.title.trim().length > 50) {
+                this.$message({
+                    message: "通知标题长度不超过50个字符",
+                    type: 'warning'
+                })
+                return;
+            }
+            this.$confirm(`你确定要保存${this.contentData.status === '1' ? '并启用' : null}该通知吗？`, '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                this.$ajax.post('/api/http/NoticeInfo/saveOrUpdateNoticeInfo.jhtml',
+                    qs.stringify({
+                        'noticeInfo.id': this.$route.params.id ? this.$route.params.id : null,
+                        'noticeInfo.noticeTitle': this.contentData.title,
+                        'noticeInfo.noticeType': this.contentData.type,
+                        'noticeInfo.noticeContent': this.content,
+                        'noticeInfo.status': this.contentData.status,
+                        'noticeInfo.agentType': this.contentData.agent.length > 1 ? this.contentData.agent.join(',') : this.contentData.agent[0],
+                        'noticeInfo.updateId': this.user.id
+                    }),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }
+                ).then(res => {
+                    if (res.data.success === 1) {
+                        this.$message({
+                            message: `保存“通知：【${this.contentData.title}】”成功~`,
+                            type: 'success'
+                        });
+                        this.$router.push('/message');
+                    } else {
+                        this.$message({
+                            message: res.data.msg,
+                            type: 'error'
+                        });
+                    }
+                })
             })
         },
         look() {
@@ -151,7 +175,7 @@ export default {
         if (this.id) {
             this.$ajax.post('/api/http/NoticeInfo/getNoticeInfoDetail.jhtml',
                 qs.stringify({
-                    'noticeId': this.id,
+                    'noticeId': this.$route.params.id,
                 }),
                 {
                     headers: {
@@ -195,6 +219,7 @@ export default {
             font-size: 19px;
             float: right;
             color: #0000ff9e;
+            cursor: pointer;
         }
     }
 }
