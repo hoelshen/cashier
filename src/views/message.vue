@@ -46,15 +46,33 @@
 								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 						</template>
 					</el-table-column>
+<<<<<<< HEAD
 					<el-table-column prop="PHONE" label="通知标题">
 					</el-table-column>
 					<el-table-column prop="NAME" label="通知类型">
+=======
+					<el-table-column prop="noticeTitle" label="通知标题" align="center" width="300px">
+						<template slot-scope="scope">
+							<div class="noticeTitle" :title="scope.row.noticeTitle">{{scope.row.noticeTitle}}</div>
+						</template>
+					</el-table-column>
+					<el-table-column prop="noticeType" label="通知类型" align="center">
+						<template slot-scope="scoped">
+							{{ scoped.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
+						</template>
+					</el-table-column>
+					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width="100px">
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 					</el-table-column>
 					<el-table-column prop="GID" label="发布时间" sortable>
 					</el-table-column>
 					<el-table-column prop="SHOPNAME" label="发布人">
 					</el-table-column>
+<<<<<<< HEAD
 					<el-table-column prop="CREATED_TIME" label="操作">
+=======
+					<el-table-column prop="CREATED_TIME" label="操作" align="center" min-width="120px">
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 						<template slot-scope="scope">
 							<el-tooltip placement="top" effect="light" >
 								<div slot="content">
@@ -78,7 +96,12 @@
 								</div>
 								<span class="table_buleTxt">禁用</span>
 							</el-tooltip>
+<<<<<<< HEAD
 							<span class="table_buleTxt">预览</span>
+=======
+							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
+							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 							<el-tooltip placement="top" effect="light">
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
@@ -250,6 +273,7 @@ export default {
 				} else {
 					time2 = time2 + '-' + temp.getDate();
 				}
+<<<<<<< HEAD
 				console.log(time2);
 			} else {
 				var time1 = '';
@@ -294,6 +318,13 @@ export default {
 
 			});
 			console.log(`当前页: ${val}`);
+=======
+			})
+		},
+		goEdit(target) {
+			console.log(target);
+			this.$router.push('/');
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 		},
 		toFixed(num) {
 			return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
@@ -394,14 +425,44 @@ export default {
 	margin-top: 5px;
     display: inline-block;
 }
+<<<<<<< HEAD
 .table_button_group{
 	margin-top: 10px;
 	text-align: right;
+=======
+.table_button_group {
+    margin-top: 10px;
+    text-align: right;
+}
+.greenPoint {
+    width: 5px;
+    height: 5px;
+    background-color: green;
+    display: inline-block;
+    vertical-align: middle;
+    margin: -2px 10px auto auto;
+    border-radius: 50%;
+}
+.tableInfo .redColor {
+    background-color: red;
+}
+.el-icon-plus:before {
+    padding-right: 5px;
+}
+.el-icon-plus {
+    margin-top: 10px;
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 }
 </style>
 
 <style lang="less">
 .el-tooltip__popper.is-light{
 	border-color:#cccccc;
+}
+.noticeTitle {
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 </style>

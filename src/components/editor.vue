@@ -7,7 +7,7 @@
 
 
     method
-    getContent                                     获取内容
+    contentData                                     获取内容
     clearContent                                   清除editor内容
 -->
 <template>
@@ -27,14 +27,64 @@
             <el-button @click="dialogFormVisible = true">添加卡片</el-button>
         </div>
         <!-- 编辑器 -->
+<<<<<<< HEAD
         <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur"></quill-editor>
+=======
+        <quill-editor v-model="contentData" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         <!-- 插入卡片dialog -->
         <el-dialog title="插入卡片" :visible.sync="dialogFormVisible">
             <label>链接：</label>
             <el-input type="textarea" v-model="url" resize="none" placeholder="请输入url，用回车分隔"></el-input>
             <div slot="footer" class="dialog-footer">
+<<<<<<< HEAD
                 <el-button @click="dialogFormVisible = false">取 消</el-button>
                 <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+=======
+                <el-button @click="addCardVisible = false">取 消</el-button>
+                <el-button type="primary" @click="doSearch" :loading="btnLoading">获取信息</el-button>
+            </div>
+        </el-dialog>
+        <!-- 卡片选择dialog -->
+        <el-dialog title="商品信息" :visible.sync="selectCardVisible">
+            <div v-if="urlData.errorUrl.length > 0">
+                <label>以下的商品链接不正确，请检查后再试</label>
+                <p v-for="url in urlData.errorUrl">商品链接：{{ url }}</p>
+            </div>
+            <div style="margin-top:20px;" v-if="urlData.errorProduct.length > 0">
+                <label>以下的商品不存在，请检查后再试</label>
+                <p v-for="url in urlData.errorProduct">商品链接：{{ url }}</p>
+            </div>
+            <hr>
+            <label v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片：</label>
+            <div class="cardWarp" v-if="urlData.productList.length > 0 " v-for="(item,index) in urlData.productList">
+                <template>
+                    <div class="cardBox">
+                        <div class="closeBtn" @click="closeCard(index)">X</div>
+                        <p class="cardLink">链接：
+                            <el-input style="width:85%" v-model="item.cardUrl" disabled>item.cardUrl</el-input>
+                        </p>
+                        <div class="cardMain">
+                            <img class="cardImg" :src="item.imgUrl">
+                            <div class="cardInfo">
+                                <div class="cardTitle" :title="item.proName">{{ item.proName }}</div>
+                                <div class="cardSubTitle" :title="item.catName">item.catName</div>
+                                <hr>
+                                <div class="price">醉品价
+                                    <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
+                                </div>
+                                <div class="price">进货价
+                                    <span class="InPrice">￥{{ toFixed(item.purchasePrice) }}</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </template>
+            </div>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="selectCardVisible = false">取 消</el-button>
+                <el-button type="primary" @click="insertCard">插入卡片</el-button>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
@@ -44,10 +94,13 @@
 </template>
 
 <script>
+<<<<<<< HEAD
 // 导入编辑器样式
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
+=======
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 // 导入编辑器
 import { quillEditor } from "vue-quill-editor";
 export default {
@@ -56,6 +109,13 @@ export default {
             type: Number,
             default: 10485760
         },
+<<<<<<< HEAD
+=======
+        contentData: {
+            type: String,
+            default: ''
+        },
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         baseUrl: {
             type: String,
             default: 'cashier.com'
@@ -67,8 +127,15 @@ export default {
     },
     data() {
         return {
+<<<<<<< HEAD
             content: "",                        //编辑器内容
             dialogFormVisible: false,           //dialog显示
+=======
+            btnLoading: false,
+            content: ``,
+            addCardVisible: false,              //dialog显示
+            selectCardVisible: false,           //dialog显示
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             url: "",                            //dialog输入的url
             editorOption: {                     //editor配置
                 modules: {
@@ -83,6 +150,46 @@ export default {
         quillEditor
     },
     methods: {
+<<<<<<< HEAD
+=======
+        // 保留两位小数
+        toFixed(num) {
+            return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
+        },
+        // 移除卡片
+        closeCard(index) {
+            this.urlData.productList.splice(index, 1);
+        },
+        // url获取卡片信息
+        doSearch() {
+            this.addCardVisible = false;
+            this.btnLoading = true;
+            var qs = require('qs');
+            this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
+                qs.stringify({
+                    cardUrl: 'https://www.zuipin.cn/goods?id=8669428&utm_source=zuipin,https://www.zuipin.cn/goods?id=8669425&utm_source=zuipin,zuipin.cn/goods?45465454654'
+                    // this.url.replace(/[\r\n&]/g,',')
+                }),
+                {
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded',
+                    },
+                }).then(res => {
+                    this.btnLoading = false;
+                    this.urlData = res.data.result;
+                })
+            this.selectCardVisible = true;
+        },
+        // 插入卡片
+        insertCard() {
+            this.selectCardVisible = false;
+            // 插入卡片
+            this.urlData.productList.map(v => {
+                this.editor.focus();
+                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
+            })
+        },
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         // 点击icon触发事件
         imgHandler(state) {
             if (state) {
@@ -132,9 +239,19 @@ export default {
             }
         },
         // 编辑器光标离开 将编辑器内容发射给父组件
+<<<<<<< HEAD
         onEditorBlur(editor) {
             this.$emit('getContent', this.content)
+=======
+        onEditorBlur() {
+            this.$emit('emitContent', this.editor.getContents())
         },
+        // 编辑器文本改变，传递数据给父组件
+        onEditorChange(v) {
+            this.$emit('emitContent', v.html)
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
+        },
+        // 清除内容
         clearContent() {
             this.content = '';
         }
@@ -152,7 +269,109 @@ export default {
 </script>
 
 <style lang="less" scoped>
+<<<<<<< HEAD
 .quill-editor {
     height: 450px;
 }
+=======
+hr {
+    margin: 20px auto;
+}
+.cardWarp:hover .closeBtn {
+    display: inline;
+}
+.cardWarp {
+    background-color: #cccccc;
+    margin: 10px auto;
+    padding: 20px;
+    width: 650px;
+    position: relative;
+    .closeBtn {
+        background-color: #ff0000e3;
+        color: #ffffff;
+        border-radius: 50%;
+        width: 20px;
+        height: 20px;
+        text-align: center;
+        line-height: 20px;
+        cursor: pointer;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        display: none;
+    }
+    .closeBtn:hover {
+        background-color: #ff0000d5;
+    }
+    .cardBox {
+        background-color: #ffffff;
+        .cardLink {
+            padding: 20px;
+        }
+        .cardMain {
+            padding: 0px 15px 15px 15px;
+            .cardImg {
+                width: 180px;
+                vertical-align: top;
+                display: inline-block;
+            }
+            .cardInfo {
+                height: 150px;
+                display: inline-block;
+                margin-left: 20px;
+                .cardTitle {
+                    width: 370px;
+                    margin-top: 20px;
+                    font-size: 18px;
+                    font-weight: normal;
+                    line-height: 19px;
+                    color: #333333;
+                    overflow: hidden;
+                    text-overflow: ellipsis;
+                    white-space: nowrap;
+                }
+                .cardSubTitle {
+                    margin-top: 10px;
+                    font-size: 14px;
+                    font-weight: normal;
+                    line-height: 15px;
+                    color: #999999;
+                }
+                .price {
+                    font-size: 14px;
+                    line-height: 14px;
+                    color: #999999;
+                    margin: 0px 0px 19px 0px;
+                    .ZPPrice {
+                        color: #333333;
+                        font-weight: 600;
+                        margin-left: 20px;
+                    }
+                    .InPrice {
+                        color: #ff0000e3;
+                        font-weight: 600;
+                        font-size: 16px;
+                        line-height: 16px;
+                        margin-left: 20px;
+                    }
+                }
+            }
+        }
+    }
+}
+</style>
+<style>
+.editor {
+    width: 1032px;
+}
+.quill-editor {
+    height: 450px;
+}
+.editor .el-dialog__wrapper .el-dialog {
+    width: 720px;
+}
+.editor .el-dialog__body {
+    line-height: 20px;
+}
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 </style>
