@@ -16,63 +16,86 @@
                 <el-col :span="6">
                     <el-form-item label="通知类型：">
                         <el-select v-model="contentData.type">
-                            <el-option value="newPro" label="新品"></el-option>
-                            <el-option value="systemMessage" label="系统公告"></el-option>
+                            <el-option value="ALL" label="全部"></el-option>
+                            <el-option value="NEW" label="新品"></el-option>
+                            <el-option value="NEWS" label="系统公告"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
                     <el-form-item label="通知状态：">
                         <el-select v-model="contentData.status" clearable placeholder="请选择">
-                            <el-option value="1" label="启用"></el-option>
-                            <el-option value="2" label="禁用"></el-option>
+                            <el-option value="ALL" label="全部"></el-option>
+                            <el-option value="ENABLE" label="启用"></el-option>
+                            <el-option value="DISENABLE" label="禁用"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                     <el-form-item label="代理商类型：" label-width="110px">
                         <el-select v-model="contentData.agent" clearable placeholder="请选择" multiple>
+<<<<<<< HEAD
+                            <el-option value="ALL" label="全部"></el-option>
+                            <el-option value="ENABLE" label="单店代理"></el-option>
+                            <el-option value="DISENABLE" label="区域代理"></el-option>
+                            <el-option value="DISENABLE" label="专柜代理"></el-option>
+=======
                             <el-option value="31,265,266" label="全部"></el-option>
                             <el-option value="31" label="单店代理"></el-option>
                             <el-option value="265" label="区域代理"></el-option>
                             <el-option value="266" label="专柜代理"></el-option>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
                         </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
+<<<<<<< HEAD
+            <quill-editor ref="myEditor" @getContent="getContent"></quill-editor>
+=======
             <quill-editor ref="myEditor" :contentData="contentData.content" @emitContent="emitContent"></quill-editor>
             <el-row style="margin-top:20px;">
                 <el-button type="primary" @click="save">保存</el-button>
                 <el-button @click="look">预览</el-button>
                 <el-button @click="goBack">取消</el-button>
             </el-row>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         </el-form>
     </div>
 </template>
 <script type="text/javascript" src="../router.js"></script>
 <script>
-import quillEditor from "../components/editor.vue";
-let qs = require('qs');
+import  quillEditor  from "../components/editor.vue";
 export default {
     data() {
         return {
             dialogFormVisible: false,    //dialog
-            id: '',
             contentData: {
                 title: "",      //标题
                 type: "",       //通知类型
+<<<<<<< HEAD
+                status: "",     //通知状态
+                agent: "",      //代理商类型
+=======
                 status: "1",     //通知状态
                 agent: ['31,265,266'],      //代理商类型
                 content: '',     //内容
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
                 url: "",        //url
             },
-            content: "",
+            content:"",
         };
     },
     components: {
         quillEditor
     },
     methods: {
+<<<<<<< HEAD
+        getContent(data){
+            this.content = data;
+        }
+    },
+    computed: {
+=======
         goBack() {
             this.$confirm(`你确定要放弃编辑该通知吗？`, '提示', {
                 confirmButtonText: '确定',
@@ -197,6 +220,7 @@ export default {
                 }
             })
         }
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
     }
 };
 </script>
@@ -223,5 +247,6 @@ export default {
         }
     }
 }
+
 </style>
 

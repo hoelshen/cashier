@@ -1,7 +1,6 @@
 <!-- 
     编辑器组件
     props        type              default          explain
-    content      String                            编辑器内容
     size         Number            10485760        图片最大尺寸,默认10m
     bucket       String            cashier-img     要上传到那个backet 
     baseUrl      String            cashier.com     图片域名
@@ -12,7 +11,7 @@
     clearContent                                   清除editor内容
 -->
 <template>
-    <div class="editor">
+    <div>
         <!-- 编辑器自定义toolbar -->
         <div id="toolbar">
             <select class="ql-size"></select>
@@ -25,15 +24,23 @@
             <button class="ql-underline"></button>
             <button class="ql-strike"></button>
             <button class="ql-image"></button>
-            <el-button @click="addCardVisible = true">添加卡片</el-button>
+            <el-button @click="dialogFormVisible = true">添加卡片</el-button>
         </div>
         <!-- 编辑器 -->
+<<<<<<< HEAD
+        <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur"></quill-editor>
+=======
         <quill-editor v-model="contentData" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         <!-- 插入卡片dialog -->
-        <el-dialog title="插入卡片" :visible.sync="addCardVisible">
+        <el-dialog title="插入卡片" :visible.sync="dialogFormVisible">
             <label>链接：</label>
             <el-input type="textarea" v-model="url" resize="none" placeholder="请输入url，用回车分隔"></el-input>
             <div slot="footer" class="dialog-footer">
+<<<<<<< HEAD
+                <el-button @click="dialogFormVisible = false">取 消</el-button>
+                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
+=======
                 <el-button @click="addCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doSearch" :loading="btnLoading">获取信息</el-button>
             </div>
@@ -77,6 +84,7 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="selectCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="insertCard">插入卡片</el-button>
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
@@ -86,6 +94,13 @@
 </template>
 
 <script>
+<<<<<<< HEAD
+// 导入编辑器样式
+import "quill/dist/quill.core.css";
+import "quill/dist/quill.snow.css";
+import "quill/dist/quill.bubble.css";
+=======
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 // 导入编辑器
 import { quillEditor } from "vue-quill-editor";
 export default {
@@ -94,10 +109,13 @@ export default {
             type: Number,
             default: 10485760
         },
+<<<<<<< HEAD
+=======
         contentData: {
             type: String,
             default: ''
         },
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         baseUrl: {
             type: String,
             default: 'cashier.com'
@@ -109,16 +127,16 @@ export default {
     },
     data() {
         return {
+<<<<<<< HEAD
+            content: "",                        //编辑器内容
+            dialogFormVisible: false,           //dialog显示
+=======
             btnLoading: false,
             content: ``,
             addCardVisible: false,              //dialog显示
             selectCardVisible: false,           //dialog显示
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             url: "",                            //dialog输入的url
-            urlData: {
-                errorProduct: [],
-                errorUrl: [],
-                productList: []
-            },
             editorOption: {                     //editor配置
                 modules: {
                     toolbar: '#toolbar'
@@ -132,6 +150,8 @@ export default {
         quillEditor
     },
     methods: {
+<<<<<<< HEAD
+=======
         // 保留两位小数
         toFixed(num) {
             return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
@@ -169,6 +189,7 @@ export default {
                 this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
             })
         },
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         // 点击icon触发事件
         imgHandler(state) {
             if (state) {
@@ -182,6 +203,7 @@ export default {
                     resolve(res)
                 })
             })
+
         },
         // 上传图片
         onUpload() {
@@ -217,12 +239,17 @@ export default {
             }
         },
         // 编辑器光标离开 将编辑器内容发射给父组件
+<<<<<<< HEAD
+        onEditorBlur(editor) {
+            this.$emit('getContent', this.content)
+=======
         onEditorBlur() {
             this.$emit('emitContent', this.editor.getContents())
         },
         // 编辑器文本改变，传递数据给父组件
         onEditorChange(v) {
             this.$emit('emitContent', v.html)
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         },
         // 清除内容
         clearContent() {
@@ -241,9 +268,12 @@ export default {
 }
 </script>
 
-
-
 <style lang="less" scoped>
+<<<<<<< HEAD
+.quill-editor {
+    height: 450px;
+}
+=======
 hr {
     margin: 20px auto;
 }
@@ -343,4 +373,5 @@ hr {
 .editor .el-dialog__body {
     line-height: 20px;
 }
+>>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 </style>
