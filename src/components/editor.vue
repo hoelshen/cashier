@@ -1,6 +1,7 @@
 <!-- 
     编辑器组件
     props        type              default          explain
+    content      String                            编辑器内容
     size         Number            10485760        图片最大尺寸,默认10m
     bucket       String            cashier-img     要上传到那个backet 
     baseUrl      String            cashier.com     图片域名
@@ -11,7 +12,7 @@
     clearContent                                   清除editor内容
 -->
 <template>
-    <div>
+    <div class="editor">
         <!-- 编辑器自定义toolbar -->
         <div id="toolbar">
             <select class="ql-size"></select>
@@ -24,52 +25,44 @@
             <button class="ql-underline"></button>
             <button class="ql-strike"></button>
             <button class="ql-image"></button>
-            <el-button @click="dialogFormVisible = true">添加卡片</el-button>
+            <el-button @click="addCardVisible = true">添加卡片</el-button>
         </div>
         <!-- 编辑器 -->
-<<<<<<< HEAD
-        <quill-editor v-model="content" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur"></quill-editor>
-=======
         <quill-editor v-model="contentData" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         <!-- 插入卡片dialog -->
-        <el-dialog title="插入卡片" :visible.sync="dialogFormVisible">
+        <el-dialog title="插入卡片" :visible.sync="addCardVisible">
             <label>链接：</label>
             <el-input type="textarea" v-model="url" resize="none" placeholder="请输入url，用回车分隔"></el-input>
             <div slot="footer" class="dialog-footer">
-<<<<<<< HEAD
-                <el-button @click="dialogFormVisible = false">取 消</el-button>
-                <el-button type="primary" @click="dialogFormVisible = false">确 定</el-button>
-=======
                 <el-button @click="addCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doSearch" :loading="btnLoading">获取信息</el-button>
             </div>
         </el-dialog>
         <!-- 卡片选择dialog -->
         <el-dialog title="商品信息" :visible.sync="selectCardVisible">
-            <div v-if="urlData.errorUrl.length > 0">
-                <label>以下的商品链接不正确，请检查后再试</label>
-                <p v-for="url in urlData.errorUrl">商品链接：{{ url }}</p>
+            <label class="card-box-error">以下商品存在问题,请检查后重试</label>
+            <div class="card-error" v-if="urlData.errorUrl.length > 0">
+                <label style="color:rgba(255, 51, 51, 0.83)">链接不正确</label>
+                <p v-for="url in urlData.errorUrl">{{ url }}</p>
             </div>
-            <div style="margin-top:20px;" v-if="urlData.errorProduct.length > 0">
-                <label>以下的商品不存在，请检查后再试</label>
-                <p v-for="url in urlData.errorProduct">商品链接：{{ url }}</p>
+            <div class="card-error" v-if="urlData.errorProduct.length > 0">
+                <label style="color:rgba(255, 51, 51, 0.83)">商品不存在</label>
+                <p v-for="url in urlData.errorProduct">{{ url }}</p>
             </div>
-            <hr>
-            <label v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片：</label>
+            <div class="card-box-hr"></div>
+            <label class="card-box-true" v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片</label>
             <div class="cardWarp" v-if="urlData.productList.length > 0 " v-for="(item,index) in urlData.productList">
                 <template>
                     <div class="cardBox">
                         <div class="closeBtn" @click="closeCard(index)">X</div>
-                        <p class="cardLink">链接：
-                            <el-input style="width:85%" v-model="item.cardUrl" disabled>item.cardUrl</el-input>
+                        <p class="cardLink">链接：{{item.cardUrl}}
                         </p>
                         <div class="cardMain">
                             <img class="cardImg" :src="item.imgUrl">
                             <div class="cardInfo">
                                 <div class="cardTitle" :title="item.proName">{{ item.proName }}</div>
                                 <div class="cardSubTitle" :title="item.catName">item.catName</div>
-                                <hr>
+                                <div class="card-box-hr"></div>
                                 <div class="price">醉品价
                                     <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
                                 </div>
@@ -84,7 +77,6 @@
             <div slot="footer" class="dialog-footer">
                 <el-button @click="selectCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="insertCard">插入卡片</el-button>
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
@@ -94,13 +86,6 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-// 导入编辑器样式
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
-=======
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 // 导入编辑器
 import { quillEditor } from "vue-quill-editor";
 export default {
@@ -109,13 +94,10 @@ export default {
             type: Number,
             default: 10485760
         },
-<<<<<<< HEAD
-=======
         contentData: {
             type: String,
             default: ''
         },
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         baseUrl: {
             type: String,
             default: 'cashier.com'
@@ -127,16 +109,16 @@ export default {
     },
     data() {
         return {
-<<<<<<< HEAD
-            content: "",                        //编辑器内容
-            dialogFormVisible: false,           //dialog显示
-=======
             btnLoading: false,
             content: ``,
             addCardVisible: false,              //dialog显示
             selectCardVisible: false,           //dialog显示
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             url: "",                            //dialog输入的url
+            urlData: {
+                errorProduct: [],
+                errorUrl: [],
+                productList: []
+            },
             editorOption: {                     //editor配置
                 modules: {
                     toolbar: '#toolbar'
@@ -150,8 +132,6 @@ export default {
         quillEditor
     },
     methods: {
-<<<<<<< HEAD
-=======
         // 保留两位小数
         toFixed(num) {
             return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
@@ -189,7 +169,6 @@ export default {
                 this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
             })
         },
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
         // 点击icon触发事件
         imgHandler(state) {
             if (state) {
@@ -203,7 +182,6 @@ export default {
                     resolve(res)
                 })
             })
-
         },
         // 上传图片
         onUpload() {
@@ -239,21 +217,12 @@ export default {
             }
         },
         // 编辑器光标离开 将编辑器内容发射给父组件
-<<<<<<< HEAD
-        onEditorBlur(editor) {
-            this.$emit('getContent', this.content)
-=======
         onEditorBlur() {
             this.$emit('emitContent', this.editor.getContents())
         },
         // 编辑器文本改变，传递数据给父组件
         onEditorChange(v) {
             this.$emit('emitContent', v.html)
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
-        },
-        // 清除内容
-        clearContent() {
-            this.content = '';
         }
     },
     computed: {
@@ -262,33 +231,59 @@ export default {
         }
     },
     mounted() {
+        console.log(this.contentData);
         // 绑定toolbar的image图标handler
         this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", this.imgHandler);
     }
 }
 </script>
 
+
+
 <style lang="less" scoped>
-<<<<<<< HEAD
-.quill-editor {
-    height: 450px;
-}
-=======
 hr {
-    margin: 20px auto;
+    margin: 19px auto;
 }
 .cardWarp:hover .closeBtn {
     display: inline;
 }
+.card-box-error::before {
+    content: "\FF01";
+    width: 16px;
+    display: inline-block;
+    text-align: center;
+    height: 16px;
+    border-radius: 50%;
+    background-color: #ff3333;
+    color: #ffffff;
+    margin-right: 5px;
+    line-height: 16px;
+}
+.card-box-true {
+    padding-left: 22px;
+    background: url("../assets/images/sy_ic_zq.png") no-repeat;
+}
+.card-box-hr {
+    background-color: #e6e6e6;
+    width: 820px;
+    height: 1px;
+    margin: 20px auto 20px 2px;
+}
+.card-error {
+    padding-left: 13px;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    margin-top: 15px;
+    width: 820px;
+    background-color: #fff6eb;
+}
 .cardWarp {
-    background-color: #cccccc;
-    margin: 10px auto;
-    padding: 20px;
-    width: 650px;
+    background-color: #f2f4f5;
+    margin-top: 18px;
+    width: 820px;
     position: relative;
     .closeBtn {
         background-color: #ff0000e3;
-        color: #ffffff;
         border-radius: 50%;
         width: 20px;
         height: 20px;
@@ -304,34 +299,37 @@ hr {
         background-color: #ff0000d5;
     }
     .cardBox {
-        background-color: #ffffff;
         .cardLink {
-            padding: 20px;
+            padding: 18px 20px;
         }
         .cardMain {
-            padding: 0px 15px 15px 15px;
+            width: 786px;
+            margin: 13px 15px 0px 15px;
+            padding-bottom: 18px;
             .cardImg {
-                width: 180px;
+                width: 128px;
                 vertical-align: top;
                 display: inline-block;
             }
             .cardInfo {
-                height: 150px;
                 display: inline-block;
                 margin-left: 20px;
+                .card-box-hr{
+                    width: 90%;
+                    margin:19px auto 19px 0px;
+                }
                 .cardTitle {
-                    width: 370px;
-                    margin-top: 20px;
-                    font-size: 18px;
+                    width: 550px;
+                    font-size: 14px;
                     font-weight: normal;
-                    line-height: 19px;
+                    line-height: 14px;
                     color: #333333;
                     overflow: hidden;
                     text-overflow: ellipsis;
                     white-space: nowrap;
                 }
                 .cardSubTitle {
-                    margin-top: 10px;
+                    margin-top: 14px;
                     font-size: 14px;
                     font-weight: normal;
                     line-height: 15px;
@@ -341,17 +339,17 @@ hr {
                     font-size: 14px;
                     line-height: 14px;
                     color: #999999;
-                    margin: 0px 0px 19px 0px;
+                    margin: 0px 0px 14px 0px;
                     .ZPPrice {
                         color: #333333;
                         font-weight: 600;
                         margin-left: 20px;
                     }
                     .InPrice {
-                        color: #ff0000e3;
+                        color: #ff9819;
                         font-weight: 600;
-                        font-size: 16px;
-                        line-height: 16px;
+                        font-size: 14px;
+                        line-height: 14px;
                         margin-left: 20px;
                     }
                 }
@@ -368,10 +366,9 @@ hr {
     height: 450px;
 }
 .editor .el-dialog__wrapper .el-dialog {
-    width: 720px;
+    width: 888px;
 }
 .editor .el-dialog__body {
     line-height: 20px;
 }
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 </style>

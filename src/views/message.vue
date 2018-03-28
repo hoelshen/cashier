@@ -12,24 +12,24 @@
 						<el-col :span="5">
 							<el-form-item label="通知类型">
 								<el-select v-model="searchData.type" clearable placeholder="请选择">
-									<el-option value="ALL" label="全部"></el-option>
-									<el-option value="NEW" label="新品"></el-option>
-									<el-option value="NEWS" label="系统公告"></el-option>
+									<el-option value="all" label="全部"></el-option>
+									<el-option value="newPro" label="新品"></el-option>
+									<el-option value="systemMessage" label="系统公告"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
 							<el-form-item label="通知状态">
 								<el-select v-model="searchData.status" clearable placeholder="请选择">
-									<el-option value="ALL" label="全部"></el-option>
-									<el-option value="ENABLE" label="启用"></el-option>
-									<el-option value="DISENABLE" label="禁用"></el-option>
+									<el-option value="0" label="全部"></el-option>
+									<el-option value="1" label="启用"></el-option>
+									<el-option value="2" label="禁用"></el-option>
 								</el-select>
 							</el-form-item>
 						</el-col>
 						<el-col :span="7">
 							<el-form-item label="发布时间">
-								<el-date-picker v-model="searchData.time" type="daterange"  start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
+								<el-date-picker v-model="searchData.time" type="daterange" start-placeholder="开始日期" end-placeholder="结束日期"> </el-date-picker>
 							</el-form-item>
 						</el-col>
 						<el-col :span="2">
@@ -39,18 +39,14 @@
 				</el-form>
 			</div>
 			<div class="tableInfo">
-				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
-					<el-table-column label="序号" width="80">
+				<el-button type="primary" class="el-icon-plus" @click="$router.push('/messageAdd')">发布通知</el-button>
+				<el-table border :data="tableData" style="margin: 10px auto 20px auto;font-size: 14px;">
+					<el-table-column label="序号" width="80" align="center">
 						<template slot-scope="scope">
 							<p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1
 								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 						</template>
 					</el-table-column>
-<<<<<<< HEAD
-					<el-table-column prop="PHONE" label="通知标题">
-					</el-table-column>
-					<el-table-column prop="NAME" label="通知类型">
-=======
 					<el-table-column prop="noticeTitle" label="通知标题" align="center" width="300px">
 						<template slot-scope="scope">
 							<div class="noticeTitle" :title="scope.row.noticeTitle">{{scope.row.noticeTitle}}</div>
@@ -62,52 +58,47 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width="100px">
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 					</el-table-column>
-					<el-table-column prop="GID" label="发布时间" sortable>
+					<el-table-column prop="status" label="状态" align="center">
+						<template slot-scope="scoped">
+							<span class="greenPoint" :class="{redColor : scoped.row.status === 2}"></span>
+							{{ scoped.row.status === 1 ? '启用' : '禁用' }}
+						</template>
 					</el-table-column>
-					<el-table-column prop="SHOPNAME" label="发布人">
+					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-<<<<<<< HEAD
-					<el-table-column prop="CREATED_TIME" label="操作">
-=======
 					<el-table-column prop="CREATED_TIME" label="操作" align="center" min-width="120px">
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 						<template slot-scope="scope">
-							<el-tooltip placement="top" effect="light" >
+							<el-tooltip placement="top" effect="light" v-if="scope.row.status === 2">
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
 									<span class="table_enable_text">你确定要启用该通知吗？</span>
 									<div class="table_button_group">
-										<el-button size="small">确定</el-button>
+										<el-button size="small" @click="changeMsg(scope.row,1)">确定</el-button>
 										<el-button size="small">取消</el-button>
 									</div>
 								</div>
 								<span class="table_buleTxt">启用</span>
 							</el-tooltip>
-							<el-tooltip placement="top" effect="light">
+							<el-tooltip placement="top" effect="light" v-else>
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
 									<span class="table_enable_text">你确定要禁用该通知吗？</span>
 									<div class="table_button_group">
-										<el-button size="small">确定</el-button>
+										<el-button size="small" @click="changeMsg(scope.row,2)">确定</el-button>
 										<el-button size="small">取消</el-button>
 									</div>
 								</div>
 								<span class="table_buleTxt">禁用</span>
 							</el-tooltip>
-<<<<<<< HEAD
-							<span class="table_buleTxt">预览</span>
-=======
 							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
 							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 							<el-tooltip placement="top" effect="light">
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
 									<span class="table_enable_text">你确定要删除该通知吗？</span>
 									<div class="table_button_group">
-										<el-button size="small">确定</el-button>
+										<el-button size="small" @click="deleteMsg(scope.row)">确定</el-button>
 										<el-button size="small">取消</el-button>
 									</div>
 								</div>
@@ -117,7 +108,7 @@
 					</el-table-column>
 				</el-table>
 				<div class="page">
-					<el-pagination style="float: right;margin-right: 50px" @size-change="handleSizeChange" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total , prev, pager, next, jumper" :total="totalNums">
+					<el-pagination style="float: right;margin-right: 50px" @current-change="handleCurrentChange" :current-page.sync="currentPage" :page-size="pageSize" layout="total , prev, pager, next, jumper" :total="totalNums">
 					</el-pagination>
 				</div>
 			</div>
@@ -127,27 +118,21 @@
 
 <script type="text/javascript" src="../router.js"></script>
 <script>
+let qs = require('qs');
 export default {
 	data() {
 		return {
 			currentPage: 1,			//当前页
 			totalNums: 0,		    //数据总数
 			pageSize: 30,			//当前页数
+			user: {},
 			searchData: {
 				title: '',		    //标题
-				type: '',		    //类型
-				status: '',		    //状态
+				type: 'all',		//类型
+				status: '0',		//状态
 				time: [],		    //时间
 			},
-			tableData: [
-				{
-					PHONE: '',			//手机号
-					SHOPNAME: '',		//注册店铺
-					NAME: '',			//姓名
-					GID: '',				//会员等级
-					CREATED_TIME: '',		//注册时间
-				}
-			]
+			tableData: []
 		}
 	},
 	methods: {
@@ -170,219 +155,120 @@ export default {
 				}
 			}
 		},
-		onSumbit() {
-			if (!this.checkSession()) return;
-			var temp = new Date(this.searchData.searchTime[0]);
-			if (temp.getFullYear() > 2006) {
-				var time1 = temp.getFullYear();
-				if ((temp.getMonth() + 1) < 10) {
-					time1 = time1 + '-0' + (temp.getMonth() + 1);
-				} else {
-					time1 = time1 + '-' + (temp.getMonth() + 1);
-				}
-				if (temp.getDate() < 10) {
-					time1 = time1 + '-0' + temp.getDate();
-				} else {
-					time1 = time1 + '-' + temp.getDate();
-				}
-				console.log(time1);
-				temp = new Date(this.searchData.searchTime[1]);
-				var time2 = temp.getFullYear();
-				if ((temp.getMonth() + 1) < 10) {
-					time2 = time2 + '-0' + (temp.getMonth() + 1);
-				} else {
-					time2 = time2 + '-' + (temp.getMonth() + 1);
-				}
-				if (temp.getDate() < 10) {
-					time2 = time2 + '-0' + temp.getDate();
-				} else {
-					time2 = time2 + '-' + temp.getDate();
-				}
-				console.log(time2);
+		// 格式化日期
+		formatDate(date) {
+			if (date instanceof Date) {
+				let year = date.getFullYear();
+				let month = date.getMonth() + 1;
+				let day = date.getDate();
+				let hours = date.getHours();
+				let min = date.getMinutes();
+				let second = date.getSeconds();
+				month = month < 10 ? "0" + month : month;
+				day = day < 10 ? "0" + day : day;
+				hours = hours < 10 ? "0" + hours : hours;
+				min = min < 10 ? "0" + min : min;
+				second = second < 10 ? "0" + second : second;
+				return `${year}-${month}-${day} ${hours}:${min}:${second}`;
 			} else {
-				var time1 = '';
-				var time2 = '';
+				return date;
 			}
-			const self = this;
-			self.$ajax({
-				url: '/api/customerInfo/customerInfo/search.jhtml',
-				method: 'post',
-				data: {
-					'page': 1,
-					'rows': this.pageSize,
-					'customerInfo.shop.shopName': this.searchData.searchShop,
-					'customerInfo.phone': this.searchData.searchPhone,
-					'customerInfo.name': this.searchData.searchName,
-					'customerInfo.gid': this.searchData.searchLevel,
-					'customerInfo.startTime': time1,
-					'customerInfo.endTime': time2,
-				},
-				transformRequest: [function(data) {
-					// Do whatever you want to transform the data
-					let ret = ''
-					for (let it in data) {
-						ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-					}
-					return ret;
-				}],
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				}
-			}).then(function(response) {
-				if (response.data.code === 1) {
-					self.tableData = response.data.rows;
-					self.totalNums = response.data.total;
-				} else {
-					self.$message({
-						message: response.data.msg,
-						type: 'error'
-					})
-				}
-			}).catch(function(error) {
-
-			});
 		},
-		handleSizeChange(val) {
-			console.log(`每页 ${val} 条`);
+		// 补齐一天
+		endTimeDay(date) {
+			if (date) {
+				return new Date(new Date(date).getTime() + 1000 * 60 * 60 * 24)
+			}
+		},
+		toFixed(num) {
+			return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
 		},
 		handleCurrentChange(val) {
 			if (!this.checkSession()) return;
-			var temp = new Date(this.searchData.searchTime[0]);
-			if (temp.getFullYear() > 2006) {
-				var time1 = temp.getFullYear();
-				if ((temp.getMonth() + 1) < 10) {
-					time1 = time1 + '-0' + (temp.getMonth() + 1);
+			this.getTableData();
+		},
+		// 启禁用状态
+		changeMsg(target, status) {
+			this.$ajax.post('/api/http/NoticeInfo/updateNoticeInfoStatus.jhtml',
+				qs.stringify({
+					'noticeInfo.id': target.id,
+					'noticeInfo.status': status,
+					'noticeInfo.updateId': this.user.id,
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+				}
+			).then(res => {
+				console.log(res);
+				if (res.data.success === 1) {
+					this.$message({ message: res.data.msg, type: 'success' });
+					target.status = status;
 				} else {
-					time1 = time1 + '-' + (temp.getMonth() + 1);
+					this.$message({ message: res.data.msg, type: 'error' });
 				}
-				if (temp.getDate() < 10) {
-					time1 = time1 + '-0' + temp.getDate();
+			})
+		},
+		// 删除消息
+		deleteMsg(target) {
+			this.$ajax.post('/api/http/NoticeInfo/deleteNoticeInfo.jhtml',
+				qs.stringify({
+					'noticeInfo.id': target.id,
+					'noticeInfo.updateId': this.user.id,
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
+				}
+			).then(res => {
+				if (res.data.success === 1) {
+					this.$message({ message: res.data.msg, type: 'success' });
+					window.location.reload();
 				} else {
-					time1 = time1 + '-' + temp.getDate();
+					this.$message({ message: res.data.msg, type: 'error' });
+					window.location.reload();
 				}
-				console.log(time1);
-				temp = new Date(this.searchData.searchTime[1]);
-				var time2 = temp.getFullYear();
-				if ((temp.getMonth() + 1) < 10) {
-					time2 = time2 + '-0' + (temp.getMonth() + 1);
-				} else {
-					time2 = time2 + '-' + (temp.getMonth() + 1);
-				}
-				if (temp.getDate() < 10) {
-					time2 = time2 + '-0' + temp.getDate();
-				} else {
-					time2 = time2 + '-' + temp.getDate();
-				}
-<<<<<<< HEAD
-				console.log(time2);
-			} else {
-				var time1 = '';
-				var time2 = '';
-			}
-			const self = this;
-			self.$ajax({
-				url: '/api/customerInfo/customerInfo/search.jhtml',
-				method: 'post',
-				data: {
-					'page': val,
-					'rows': this.pageSize,
-					'customerInfo.shop.shopName': this.searchData.searchShop,
-					'customerInfo.phone': this.searchData.searchPhone,
-					'customerInfo.name': this.searchData.searchName,
-					'customerInfo.gid': this.searchData.searchLevel,
-					'customerInfo.startTime': time1,
-					'customerInfo.endTime': time2,
-				},
-				transformRequest: [function(data) {
-					// Do whatever you want to transform the data
-					let ret = ''
-					for (let it in data) {
-						ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-					}
-					return ret;
-				}],
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				}
-			}).then(function(response) {
-				if (response.data.code === 1) {
-					self.tableData = response.data.rows;
-					self.totalNums = response.data.total;
-				} else {
-					self.$message({
-						message: response.data.msg,
-						type: 'error'
-					})
-				}
-			}).catch(function(error) {
-
-			});
-			console.log(`当前页: ${val}`);
-=======
 			})
 		},
 		goEdit(target) {
 			console.log(target);
 			this.$router.push('/');
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 		},
-		toFixed(num) {
-			return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
+		onSumbit() {
+			if (!this.checkSession()) return;
+			this.getTableData();
 		},
-		getData(obj) {
-			const self = this;
-			obj.method = obj.method || 'get';
-			obj.url = obj.url || '';
-			obj.data = obj.data || {};
-			obj.success = obj.success || function() { };
-			obj.fail = obj.fail || function() { };
-			obj.error = obj.error || function() { };
-			if (obj.method === 'get') {
-				var str = '?';
-				for (var item in obj.data) {
-					if (obj.data[item] != '' && obj.data[item] != undefined) {
-						str += item + '=' + obj.data[item] + '&';
-					}
+		getTableData() {
+			this.$ajax.post('/api/http/NoticeInfo/queryNoticeInfoList.jhtml',
+				qs.stringify({
+					'pageIndex': this.currentPage,
+					'pageSize': this.pageSize,
+					'searchVo.noticeTitle': this.searchData.title,
+					'searchVo.noticeType': this.searchData.type,
+					'searchVo.status': this.searchData.status,
+					'searchVo.publishTimeStart': this.searchData.time ? this.formatDate(this.searchData.time[0]) : null,
+					'searchVo.publishTimeEnd': this.searchData.time ? this.formatDate(this.endTimeDay(this.searchData.time[1])) : null
+				}),
+				{
+					headers: {
+						'Content-Type': 'application/x-www-form-urlencoded',
+					},
 				}
-				str = str.substring(0, str.length - 1);
-				obj.url = obj.url + str;
-				self.$ajax({
-					method: 'get',
-					url: `api/${obj.url}`
-				}).then(function(response) {
-					if (response.data.code === 1) {
-						obj.success.call(self, response);
-					} else {
-						// console.log(response);
-						obj.fail.call(self, response);
-					}
-				}).catch(function(error) {
-					obj.error.call(self, error);
-				});
-			}
+			).then(res => {
+				this.tableData = res.data.data.list;
+				this.totalNums = res.data.data.total
+			})
 		}
 	},
 	created() {
 		if (!this.checkSession()) return;
-		this.getData({
-			url: 'customerInfo/customerInfo/search.jhtml',
-			data: {
-				'pager.pageIndex': this.currentPage,
-				'pager.pageSize': this.pageSize,
-			},
-			success(response) {
-				console.log(response);
-				this.tableData = response.data.rows;
-				this.totalNums = response.data.total;
-			},
-			fail(response) {
-				this.$message({
-					message: response.data.msg,
-					type: 'error'
-				})
-			}
-		});
-	},
+		if (sessionStorage.user) {
+			this.user = JSON.parse(sessionStorage.getItem('user'));
+		}
+		this.getTableData();
+	}
 }
 </script>
 
@@ -391,6 +277,9 @@ export default {
     margin: 20px 15px;
     padding: 1px 15px;
     background-color: white;
+}
+.limit {
+    text-align: center;
 }
 
 .page {
@@ -405,31 +294,25 @@ export default {
     margin: 20px 15px auto 15px;
 }
 
-
 #search {
     .el-form {
         margin: 30px 18px auto 18px;
     }
 }
-.table_buleTxt{
-	color: #20a0ff;
-	cursor: pointer;
-	margin-left: 10px;
+.table_buleTxt {
+    color: #20a0ff;
+    cursor: pointer;
+    margin-left: 10px;
 }
-.table_icon{
-	color: red;
-	font-size: 16px;
-	vertical-align: middle;
+.table_icon {
+    color: red;
+    font-size: 16px;
+    vertical-align: middle;
 }
-.table_enable_text{
-	margin-top: 5px;
+.table_enable_text {
+    margin-top: 5px;
     display: inline-block;
 }
-<<<<<<< HEAD
-.table_button_group{
-	margin-top: 10px;
-	text-align: right;
-=======
 .table_button_group {
     margin-top: 10px;
     text-align: right;
@@ -451,13 +334,12 @@ export default {
 }
 .el-icon-plus {
     margin-top: 10px;
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
 }
 </style>
 
 <style lang="less">
-.el-tooltip__popper.is-light{
-	border-color:#cccccc;
+.el-tooltip__popper.is-light {
+    border-color: #cccccc;
 }
 .noticeTitle {
     width: 100%;

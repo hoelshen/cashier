@@ -89,21 +89,25 @@ const config = [{
                 component: resolve => require(['./views/message.vue'], resolve),
             },
             {
+                // 修改通知
+                path: 'updateMsg/:id',
+                name: 'updateMsg',
+                component: resolve => require(['./views/messageAdd.vue'], resolve),
+            },
+            {
                 // 添加通知
                 path: 'messageAdd',
+                name: 'messageAdd',
                 component: resolve => require(['./views/messageAdd.vue'], resolve),
-<<<<<<< HEAD
-=======
             },
             {
                 // 预览通知
                 path: 'lookMsg',
                 name: 'lookMsg',
                 component: resolve => require(['./views/lookMsg.vue'], resolve),
->>>>>>> d15ddc5cd8761f25890fecb362142b8b02d112d0
             }
         ]
-    },
+    }
 ]
 
 const router = new Router({
