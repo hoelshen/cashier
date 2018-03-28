@@ -30,7 +30,7 @@
         <!-- 编辑器 -->
         <quill-editor v-model="contentData" ref="myQuillEditor" :options="editorOption" @blur="onEditorBlur($event)" @change="onEditorChange($event)"></quill-editor>
         <!-- 插入卡片dialog -->
-        <el-dialog title="插入卡片" :visible.sync="addCardVisible">
+        <el-dialog title="插入卡片" :visible.sync="addCardVisible" width="20%">
             <label>链接：</label>
             <el-input type="textarea" v-model="url" resize="none" placeholder="请输入url，用回车分隔"></el-input>
             <div slot="footer" class="dialog-footer">
@@ -39,7 +39,7 @@
             </div>
         </el-dialog>
         <!-- 卡片选择dialog -->
-        <el-dialog title="商品信息" :visible.sync="selectCardVisible">
+        <el-dialog title="商品信息" class="card-dialog" :visible.sync="selectCardVisible">
             <label class="card-box-error">以下商品存在问题,请检查后重试</label>
             <div class="card-error" v-if="urlData.errorUrl.length > 0">
                 <label style="color:rgba(255, 51, 51, 0.83)">链接不正确</label>
@@ -61,7 +61,7 @@
                             <img class="cardImg" :src="item.imgUrl">
                             <div class="cardInfo">
                                 <div class="cardTitle" :title="item.proName">{{ item.proName }}</div>
-                                <div class="cardSubTitle" :title="item.catName">item.catName</div>
+                                <div class="cardSubTitle" :title="item.catName">{{item.catName}}</div>
                                 <div class="card-box-hr"></div>
                                 <div class="price">醉品价
                                     <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
@@ -147,8 +147,8 @@ export default {
             var qs = require('qs');
             this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
                 qs.stringify({
-                    cardUrl: 'https://www.zuipin.cn/goods?id=8669428&utm_source=zuipin,https://www.zuipin.cn/goods?id=8669425&utm_source=zuipin,zuipin.cn/goods?45465454654'
-                    // this.url.replace(/[\r\n&]/g,',')
+                    cardUrl: this.url.replace(/[\r\n&]/g, ',')
+                    // 'https://www.zuipin.cn/goods?id=8669428&utm_source=zuipin,https://www.zuipin.cn/goods?id=8669425&utm_source=zuipin,zuipin.cn/goods?45465454654'
                 }),
                 {
                     headers: {
@@ -218,11 +218,11 @@ export default {
         },
         // 编辑器光标离开 将编辑器内容发射给父组件
         onEditorBlur() {
-            this.$emit('emitContent', this.editor.getContents())
+            this.$emit('emitContent', this.contentData)
         },
         // 编辑器文本改变，传递数据给父组件
         onEditorChange(v) {
-            this.$emit('emitContent', v.html)
+            this.$emit('emitContent', this.contentData)
         }
     },
     computed: {
@@ -231,7 +231,6 @@ export default {
         }
     },
     mounted() {
-        console.log(this.contentData);
         // 绑定toolbar的image图标handler
         this.$refs.myQuillEditor.quill.getModule("toolbar").addHandler("image", this.imgHandler);
     }
@@ -314,9 +313,9 @@ hr {
             .cardInfo {
                 display: inline-block;
                 margin-left: 20px;
-                .card-box-hr{
+                .card-box-hr {
                     width: 90%;
-                    margin:19px auto 19px 0px;
+                    margin: 19px auto 19px 0px;
                 }
                 .cardTitle {
                     width: 550px;
@@ -366,6 +365,9 @@ hr {
     height: 450px;
 }
 .editor .el-dialog__wrapper .el-dialog {
+    width: 500px;
+}
+.editor .card-dialog .el-dialog {
     width: 888px;
 }
 .editor .el-dialog__body {
