@@ -91,8 +91,8 @@
 								</div>
 								<span class="table_buleTxt">禁用</span>
 							</el-tooltip>
+							<router-link v-if="scope.row.status != 1" class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
 							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
-							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
 							<el-tooltip v-if="scope.row.status != 1" placement="top" effect="light">
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
@@ -227,7 +227,7 @@ export default {
 				}
 			).then(res => {
 				if (res.data.success === 1) {
-					this.$message({ message:'删除' + res.data.msg, type: 'success' });
+					this.$message({ message:`删除“通知：【${target.noticeTitle}】”${res.data.msg}`, type: 'success' });
 					window.location.reload();
 				} else {
 					this.$message({ message: res.data.msg, type: 'error' });
