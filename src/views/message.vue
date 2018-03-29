@@ -69,41 +69,11 @@
 					</el-table-column>
 					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="120px">
 						<template slot-scope="scope">
-							<el-tooltip placement="top" effect="light" v-if="scope.row.status === 2">
-								<div slot="content">
-									<i class="el-icon-warning table_icon"></i>
-									<span class="table_enable_text">你确定要启用该通知吗？</span>
-									<div class="table_button_group">
-										<el-button size="small" @click="changeMsg(scope.row,1)">确定</el-button>
-										<el-button size="small" @click="closeTip">取消</el-button>
-									</div>
-								</div>
-								<span class="table_buleTxt">启用</span>
-							</el-tooltip>
-							<el-tooltip placement="top" effect="light" v-else>
-								<div slot="content">
-									<i class="el-icon-warning table_icon"></i>
-									<span class="table_enable_text">你确定要禁用该通知吗？</span>
-									<div class="table_button_group">
-										<el-button size="small" @click="changeMsg(scope.row,2)">确定</el-button>
-										<el-button size="small" @click="closeTip">取消</el-button>
-									</div>
-								</div>
-								<span class="table_buleTxt">禁用</span>
-							</el-tooltip>
+							<span v-if="scope.row.status === 2" class="table_buleTxt" @click="changeMsg(scope.row,1)">启用</span>
+							<span v-if="scope.row.status === 1" class="table_buleTxt" @click="changeMsg(scope.row,2)">禁用</span>
+							<router-link v-if="scope.row.status != 1" class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
 							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
-							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
-							<el-tooltip v-if="scope.row.status != 1" placement="top" effect="light">
-								<div slot="content">
-									<i class="el-icon-warning table_icon"></i>
-									<span class="table_enable_text">你确定要删除该通知吗？</span>
-									<div class="table_button_group">
-										<el-button size="small" @click="deleteMsg(scope.row)">确定</el-button>
-										<el-button size="small" @click="closeTip">取消</el-button>
-									</div>
-								</div>
-								<span class="table_buleTxt">删除</span>
-							</el-tooltip>
+							<span v-if="scope.row.status != 1" class="table_buleTxt" @click="deleteMsg(scope.row)">删除</span>
 						</template>
 					</el-table-column>
 				</el-table>
@@ -136,8 +106,8 @@ export default {
 		}
 	},
 	methods: {
-		closeTip(e){
-			e.path[3].style.display="none";
+		closeTip(e) {
+			e.path[3].style.display = "none";
 		},
 		//判断是否超时
 		checkSession() {
@@ -192,47 +162,63 @@ export default {
 		},
 		// 启禁用状态
 		changeMsg(target, status) {
-			this.$ajax.post('/api/http/NoticeInfo/updateNoticeInfoStatus.jhtml',
-				qs.stringify({
-					'noticeInfo.id': target.id,
-					'noticeInfo.status': status,
-					'noticeInfo.updateId': this.user.id,
-				}),
-				{
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-				}
-			).then(res => {
-				console.log(res);
-				if (res.data.success === 1) {
-					this.$message({ message: res.data.msg, type: 'success' });
-					target.status = status;
-				} else {
-					this.$message({ message: res.data.msg, type: 'error' });
-				}
+			this.$confirm(`确定${status === 1 ? '启用' : '禁用'}通知【${target.noticeTitle}】`, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.$ajax.post('/api/http/NoticeInfo/updateNoticeInfoStatus.jhtml',
+					qs.stringify({
+						'noticeInfo.id': target.id,
+						'noticeInfo.status': status,
+						'noticeInfo.updateId': this.user.id,
+					}),
+					{
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+					}
+				).then(res => {
+					console.log(res);
+					if (res.data.success === 1) {
+						this.$message({ message: res.data.msg, type: 'success' });
+						target.status = status;
+					} else {
+						this.$message({ message: res.data.msg, type: 'error' });
+					}
+				})
 			})
 		},
 		// 删除消息
 		deleteMsg(target) {
-			this.$ajax.post('/api/http/NoticeInfo/deleteNoticeInfo.jhtml',
-				qs.stringify({
-					'noticeInfo.id': target.id,
-					'noticeInfo.updateId': this.user.id,
-				}),
-				{
-					headers: {
-						'Content-Type': 'application/x-www-form-urlencoded',
-					},
-				}
-			).then(res => {
-				if (res.data.success === 1) {
-					this.$message({ message:'删除' + res.data.msg, type: 'success' });
-					window.location.reload();
-				} else {
-					this.$message({ message: res.data.msg, type: 'error' });
-					window.location.reload();
-				}
+			this.$confirm(`确定删除通知【${target.noticeTitle}】`, '提示', {
+				confirmButtonText: '确定',
+				cancelButtonText: '取消',
+				type: 'warning'
+			}).then(() => {
+				this.$ajax.post('/api/http/NoticeInfo/deleteNoticeInfo.jhtml',
+					qs.stringify({
+						'noticeInfo.id': target.id,
+						'noticeInfo.updateId': this.user.id,
+					}),
+					{
+						headers: {
+							'Content-Type': 'application/x-www-form-urlencoded',
+						},
+					}
+				).then(res => {
+					if (res.data.success === 1) {
+						this.$message({ message: `删除“通知：【${target.noticeTitle}】”${res.data.msg}`, type: 'success' });
+						setTimeout(()=>{
+							window.location.reload();
+						},500)
+					} else {
+						this.$message({ message: res.data.msg, type: 'error' });
+												setTimeout(()=>{
+							window.location.reload();
+						},500)
+					}
+				})
 			})
 		},
 		goEdit(target) {

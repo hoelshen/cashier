@@ -77,7 +77,7 @@
             <div slot="footer" class="dialog-footer">
                 <span class="explain-price">价格说明：不同的代理商会显示各自的进货价</span>
                 <el-button @click="selectCardVisible = false">取 消</el-button>
-                <el-button type="primary" @click="insertCard">插入卡片</el-button>
+                <el-button v-if="urlData.productList.length > 0" type="primary" @click="insertCard">插入卡片</el-button>
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
@@ -143,7 +143,7 @@ export default {
         },
         // url获取卡片信息
         doSearch() {
-            if (this.url) {
+            if (this.url && !/,/g.test(this.url)) {
                 this.addCardVisible = false;
                 this.btnLoading = true;
                 var qs = require('qs');
@@ -162,7 +162,7 @@ export default {
                 this.selectCardVisible = true;
             } else {
                 this.$message({
-                    message:'url不能为空！',
+                    message:'url不能为空,且回车分隔！',
                     type:'warning'
                 })
             }
