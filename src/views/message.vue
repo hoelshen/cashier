@@ -67,7 +67,7 @@
 					</el-table-column>
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="center" min-width="120px">
+					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="120px">
 						<template slot-scope="scope">
 							<el-tooltip placement="top" effect="light" v-if="scope.row.status === 2">
 								<div slot="content">
@@ -75,7 +75,7 @@
 									<span class="table_enable_text">你确定要启用该通知吗？</span>
 									<div class="table_button_group">
 										<el-button size="small" @click="changeMsg(scope.row,1)">确定</el-button>
-										<el-button size="small">取消</el-button>
+										<el-button size="small" @click="closeTip">取消</el-button>
 									</div>
 								</div>
 								<span class="table_buleTxt">启用</span>
@@ -86,20 +86,20 @@
 									<span class="table_enable_text">你确定要禁用该通知吗？</span>
 									<div class="table_button_group">
 										<el-button size="small" @click="changeMsg(scope.row,2)">确定</el-button>
-										<el-button size="small">取消</el-button>
+										<el-button size="small" @click="closeTip">取消</el-button>
 									</div>
 								</div>
 								<span class="table_buleTxt">禁用</span>
 							</el-tooltip>
 							<router-link class="table_buleTxt" target="_blank" :to="{ name: 'lookMsg', query: { id: scope.row.id }}">预览</router-link>
 							<router-link class="table_buleTxt" :to="{ name: 'updateMsg', params: { id: scope.row.id}}">修改</router-link>
-							<el-tooltip placement="top" effect="light">
+							<el-tooltip v-if="scope.row.status != 1" placement="top" effect="light">
 								<div slot="content">
 									<i class="el-icon-warning table_icon"></i>
 									<span class="table_enable_text">你确定要删除该通知吗？</span>
 									<div class="table_button_group">
 										<el-button size="small" @click="deleteMsg(scope.row)">确定</el-button>
-										<el-button size="small">取消</el-button>
+										<el-button size="small" @click="closeTip">取消</el-button>
 									</div>
 								</div>
 								<span class="table_buleTxt">删除</span>
@@ -136,6 +136,9 @@ export default {
 		}
 	},
 	methods: {
+		closeTip(e){
+			e.path[3].style.display="none";
+		},
 		//判断是否超时
 		checkSession() {
 			const self = this;
@@ -224,7 +227,7 @@ export default {
 				}
 			).then(res => {
 				if (res.data.success === 1) {
-					this.$message({ message: res.data.msg, type: 'success' });
+					this.$message({ message:'删除' + res.data.msg, type: 'success' });
 					window.location.reload();
 				} else {
 					this.$message({ message: res.data.msg, type: 'error' });

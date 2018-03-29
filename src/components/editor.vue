@@ -32,7 +32,7 @@
         <!-- 插入卡片dialog -->
         <el-dialog title="插入卡片" :visible.sync="addCardVisible" width="20%">
             <label>链接：</label>
-            <el-input type="textarea" v-model="url" resize="none" placeholder="请输入url，用回车分隔"></el-input>
+            <el-input type="textarea" v-model="url" resize="none" placeholder="请输入您想要插入的商品链接，将以卡片的形式展示出来哟~（支持多个，批量操作需换行）"></el-input>
             <div slot="footer" class="dialog-footer">
                 <el-button @click="addCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="doSearch" :loading="btnLoading">获取信息</el-button>
@@ -40,7 +40,7 @@
         </el-dialog>
         <!-- 卡片选择dialog -->
         <el-dialog title="商品信息" class="card-dialog" :visible.sync="selectCardVisible">
-            <label class="card-box-error">以下商品存在问题,请检查后重试</label>
+            <label class="card-box-error" v-if="urlData.errorUrl.length > 0 || urlData.errorProduct.length > 0">以下商品存在问题,请检查后重试</label>
             <div class="card-error" v-if="urlData.errorUrl.length > 0">
                 <label style="color:rgba(255, 51, 51, 0.83)">链接不正确</label>
                 <p v-for="url in urlData.errorUrl">{{ url }}</p>
@@ -49,12 +49,12 @@
                 <label style="color:rgba(255, 51, 51, 0.83)">商品不存在</label>
                 <p v-for="url in urlData.errorProduct">{{ url }}</p>
             </div>
-            <div class="card-box-hr"></div>
+            <div class="card-box-hr" v-if="urlData.errorUrl.length > 0 || urlData.errorProduct.length > 0"></div>
             <label class="card-box-true" v-if="urlData.productList.length > 0">可以选择先插入以下商品卡片</label>
             <div class="cardWarp" v-if="urlData.productList.length > 0 " v-for="(item,index) in urlData.productList">
                 <template>
                     <div class="cardBox">
-                        <div class="closeBtn" @click="closeCard(index)">X</div>
+                        <div class="closeBtn" @click="closeCard(index)"></div>
                         <p class="cardLink">链接：{{item.cardUrl}}
                         </p>
                         <div class="cardMain">
@@ -66,7 +66,7 @@
                                 <div class="price">醉品价
                                     <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
                                 </div>
-                                <div class="price">进货价
+                                <div class="price" style="margin:0px;">进货价
                                     <span class="InPrice">￥{{ toFixed(item.purchasePrice) }}</span>
                                 </div>
                             </div>
@@ -75,6 +75,7 @@
                 </template>
             </div>
             <div slot="footer" class="dialog-footer">
+                <span class="explain-price">价格说明：不同的代理商会显示各自的进货价</span>
                 <el-button @click="selectCardVisible = false">取 消</el-button>
                 <el-button type="primary" @click="insertCard">插入卡片</el-button>
             </div>
@@ -142,23 +143,29 @@ export default {
         },
         // url获取卡片信息
         doSearch() {
-            this.addCardVisible = false;
-            this.btnLoading = true;
-            var qs = require('qs');
-            this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
-                qs.stringify({
-                    cardUrl: this.url.replace(/[\r\n&]/g, ',')
-                    // 'https://www.zuipin.cn/goods?id=8669428&utm_source=zuipin,https://www.zuipin.cn/goods?id=8669425&utm_source=zuipin,zuipin.cn/goods?45465454654'
-                }),
-                {
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded',
-                    },
-                }).then(res => {
-                    this.btnLoading = false;
-                    this.urlData = res.data.result;
+            if (this.url) {
+                this.addCardVisible = false;
+                this.btnLoading = true;
+                var qs = require('qs');
+                this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
+                    qs.stringify({
+                        cardUrl:this.url.replace(/[\r\n&]/g, ',')
+                    }),
+                    {
+                        headers: {
+                            'Content-Type': 'application/x-www-form-urlencoded',
+                        },
+                    }).then(res => {
+                        this.btnLoading = false;
+                        this.urlData = res.data.result;
+                    })
+                this.selectCardVisible = true;
+            } else {
+                this.$message({
+                    message:'url不能为空！',
+                    type:'warning'
                 })
-            this.selectCardVisible = true;
+            }
         },
         // 插入卡片
         insertCard() {
@@ -276,12 +283,19 @@ hr {
     width: 820px;
     background-color: #fff6eb;
 }
+.explain-price {
+    float: left;
+    background: url("../assets/images/sy_ic_bz.png") no-repeat;
+    padding-left: 18px;
+    margin-top: 15px;
+}
 .cardWarp {
     background-color: #f2f4f5;
     margin-top: 18px;
     width: 820px;
     position: relative;
     .closeBtn {
+        background: url("../assets/images/sy_ic_gb.png");
         background-color: #ff0000e3;
         border-radius: 50%;
         width: 20px;
@@ -299,11 +313,11 @@ hr {
     }
     .cardBox {
         .cardLink {
-            padding: 18px 20px;
+            padding: 14px 20px;
         }
         .cardMain {
             width: 786px;
-            margin: 13px 15px 0px 15px;
+            margin: 13px 14px 0px 20px;
             padding-bottom: 18px;
             .cardImg {
                 width: 128px;
@@ -312,7 +326,7 @@ hr {
             }
             .cardInfo {
                 display: inline-block;
-                margin-left: 20px;
+                margin-left: 15px;
                 .card-box-hr {
                     width: 90%;
                     margin: 19px auto 19px 0px;
