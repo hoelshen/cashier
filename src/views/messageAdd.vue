@@ -32,7 +32,6 @@
                 <el-col :span="12">
                     <el-form-item label="代理商类型：" label-width="110px">
                         <el-select v-model="contentData.agent" clearable placeholder="请选择" multiple>
-                            <el-option value="31,265,266" label="全部"></el-option>
                             <el-option value="31" label="单店代理"></el-option>
                             <el-option value="265" label="区域代理"></el-option>
                             <el-option value="266" label="专柜代理"></el-option>
