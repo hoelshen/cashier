@@ -159,7 +159,8 @@ export default {
             let routerNow = this.$router.resolve({
                 path: '/lookMsg',
                 query: {
-                    content: this.contentData.content
+                    content: this.contentData.content,
+                    title: this.contentData.title
                 }
             });
             window.open(routerNow.href, '_blank');

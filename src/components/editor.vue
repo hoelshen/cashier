@@ -143,7 +143,7 @@ export default {
         },
         // url获取卡片信息
         doSearch() {
-            if (this.url) {
+            if (this.url && !/,/g.test(this.url)) {
                 this.addCardVisible = false;
                 this.btnLoading = true;
                 var qs = require('qs');
@@ -162,7 +162,7 @@ export default {
                 this.selectCardVisible = true;
             } else {
                 this.$message({
-                    message:'url不能为空！',
+                    message:'url不能为空,且回车分隔！',
                     type:'warning'
                 })
             }
