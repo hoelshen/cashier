@@ -67,7 +67,6 @@
 							<p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
 						</template>
 					</el-table-column>
-					</el-table-column>
 					<el-table-column prop="salesMan" label="代理商姓名">
 					</el-table-column>
 					<el-table-column prop="shopName" label="店铺名称">
@@ -86,14 +85,12 @@
 					</el-table-column>
 					<el-table-column prop="remark" label="备注/单号" width="180">
 						<template slot-scope="scope">
-							<p>
 								<router-link target="_blank" v-if="scope.row.changeType === '进货'" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{scope.row.purchaseOrderNo}}</router-link>
 								<router-link target="_blank" v-if="scope.row.changeType === '退货' " :to="{ name: 'drawBackDetail', params: { purchaseOrderBackNo: scope.row.purchaseOrderNo}}">{{scope.row.purchaseOrderNo}}</router-link>
 								<p :title=scope.row.remark v-if="scope.row.changeType === '充值' || scope.row.changeType === '扣款' " style="overflow : hidden;text-overflow: ellipsis;display: -webkit-box;-webkit-line-clamp: 2;-webkit-box-orient: vertical;">{{scope.row.remark}}
 								</p>
 								<p :title=scope.row.remark v-if="scope.row.changeType === '订单分成' ">{{scope.row.purchaseOrderNo}}
 								</p>
-							</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="creator" label="变更人" width="90">
@@ -323,7 +320,7 @@ export default {
 			}
 			return num;
 		},
-		 // 格式化json
+		//  格式化json
         formatJson(filterVal, jsonData) {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
@@ -331,9 +328,21 @@ export default {
 		allOutputExcel() {
          this.outputExcel()
 		},
-		formatJson(filterVal, jsonData) {
-				return jsonData.map(v => filterVal.map(j => v[j]))
-		},
+		// formatJson(filterVal, jsonData) {
+        //     // ----> 格式化json
+		// 	// console.log(jsonData)
+        //     return jsonData.map(v =>{
+		// 		// console.log(v)
+        //         // filterVal.map(j => 
+		// 		// 		// console.log(j,v[j])
+		// 		// 		v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "专柜")  ): v[j]  );
+		// 		// 	}
+		// 		// )
+						
+		// 		return jsonData.map(v => filterVal.map(j => v[j]))
+				
+		// 	});
+        // },
 		//导出所选明细
 		outputExcel() {
 		if (!this.checkSession()) return;
@@ -387,18 +396,17 @@ export default {
 					'advanceDeposit.operator': this.searchData.operator,
 				},
 				success(response) {
-					console.log(response.data.success)
+					// console.log(response.data.success)
 					if (response.data.success === 1) {
 							self.tableData = response.data.result;
 							if(self.tableData.length>0){
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
 											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额', '备注/单号', '变更人', '变更时间', '运营人员']
-											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'remark', 'creator', 'createdTime', 'operator']
-
+											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
-											console.log(list)
 											const data = this.formatJson(filterVal, list);
+											// console.log(data)
 											export_json_to_excel(tHeader, data, '预存款明细');
 										})
 							}else{
@@ -456,5 +464,5 @@ export default {
 }
 </script>
 <style lang="less" scoped>
-@import url('../assets/less/prepaidManage.less');
+@import url("../assets/less/prepaidManage.less");
 </style>

@@ -190,13 +190,15 @@
                 <el-col :span="12">
                     <el-form-item label="运营人员">
                         <span  class="down_left" v-if="addForm.operator===''"></span>
-                        <span class="delete_left" v-else @click="deleteOperator"></span>                        
+                        <span class="delete_left" v-else @click="deleteOperator"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>                                                                 -->
                         <el-autocomplete 
                         v-model="addForm.operator"                  
                         :fetch-suggestions="operatorQuerySearchAsync" 
                         @select="handleoperatorSelect"
                         placeholder="请选择"
                         >
+                        <span class="search_left"></span>                        
                         </el-autocomplete>
                      
                     </el-form-item>                    
@@ -204,16 +206,23 @@
                 <el-col :span="12">
                     <el-form-item label="业务人员">
                         <span  class="down_right" v-if="addForm.salesMan===''"></span>
-                        <span class="delete_right" v-else @click="deleteSalesMan"></span>                                                                      
+                        <span class="delete_right" v-else @click="deleteSalesMan"></span>
+                        <!-- <span class="search_right" v-if="!(addForm.salesMan==='')" @click="searchSalesMan"></span>                                                                                                                                                               -->
                         <el-autocomplete 
                         v-model="addForm.salesMan" 
                         :fetch-suggestions="salesManQuerySearchAsync" 
                         @select="handlesalesManSelect"
                         placeholder="请选择"
                         >
+                        <span class="search_right"></span>
                         </el-autocomplete>
                     </el-form-item>
-                </el-col>                    
+                </el-col>
+                <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input>
+                <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>             
+                <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span>
+                <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span>
+                
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -399,7 +408,9 @@ export default {
                 operator:'',
                 salesMan:'',
                 operatorId:'',
-                salesManId:''
+                salesManId:'',
+                operatorName:'',
+                salesManName:'',
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -453,6 +464,8 @@ export default {
                 operator:'',
                 salesManId:'',
                 operatorId:'',
+                operatorName:'',
+                salesManName:'',
     
             },
             editFormTitle: '',
@@ -476,6 +489,8 @@ export default {
                 operatorId:'',
                 salesMan:'',
                 salesManId:'',
+                operatorName:'',
+                salesManName:'',
                 
             },
             isDisable: false,
@@ -487,6 +502,8 @@ export default {
         addressComponent
     },
     created() {
+        console.log(this.salesManName);
+        console.log(this.operatorName);
         const self = this;
         if (!self.checkSession()) return;
         self.loading = true;
@@ -786,15 +803,16 @@ export default {
         },
         //点击选中
         handleoperatorSelect(item) {
-            console.log(item);                
-               this.operatorId= item.id
-               console.log(item.id)
+            this.operatorId= item.id
+            this.addForm.operatorName = item.userName
+            // console.log(this.addForm.operatorName)
             //do something
         },
         handlesalesManSelect(item) {
-            console.log(item);                
-                this.salesManId = item.id
-                console.log(item.id)
+            this.salesManId = item.id
+            this.addForm.salesManName= item.userName
+            // console.log(this.addForm.salesManName)
+            
             //do something
         },
         //新增页面列表
@@ -812,13 +830,13 @@ export default {
                 let  QS =  queryString.toLocaleLowerCase();
                 
                 for(let item of response.data.result){
-                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 ){
                         list.push(item)
                     }
                 }
                 // console.log(list);
                 if(list.length==1){
-                    list.push({value:`没有找到${queryString}`}); 
+                    list.push({value:`没有匹配结果"${queryString}"`}); 
                 }
                 callback(list);
             }).catch((error)=>{
@@ -844,7 +862,7 @@ export default {
                     }
                 }
                 if(list.length==1){
-                    list.push({value:`没有找到${queryString}`}); 
+                    list.push({value:`没有匹配结果"${queryString}"`}); 
                 }
                 callback(list);
             }).catch((error)=>{
@@ -1292,9 +1310,6 @@ export default {
             if (self.$refs.addAgentAddress.resetAddress()) {
                 self.$refs.addAgentAddress.resetAddress();
             }
-
-
-
         },
         //重置修改表格内容
         resetEditForm() {
@@ -1333,18 +1348,35 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
-        deleteSalesMan(){
-            this.addForm.salesMan='';
-        },
         deleteOperator(){
             this.addForm.operator='';
+            this.addForm.operatorName='';
+            
+            // console.log(this.addForm.salesManName)
+        },
+        deleteSalesMan(){
+            this.addForm.salesMan='';
+            this.addForm.salesManName='';
+            // console.log(this.addForm.salesManName)            
+        },
+        deleteOperatorName(){
+            this.addForm.operatorName = '';
+        },
+        deleteSalesManName(){
+            this.addForm.salesManName= '';
+            
         }
-        
+
     }
 }
 </script>
 <style lang="less" scoped>
 @import url('../assets/less/storeManage.less');
+.last_time{
+    position: fixed;
+    top: 72%;
+    left: 60%;
+}
 </style>
 <style>
 .el-message-box {
@@ -1380,23 +1412,23 @@ export default {
     padding: 0px 20px 30px;
 }
 .delete_left{
-    background:url("../assets/images/清除.png") no-repeat  center;
+    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
     background-size: 20px 20px;  
     position: fixed;
-    width: 2%;
+    width: 1.5%;
     height: 5%;
     top: 74%;
-    left: 32%;
+    left: 32.5%;
     z-index: 999;
 }
 .delete_right{
-    background:url("../assets/images/清除.png") no-repeat  center;
+    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
     background-size: 20px 20px;    
     position: fixed;
-    width: 2%;
+    width: 1.5%;
     height: 5%;
     top: 74%;
-    left: 80%;
+    left: 80.5%;
     z-index: 999;
 }
 .down_left{
@@ -1416,5 +1448,48 @@ export default {
     top: 74%;
     left: 80%;
     z-index: 999;
+}
+.search_left{
+    background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
+    position: fixed;
+    width: 2%;
+    height: 5%;
+    top: 74%;
+    left: 30%;
+    z-index: 999;
+}
+.search_right{
+    background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
+    position: fixed;
+    width: 2%;
+    height: 5%;
+    top: 74%;
+    left: 78%;
+    z-index: 999;
+}
+.deleteOperatorName_left{
+
+    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
+    background-size: 20px 20px;  
+    position: fixed;
+    width: 1.5%;
+    height: 5%;
+    top: 68%;
+    left: 32.5%;
+    z-index: 999;
+
+
+}
+.deleteSalesManName_right{
+
+    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
+    background-size: 20px 20px;    
+    position: fixed;
+    width: 1.5%;
+    height: 5%;
+    top: 68%;
+    left: 80.5%;
+    z-index: 999;
+
 }
 </style>
