@@ -321,28 +321,27 @@ export default {
 			return num;
 		},
 		//  格式化json
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
+        // formatJson(filterVal, jsonData) {
+        //     return jsonData.map(v => filterVal.map(j => v[j]))
+        // },
 		//导出全部明细
 		allOutputExcel() {
          this.outputExcel()
 		},
-		// formatJson(filterVal, jsonData) {
-        //     // ----> 格式化json
-		// 	// console.log(jsonData)
-        //     return jsonData.map(v =>{
-		// 		// console.log(v)
-        //         // filterVal.map(j => 
-		// 		// 		// console.log(j,v[j])
-		// 		// 		v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "专柜")  ): v[j]  );
-		// 		// 	}
-		// 		// )
+		formatJson(filterVal, jsonData) {
+        //     ----> 格式化json
+		//     console.log(jsonData)
+            return jsonData.map(v => {
+		// 	   console.log(v)
+            return filterVal.map(j => {
+		//       console.log(j,v[j])
+		    	return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "专柜")  ): v[j]  );
+			// }
+			})
+		    
 						
-		// 		return jsonData.map(v => filterVal.map(j => v[j]))
-				
-		// 	});
-        // },
+			})	
+        },
 		//导出所选明细
 		outputExcel() {
 		if (!this.checkSession()) return;

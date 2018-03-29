@@ -70,7 +70,7 @@
                     </el-table-column>
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
-                    <el-table-column title="shopName" prop="shopName" label="店铺名称">
+                    <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
                         <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
@@ -83,7 +83,7 @@
                                 <span v-if="!scope.row.agentGradeId">-</span>
                             </template>
                     </el-table-column>
-                    <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100">
+                    <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="157">
                     </el-table-column>
                     <el-table-column prop="signTime" label="注册时间" width="110">
                     </el-table-column>
@@ -95,9 +95,9 @@
                                 </p>
                             </template>
                     </el-table-column>
-                     <el-table-column prop="operator" label="运营人员">
+                     <el-table-column prop="operator" label="运营人员" width="127">
                     </el-table-column>
-                     <el-table-column prop="salesMan" label="业务人员">
+                     <el-table-column prop="salesMan" label="业务人员" width="127">
                     </el-table-column>
                     <el-table-column label="操作" width="240">
                         <template slot-scope="scope">
@@ -189,32 +189,30 @@
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="运营人员">
-                        <span  class="down_left" v-if="addForm.operator===''"></span>
-                        <span class="delete_left" v-else @click="deleteOperator"></span>
-                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>                                                                 -->
+                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
                         <el-autocomplete 
                         v-model="addForm.operator"                  
                         :fetch-suggestions="operatorQuerySearchAsync" 
                         @select="handleoperatorSelect"
                         placeholder="请选择"
+                        icon="caret-bottom"
                         >
                         <span class="search_left"></span>                        
                         </el-autocomplete>
-                     
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="业务人员">
-                        <span  class="down_right" v-if="addForm.salesMan===''"></span>
-                        <span class="delete_right" v-else @click="deleteSalesMan"></span>
-                        <!-- <span class="search_right" v-if="!(addForm.salesMan==='')" @click="searchSalesMan"></span>                                                                                                                                                               -->
-                        <el-autocomplete 
+                        <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
+                        <el-autocomplete
                         v-model="addForm.salesMan" 
                         :fetch-suggestions="salesManQuerySearchAsync" 
                         @select="handlesalesManSelect"
                         placeholder="请选择"
+                        icon="caret-bottom"
                         >
-                        <span class="search_right"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -222,7 +220,6 @@
                 <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>             
                 <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span>
                 <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span>
-                
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -253,7 +250,7 @@
             </el-row>
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="店铺名称：">
+                    <el-form-item label="店铺名称：" >
                         <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>
@@ -311,16 +308,44 @@
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                     </el-form-item>
                 </el-col> 
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                     <el-form-item label="运营人员">
                     <el-input v-model="editForm.operator" placeholder="运营人员" :disabled="isDisable"></el-input>                   
                     </el-form-item>  
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="业务人员">
-                        <el-input v-model="editForm.salesMan" placeholder="业务人员" :disabled="isDisable"></el-input>
+                        <el-input v-model="editForm.salesMan" placeholder="  sds " :disabled="isDisable"></el-input>
                     </el-form-item>
-                </el-col> 
+                </el-col>  -->
+                <el-col :span="12">
+                    <el-form-item label="运营人员" >
+                        <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
+                        <el-autocomplete 
+                        v-model="editForm.operator"                  
+                        :fetch-suggestions="operatorQuerySearchAsync" 
+                        @select="handleoperatorSelect"
+                        placeholder="运营人员"  
+                        icon="caret-bottom"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>                    
+                </el-col>
+                <el-col :span="12">
+                    <el-form-item label="业务人员">
+                        <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
+                        <el-autocomplete
+                        v-model="editForm.salesMan" 
+                        :fetch-suggestions="salesManQuerySearchAsync" 
+                        @select="handlesalesManSelect"
+                        placeholder="业务人员"
+                        icon="caret-bottom"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>
+                </el-col>
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -452,6 +477,8 @@ export default {
                 signedTime: '',
                 agentGradeId: '',
                 provinceCode: '',
+                province:'',
+                city:'',
                 cityCode: '',
                 countyCode: '',
                 agentProvince: '',
@@ -476,9 +503,11 @@ export default {
                 phone: '',
                 signedTime: '',
                 agentGradeId: '',
-                provinceCode: '',
-                cityCode: '',
-                countyCode: '',
+                province: '',
+                city: '',
+                county: '',
+                cityCode:'',
+                countyCode:'',
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
@@ -800,6 +829,8 @@ export default {
         //打开新增店铺弹窗
         openAddDialog() {
             this.addDialogVisible = true;
+            this.addForm.operatorName==="";
+            this.addForm.operatorName==="";
         },
         //点击选中
         handleoperatorSelect(item) {
@@ -827,7 +858,20 @@ export default {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
                 }
 
+                if(!queryString){
+                    console.log(response.data.result)
+                    
+                    for(let item of response.data.result){
+                        list.push(item)
+                    }
+                    
+                    callback(list);
+
+                }else{
+
                 let  QS =  queryString.toLocaleLowerCase();
+                    
+               
                 
                 for(let item of response.data.result){
                     if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 ){
@@ -837,6 +881,7 @@ export default {
                 // console.log(list);
                 if(list.length==1){
                     list.push({value:`没有匹配结果"${queryString}"`}); 
+                } 
                 }
                 callback(list);
             }).catch((error)=>{
@@ -854,16 +899,31 @@ export default {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
                 }
 
-                let  QS =  queryString.toLocaleLowerCase();
-                
-                for(let item of response.data.result){
-                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+
+                if(!queryString){
+                    // console.log(response.data.result)
+                    
+                    for(let item of response.data.result){
                         list.push(item)
                     }
+                    
+                    callback(list);
+
+                }else{
+                    
+                    let  QS =  queryString.toLocaleLowerCase();
+                    
+                    for(let item of response.data.result){
+                        if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+                            list.push(item)
+                        }
+                    }
+                    if(list.length==1){
+                        list.push({value:`没有匹配结果"${queryString}"`}); 
+                    }
                 }
-                if(list.length==1){
-                    list.push({value:`没有匹配结果"${queryString}"`}); 
-                }
+
+
                 callback(list);
             }).catch((error)=>{
                 console.log(error);
@@ -1144,6 +1204,15 @@ export default {
                 }
 
             }
+            //业务人员判断
+            // if(addForm.salesMan===""){
+            //     self.loading = false;
+            //     self.$message({
+            //         message:'业务人员为必填项',
+            //         type:'error'
+            //     })
+            //     return false;
+            // }
             return true
         },
         // 新增店铺
@@ -1233,13 +1302,15 @@ export default {
                     'shop.signedTime': data.signedTime,
                     'shop.agentGradeId': data.agentGradeId,
                     'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
+                    'shop.cityCode': data.cityCode,
+                    'shop.countyCode': data.areaCode,
                     'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
                     'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
+                    'shop.city':data.city,       
+                    'shop.provinceCode': editAddress.provinceCode,                                        
                     'shop.isShow': data.isShow,
                     'shop.operator':data.operator,
                     'shop.salesMan':data.salesMan,
@@ -1303,13 +1374,13 @@ export default {
                 operatorId:'',
 
             }
-            if (self.$refs.addAddress.resetAddress()) {
-                self.$refs.addAddress.resetAddress();
+            // if (self.$refs.addAddress.resetAddress()) {
+            //     self.$refs.addAddress.resetAddress();
 
-            }
-            if (self.$refs.addAgentAddress.resetAddress()) {
-                self.$refs.addAgentAddress.resetAddress();
-            }
+            // }
+            // if (self.$refs.addAgentAddress.resetAddress()) {
+            //     self.$refs.addAgentAddress.resetAddress();
+            // }
         },
         //重置修改表格内容
         resetEditForm() {
@@ -1333,12 +1404,12 @@ export default {
                 salesManId:'',    
                 operatorId:'',
             }
-            if (self.$refs.editAddress.resetAddress()) {
-                self.$refs.editAddress.resetAddress();
-            }
-            if (self.$refs.editAgentAddress.resetAddress()) {
-                self.$refs.editAgentAddress.resetAddress();
-            }
+            // if (self.$refs.editAddress.resetAddress()) {
+            //     self.$refs.editAddress.resetAddress();
+            // }
+            // if (self.$refs.editAgentAddress.resetAddress()) {
+            //     self.$refs.editAgentAddress.resetAddress();
+            // }
 
         },
         //重置预存款表格内容
@@ -1351,12 +1422,14 @@ export default {
         deleteOperator(){
             this.addForm.operator='';
             this.addForm.operatorName='';
-            
+            this.editForm.operator='';
             // console.log(this.addForm.salesManName)
         },
         deleteSalesMan(){
             this.addForm.salesMan='';
             this.addForm.salesManName='';
+            this.editForm.salesMan='';
+            
             // console.log(this.addForm.salesManName)            
         },
         deleteOperatorName(){
@@ -1418,7 +1491,7 @@ export default {
     width: 1.5%;
     height: 5%;
     top: 74%;
-    left: 32.5%;
+    left: 36.5%;
     z-index: 999;
 }
 .delete_right{
@@ -1428,27 +1501,10 @@ export default {
     width: 1.5%;
     height: 5%;
     top: 74%;
-    left: 80.5%;
+    left: 84.5%;
     z-index: 999;
 }
-.down_left{
-    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 32%;
-    z-index: 999;
-}
-.down_right{
-    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 80%;
-    z-index: 999;
-}
+
 .search_left{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
     position: fixed;
