@@ -209,10 +209,14 @@ export default {
 				).then(res => {
 					if (res.data.success === 1) {
 						this.$message({ message: `删除“通知：【${target.noticeTitle}】”${res.data.msg}`, type: 'success' });
-						window.location.reload();
+						setTimeout(()=>{
+							window.location.reload();
+						},500)
 					} else {
 						this.$message({ message: res.data.msg, type: 'error' });
-						window.location.reload();
+												setTimeout(()=>{
+							window.location.reload();
+						},500)
 					}
 				})
 			})
