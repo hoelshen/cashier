@@ -26,16 +26,20 @@ export default {
     methods: {
         // 获取url
         getUrl() {
-            this.copyContent.split('<p>卡片</p>').map((value, index, arr) => {
-                value.split('</p><p>链接：').map(v => {
-                    v.split('</p><p>sku：').map(v => {
-                        if (/https:/.test(v)) {
-                            this.url = this.url + v + ',';
-                            this.count++;
-                        }
+            if (/<p>卡片/.test(this.copyContent)) {
+                this.copyContent.split('<p>卡片</p>').map((value, index, arr) => {
+                    value.split('</p><p>链接：').map(v => {
+                        v.split('</p><p>sku：').map(v => {
+                            if (/https:/.test(v)) {
+                                this.url = this.url + v + ',';
+                                this.count++;
+                            }
+                        })
                     })
-                })
-            });
+                });
+            } else {
+                this.content = this.copyContent;
+            }
         },
         // 保留两位小数
         toFixed(num) {
@@ -59,8 +63,6 @@ export default {
                     this.content = '';
                     this.arr = this.copyContent.split('<p>卡片</p>');
                     this.arr.map((value, index, arr) => {
-                        // 第一个卡片前面的文字
-                        index === 0 ? this.content = this.content + arr[0] : null;
                         this.arr1 = value.split('<p>/卡片</p>').map((v, i) => {
                             if (/<p>标题：/.test(v)) {
                                 this.content = this.content +
@@ -72,7 +74,8 @@ export default {
                                         <p style="position: absolute;top: 116px;left: 335px;line-height: 14px;font-size: 14px;color: #333333;font-weight:550;">￥${this.toFixed(this.cardData[index - 1].salesPrice)}</p>
                                         <p style="position: absolute;top: 147px;left: 240px;line-height: 14px;font-size: 14px;color: #999999;">代理价：</p>
                                         <p style="position: absolute;top: 147px;left: 335px;line-height: 16px;font-size: 16px;color: #ff9819;font-weight:550;">￥${this.toFixed(this.cardData[index - 1].purchasePrice)}</p>
-                                        <div style="position: absolute;top: 162px;left: 704px;width:98px;height:38px;line-height: 38px;border-radius: 4px;border: solid 1px #ff9819;font-size: 14px;color: #ff9819;text-align: center;cursor: pointer;" onClick="window.open('${this.cardData[index - 1].cardUrl}')">查看详情</div>
+                                        <div style="position: absolute;top: 162px;left: 650px;width:98px;height:38px;line-height: 38px;border-radius: 4px;border: solid 1px #ff9819;font-size: 14px;color: #ff9819;text-align: center;cursor: pointer;" onClick="window.open('${this.cardData[index - 1].cardUrl}')">查看详情</div>
+                                        <div style="position: absolute;top: 162px;left: 800px;width:98px;height:38px;line-height: 38px;border-radius: 4px;border: solid 1px #ff9819;font-size: 14px;color: #ff9819;text-align: center;cursor: pointer;">加入进货单</div>
                                     </div>`
                             } else {
                                 this.content = this.content + v;
