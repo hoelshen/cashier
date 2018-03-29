@@ -54,12 +54,12 @@
                     <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column type="selection" width="50">
                         </el-table-column>
-                        <el-table-column prop="shopNo" label="代理商编号">
+                        <el-table-column prop="shopNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
                                     <span>{{scope.row.shopNo}}</span>
                                 </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="代理商姓名">
+                        <el-table-column prop="name" label="代理商姓名" width="200">
                             <template slot-scope="scope">
                                     <span>{{scope.row.name}}</span>
                             </template>
@@ -70,7 +70,7 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="商品总金额">
+                        <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
                                 <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
                             </template>
