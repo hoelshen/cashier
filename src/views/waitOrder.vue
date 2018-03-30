@@ -74,7 +74,7 @@
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updator" label="运营人员">
+                    <el-table-column prop="operator" label="运营人员">
                     </el-table-column>                    
                     <el-table-column prop="phone" label="操作">
                         <template slot-scope="scope">
