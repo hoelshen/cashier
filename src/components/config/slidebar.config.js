@@ -85,7 +85,7 @@ export default [{
     },
     {
         title: '通知管理',
-        icon: 'icon-fenchenghesuan',
+        icon: 'icon-tongzhiguanli',
         children: [{
             title: '通知管理',
             path: '/message'

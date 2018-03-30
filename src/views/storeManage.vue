@@ -329,12 +329,12 @@
 
                 <el-col :span="24" v-if="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :disabled="isDisable" />
+                        <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :isDetail="false"/>
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="收件地址：">
-                        <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :disabled="isDisable" />
+                        <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
