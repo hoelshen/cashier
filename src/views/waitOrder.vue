@@ -17,7 +17,7 @@
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
-                                    <el-option label="全部" value=""></el-option>   
+                                    <!-- <el-option label="全部" value=""></el-option>    -->
                                     <el-option label="待审核" value="WAIT_CHECK"></el-option>
 
                                     <!-- <el-option label="待发货" value="WAIT_SEND"></el-option>

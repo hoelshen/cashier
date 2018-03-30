@@ -5,7 +5,7 @@
                 <el-row :gutter="20">
                   
                     <el-col :span="6">
-                        <el-form-item label="注册店铺名：" label-width="38%">
+                        <el-form-item label="代理商名称：" label-width="38%">
                             <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
@@ -54,7 +54,7 @@
                 </el-table-column>
                 <!-- <el-table-column prop="phone" label="手机号"> -->
                 <!-- </el-table-column> -->
-                <el-table-column prop="name" label="店铺名称">
+                <el-table-column prop="name" label="代理商名称：">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
                     <template slot-scope="scope">
@@ -66,10 +66,11 @@
                         {{ scope.row.refundState === 'WAIT_AUDIT' ? '待审核':(scope.row.refundState === 'AUDIT_PASS_REFUNDING' ? '审核通过,退款中':(scope.row.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (scope.row.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(scope.row.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (scope.row.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(scope.row.refundState === 'CANCEL' ? '退款关闭' :'')))))) }}
                     </template>
                 </el-table-column>
-                <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
-                </el-table-column>
                 <el-table-column prop="operator" label="运营人员">                  
                 </el-table-column>
+                <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
+                </el-table-column>
+               
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template slot-scope="scope">
                         <!-- <router-link target="_blank" :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">{{ scope.row.purchaseOrderNo }}</router-link> -->
