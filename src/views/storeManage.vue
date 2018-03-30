@@ -246,30 +246,6 @@
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     <!-- 修改店铺及店铺详情弹窗 start -->
     <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
         <el-form :model="editForm" label-width="120px" ref="editForm">
@@ -362,7 +338,7 @@
                 </el-col>  -->
                 <el-col class="xg-search-yy-wrap"  :span="12">
                     <el-form-item label="运营人员" >
-                        <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
+                        <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator" ></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
                         <el-autocomplete 
                         v-model="editForm.operator"                  
@@ -370,12 +346,13 @@
                         @select="handleoperatorSelect"
                         placeholder="运营人员"  
                         icon="caret-bottom"
+                        :disabled="isDisable"
                         >
                         </el-autocomplete>
                     </el-form-item>                    
                 </el-col>
-                <el-col class="xg-search-yw-wrap" :span="12">
-                    <el-form-item label="业务人员">
+                <el-col class="xg-search-yw-wrap" :span="12" :disabled="isDisable">
+                    <el-form-item label="业务人员" >
                         <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
                         <el-autocomplete
@@ -384,6 +361,7 @@
                         @select="handlesalesManSelect"
                         placeholder="业务人员"
                         icon="caret-bottom"
+                        :disabled="isDisable"
                         >
                         </el-autocomplete>
                     </el-form-item>
@@ -407,7 +385,6 @@
                 </el-col>
             </el-row>
 
-
             <el-row>
                 <el-col :span="22">
                     <el-form-item label="变动类型：" label-width="100px">
@@ -418,8 +395,6 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-
-
 
             <el-row :gutter="20">
                 <el-col :span="5">
@@ -581,8 +556,8 @@ export default {
         addressComponent
     },
     created() {
-        console.log(this.salesManName);
-        console.log(this.operatorName);
+        // console.log(this.salesManName);
+        // console.log(this.operatorName);
         const self = this;
         if (!self.checkSession()) return;
         self.loading = true;
@@ -999,6 +974,10 @@ export default {
                 self.loading = false;
                 self.editForm = response.data.result;
                 console.log(self.editForm.city)
+                console.log(self.editForm.county)
+                console.log(self.editForm.province)
+                
+
             }).catch(function(err) {
                 self.loading = false;
                 console.log(err);
@@ -1231,7 +1210,16 @@ export default {
 
                     return false
                 }
-
+                //业务人员判断
+                if(!data.salesMan){
+                    console.log(data.salesMan)
+                    self.loading = false;
+                    self.$message({
+                        message:'业务人员为必填项',
+                        type:'error'
+                    })
+                    return false;
+                }
             }
             //代理区域判断
             if (data.agentGradeId == 265&& data.shopType != 'SELF_SUPPORT') {
@@ -1253,15 +1241,6 @@ export default {
                     }
                 }
 
-            }
-            // 业务人员判断
-            if(!this.addForm.salesMan){
-                self.loading = false;
-                self.$message({
-                    message:'业务人员为必填项',
-                    type:'error'
-                })
-                return false;
             }
             return true
         },
@@ -1329,6 +1308,9 @@ export default {
             }).catch(function(err) {
                 self.loading = false;
             });
+
+
+
         },
         // 修改店铺
         editAgent() {
@@ -1424,13 +1406,11 @@ export default {
                 operatorId:'',
 
             }
-            // if (self.$refs.addAddress.resetAddress()) {
-            //     self.$refs.addAddress.resetAddress();
+            if (self.$refs.addAddress.resetAddress()) {
+                self.$refs.addAddress.resetAddress();
 
-            // }
-            // if (self.$refs.addAgentAddress.resetAddress()) {
-            //     self.$refs.addAgentAddress.resetAddress();
-            // }
+            }
+    
         },
         //重置修改表格内容
         resetEditForm() {
@@ -1454,12 +1434,10 @@ export default {
                 salesManId:'',    
                 operatorId:'',
             }
-            // if (self.$refs.editAddress.resetAddress()) {
-            //     self.$refs.editAddress.resetAddress();
-            // }
-            // if (self.$refs.editAgentAddress.resetAddress()) {
-            //     self.$refs.editAgentAddress.resetAddress();
-            // }
+       
+            if (self.$refs.editAgentAddress.resetAddress()) {
+                self.$refs.editAgentAddress.resetAddress();
+            }
 
         },
         //重置预存款表格内容
@@ -1471,13 +1449,13 @@ export default {
         },
         deleteOperator(){
             this.addForm.operator='';
-            this.addForm.operatorName='';
+            // this.addForm.operatorName='';
             this.editForm.operator='';
             // console.log(this.addForm.salesManName)
         },
         deleteSalesMan(){
             this.addForm.salesMan='';
-            this.addForm.salesManName='';
+            // this.addForm.salesManName='';
             this.editForm.salesMan='';
             
             // console.log(this.addForm.salesManName)            
@@ -1549,7 +1527,7 @@ export default {
     width: 20px;
     height: 20px;
     top: 9px;
-    left: 171px;
+    left: 289px;
     z-index: 1000;
 }
 .deleteOperatorName_left{
