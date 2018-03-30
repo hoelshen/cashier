@@ -28,28 +28,29 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="代理商等级">
-                                <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
-                                    <el-option label="区域代理" value="265"></el-option>
-                                    <el-option label="专柜代理" value="266"></el-option>
-                                    <el-option label="单店代理" value="31"></el-option>
-                                </el-select>
+                            <el-form-item label="运营人员" label-width="72px">
+                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
                             </el-form-item>
                         </el-col>
-                  
                      
                         <el-col :span="2">
                             <el-button type="primary" @click='onSumbit'>查询</el-button>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
+                           
                             <el-col :span="6">
-                                 <el-form-item label="运营人员" label-width="72px">
-                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
-                            </el-form-item>
+                                <el-form-item label="代理商等级">
+                                    <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+                                        <el-option label="区域代理" value="265"></el-option>
+                                        <el-option label="专柜代理" value="266"></el-option>
+                                        <el-option label="单店代理" value="31"></el-option>
+                                    </el-select>
+                                </el-form-item>
                             </el-col>
-                            <el-col :span="6">
-                            <el-form-item label="下单时间" label-width="72px" style="padding-left:13px;">
+                  
+                            <el-col :span="6" >
+                            <el-form-item label="下单时间" label-width="72px" style="padding-left:14px;">
                                 <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
                             </el-form-item>
                         </el-col>
