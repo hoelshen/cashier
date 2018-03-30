@@ -35,8 +35,8 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                     <el-col :span="6" style="padding-left:4.8%;">
-                        <el-form-item label="申请时间: " >
+                     <el-col :span="6">
+                        <el-form-item label="申请时间: " label-width="38%">
                             <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime" ></el-date-picker>
                         </el-form-item>
                     </el-col>
