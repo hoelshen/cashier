@@ -305,12 +305,12 @@
 
                 <el-col :span="24" v-if="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :disabled="isDisable" />
+                        <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='selfEditAgentAddress' :disabled="isDisable" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
                     <el-form-item label="收件地址：">
-                        <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :disabled="isDisable" />
+                        <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='selfEditAddress' :disabled="isDisable" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="24">
@@ -1410,6 +1410,9 @@ export default {
                 self.$refs.addAddress.resetAddress();
 
             }
+            if (self.$refs.editAgentAddress.resetAddress()) {
+                self.$refs.editAgentAddress.resetAddress();
+            }
     
         },
         //重置修改表格内容
@@ -1425,6 +1428,9 @@ export default {
                 provinceCode: '',
                 cityCode: '',
                 countyCode: '',
+                city:'',
+                county:'',
+                province:'',
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
@@ -1437,6 +1443,9 @@ export default {
        
             if (self.$refs.editAgentAddress.resetAddress()) {
                 self.$refs.editAgentAddress.resetAddress();
+            }
+            if (self.$refs.addAddress.resetAddress()) {
+                self.$refs.addAddress.resetAddress();
             }
 
         },

@@ -4718,15 +4718,11 @@
             },
             resetAddress() {
                 const self = this;
-                console.log('ok')
 
                 self.onSelectprovinceCode = '';
                 self.onSelectcityCode = '';
                 self.onSelectareaCode = '';
 
-                console.log(self.onSelectprovinceCode);
-                console.log(self.onSelectcityCode);
-                console.log(self.onSelectareaCode);
             }
 
         }
