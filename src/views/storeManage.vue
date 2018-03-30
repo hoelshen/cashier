@@ -40,7 +40,7 @@
                         </el-form-item>
                     </el-col>
                      <el-col :span="6">
-                        <el-form-item label="运营人员：">
+                        <el-form-item label="运营人员：" >
                             <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
                         </el-form-item>
                     </el-col>
@@ -188,8 +188,9 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
+                    <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
+                    
                     <el-form-item label="运营人员">
-                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
                         <el-autocomplete 
                         v-model="addForm.operator"                  
@@ -203,8 +204,9 @@
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="12">
+                    <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
+                    
                     <el-form-item label="业务人员">
-                        <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
                         <el-autocomplete
                         v-model="addForm.salesMan" 
@@ -228,6 +230,37 @@
         </div>
     </el-dialog>
     <!-- 新增店铺弹窗 end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- 修改店铺及店铺详情弹窗 start -->
     <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
         <el-form :model="editForm" label-width="120px" ref="editForm">
@@ -364,6 +397,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
             <el-row>
                 <el-col :span="22">
                     <el-form-item label="变动类型：" label-width="100px">
@@ -374,20 +409,25 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
+
             <el-row :gutter="20">
-                <el-col :span="7">
+                <el-col :span="15">
                     <el-form-item label="变动金额：" label-width="100px">
                         <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
                         <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
                     </el-form-item>
                 </el-col>
-                <el-col :span="15">
-                    <el-form-item>
+                <el-col :span="7">
+                    <el-form-item >
                         <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"></el-input>
                         <p class="yuan">元</p>
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
             <el-row>
                 <el-col :span="22">
                     <el-form-item label="备注说明：" label-width="100px">
@@ -398,6 +438,7 @@
                 </el-col>
             </el-row>
         </el-form>
+
         <div slot="footer" class="dialog-footer">
             <el-button @click="changeCancle">取 消</el-button>
             <el-button type="primary" @click="onChange">确 定</el-button>
@@ -948,7 +989,7 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 self.editForm = response.data.result;
-                console.log(self.editForm)
+                console.log(self.editForm.city)
             }).catch(function(err) {
                 self.loading = false;
                 console.log(err);
@@ -1204,15 +1245,15 @@ export default {
                 }
 
             }
-            //业务人员判断
-            // if(addForm.salesMan===""){
-            //     self.loading = false;
-            //     self.$message({
-            //         message:'业务人员为必填项',
-            //         type:'error'
-            //     })
-            //     return false;
-            // }
+            // 业务人员判断
+            if(!this.addForm.salesMan){
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
             return true
         },
         // 新增店铺
@@ -1485,29 +1526,46 @@ export default {
     padding: 0px 20px 30px;
 }
 .delete_left{
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;  
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 74%;
-    left: 36.5%;
-    z-index: 999;
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 3.5%;
+    height: 6%;
+    top: 87%;
+    left: 30.5%;
+    z-index: 1000;
 }
 .delete_right{
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;    
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 74%;
-    left: 84.5%;
-    z-index: 999;
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 3.5%;
+    height: 6%;
+    top: 87%;
+    left: 30.5%;
+    z-index: 1000;
 }
+.deleteOperatorName_left{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 2.5%;
+    height: 6%;
+    top: 78%;
+    left: 31.5%;
+    z-index: 999;
 
+}
+.deleteSalesManName_right{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 2.5%;
+    height: 6%;
+    top: 78%;
+    left: 81.5%;
+    z-index: 999;
+
+}
 .search_left{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
-    position: fixed;
+    position: absolute;
     width: 2%;
     height: 5%;
     top: 74%;
@@ -1516,36 +1574,12 @@ export default {
 }
 .search_right{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
-    position: fixed;
+    position: absolute;
     width: 2%;
     height: 5%;
     top: 74%;
     left: 78%;
     z-index: 999;
 }
-.deleteOperatorName_left{
 
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;  
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 68%;
-    left: 32.5%;
-    z-index: 999;
-
-
-}
-.deleteSalesManName_right{
-
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;    
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 68%;
-    left: 80.5%;
-    z-index: 999;
-
-}
 </style>
