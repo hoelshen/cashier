@@ -162,8 +162,6 @@ export default {
                 val => obj.areaCode === val.code ? (obj.areaName = val.regionName) : void 0
             );
             obj.address = obj.provinceName + obj.cityName + obj.areaName + obj.detail;
-
-
             return obj;
         },
         getAllData() {
@@ -179,12 +177,11 @@ export default {
         }
     },
     created() {
-        this.$ajax.get('/cbttest/baseRegion/getRegionTree'
+        this.$ajax.get('/api//http/area/getRegionTree.jhtml'
         ).then((res) => {
-            this.baseData = res.data.data;
+            this.baseData = res.data.result;
         }).catch(function (err) {
             this.loading = false;
-            console.log(err);
         });
     }
 };
