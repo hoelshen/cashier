@@ -12,7 +12,7 @@
 
                 <el-col :span="6">
                     <el-form-item label="代理商姓名：" >
-                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" style="width:100%"></el-input>
+                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" ></el-input>
                     </el-form-item>
                 </el-col>
 
@@ -24,34 +24,43 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="6">
-                    <el-form-item label="注册时间：">
-                        <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
-                        </el-date-picker>
+                    <el-col :span="6"  >
+                    <el-form-item label="代理商等级：" style="padding:0 3px 0 0">
+                        <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable >
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                        </el-select>
                     </el-form-item>
-                </el-col>   
+                </el-col>
+
+                
+
+           
             </el-row>
             <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="代理商等级：" >
-                            <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
-                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                      <el-col :span="6">
                         <el-form-item label="运营人员：" >
                             <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
                         </el-form-item>
                     </el-col>
                      <el-col :span="6">
-                        <el-form-item label="业务人员：" style="width:80%">
+                        <el-form-item label="业务人员：">
                             <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" style="padding-left:1.5%" >
-                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                    <el-col :span="6">
+
+                    <el-form-item label="注册时间：">
+                        <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                    </el-col>   
+
+                    <el-col :span="6" style="text-align: center;padding-left:10%" >
+                        <el-button type="primary" @click="onSubmit" class="searchBtn" >查询</el-button>
                     </el-col>
+
+
+                    
             </el-row>
         </el-form>
     </div>
