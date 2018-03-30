@@ -196,7 +196,7 @@
                         </div>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col class="search-yy-wrap" :span="12">
                     <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
                     
                     <el-form-item label="运营人员">
@@ -212,7 +212,7 @@
                         </el-autocomplete>
                     </el-form-item>                    
                 </el-col>
-                <el-col :span="12">
+                <el-col class="search-yw-wrap" :span="12">
                     <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
                     
                     <el-form-item label="业务人员">
@@ -227,8 +227,8 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input>
-                <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>             
+                <!-- <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input> -->
+                <!-- <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>              -->
                 <!-- <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span> -->
                 <!-- <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span> -->
             </el-row>
@@ -360,7 +360,7 @@
                         <el-input v-model="editForm.salesMan" placeholder="  sds " :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>  -->
-                <el-col :span="12">
+                <el-col class="xg-search-yy-wrap"  :span="12">
                     <el-form-item label="运营人员" >
                         <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
@@ -374,7 +374,7 @@
                         </el-autocomplete>
                     </el-form-item>                    
                 </el-col>
-                <el-col :span="12">
+                <el-col class="xg-search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
                         <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
                         <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
@@ -1537,22 +1537,22 @@ export default {
 .delete_left{
     background:url("../assets/images/zph_close.png") no-repeat  center;
     position: absolute;
-    width: 3.5%;
-    height: 6%;
-    top: 87%;
-    left: 30.5%;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
     z-index: 1000;
 }
 .delete_right{
     background:url("../assets/images/zph_close.png") no-repeat  center;
     position: absolute;
-    width: 3.5%;
-    height: 6%;
-    top: 87%;
-    left: 30.5%;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
     z-index: 1000;
 }
-/* .deleteOperatorName_left{
+.deleteOperatorName_left{
     background:url("../assets/images/zph_close.png") no-repeat  center;
     position: absolute;
     width: 2.5%;
@@ -1571,24 +1571,56 @@ export default {
     left: 81.5%;
     z-index: 999;
 
-} */
+}
 .search_left{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
     position: absolute;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 30%;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
     z-index: 999;
 }
 .search_right{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
     position: absolute;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 78%;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
     z-index: 999;
+}
+.search-yw-wrap{
+    position: relative;
+    
+}
+
+.search-yy-wrap{
+    position: relative;
+}
+.xg-search-yw-wrap{
+     position: relative;
+}
+.xg-search-yy-wrap{
+     position: relative;
+}
+.xg-search-yy-wrap .delete_left{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
+    z-index: 1000;
+}
+.xg-search-yw-wrap .delete_right{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
+    z-index: 1000;
 }
 
 </style>
