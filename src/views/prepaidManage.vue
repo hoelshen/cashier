@@ -26,7 +26,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
-							<el-form-item label="代理商等级">
+							<el-form-item label="代理商等级"  >
 								<el-select @keyup.enter.native="onSumbit" v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 									<el-option label="区域代理" value="265"></el-option>
 									<el-option label="专柜代理" value="266"></el-option>
@@ -140,7 +140,8 @@ export default {
 					orderStatus: '',		//状态
 					createdTime: '',		//变更时间
 					salesMan:'',             //代理商姓名
-					operator:'',           //运营人员
+					operator:'', 	     //运营人员
+					searchLevel:''       //代理商等级 
 				}
 			],
 			allId: '',
@@ -217,7 +218,7 @@ export default {
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.salesMan': this.searchData.salesMan,
 					'advanceDeposit.operator': this.searchData.operator,
-					
+					'advanceDeposit.agentGradeIds':this.searchData.searchLevel
 				},
 				success(response) {
 					console.log(response.data.result)
@@ -321,28 +322,27 @@ export default {
 			return num;
 		},
 		//  格式化json
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
+        // formatJson(filterVal, jsonData) {
+        //     return jsonData.map(v => filterVal.map(j => v[j]))
+        // },
 		//导出全部明细
 		allOutputExcel() {
          this.outputExcel()
 		},
-		// formatJson(filterVal, jsonData) {
-        //     // ----> 格式化json
-		// 	// console.log(jsonData)
-        //     return jsonData.map(v =>{
-		// 		// console.log(v)
-        //         // filterVal.map(j => 
-		// 		// 		// console.log(j,v[j])
-		// 		// 		v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "专柜")  ): v[j]  );
-		// 		// 	}
-		// 		// )
+		formatJson(filterVal, jsonData) {
+        //     ----> 格式化json
+		//     console.log(jsonData)
+            return jsonData.map(v => {
+		// 	   console.log(v)
+            return filterVal.map(j => {
+		//       console.log(j,v[j])
+		    	return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "专柜")  ): v[j]  );
+			// }
+			})
+		    
 						
-		// 		return jsonData.map(v => filterVal.map(j => v[j]))
-				
-		// 	});
-        // },
+			})	
+        },
 		//导出所选明细
 		outputExcel() {
 		if (!this.checkSession()) return;
@@ -385,8 +385,8 @@ export default {
 			this.$getData({
 				url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 				data: {
-					'pager.pageIndex': this.currentPage,
-					'pager.pageSize': this.pageSize,
+					'pager.pageIndex': 1,
+					'pager.pageSize': 999999,
 					'advanceDeposit.shopNo': this.searchData.searchId,
 					'advanceDeposit.phone': this.searchData.searchPhone,
 					'advanceDeposit.changeType': this.searchData.searchStatus,
@@ -402,8 +402,8 @@ export default {
 							if(self.tableData.length>0){
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
-											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额', '备注/单号', '变更人', '变更时间', '运营人员']
-											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'purchaseOrderNo', 'creator', 'createdTime', 'operator']
+											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额','结余', '备注/单号', '变更人', '变更时间', '运营人员']
+											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
 											const data = this.formatJson(filterVal, list);
 											// console.log(data)

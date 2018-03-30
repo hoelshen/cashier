@@ -11,9 +11,8 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-                        <el-form-item label="选择月份： ">
-                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
-                            </el-date-picker>
+                        <el-form-item label="代理商姓名：" >
+                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
@@ -23,11 +22,10 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="付款单号：">
-                            <el-input v-model="searchData.payOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
-                        </el-form-item>
+                    <el-col :span="2" :offset="1">
+                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
                     </el-col>
+                    
                 </el-row>
                 <el-row :gutter="10" class="searchbar">
                     <el-col :span="6">
@@ -35,14 +33,18 @@
                             <el-input v-model="searchData.shopNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
                         </el-form-item>
                     </el-col>
-                     <el-col :span="6">
-                        <el-form-item label="代理商姓名：" style="width:73%">
-                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                    <el-col :span="6">
+                        <el-form-item label="选择月份： ">
+                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="2" :offset="1">
-                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                     <el-col :span="6">
+                        <el-form-item label="付款单号：">
+                            <el-input v-model="searchData.payOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
+                        </el-form-item>
                     </el-col>
+                    
                 </el-row>
             </el-form>
         </div>
@@ -54,28 +56,28 @@
                     <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column type="selection" width="50">
                         </el-table-column>
-                        <el-table-column prop="shopNo" label="代理商编号">
+                        <el-table-column prop="shopNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
                                     <span>{{scope.row.shopNo}}</span>
                                 </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="代理商姓名">
+                        <el-table-column prop="name" label="代理商姓名" width="200">
                             <template slot-scope="scope">
                                     <span>{{scope.row.name}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="createMonth" label="月份">
+                        <el-table-column prop="createMonth" label="月份" width="100">
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="商品总金额">
+                        <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
                                 <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="verifiAmount" label="分成金额">
+                        <el-table-column prop="verifiAmount" label="分成金额" width="100">
                             <template slot-scope="scope">
                                 <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
                             </template>
@@ -85,7 +87,7 @@
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号">
+                        <el-table-column prop="payOrderNo" label="付款单号" width="100">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
@@ -437,4 +439,7 @@ export default {
 </script>
 <style lang="less" scoped>
 @import url('../assets/less/area.less');
+.el-date-editor.el-input{
+    width: 100%
+}
 </style>

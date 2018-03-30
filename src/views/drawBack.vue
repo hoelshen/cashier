@@ -4,11 +4,6 @@
             <el-form v-model="searchData">
                 <el-row :gutter="10">
                     <el-col :span="6">
-                        <el-form-item label="代理商手机：" label-width="38%">
-                            <el-input v-model="searchData.searchPhone" @keyup.enter.native="onSubmit"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
                         <el-form-item label="代理商名称：" label-width="38%">
                             <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
@@ -21,6 +16,11 @@
                     <el-col :span="6">
                         <el-form-item label="原进货单号：" label-width="38%">
                             <el-input v-model="searchData.searchOrderNo" @keyup.enter.native="onSubmit"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="运营人员：" label-width="38%">
+                            <el-input v-model="searchData.searchUpdator" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -55,8 +55,6 @@
                 </el-table-column>
                 <el-table-column prop="shopNo" label="代理商编号" width="110px">
                 </el-table-column>
-                <el-table-column prop="phone" label="手机号">
-                </el-table-column>
                 <el-table-column prop="name" label="代理商名称">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
@@ -69,6 +67,9 @@
                         {{ scope.row.refundState === 'WAIT_AUDIT' ? '待审核':(scope.row.refundState === 'AUDIT_PASS_REFUNDING' ? '审核通过,退款中':(scope.row.refundState === 'REDUNS_SUCCESS' ? '退款成功' : (scope.row.refundState === 'AUDIT_PASS_WAIT_SEND' ? '审核通过，请退货':(scope.row.refundState === 'SEND_WAIT_RECEIVED' ? '已退回，待收货': (scope.row.refundState === 'RECEIVED_WAIT_CONFIRM' ? '已收货，确认中':(scope.row.refundState === 'CANCEL' ? '退款关闭' :'')))))) }}
                     </template>
                 </el-table-column>
+                <el-table-column prop="operator" label="运营人员">
+                </el-table-column>
+                
                 <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
@@ -112,7 +113,8 @@ export default {
         searchNo: "", //退款单号
         searchOrderNo: "", //原进货单号
         searchState: "", //状态
-        searchTime: "" //申请时间
+        searchTime: "", //申请时间
+        searchUpdator:'',  //运营人员
       },
       tableData: [
         {
@@ -126,7 +128,8 @@ export default {
           applyTime: "", //申请时间
           purchaseOrderNo: "", //原进货单号
           serviceRemark: "", //客服备注
-          linkTo: "ttttttt1" //跳转链接
+          linkTo: "ttttttt1", //跳转链接
+          operator:'',   //运营人员
         }
       ]
     };
@@ -236,7 +239,8 @@ export default {
             "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
             "searchBackVo.purchaseOrderState": this.searchData.searchState,
             "searchBackVo.startTime": time[0],
-            "searchBackVo.endTime": time[1]
+            "searchBackVo.endTime": time[1],
+            "searchBackVo.updator":this.searchData.searchUpdator,
           }),
           {
             headers: {
@@ -292,7 +296,9 @@ export default {
             "searchBackVo.startTime": time[0],
             "searchBackVo.endTime": time[1],
             "searchBackVo.sort": "applyTime",
-            "searchBackVo.order": this.order
+            "searchBackVo.order": this.order,
+            "searchBackVo.updator":this.searchData.searchUpdator,
+            
           }),
           {
             headers: {
@@ -374,7 +380,9 @@ export default {
             "searchBackVo.purchaseOrderNo": this.searchData.searchOrderNo,
             "searchBackVo.purchaseOrderState": this.searchData.searchState,
             "searchBackVo.startTime": time[0],
-            "searchBackVo.endTime": time[1]
+            "searchBackVo.endTime": time[1],
+            "searchBackVo.updator":this.searchData.searchUpdator,
+            
           }),
           {
             headers: {

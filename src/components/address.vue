@@ -32,7 +32,8 @@
                 v-for="(value,key) in provinceList"
                 :key="key"
                 :label="value"
-                :value="key">
+                :value="key"
+                >
                 </el-option>
             </el-select>
         </div>
@@ -42,7 +43,8 @@
                 v-for="(value,key) in cityList"
                 :key="key"
                 :label="value"
-                :value="key">
+                :value="key"
+                >
                 </el-option>
             </el-select>
         </div>
@@ -52,7 +54,8 @@
                 v-for="(value,key) in areaList"
                 :key="key"
                 :label="value"
-                :value="key">
+                :value="key"
+                >
                 </el-option>
             </el-select>
         </div>

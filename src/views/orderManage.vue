@@ -5,11 +5,6 @@
                 <el-form label-width="85px" ref="form" :model="searchData">
                     <el-row :gutter="20">
                         <el-col :span="6">
-                            <el-form-item label="代理商手机">
-                                <el-input v-model="searchData.searchPhone" @keyup.enter.native="onSumbit" placeholder="代理商手机号"></el-input>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
                             <el-form-item label="代理商名称">
                                 <el-input v-model="searchData.searchName" @keyup.enter.native="onSumbit" placeholder="代理商名称"></el-input>
                             </el-form-item>
@@ -30,6 +25,28 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+                        <el-col :span="6">
+                            <el-form-item label="运营人员">
+                                <el-input v-model="searchData.searchOperator" @keyup.enter.native="onSumbit" placeholder="运营人员"></el-input>
+                            </el-form-item>
+                        </el-col>
+
+                        <!-- // <el-col :span="12">
+                        //     <el-form-item label="运营人员">
+                        //         <! <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
+                        <!-- //         <el-autocomplete 
+                        //         v-model="searchData.searchOperator"                  
+                        //         :fetch-suggestions="operatorQuerySearchAsync" 
+                        //         @select="handleoperatorSelect"
+                        //         placeholder="请选择"
+                        //         icon="caret-bottom"
+                        //         >                       
+                        //         </el-autocomplete>
+                        //     </el-form-item>                    
+                        // </el-col> -->
+
+
+
                         <el-col :span="2">
                             <el-button type="primary" @click='onSumbit'>查询</el-button>
                         </el-col>
@@ -44,6 +61,7 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+
                         <el-col :span="6">
                             <el-form-item label="下单时间" label-width="72px">
                                 <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
@@ -63,8 +81,6 @@
                             <p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="phone" label="手机号">
-                    </el-table-column>
                     <el-table-column prop="name" label="代理商名称">
                     </el-table-column>
                     <el-table-column prop="stateName" label="状态">
@@ -75,6 +91,10 @@
                         <template slot-scope="scope">
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
+                    </el-table-column>
+                    <el-table-column prop="operator" label="运营人员">
+                    </el-table-column>
+                    <el-table-column prop="receiptName" label="收件人">
                     </el-table-column>
                     <el-table-column prop="phone" label="详情">
                         <template slot-scope="scope">
@@ -109,6 +129,7 @@ export default {
                 searchTime: '', //下单时间
                 searchLevel: [], //代理商等级
                 Level: [], //代理商等级替代
+                searchOperator:''  //运营人员
             },
             tableData: [{
                 purchaseOrderNo: '', //进货单号
@@ -119,6 +140,8 @@ export default {
                 stateName: '', //状态
                 orderTime: '', //下单时间
                 orderSum: '', //金额
+                operator:'',   //运营人员
+                receiptName:'', //收件人
             }]
         }
     },
@@ -197,6 +220,8 @@ export default {
                     'purchaseOrder.agentGradeIds': this.searchData.level,
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
+                    'purchaseOrder.operator':this.searchData.searchOperator,
+                    
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -225,7 +250,54 @@ export default {
         },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
-        },
+        },  
+        // handleoperatorSelect(item) {
+            
+            
+        // },
+        // operatorQuerySearchAsync(queryString, callback) {
+        //         var list = [{}];
+        //         //调用的后台接口
+        //         let url = '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml?userUnit=operator' + '&userName=' + queryString;
+        //         //从后台获取到对象数组
+        //         axios.get( url ).then((response)=>{
+        //             //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+        //             for (let i of response.data.result){
+        //                 i.value = i.userName;  //将CUSTOMER_NAME作为value
+        //             }
+
+        //             if(!queryString){
+        //                 console.log(response.data.result)
+                        
+        //                 for(let item of response.data.result){
+        //                     list.push(item)
+        //                 }
+                        
+        //                 callback(list);
+
+        //             }else{
+
+        //             let  QS =  queryString.toLocaleLowerCase();
+                        
+                
+                    
+        //             for(let item of response.data.result){
+        //                 if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 ){
+        //                     list.push(item)
+        //                 }
+        //             }
+        //             // console.log(list);
+        //             if(list.length==1){
+        //                 list.push({value:`没有匹配结果"${queryString}"`}); 
+        //             } 
+        //             }
+        //             callback(list);
+        //         }).catch((error)=>{
+        //             console.log(error);
+        //         });
+        //     },
+
+
         handleCurrentChange(val) {
             if (!this.checkSession()) return;
             console.log(this.searchData.searchTime);
@@ -280,6 +352,7 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
+                    "purchaseOrder.operator ": this.searchData.searchOperator,
                 },
                 success(response) {
                     this.tableData = response.data.result;
@@ -360,6 +433,8 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
+                    'purchaseOrder.name':this.searchData.searchName,
+                    'purchaseOrder.operator ':this.searchData.operator,
                 },
                 success(response) {
                     this.tableData = response.data.result;

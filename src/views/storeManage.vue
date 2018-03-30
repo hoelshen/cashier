@@ -12,7 +12,7 @@
 
                 <el-col :span="6">
                     <el-form-item label="代理商姓名：" >
-                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" style="width:100%"></el-input>
+                        <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名" ></el-input>
                     </el-form-item>
                 </el-col>
 
@@ -24,34 +24,43 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="6">
-                    <el-form-item label="注册时间：">
-                        <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
-                        </el-date-picker>
+                    <el-col :span="6"  >
+                    <el-form-item label="代理商等级：" style="padding:0 3px 0 0">
+                        <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable >
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                        </el-select>
                     </el-form-item>
-                </el-col>   
+                </el-col>
+
+                
+
+           
             </el-row>
             <el-row>
-                    <el-col :span="6">
-                        <el-form-item label="代理商等级：" >
-                            <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
-                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
                      <el-col :span="6">
-                        <el-form-item label="运营人员：">
+                        <el-form-item label="运营人员：" >
                             <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
                         </el-form-item>
                     </el-col>
                      <el-col :span="6">
-                        <el-form-item label="业务人员：" style="width:80%">
+                        <el-form-item label="业务人员：">
                             <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6" style="padding-left:1.5%" >
-                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                    <el-col :span="6">
+
+                    <el-form-item label="注册时间：">
+                        <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
+                        </el-date-picker>
+                    </el-form-item>
+                    </el-col>   
+
+                    <el-col :span="6" style="text-align: center;padding-left:10%" >
+                        <el-button type="primary" @click="onSubmit" class="searchBtn" >查询</el-button>
                     </el-col>
+
+
+                    
             </el-row>
         </el-form>
     </div>
@@ -70,7 +79,7 @@
                     </el-table-column>
                     <el-table-column prop="name" label="姓名">
                     </el-table-column>
-                    <el-table-column title="shopName" prop="shopName" label="店铺名称">
+                    <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
                         <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
@@ -83,7 +92,7 @@
                                 <span v-if="!scope.row.agentGradeId">-</span>
                             </template>
                     </el-table-column>
-                    <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100">
+                    <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="157">
                     </el-table-column>
                     <el-table-column prop="signTime" label="注册时间" width="110">
                     </el-table-column>
@@ -95,9 +104,9 @@
                                 </p>
                             </template>
                     </el-table-column>
-                     <el-table-column prop="operator" label="运营人员">
+                     <el-table-column prop="operator" label="运营人员" width="127">
                     </el-table-column>
-                     <el-table-column prop="salesMan" label="业务人员">
+                     <el-table-column prop="salesMan" label="业务人员" width="127">
                     </el-table-column>
                     <el-table-column label="操作" width="240">
                         <template slot-scope="scope">
@@ -187,42 +196,41 @@
                         </div>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col class="search-yy-wrap" :span="12">
+                    <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
+                    
                     <el-form-item label="运营人员">
-                        <span  class="down_left" v-if="addForm.operator===''"></span>
-                        <span class="delete_left" v-else @click="deleteOperator"></span>
-                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>                                                                 -->
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
                         <el-autocomplete 
                         v-model="addForm.operator"                  
                         :fetch-suggestions="operatorQuerySearchAsync" 
                         @select="handleoperatorSelect"
                         placeholder="请选择"
+                        icon="caret-bottom"
                         >
                         <span class="search_left"></span>                        
                         </el-autocomplete>
-                     
                     </el-form-item>                    
                 </el-col>
-                <el-col :span="12">
+                <el-col class="search-yw-wrap" :span="12">
+                    <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
+                    
                     <el-form-item label="业务人员">
-                        <span  class="down_right" v-if="addForm.salesMan===''"></span>
-                        <span class="delete_right" v-else @click="deleteSalesMan"></span>
-                        <!-- <span class="search_right" v-if="!(addForm.salesMan==='')" @click="searchSalesMan"></span>                                                                                                                                                               -->
-                        <el-autocomplete 
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
+                        <el-autocomplete
                         v-model="addForm.salesMan" 
                         :fetch-suggestions="salesManQuerySearchAsync" 
                         @select="handlesalesManSelect"
                         placeholder="请选择"
+                        icon="caret-bottom"
                         >
-                        <span class="search_right"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input>
-                <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>             
-                <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span>
-                <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span>
-                
+                <!-- <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input> -->
+                <!-- <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>              -->
+                <!-- <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span> -->
+                <!-- <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span> -->
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -231,6 +239,37 @@
         </div>
     </el-dialog>
     <!-- 新增店铺弹窗 end -->
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     <!-- 修改店铺及店铺详情弹窗 start -->
     <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
         <el-form :model="editForm" label-width="120px" ref="editForm">
@@ -253,7 +292,7 @@
             </el-row>
             <el-row>
                 <el-col :span="12">
-                    <el-form-item label="店铺名称：">
+                    <el-form-item label="店铺名称：" >
                         <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>
@@ -311,16 +350,44 @@
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
                     </el-form-item>
                 </el-col> 
-                <el-col :span="12">
+                <!-- <el-col :span="12">
                     <el-form-item label="运营人员">
                     <el-input v-model="editForm.operator" placeholder="运营人员" :disabled="isDisable"></el-input>                   
                     </el-form-item>  
                 </el-col>
                 <el-col :span="12">
                     <el-form-item label="业务人员">
-                        <el-input v-model="editForm.salesMan" placeholder="业务人员" :disabled="isDisable"></el-input>
+                        <el-input v-model="editForm.salesMan" placeholder="  sds " :disabled="isDisable"></el-input>
                     </el-form-item>
-                </el-col> 
+                </el-col>  -->
+                <el-col class="xg-search-yy-wrap"  :span="12">
+                    <el-form-item label="运营人员" >
+                        <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                               
+                        <el-autocomplete 
+                        v-model="editForm.operator"                  
+                        :fetch-suggestions="operatorQuerySearchAsync" 
+                        @select="handleoperatorSelect"
+                        placeholder="运营人员"  
+                        icon="caret-bottom"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>                    
+                </el-col>
+                <el-col class="xg-search-yw-wrap" :span="12">
+                    <el-form-item label="业务人员">
+                        <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
+                        <!-- <span class="search_left" v-if="!(addForm.operator==='')" @click="searchOperator"></span>-->                                                                                       
+                        <el-autocomplete
+                        v-model="editForm.salesMan" 
+                        :fetch-suggestions="salesManQuerySearchAsync" 
+                        @select="handlesalesManSelect"
+                        placeholder="业务人员"
+                        icon="caret-bottom"
+                        >
+                        </el-autocomplete>
+                    </el-form-item>
+                </el-col>
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -339,6 +406,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
             <el-row>
                 <el-col :span="22">
                     <el-form-item label="变动类型：" label-width="100px">
@@ -349,20 +418,25 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
+
             <el-row :gutter="20">
-                <el-col :span="7">
-                    <el-form-item label="变动金额：" label-width="100px">
+                <el-col :span="5">
+                    <el-form-item label="变动金额：" label-width="100px" >
                         <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
                         <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
                     </el-form-item>
                 </el-col>
-                <el-col :span="15">
-                    <el-form-item>
-                        <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"></el-input>
+                <el-col :span="17" >
+                    <el-form-item >
+                        <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"  style="padding-right:5px;"> </el-input>
                         <p class="yuan">元</p>
                     </el-form-item>
                 </el-col>
             </el-row>
+
+
             <el-row>
                 <el-col :span="22">
                     <el-form-item label="备注说明：" label-width="100px">
@@ -373,6 +447,7 @@
                 </el-col>
             </el-row>
         </el-form>
+
         <div slot="footer" class="dialog-footer">
             <el-button @click="changeCancle">取 消</el-button>
             <el-button type="primary" @click="onChange">确 定</el-button>
@@ -452,6 +527,8 @@ export default {
                 signedTime: '',
                 agentGradeId: '',
                 provinceCode: '',
+                province:'',
+                city:'',
                 cityCode: '',
                 countyCode: '',
                 agentProvince: '',
@@ -476,9 +553,11 @@ export default {
                 phone: '',
                 signedTime: '',
                 agentGradeId: '',
-                provinceCode: '',
-                cityCode: '',
-                countyCode: '',
+                province: '',
+                city: '',
+                county: '',
+                cityCode:'',
+                countyCode:'',
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
@@ -800,6 +879,8 @@ export default {
         //打开新增店铺弹窗
         openAddDialog() {
             this.addDialogVisible = true;
+            this.addForm.operatorName==="";
+            this.addForm.operatorName==="";
         },
         //点击选中
         handleoperatorSelect(item) {
@@ -827,7 +908,20 @@ export default {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
                 }
 
+                if(!queryString){
+                    console.log(response.data.result)
+                    
+                    for(let item of response.data.result){
+                        list.push(item)
+                    }
+                    
+                    callback(list);
+
+                }else{
+
                 let  QS =  queryString.toLocaleLowerCase();
+                    
+               
                 
                 for(let item of response.data.result){
                     if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 ){
@@ -837,6 +931,7 @@ export default {
                 // console.log(list);
                 if(list.length==1){
                     list.push({value:`没有匹配结果"${queryString}"`}); 
+                } 
                 }
                 callback(list);
             }).catch((error)=>{
@@ -854,16 +949,31 @@ export default {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
                 }
 
-                let  QS =  queryString.toLocaleLowerCase();
-                
-                for(let item of response.data.result){
-                    if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+
+                if(!queryString){
+                    // console.log(response.data.result)
+                    
+                    for(let item of response.data.result){
                         list.push(item)
                     }
+                    
+                    callback(list);
+
+                }else{
+                    
+                    let  QS =  queryString.toLocaleLowerCase();
+                    
+                    for(let item of response.data.result){
+                        if(item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1){
+                            list.push(item)
+                        }
+                    }
+                    if(list.length==1){
+                        list.push({value:`没有匹配结果"${queryString}"`}); 
+                    }
                 }
-                if(list.length==1){
-                    list.push({value:`没有匹配结果"${queryString}"`}); 
-                }
+
+
                 callback(list);
             }).catch((error)=>{
                 console.log(error);
@@ -888,7 +998,7 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 self.editForm = response.data.result;
-                console.log(self.editForm)
+                console.log(self.editForm.city)
             }).catch(function(err) {
                 self.loading = false;
                 console.log(err);
@@ -1144,6 +1254,15 @@ export default {
                 }
 
             }
+            // 业务人员判断
+            if(!this.addForm.salesMan){
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
             return true
         },
         // 新增店铺
@@ -1233,13 +1352,15 @@ export default {
                     'shop.signedTime': data.signedTime,
                     'shop.agentGradeId': data.agentGradeId,
                     'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
+                    'shop.cityCode': data.cityCode,
+                    'shop.countyCode': data.areaCode,
                     'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
                     'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
+                    'shop.city':data.city,       
+                    'shop.provinceCode': editAddress.provinceCode,                                        
                     'shop.isShow': data.isShow,
                     'shop.operator':data.operator,
                     'shop.salesMan':data.salesMan,
@@ -1303,13 +1424,13 @@ export default {
                 operatorId:'',
 
             }
-            if (self.$refs.addAddress.resetAddress()) {
-                self.$refs.addAddress.resetAddress();
+            // if (self.$refs.addAddress.resetAddress()) {
+            //     self.$refs.addAddress.resetAddress();
 
-            }
-            if (self.$refs.addAgentAddress.resetAddress()) {
-                self.$refs.addAgentAddress.resetAddress();
-            }
+            // }
+            // if (self.$refs.addAgentAddress.resetAddress()) {
+            //     self.$refs.addAgentAddress.resetAddress();
+            // }
         },
         //重置修改表格内容
         resetEditForm() {
@@ -1333,12 +1454,12 @@ export default {
                 salesManId:'',    
                 operatorId:'',
             }
-            if (self.$refs.editAddress.resetAddress()) {
-                self.$refs.editAddress.resetAddress();
-            }
-            if (self.$refs.editAgentAddress.resetAddress()) {
-                self.$refs.editAgentAddress.resetAddress();
-            }
+            // if (self.$refs.editAddress.resetAddress()) {
+            //     self.$refs.editAddress.resetAddress();
+            // }
+            // if (self.$refs.editAgentAddress.resetAddress()) {
+            //     self.$refs.editAgentAddress.resetAddress();
+            // }
 
         },
         //重置预存款表格内容
@@ -1351,12 +1472,14 @@ export default {
         deleteOperator(){
             this.addForm.operator='';
             this.addForm.operatorName='';
-            
+            this.editForm.operator='';
             // console.log(this.addForm.salesManName)
         },
         deleteSalesMan(){
             this.addForm.salesMan='';
             this.addForm.salesManName='';
+            this.editForm.salesMan='';
+            
             // console.log(this.addForm.salesManName)            
         },
         deleteOperatorName(){
@@ -1412,84 +1535,92 @@ export default {
     padding: 0px 20px 30px;
 }
 .delete_left{
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;  
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 74%;
-    left: 32.5%;
-    z-index: 999;
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
+    z-index: 1000;
 }
 .delete_right{
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;    
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 74%;
-    left: 80.5%;
-    z-index: 999;
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
+    z-index: 1000;
 }
-.down_left{
-    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 32%;
+.deleteOperatorName_left{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 2.5%;
+    height: 6%;
+    top: 78%;
+    left: 31.5%;
     z-index: 999;
+
 }
-.down_right{
-    background: url("http://ourjs.github.io/static/2015/arrow.png") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 80%;
+.deleteSalesManName_right{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 2.5%;
+    height: 6%;
+    top: 78%;
+    left: 81.5%;
     z-index: 999;
+
 }
 .search_left{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 30%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
     z-index: 999;
 }
 .search_right{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
-    position: fixed;
-    width: 2%;
-    height: 5%;
-    top: 74%;
-    left: 78%;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 289px;
     z-index: 999;
 }
-.deleteOperatorName_left{
-
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;  
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 68%;
-    left: 32.5%;
-    z-index: 999;
-
-
+.search-yw-wrap{
+    position: relative;
+    
 }
-.deleteSalesManName_right{
 
-    background:url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A54%3A30.png?version=1&modificationDate=1519888760000&api=v2") no-repeat  center;
-    background-size: 20px 20px;    
-    position: fixed;
-    width: 1.5%;
-    height: 5%;
-    top: 68%;
-    left: 80.5%;
-    z-index: 999;
-
+.search-yy-wrap{
+    position: relative;
 }
+.xg-search-yw-wrap{
+     position: relative;
+}
+.xg-search-yy-wrap{
+     position: relative;
+}
+.xg-search-yy-wrap .delete_left{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
+    z-index: 1000;
+}
+.xg-search-yw-wrap .delete_right{
+    background:url("../assets/images/zph_close.png") no-repeat  center;
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    top: 9px;
+    left: 171px;
+    z-index: 1000;
+}
+
 </style>
