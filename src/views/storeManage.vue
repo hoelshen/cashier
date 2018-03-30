@@ -561,6 +561,11 @@ export default {
         const self = this;
         if (!self.checkSession()) return;
         self.loading = true;
+        
+
+
+
+
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function(response) {
             console.log(response);
@@ -973,6 +978,8 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 self.editForm = response.data.result;
+                self.searchData.operator = response.data.result.operatorId;
+                self.searchData.salesMan = response.data.result.salesManId;
                 console.log(self.editForm.city)
                 console.log(self.editForm.county)
                 console.log(self.editForm.province)
