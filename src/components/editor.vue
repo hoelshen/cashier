@@ -149,7 +149,7 @@ export default {
                 var qs = require('qs');
                 this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
                     qs.stringify({
-                        cardUrl:this.url.replace(/[\r\n&]/g, ',')
+                        cardUrl:this.url.replace(/[\r\n]/g, ',')
                     }),
                     {
                         headers: {
