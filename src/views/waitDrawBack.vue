@@ -36,7 +36,7 @@
                         </el-form-item>
                     </el-col>
                      <el-col :span="6">
-                        <el-form-item label="申请时间: " label-width="38%">
+                        <el-form-item label="申请时间 ：" label-width="38%" >
                             <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime" ></el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -68,7 +68,7 @@
                 </el-table-column>
                 <el-table-column prop="applyTime" label="申请时间" sortable="custom" width="170px">
                 </el-table-column>
-                <el-table-column prop="updator" label="运营人员">                  
+                <el-table-column prop="operator" label="运营人员">                  
                 </el-table-column>
                 <el-table-column prop="purchaseOrderNo" label="原进货单号" width="160px">
                     <template slot-scope="scope">
