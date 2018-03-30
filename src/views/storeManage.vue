@@ -1175,12 +1175,12 @@ export default {
                     return false
                 }
                 //业务人员判断
-                if (!data.salesMan) {
+                if(!data.salesMan){
                     console.log(data.salesMan)
                     self.loading = false;
                     self.$message({
-                        message: '业务人员为必填项',
-                        type: 'error'
+                        message:'业务人员为必填项',
+                        type:'error'
                     })
                     return false;
                 }
@@ -1370,7 +1370,6 @@ export default {
                 operatorId: '',
 
             }
-
         },
         //重置修改表格内容
         resetEditForm() {
@@ -1385,6 +1384,9 @@ export default {
                 provinceCode: '',
                 cityCode: '',
                 countyCode: '',
+                city:'',
+                county:'',
+                province:'',
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
@@ -1394,6 +1396,7 @@ export default {
                 salesManId: '',
                 operatorId: '',
             }
+
         },
         //重置预存款表格内容
         resetForm() {
@@ -1402,17 +1405,17 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
-        deleteOperator() {
-            this.addForm.operator = '';
+        deleteOperator(){
+            this.addForm.operator='';
             // this.addForm.operatorName='';
-            this.editForm.operator = '';
+            this.editForm.operator='';
             // console.log(this.addForm.salesManName)
         },
-        deleteSalesMan() {
-            this.addForm.salesMan = '';
+        deleteSalesMan(){
+            this.addForm.salesMan='';
             // this.addForm.salesManName='';
-            this.editForm.salesMan = '';
-
+            this.editForm.salesMan='';
+            
             // console.log(this.addForm.salesManName)            
         },
         deleteOperatorName() {

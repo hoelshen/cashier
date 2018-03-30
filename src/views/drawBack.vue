@@ -364,6 +364,7 @@ export default {
     },
     // 查询
     onSubmit() {
+      this.currentPage=1;
       if (!this.checkSession()) return;
       var time = this.dealTime();
       //默认的axios是json格式，需要转换为form格式，并且将参数序列化stringify

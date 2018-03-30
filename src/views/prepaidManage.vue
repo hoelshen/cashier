@@ -169,6 +169,7 @@ export default {
 			}
 		},
 		onSumbit() {
+			this.currentPage=1;
 			if (!this.checkSession()) return;
 			var temp = new Date(this.searchData.searchTime[0]);
 			if (temp.getFullYear() > 2006) {
