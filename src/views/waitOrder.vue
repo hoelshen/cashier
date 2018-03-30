@@ -14,8 +14,6 @@
                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchOrderNo" placeholder="进货单号"></el-input>
                             </el-form-item>
                         </el-col>
-                        
-                       
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
@@ -29,19 +27,27 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
-
-                      <el-col :span="6">
-                                 <el-form-item label="运营人员" label-width="72px">
-                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
+                        <el-col :span="6">
+                            <el-form-item label="代理商等级">
+                                <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+                                    <el-option label="区域代理" value="265"></el-option>
+                                    <el-option label="专柜代理" value="266"></el-option>
+                                    <el-option label="单店代理" value="31"></el-option>
+                                </el-select>
                             </el-form-item>
                         </el-col>
+                  
                      
                         <el-col :span="2">
                             <el-button type="primary" @click='onSumbit'>查询</el-button>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
-                      
+                            <el-col :span="6">
+                                 <el-form-item label="运营人员" label-width="72px">
+                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
+                            </el-form-item>
+                            </el-col>
                             <el-col :span="6">
                             <el-form-item label="下单时间" label-width="72px" style="padding-left:13px;">
                                 <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
@@ -55,11 +61,11 @@
                     <el-table-column prop="purchaseOrderNo" label="进货单号" width="180">
                     </el-table-column>
                     <el-table-column prop="agentGradeId" label="代理商编号" style="position: relative">
-                        <!-- <template scope="scope">{{ scope.row.shopNo }}
+                        <template scope="scope">{{ scope.row.shopNo }}
                             <p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
                             <p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
                             <p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
-                        </template> -->
+                        </template>
                     </el-table-column>
                     <el-table-column prop="shopName" label="代理商名称">
                     </el-table-column>
@@ -74,7 +80,7 @@
                             <p>{{ toFixed(scope.row.orderSum) }}</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="updator" label="运营人员">
+                    <el-table-column prop="operator" label="运营人员">
                     </el-table-column>                    
                     <el-table-column prop="phone" label="操作">
                         <template slot-scope="scope">
