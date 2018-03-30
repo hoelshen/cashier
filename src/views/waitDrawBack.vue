@@ -54,7 +54,7 @@
                 </el-table-column>
                 <!-- <el-table-column prop="phone" label="手机号"> -->
                 <!-- </el-table-column> -->
-                <el-table-column prop="name" label="代理商名称：">
+                <el-table-column prop="name" label="代理商名称：" width="170">
                 </el-table-column>
                 <el-table-column prop="refundType" label="退款类型">
                     <template slot-scope="scope">
