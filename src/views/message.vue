@@ -209,14 +209,14 @@ export default {
 				).then(res => {
 					if (res.data.success === 1) {
 						this.$message({ message: `删除“通知：【${target.noticeTitle}】”${res.data.msg}`, type: 'success' });
-						setTimeout(()=>{
+						setTimeout(() => {
 							window.location.reload();
-						},500)
+						}, 500)
 					} else {
 						this.$message({ message: res.data.msg, type: 'error' });
-												setTimeout(()=>{
+						setTimeout(() => {
 							window.location.reload();
-						},500)
+						}, 500)
 					}
 				})
 			})
@@ -227,6 +227,7 @@ export default {
 		},
 		onSumbit() {
 			if (!this.checkSession()) return;
+			this.currentPage = 1;
 			this.getTableData();
 		},
 		getTableData() {
