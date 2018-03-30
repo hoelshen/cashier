@@ -69,8 +69,8 @@ export default {
                                 this.content = this.content +
                                     `<div style="width: 100%;height: 240px;background-color: #f7f9fa;position: relative;margin-top:5px">
                                         <img style="width: 200px;position: absolute;top: 20px;left: 20px;" src="${this.cardData[index - 1].imgUrl}">
-                                        <p style="position: absolute;top: 25px;left: 240px;line-height: 18px;font-size: 18px;font-weight: 600;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width:700px" title="${this.cardData[index - 1].subTitle}">${this.cardData[index - 1].subTitle}</p>
-                                        <p style="position: absolute;top: 59px;left: 240px;line-height: 14px;font-size: 14px;color: #999999;width:700px" title="${this.cardData[index - 1].title}">${this.cardData[index - 1].title}</p>
+                                        <p style="position: absolute;top: 25px;left: 240px;line-height: 18px;font-size: 18px;font-weight: 600;overflow: hidden;white-space: nowrap;text-overflow: ellipsis;width:700px" title="${this.cardData[index - 1].title}">${this.cardData[index - 1].title}</p>
+                                        <p style="position: absolute;top: 59px;left: 240px;line-height: 14px;font-size: 14px;color: #999999;width:700px" title="${this.cardData[index - 1].subTitle}">${this.cardData[index - 1].subTitle}</p>
                                         <p style="position: absolute;top: 95px;left: 240px;line-height: 14px;font-size: 14px;background-color: #e3e5e6;width:700px;height:1px;"></p>
                                         <p style="position: absolute;top: 114px;left: 240px;line-height: 14px;font-size: 14px;color: #999999;">醉品价：</p>
                                         <p style="position: absolute;top: 116px;left: 335px;line-height: 14px;font-size: 14px;color: #333333;font-weight:550;">￥${this.toFixed(this.cardData[index - 1].salesPrice)}</p>
