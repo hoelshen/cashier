@@ -17,7 +17,7 @@
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
-                                    <el-option label="全部" value=""></el-option>   
+                                    <!-- <el-option label="全部" value=""></el-option>    -->
                                     <el-option label="待审核" value="WAIT_CHECK"></el-option>
 
                                     <!-- <el-option label="待发货" value="WAIT_SEND"></el-option>
@@ -28,28 +28,29 @@
                             </el-form-item>
                         </el-col>
                         <el-col :span="6">
-                            <el-form-item label="代理商等级">
-                                <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
-                                    <el-option label="区域代理" value="265"></el-option>
-                                    <el-option label="专柜代理" value="266"></el-option>
-                                    <el-option label="单店代理" value="31"></el-option>
-                                </el-select>
+                            <el-form-item label="运营人员" label-width="72px">
+                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchOperator" placeholder="运营人员"></el-input>        
                             </el-form-item>
                         </el-col>
-                  
                      
                         <el-col :span="2">
                             <el-button type="primary" @click='onSumbit'>查询</el-button>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
+                           
                             <el-col :span="6">
-                                 <el-form-item label="运营人员" label-width="72px">
-                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
-                            </el-form-item>
+                                <el-form-item label="代理商等级">
+                                    <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
+                                        <el-option label="区域代理" value="265"></el-option>
+                                        <el-option label="专柜代理" value="266"></el-option>
+                                        <el-option label="单店代理" value="31"></el-option>
+                                    </el-select>
+                                </el-form-item>
                             </el-col>
-                            <el-col :span="6">
-                            <el-form-item label="下单时间" label-width="72px" style="padding-left:13px;">
+                  
+                            <el-col :span="6" >
+                            <el-form-item label="下单时间" label-width="72px" style="padding-left:14px;">
                                 <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
                             </el-form-item>
                         </el-col>
@@ -115,7 +116,7 @@ export default {
                 searchTime: '',		//下单时间
                 searchLevel: [],		//代理商等级
                 Level: [],			//代理商等级替代
-                searchUpdator:'',     //运营人员   
+                searchOperator:'',     //运营人员   
             },
             tableData: [
                 {
@@ -127,7 +128,7 @@ export default {
                     stateName: '',			//状态
                     orderTime: '',			//下单时间
                     orderSum: '',			//金额
-                    updator:'',          //运营人员
+                    operator:'',          //运营人员
                 }
             ]
         }
@@ -209,7 +210,7 @@ export default {
                     'purchaseOrder.agentGradeIds': this.searchData.level,
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.upator': this.searchData.searchUpdator,
+                    'purchaseOrder.operator': this.searchData.searchOperator,
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -294,7 +295,7 @@ export default {
                     'purchaseOrder.agentGradeIds': this.searchData.level,
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.updator': this.searchData.searchUpdator,                    
+                    'purchaseOrder.operator': this.searchData.searchOperator,                    
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -385,7 +386,7 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
-                    'purchaseOrder.updator': this.searchData.searchUpdator,
+                    'purchaseOrder.operator': this.searchData.searchOperator,
                 },
                 success(response) {
                     this.tableData = response.data.result;
