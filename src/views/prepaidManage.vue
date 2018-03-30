@@ -217,7 +217,6 @@ export default {
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.salesMan': this.searchData.salesMan,
 					'advanceDeposit.operator': this.searchData.operator,
-					
 				},
 				success(response) {
 					console.log(response.data.result)
@@ -384,8 +383,8 @@ export default {
 			this.$getData({
 				url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 				data: {
-					'pager.pageIndex': this.currentPage,
-					'pager.pageSize': this.pageSize,
+					'pager.pageIndex': 1,
+					'pager.pageSize': 999999,
 					'advanceDeposit.shopNo': this.searchData.searchId,
 					'advanceDeposit.phone': this.searchData.searchPhone,
 					'advanceDeposit.changeType': this.searchData.searchStatus,
@@ -401,8 +400,8 @@ export default {
 							if(self.tableData.length>0){
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
-											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额', '备注/单号', '变更人', '变更时间', '运营人员']
-											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'purchaseOrderNo', 'creator', 'createdTime', 'operator']
+											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额','结余', '备注/单号', '变更人', '变更时间', '运营人员']
+											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
 											const data = this.formatJson(filterVal, list);
 											// console.log(data)

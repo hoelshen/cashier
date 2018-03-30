@@ -220,8 +220,8 @@
                 </el-col>
                 <el-input  v-if="!!addForm.operatorName" v-model="addForm.operatorName" style="left: 14.5%; top: 67%;position: fixed;width: 20%;" ></el-input>
                 <el-input  v-if="!!addForm.salesManName" v-model="addForm.salesManName" style="left: 62.5%; top: 67%;position: fixed;width: 20%;"></el-input>             
-                <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span>
-                <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span>
+                <!-- <span  class="deleteOperatorName_left"  v-if="!(addForm.operatorName==='')" @click="deleteOperatorName"></span> -->
+                <!-- <span  class="deleteSalesManName_right" v-if="!(addForm.salesManName==='')" @click="deleteSalesManName"></span> -->
             </el-row>
         </el-form>
         <div slot="footer" class="dialog-footer">
@@ -413,15 +413,15 @@
 
 
             <el-row :gutter="20">
-                <el-col :span="15">
-                    <el-form-item label="变动金额：" label-width="100px">
+                <el-col :span="5">
+                    <el-form-item label="变动金额：" label-width="100px" >
                         <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
                         <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
                     </el-form-item>
                 </el-col>
-                <el-col :span="7">
+                <el-col :span="17" >
                     <el-form-item >
-                        <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"></el-input>
+                        <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney"  style="padding-right:5px;"> </el-input>
                         <p class="yuan">元</p>
                     </el-form-item>
                 </el-col>
@@ -1543,7 +1543,7 @@ export default {
     left: 30.5%;
     z-index: 1000;
 }
-.deleteOperatorName_left{
+/* .deleteOperatorName_left{
     background:url("../assets/images/zph_close.png") no-repeat  center;
     position: absolute;
     width: 2.5%;
@@ -1562,7 +1562,7 @@ export default {
     left: 81.5%;
     z-index: 999;
 
-}
+} */
 .search_left{
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2") no-repeat  center;
     position: absolute;
