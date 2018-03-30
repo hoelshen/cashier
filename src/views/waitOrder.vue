@@ -5,11 +5,6 @@
                 <el-form label-width="85px" ref="form" :model="searchData">
                     <el-row :gutter="20">
                         <el-col :span="6">
-                            <el-form-item label="下单时间" label-width="72px">
-                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="6">
                             <el-form-item label="代理商名称">
                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="代理商名称"></el-input>
                             </el-form-item>
@@ -19,6 +14,8 @@
                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchOrderNo" placeholder="进货单号"></el-input>
                             </el-form-item>
                         </el-col>
+                        
+                       
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
                                 <el-select v-model="searchData.searchState" clearable placeholder="请选择">
@@ -32,14 +29,22 @@
                                 </el-select>
                             </el-form-item>
                         </el-col>
+
+                      <el-col :span="6">
+                                 <el-form-item label="运营人员" label-width="72px">
+                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
+                            </el-form-item>
+                        </el-col>
+                     
                         <el-col :span="2">
                             <el-button type="primary" @click='onSumbit'>查询</el-button>
                         </el-col>
                     </el-row>
                     <el-row :gutter="20">
-                        <el-col :span="6">
-                                 <el-form-item label="运营人员" label-width="72px">
-                                 <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
+                      
+                            <el-col :span="6">
+                            <el-form-item label="下单时间" label-width="72px" style="padding-left:13px;">
+                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>

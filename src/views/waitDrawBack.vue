@@ -3,11 +3,7 @@
         <div class="search">
             <el-form v-model="searchData">
                 <el-row :gutter="20">
-                    <el-col :span="6">
-                        <el-form-item label="申请时间: " label-width="27%">
-                            <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime"></el-date-picker>
-                        </el-form-item>
-                    </el-col>
+                  
                     <el-col :span="6">
                         <el-form-item label="注册店铺名：" label-width="38%">
                             <el-input v-model="searchData.searchShopName" @keyup.enter.native="onSubmit"></el-input>
@@ -18,7 +14,20 @@
                             <el-input v-model="searchData.searchOrderNo" @keyup.enter.native="onSubmit"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="4">
+                    <el-col :span="6">
+                        <el-form-item label="退款单号：" label-width="30%">
+                            <el-input v-model="searchData.searchNo" @keyup.enter.native="onSubmit"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                            <el-form-item label="运营人员：" label-width="38%">
+                                <el-input v-model="searchData.searchUpdator" @keyup.enter.native="onSubmit"></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                <el-row :gutter="20">
+                 
+                    <el-col :span="6" >
                           <el-form-item label="状态：" label-width="38%">
                             <el-select v-model="searchData.searchState" clearable>
                                 <el-option label="待审核" value="WAIT_AUDIT"></el-option>
@@ -26,22 +35,14 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="2">
+                     <el-col :span="6" style="padding-left:4.8%;">
+                        <el-form-item label="申请时间: " >
+                            <el-date-picker type="daterange" placeholder="选择日期范围" v-model="searchData.searchTime" ></el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="4" style="padding-left:10%">
                         <el-button type="primary" @click="onSubmit">查询</el-button>
                     </el-col>
-                </el-row>
-                <el-row :gutter="20">
-                    <el-col :span="6">
-                        <el-form-item label="退款单号：" label-width="30%">
-                            <el-input v-model="searchData.searchNo" @keyup.enter.native="onSubmit"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="运营人员：" label-width="38%">
-                            <el-input v-model="searchData.searchUpdator" @keyup.enter.native="onSubmit"></el-input>
-                        </el-form-item>
-                    </el-col>
-                     
                 </el-row>
             </el-form>
         </div>

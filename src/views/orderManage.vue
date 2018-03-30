@@ -63,8 +63,8 @@
                         </el-col>
 
                         <el-col :span="6">
-                            <el-form-item label="下单时间" label-width="72px">
-                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
+                            <el-form-item label="下单时间" label-width="72px" style="padding-left:10px;padding-left:5px">
+                                <el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围" style="width:78%"></el-date-picker>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -83,6 +83,8 @@
                     </el-table-column>
                     <el-table-column prop="name" label="代理商名称">
                     </el-table-column>
+                    <el-table-column prop="receiptName" label="收件人">
+                    </el-table-column>
                     <el-table-column prop="stateName" label="状态">
                     </el-table-column>
                     <el-table-column prop="orderTime" label="下单时间">
@@ -94,9 +96,7 @@
                     </el-table-column>
                     <el-table-column prop="operator" label="运营人员">
                     </el-table-column>
-                    <el-table-column prop="receiptName" label="收件人">
-                    </el-table-column>
-                    <el-table-column prop="phone" label="详情">
+                    <el-table-column prop="phone" label="操作">
                         <template slot-scope="scope">
                             <router-link :to="{ name: 'orderInfo', params: { purchaseOrderNo: scope.row.purchaseOrderNo,shopNo:scope.row.shopNo }}">详情</router-link>
                         </template>
@@ -166,6 +166,7 @@ export default {
             }
         },
         onSumbit() {
+            this.currentPage=1;
             if (!this.checkSession()) return;
             console.log(this.searchData.searchTime);
             console.log(this.searchData.searchTime[0]);
