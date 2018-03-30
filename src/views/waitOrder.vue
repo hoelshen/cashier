@@ -29,7 +29,7 @@
                         </el-col>
                         <el-col :span="6">
                             <el-form-item label="运营人员" label-width="72px">
-                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchUpdator" placeholder="运营人员"></el-input>        
+                                <el-input @keyup.enter.native="onSumbit" v-model="searchData.searchOperator" placeholder="运营人员"></el-input>        
                             </el-form-item>
                         </el-col>
                      
@@ -116,7 +116,7 @@ export default {
                 searchTime: '',		//下单时间
                 searchLevel: [],		//代理商等级
                 Level: [],			//代理商等级替代
-                searchUpdator:'',     //运营人员   
+                searchOperator:'',     //运营人员   
             },
             tableData: [
                 {
@@ -128,7 +128,7 @@ export default {
                     stateName: '',			//状态
                     orderTime: '',			//下单时间
                     orderSum: '',			//金额
-                    updator:'',          //运营人员
+                    operator:'',          //运营人员
                 }
             ]
         }
@@ -210,7 +210,7 @@ export default {
                     'purchaseOrder.agentGradeIds': this.searchData.level,
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.upator': this.searchData.searchUpdator,
+                    'purchaseOrder.operator': this.searchData.searchOperator,
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -295,7 +295,7 @@ export default {
                     'purchaseOrder.agentGradeIds': this.searchData.level,
                     'purchaseOrder.startTime': time1,
                     'purchaseOrder.endTime': time2,
-                    'purchaseOrder.updator': this.searchData.searchUpdator,                    
+                    'purchaseOrder.operator': this.searchData.searchOperator,                    
                 },
                 transformRequest: [function(data) {
                     // Do whatever you want to transform the data
@@ -386,7 +386,7 @@ export default {
                     'purchaseOrder.endTime': time2,
                     'purchaseOrder.sort': 'orderSum',
                     'purchaseOrder.order': this.order,
-                    'purchaseOrder.updator': this.searchData.searchUpdator,
+                    'purchaseOrder.operator': this.searchData.searchOperator,
                 },
                 success(response) {
                     this.tableData = response.data.result;
