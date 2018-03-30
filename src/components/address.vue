@@ -57,15 +57,15 @@ export default {
     props: {
         provinceCode: {
             type: String,
-            default: "110000"
+            default: ""
         },
         cityCode: {
             type: String,
-            default: "110100"
+            default: ""
         },
         areaCode: {
             type: String,
-            default: "110101"
+            default: ""
         },
         detail: {
             type: String,
