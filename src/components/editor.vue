@@ -60,8 +60,8 @@
                         <div class="cardMain">
                             <img class="cardImg" :src="item.imgUrl">
                             <div class="cardInfo">
-                                <div class="cardTitle" :title="item.proName">{{ item.proName }}</div>
-                                <div class="cardSubTitle" :title="item.catName">{{item.catName}}</div>
+                                <div class="cardTitle" :title="item.title">{{ item.title }}</div>
+                                <div class="cardSubTitle" :title="item.subTitle">{{item.subTitle}}</div>
                                 <div class="card-box-hr"></div>
                                 <div class="price">醉品价
                                     <span class="ZPPrice">￥{{ toFixed(item.salesPrice) }}</span>
@@ -173,7 +173,7 @@ export default {
             // 插入卡片
             this.urlData.productList.map(v => {
                 this.editor.focus();
-                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.proName}\n副标题：${v.catName}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
+                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.title}\n副标题：${v.subTitle}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
             })
         },
         // 点击icon触发事件
