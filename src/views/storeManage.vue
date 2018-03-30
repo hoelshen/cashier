@@ -942,8 +942,8 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.editForm = response.data.result;
-                self.searchData.operator = response.data.result.operatorId;
-                self.searchData.salesMan = response.data.result.salesManId;
+                self.operatorId = response.data.result.operatorId;
+                self.salesManId = response.data.result.salesManId;
                 console.log(self.editForm.city)
                 console.log(self.editForm.county)
                 console.log(self.editForm.province)
