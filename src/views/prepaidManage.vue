@@ -26,7 +26,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
-							<el-form-item label="代理商等级">
+							<el-form-item label="代理商等级"  >
 								<el-select @keyup.enter.native="onSumbit" v-model="searchData.searchLevel" clearable multiple placeholder="全部">
 									<el-option label="区域代理" value="265"></el-option>
 									<el-option label="专柜代理" value="266"></el-option>
@@ -140,7 +140,8 @@ export default {
 					orderStatus: '',		//状态
 					createdTime: '',		//变更时间
 					salesMan:'',             //代理商姓名
-					operator:'',           //运营人员
+					operator:'', 	     //运营人员
+					searchLevel:''       //代理商等级 
 				}
 			],
 			allId: '',
@@ -217,6 +218,7 @@ export default {
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.salesMan': this.searchData.salesMan,
 					'advanceDeposit.operator': this.searchData.operator,
+					'advanceDeposit.agentGradeIds':this.searchData.searchLevel
 				},
 				success(response) {
 					console.log(response.data.result)
