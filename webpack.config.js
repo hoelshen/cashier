@@ -50,10 +50,17 @@ module.exports = (options = {}) => ({
         }),
         new HtmlWebpackPlugin({
             template: 'src/index.html'
+        }),
+        new webpack.DefinePlugin({
+            'process.env': {
+                // NODE_ENV: JSON.stringify('production')
+                NODE_ENV: JSON.stringify('development')
+            }
         })
     ],
     resolve: {
         alias: {
+            'vue$': 'vue/dist/vue.esm.js',
             '~': resolve(__dirname, 'src')
         }
     },
@@ -77,7 +84,15 @@ module.exports = (options = {}) => ({
                 pathRewrite: {
                     '^/api': ''
                 }
-            }
+            },
+            '/cbttest': {
+                target: 'http://java.cbs.test.yipicha.com/', // 接口的域名
+                secure: false,
+                changeOrigin: true,
+                pathRewrite: {
+                    '^/cbttest': ''
+                }
+            },
         },
         historyApiFallback: {
             index: url.parse(options.dev ? '/assets/' : publicPath).pathname

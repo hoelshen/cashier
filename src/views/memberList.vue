@@ -42,7 +42,7 @@
 			<div class="orderList">
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column label="序号" width="80">
-						<template scope="scope">
+						<template slot-scope="scope">
 							<p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1
 								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
 						</template>
@@ -52,7 +52,7 @@
 					<el-table-column prop="NAME" label="姓名">
 					</el-table-column>
 					<el-table-column prop="GID" label="会员等级">
-						<template scope="scope">
+						<template slot-scope="scope">
 							<p>{{getLevel(scope.row.GID)}}</p>
 						</template>
 					</el-table-column>

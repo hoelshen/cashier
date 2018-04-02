@@ -82,6 +82,14 @@ export default [{
             title: '区域订单',
             path: '/area'
         }]
+    },
+    {
+        title: '通知管理',
+        icon: 'icon-tongzhiguanli',
+        children: [{
+            title: '通知管理',
+            path: '/message'
+        }]
     }
 
 ]
