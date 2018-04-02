@@ -43,7 +43,7 @@
                                 <el-form-item label="代理商等级">
                                     <el-select v-model="searchData.searchLevel" clearable multiple placeholder="全部">
                                         <el-option label="区域代理" value="265"></el-option>
-                                        <el-option label="专柜代理" value="266"></el-option>
+                                        <el-option label="微店代理" value="266"></el-option>
                                         <el-option label="单店代理" value="31"></el-option>
                                     </el-select>
                                 </el-form-item>
@@ -65,7 +65,7 @@
                         <template scope="scope">{{ scope.row.shopNo }}
                             <p class="textBlue" v-if="scope.row.agentGradeId === 31">单店</p>
                             <p class="textOrange" v-if="scope.row.agentGradeId === 265">区域</p>
-                            <p class="textYellow" v-if="scope.row.agentGradeId === 266">专柜</p>
+                            <p class="textYellow" v-if="scope.row.agentGradeId === 266">微店</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="name" label="代理商名称">

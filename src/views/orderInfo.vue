@@ -22,7 +22,7 @@
                 <el-col :span="8" style="position:relative">代理商：
                     <p class="textBlue1" v-if="shopInfo.agentGradeId === 31">单店</p>
                     <p class="textOrange1" v-if="shopInfo.agentGradeId === 265">区域</p>
-                    <p class="textYellow1" v-if="shopInfo.agentGradeId === 266">专柜</p>
+                    <p class="textYellow1" v-if="shopInfo.agentGradeId === 266">微店</p>
                     <span class="agent">{{ shopInfo.shopNo }}</span>{{ shopInfo.shopName }}</el-col>
                 <el-col :span="8">收件人：{{ orderInfo.receiptName }}</el-col>
                 <el-col :span="8">收件电话：{{ orderInfo.receiptPhone }}</el-col>
