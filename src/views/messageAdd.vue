@@ -34,7 +34,7 @@
                         <el-select v-model="contentData.agent" clearable placeholder="请选择" multiple>
                             <el-option value="31" label="单店代理"></el-option>
                             <el-option value="265" label="区域代理"></el-option>
-                            <el-option value="266" label="专柜代理"></el-option>
+                            <el-option value="266" label="微店代理"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col>
