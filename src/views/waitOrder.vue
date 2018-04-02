@@ -68,7 +68,7 @@
                             <p class="textYellow" v-if="scope.row.agentGradeId === 266">微店</p>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="shopName" label="代理商名称">
+                    <el-table-column prop="name" label="代理商名称">
                     </el-table-column>
                     <el-table-column prop="peceiptName" label="收件人">
                     </el-table-column>
@@ -204,7 +204,7 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
@@ -289,7 +289,7 @@ export default {
                     'pager.pageIndex': val,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
@@ -378,7 +378,7 @@ export default {
                     'pager.pageIndex': 1,
                     'pager.pageSize': this.pageSize,
                     'purchaseOrder.phone': this.searchData.searchPhone,
-                    'purchaseOrder.shopName': this.searchData.searchName,
+                    'purchaseOrder.name': this.searchData.searchName,
                     'purchaseOrder.purchaseOrderNo': this.searchData.searchOrderNo,
                     'purchaseOrder.state': this.searchData.searchState,
                     'purchaseOrder.agentGradeIds': this.searchData.level,
