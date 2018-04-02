@@ -89,6 +89,7 @@
 <script>
 // 导入编辑器
 import { quillEditor } from "vue-quill-editor";
+import $ from "jquery";
 export default {
     props: {
         size: {
@@ -149,7 +150,7 @@ export default {
                 var qs = require('qs');
                 this.$ajax.post('/api/http/NoticeInfo/createCard.jhtml',
                     qs.stringify({
-                        cardUrl:this.url.replace(/[\r\n]/g, ',')
+                        cardUrl: this.url.replace(/[\r\n]/g, ',')
                     }),
                     {
                         headers: {
@@ -162,8 +163,8 @@ export default {
                 this.selectCardVisible = true;
             } else {
                 this.$message({
-                    message:'url不能为空,且回车分隔！',
-                    type:'warning'
+                    message: 'url不能为空,且回车分隔！',
+                    type: 'warning'
                 })
             }
         },
@@ -184,8 +185,20 @@ export default {
         },
         // 获取OSS签名
         getTocken() {
+            // $.getJSON({
+            //     // async: true,
+            //     url: "http://java.cbs.test.yipicha.com/cbttest/oteao/file/getSignature",
+            //     type: "POST",
+            //     dataType: "jsonp", // 返回的数据类型，设置为JSONP方式
+            //     // jsonp: 'callback', //指定一个查询参数名称来覆盖默认的 jsonp 回调参数名 callback
+            //     jsonpCallback: 'handleResponse', //设置回调函数名
+            //     success: function (response, status, xhr) {
+            //         console.log('状态为：' + status + ',状态是：' + xhr.statusText);
+            //         console.log(response);
+            //     }
+            // });
             return new Promise((resolve, reject) => {
-                this.$ajax.post('/cbttest/oteao/file/getSignature').then((res) => {
+                this.$ajax.post('/cbttest/oteao/file/getSignature',).then((res) => {
                     resolve(res)
                 })
             })
