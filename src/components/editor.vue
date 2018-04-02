@@ -80,7 +80,7 @@
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
-        <input v-show="false" type="file" accept="image/jpeg,image/png,image/gif" ref="imgBtn" @change="onUpload">
+        <input v-show="false" type="file" accept="image/jpeg,image/png,image/gif,image/jpg" ref="imgBtn" @change="onUpload">
     </div>
 
 </template>
@@ -229,7 +229,8 @@ export default {
                                 type: "success"
                             });
                             //插入图片
-                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.url);
+                            console.log(res);
+                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.name);
                         }
                     })
                 });
