@@ -230,7 +230,7 @@ export default {
                             });
                             //插入图片
                             console.log(res);
-                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.name);
+                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.url ? res.url : res.res.requestUrls[0].split('?')[0] );
                         }
                     })
                 });
