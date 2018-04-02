@@ -3,7 +3,6 @@
     props        type              default          explain
     content      String                            编辑器内容
     size         Number            10485760        图片最大尺寸,默认10m
-    bucket       String            cashier-img     要上传到那个backet 
     baseUrl      String            cashier.com     图片域名
 
 
@@ -81,7 +80,7 @@
             </div>
         </el-dialog>
         <!-- 因为获取不到编辑器内图片框的值，用file代替 -->
-        <input v-show="false" type="file" accept="image/jpeg,image/png,image/gif" ref="imgBtn" @change="onUpload">
+        <input v-show="false" type="file" accept="image/jpeg,image/png,image/gif,image/jpg" ref="imgBtn" @change="onUpload">
     </div>
 
 </template>
@@ -103,11 +102,7 @@ export default {
         baseUrl: {
             type: String,
             default: 'cashier.com'
-        },
-        bucket: {
-            type: String,
-            default: 'cashier-img'
-        },
+        }
     },
     data() {
         return {
@@ -134,6 +129,20 @@ export default {
         quillEditor
     },
     methods: {
+        formatDate(date) {
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hours = date.getHours();
+            let min = date.getMinutes();
+            let second = date.getSeconds();
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            hours = hours < 10 ? '0' + hours : hours;
+            min = min < 10 ? '0' + min : min;
+            second = second < 10 ? '0' + second : second;
+            return `${year}-${month}-${day} ${hours}:${min}:${second}`
+        },
         // 保留两位小数
         toFixed(num) {
             return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
@@ -185,26 +194,15 @@ export default {
         },
         // 获取OSS签名
         getTocken() {
-            // $.getJSON({
-            //     // async: true,
-            //     url: "http://java.cbs.test.yipicha.com/cbttest/oteao/file/getSignature",
-            //     type: "POST",
-            //     dataType: "jsonp", // 返回的数据类型，设置为JSONP方式
-            //     // jsonp: 'callback', //指定一个查询参数名称来覆盖默认的 jsonp 回调参数名 callback
-            //     jsonpCallback: 'handleResponse', //设置回调函数名
-            //     success: function (response, status, xhr) {
-            //         console.log('状态为：' + status + ',状态是：' + xhr.statusText);
-            //         console.log(response);
-            //     }
-            // });
             return new Promise((resolve, reject) => {
-                this.$ajax.post('/cbttest/oteao/file/getSignature',).then((res) => {
+                this.$ajax.post('/cbttest/oteao/file/getSignature', ).then((res) => {
                     resolve(res)
                 })
             })
         },
         // 上传图片
         onUpload() {
+            console.log(this.$refs.imgBtn.files[0]);
             // 图片大于10M
             if (this.$refs.imgBtn.files[0].size > 10485760) {
                 this.$message({
@@ -223,14 +221,16 @@ export default {
                         stsToken: res.data.data.securityToken,
                         bucket: 'imgcbt'
                     });
-                    client.multipartUpload('22', this.$refs.imgBtn.files[0]).then(res => {
+
+                    client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
                         if (res.res.status === 200) {
                             this.$message({
                                 message: "上传成功",
                                 type: "success"
                             });
                             //插入图片
-                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.url);
+                            console.log(res);
+                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.name);
                         }
                     })
                 });
