@@ -11,7 +11,7 @@
 						</el-col>
 						<el-col :span="5">
 							<el-form-item label="通知类型">
-								<el-select v-model="searchData.type" clearable placeholder="请选择">
+								<el-select v-model="searchData.type" placeholder="请选择">
 									<el-option value="all" label="全部"></el-option>
 									<el-option value="newPro" label="新品"></el-option>
 									<el-option value="systemMessage" label="系统公告"></el-option>
@@ -20,7 +20,7 @@
 						</el-col>
 						<el-col :span="5">
 							<el-form-item label="通知状态">
-								<el-select v-model="searchData.status" clearable placeholder="请选择">
+								<el-select v-model="searchData.status" placeholder="请选择">
 									<el-option value="0" label="全部"></el-option>
 									<el-option value="1" label="启用"></el-option>
 									<el-option value="2" label="禁用"></el-option>

@@ -183,7 +183,7 @@ export default {
             // 插入卡片
             this.urlData.productList.map(v => {
                 this.editor.focus();
-                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.title}\n副标题：${v.subTitle}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片`, {});
+                this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.title}\n副标题：${v.subTitle}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片\n`, {});
             })
         },
         // 点击icon触发事件
@@ -219,7 +219,7 @@ export default {
                         accessKeyId: res.data.data.accessKeyId,
                         accessKeySecret: res.data.data.accessKeySecret,
                         stsToken: res.data.data.securityToken,
-                        bucket: 'imgcbt'
+                        bucket: 'cashier-img'
                     });
 
                     client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
