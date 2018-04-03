@@ -219,10 +219,10 @@ export default {
                         accessKeyId: res.data.data.accessKeyId,
                         accessKeySecret: res.data.data.accessKeySecret,
                         stsToken: res.data.data.securityToken,
-                        bucket: 'imgcbt'
+                        bucket: 'imgcashier'
                     });
 
-                    client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
+                    client.multipartUpload(this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
                         if (res.res.status === 200) {
                             this.$message({
                                 message: "上传成功",
