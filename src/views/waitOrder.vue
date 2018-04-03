@@ -436,4 +436,6 @@ export default {
 
 <style lang="less" scoped>
 @import url('../assets/less/waitOrder.less');
+// @import url('../assets/css/default-skin.css');
+// @import url('../assets/css/photoswipe.css');
 </style>
