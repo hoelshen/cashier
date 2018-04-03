@@ -1315,10 +1315,10 @@ export default {
                     'shop.city': data.city,
                     'shop.provinceCode': editAddress.provinceCode,
                     'shop.isShow': data.isShow,
-                    'shop.operator': data.operator || '',
+                    'shop.operator': data.operator,
                     'shop.salesMan': data.salesMan,
                     'shop.salesManId': this.salesManId,
-                    'shop.operatorId': this.operatorId || '',
+                    'shop.operatorId': this.operatorId,
                 },
                 transformRequest: [function (data) {
                     let ret = ''
