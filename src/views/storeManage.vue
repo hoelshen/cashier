@@ -1317,8 +1317,8 @@ export default {
                     'shop.isShow': data.isShow,
                     'shop.operator': data.operator,
                     'shop.salesMan': data.salesMan,
-                    'shop.salesManId': this.salesManId,
-                    'shop.operatorId': this.operatorId,
+                    'shop.salesManId': this.salesManId || '',
+                    'shop.operatorId': this.operatorId || '',
                 },
                 transformRequest: [function (data) {
                     let ret = ''
