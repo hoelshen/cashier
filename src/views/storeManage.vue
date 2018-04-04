@@ -304,7 +304,7 @@
                         <el-form-item label="运营人员">
                             <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
                       
-                            <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
+                            <el-autocomplete v-model="editForm.operator"  :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
                             </el-autocomplete>
                         </el-form-item>
                     </el-col>
@@ -802,6 +802,16 @@ export default {
         },
         //用户列表
         operatorQuerySearchAsync(queryString, callback) {
+    
+
+            if(this.editForm.operator == queryString){
+
+               this.editForm.operator2 = false;
+
+                
+            }
+
+            
             queryString = !this.editForm.operator2 ? '' : queryString;
             this.editForm.operator2 = true;
 
@@ -847,9 +857,19 @@ export default {
             });
         },
         salesManQuerySearchAsync(queryString, callback) {
-            
-            queryString = !this.editForm.salesMan2 ? '' : queryString;
+
+            if(this.editForm.salesMan == queryString){
+
+
+            this.editForm.salesMan2 = false;
+
+                
+            }
         
+        
+        
+            queryString = !this.editForm.salesMan2 ? '' : queryString;
+         
           
             this.editForm.salesMan2 = true;
 
@@ -935,9 +955,9 @@ export default {
                 self.editForm = response.data.result;
                 self.operatorId = response.data.result.operatorId;
                 self.salesManId = response.data.result.salesManId;
-                console.log(self.editForm.city)
-                console.log(self.editForm.county)
-                console.log(self.editForm.province)
+                // console.log(self.editForm.city)
+                // console.log(self.editForm.county)
+                // console.log(self.editForm.province)
 
 
             }).catch(function (err) {
