@@ -219,7 +219,8 @@ export default {
                         accessKeyId: res.data.data.accessKeyId,
                         accessKeySecret: res.data.data.accessKeySecret,
                         stsToken: res.data.data.securityToken,
-                        bucket: 'cashier-img'
+                        bucket: 'cashier-img',
+                        secure:true
                     });
 
                     client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
