@@ -225,7 +225,7 @@ export default {
                     });
 
 
-                    client.Upload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
+                    client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
                         
                         if (res.res.status === 200) {
                             this.$message({
