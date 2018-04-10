@@ -1290,6 +1290,9 @@ export default {
             self.loading = true;
             const data = self.editForm;
             let editAddress = self.$refs.editAddress.getData();
+            
+            console.log(editAddress);
+            // return;
             let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
             if (!self.testData(data, editAddress, editAgentAddress)) return;
             //请求
@@ -1305,8 +1308,8 @@ export default {
                     'shop.signedTime': data.signedTime,
                     'shop.agentGradeId': data.agentGradeId,
                     'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': data.cityCode,
-                    'shop.countyCode': data.areaCode,
+                    'shop.cityCode': editAddress.cityCode,
+                    'shop.countyCode': editAddress.areaCode,
                     'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
                     'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
