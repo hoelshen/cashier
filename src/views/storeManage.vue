@@ -1257,7 +1257,7 @@ export default {
                     'shop.operator': data.operator,
                     'shop.salesMan': data.salesMan,
                     'shop.salesManId': this.salesManId,
-                    'shop.operatorId': this.operatorId,
+                    'shop.operatorId': this.operatorId || '',
                 },
                 transformRequest: [function (data) {
                     let ret = ''
