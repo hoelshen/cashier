@@ -28,12 +28,12 @@ const config = [{
                 name: 'waitOrder',
                 component: resolve => require(['./views/waitOrder.vue'], resolve),
             },
-            {
-                // 预存款管理
-                path: 'prepaidManage',
-                name: 'prepaidManage',
-                component: resolve => require(['./views/prepaidManage.vue'], resolve),
-            },
+            // {
+            //     // 预存款管理
+            //     path: 'prepaidManage',
+            //     name: 'prepaidManage',
+            //     component: resolve => require(['./views/prepaidManage.vue'], resolve),
+            // },
             {
                 // 退货单管理
                 path: 'drawBack',
