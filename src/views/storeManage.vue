@@ -92,7 +92,7 @@
                         <el-table-column prop="signTime" label="注册时间" width="110">
                         </el-table-column>
                         <el-table-column prop="state" label="状态">
-                            <template slot-scope="scope">
+                            <template slot-scope="scope" >
                                 <p>
                                     <span v-if="scope.row.state==0">
                                         <span class="green-color"></span>启用</span>
@@ -303,7 +303,6 @@
                     <el-col class="xg-search-yy-wrap" :span="12">
                         <el-form-item label="运营人员">
                             <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
-                      
                             <el-autocomplete v-model="editForm.operator"  :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
                             </el-autocomplete>
                         </el-form-item>
@@ -1457,6 +1456,7 @@ export default {
 
 .el-message-box__btns {
     text-align: left;
+    padding-left: 343px;
 }
 
 .forbidden-button {

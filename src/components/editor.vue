@@ -196,7 +196,7 @@ export default {
         // 获取OSS签名
         getTocken() {
             return new Promise((resolve, reject) => {
-                this.$ajax.post('/cbttest/oteao/file/getSignature', ).then((res) => {
+                this.$ajax.post('https://oadmin.zuipin.cn/cbttest/oteao/file/getSignature', ).then((res) => {
                     resolve(res)
                 })
             })
