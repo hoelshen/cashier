@@ -174,6 +174,16 @@ export default {
         },
         getDetail() {
             return this.getData();
+        },
+        // 重置
+        reset(){
+            this.select = {
+                provinceCode: '',
+                cityCode: '',
+                areaCode: '',
+                detail: this.detail
+            }
+
         }
     },
     created() {

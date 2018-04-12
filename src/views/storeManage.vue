@@ -508,7 +508,7 @@ export default {
 
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
-            console.log(response);
+            // console.log(response);
             if (response.data.success == 1) {
                 self.levelArray = response.data.result
             } else {
@@ -530,7 +530,7 @@ export default {
             self.loading = false;
             self.myData = response.data.rows;
             self.totalSize = response.data.total
-            console.log(response);
+            // console.log(response);
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -561,7 +561,7 @@ export default {
         onChange() {
             if (sessionStorage.user) {
                 this.user = JSON.parse(sessionStorage.user);
-                console.log(this.user);
+                // console.log(this.user);
             }
             const self = this;
             if (!self.checkSession()) return;
@@ -619,7 +619,7 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                console.log(response)
+                // console.log(response)
                 if (response.data.result === 1) {
                     if (window.sessionStorage) {
                         self.$message({
@@ -685,7 +685,7 @@ export default {
                 self.loading = false;
                 self.myData = response.data.rows;
                 self.totalSize = response.data.total
-                console.log(response);
+                // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
@@ -750,7 +750,7 @@ export default {
                 self.loading = false;
                 self.myData = response.data.rows;
                 self.totalSize = response.data.total
-                console.log(response);
+                // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
@@ -759,7 +759,7 @@ export default {
         // 预存款余额排序
         sortAmount(row, column) {
             const self = this;
-            console.log(row.order)
+            // console.log(row.order)
             if (row.order === 'ascending') {
                 self.order = 'asc';
             } else if (row.order === 'descending') {
@@ -789,7 +789,7 @@ export default {
                 self.loading = false;
                 self.myData = response.data.rows;
                 self.totalSize = response.data.total
-                console.log(response);
+                // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
@@ -798,6 +798,12 @@ export default {
         },
         //打开新增店铺弹窗
         openAddDialog() {
+            
+        //   console.log(this.addForm.areacode);
+        //   console.log(this.addForm.provinceCode);
+        //   console.log(this.addForm.cityCode); 
+        //   console.log(this.addForm.agentCity);
+        //   console.log(this.addForm.addAddress)    
             this.addDialogVisible = true;
         },
         //用户列表
@@ -827,7 +833,7 @@ export default {
                 }
 
                 if (!queryString) {
-                    console.log(response.data.result)
+                    // console.log(response.data.result)
 
                     for (let item of response.data.result) {
                         list.push(item)
@@ -838,8 +844,6 @@ export default {
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
-
-
 
                     for (let item of response.data.result) {
                         if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
@@ -862,8 +866,7 @@ export default {
 
 
             this.editForm.salesMan2 = false;
-
-                
+  
             }
         
         
@@ -1194,7 +1197,7 @@ export default {
                 }
                 //业务人员判断
                 if(!data.salesMan){
-                    console.log(data.salesMan)
+                    // console.log(data.salesMan)
                     self.loading = false;
                     self.$message({
                         message:'业务人员为必填项',
@@ -1271,7 +1274,7 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                console.log(response)
+                // console.log(response)
                 if (response.data.result == 0) {
                     self.$message({
                         message: response.data.msg,
@@ -1304,7 +1307,7 @@ export default {
             let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
             if (!self.testData(data, editAddress, editAgentAddress)) return;
             //请求
-            console.log(data)
+            // console.log(data)
             self.$ajax({
                 url: '/api/shop/shopManage/modify.jhtml',
                 method: 'post',
@@ -1343,7 +1346,7 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                console.log(response)
+                // console.log(response)
                 if (response.data.result == 0) {
                     self.$message({
                         message: response.data.msg,
@@ -1367,15 +1370,14 @@ export default {
         //重置新增表格内容
         resetAddForm() {
             const self = this;
+            self.$refs.addAddress.reset();
+            
             self.addForm = {
                 shopName: '',
                 name: '',
                 phone: '',
                 signedTime: '',
                 agentGradeId: '',
-                provinceCode: '',
-                cityCode: '',
-                countyCode: '',
                 agentProvince: '',
                 agentCity: '',
                 agentCounty: '',
@@ -1386,7 +1388,11 @@ export default {
                 salesMan: '',
                 salesManId: '',
                 operatorId: '',
-
+                addAddress:'',
+                provinceCode: '',
+                cityCode: '',
+                countyCode: '',
+                areaCode:'',
             }
         },
         //重置修改表格内容
@@ -1400,6 +1406,7 @@ export default {
                 signedTime: '',
                 agentGradeId: '',
                 provinceCode: '',
+                areaCode:'',
                 cityCode: '',
                 countyCode: '',
                 city:'',
