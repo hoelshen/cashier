@@ -16,10 +16,9 @@
                         </el-col>
                         <el-col :span="5">
                             <el-form-item label="状态" label-width="50px">
-                                <el-select v-model="searchData.searchState" clearable placeholder="请选择">
+                                <el-select v-model="searchData.searchState"  clearable >
                                     <!-- <el-option label="全部" value=""></el-option>    -->
                                     <el-option label="待审核" value="WAIT_CHECK"></el-option>
-
                                     <!-- <el-option label="待发货" value="WAIT_SEND"></el-option>
         		    				<el-option label="已发货" value="DELIVERED"></el-option>
         		    				<el-option label="已完成" value="FINISH"></el-option>
@@ -112,11 +111,11 @@ export default {
                 searchPhone: '',		//代理商手机
                 searchName: '',		//代理商名称
                 searchOrderNo: '',		//进货单号
-                searchState: '',		//订单状态
+                searchState: '待审核',		//订单状态
                 searchTime: '',		//下单时间
                 searchLevel: [],		//代理商等级
                 Level: [],			//代理商等级替代
-                searchOperator:'',     //运营人员   
+                searchOperator:'',     //运营人员  
             },
             tableData: [
                 {
@@ -194,8 +193,8 @@ export default {
             } else {
                 this.searchData.level = '';
             }
-            console.log(this.searchData.searchLevel);
-            console.log("yunyingrenyuan:",this.searchData.searchUpdator)
+            // console.log(this.searchData.searchLevel);
+            // console.log("yunyingrenyuan:",this.searchData.searchUpdator)
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
@@ -417,7 +416,7 @@ export default {
             data: {
                 pageIndex: this.currentPage,
                 pageSize: this.pageSize,
-                'purchaseOrder.state': '',
+                'purchaseOrder.state': 'WAIT_CHECK',
             },
             success(response) {
                 this.tableData = response.data.result;
