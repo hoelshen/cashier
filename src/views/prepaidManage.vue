@@ -442,8 +442,8 @@ export default {
 	created() {
 		var src = window.location.href.split('/');
 		this.searchData.searchId = src[5];
-		this.searchData.name = src[6];
-		console.log(this.searchData.searchName)		
+		this.searchData.name =decodeURI(src[6]);
+		console.log(this.searchData.name)		
 		this.$getData({
 			url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data: {
