@@ -36,7 +36,7 @@ const config = [{
                 children:[{
                     path:':shopNo/:name',
                     name:'prepaidManage',
-                    component: resolve => require(['./views/waitOrder.vue'], resolve),
+                    component: resolve => require(['./views/prepaidManage.vue'], resolve),
                 }]
             },
             {
