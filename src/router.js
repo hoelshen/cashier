@@ -28,12 +28,17 @@ const config = [{
                 name: 'waitOrder',
                 component: resolve => require(['./views/waitOrder.vue'], resolve),
             },
-            // {
-            //     // 预存款管理
-            //     path: 'prepaidManage',
-            //     name: 'prepaidManage',
-            //     component: resolve => require(['./views/prepaidManage.vue'], resolve),
-            // },
+            {
+                // 预存款管理
+                path: "prepaidManage",
+                name: 'prepaidManage',
+                component: resolve => require(['./views/prepaidManage.vue'], resolve),
+                children:[{
+                    path:':shopNo/:name',
+                    name:'prepaidManage',
+                    component: resolve => require(['./views/waitOrder.vue'], resolve),
+                }]
+            },
             {
                 // 退货单管理
                 path: 'drawBack',
@@ -51,12 +56,6 @@ const config = [{
                 path: 'drawBackDetail/:purchaseOrderBackNo',
                 name: 'drawBackDetail',
                 component: resolve => require(['./views/drawBackDetail.vue'], resolve),
-            },
-            {
-                // 预存款
-                path: 'prepaidManage/:shopNo',
-                name: 'prepaidManage',
-                component: resolve => require(['./views/prepaidManage.vue'], resolve),
             },
             {
                 // 会员列表

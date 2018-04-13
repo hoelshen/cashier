@@ -297,7 +297,7 @@
                     </el-col>
                     <el-col :span="24" v-if="isDisable">
                         <el-form-item label="预存款详情：">
-                            <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo }}">点击查看</router-link>
+                            <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo,name:editForm.name}}">点击查看</router-link>
                         </el-form-item>
                     </el-col>
                     <el-col class="xg-search-yy-wrap" :span="12">
@@ -598,6 +598,7 @@ export default {
                 method: 'post',
                 data: {
                     'advanceDeposit.shopId': self.changeForm.changeShopId,
+                    'advanceDeposit.shopName': self.changeForm.changeShopName,
                     'advanceDeposit.changeType': self.changeForm.changeType,
                     'advanceDeposit.alterMoney': self.changeForm.alterMoney,
                     'advanceDeposit.remark': self.changeForm.remark,
