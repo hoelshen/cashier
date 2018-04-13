@@ -11,7 +11,7 @@
 						</el-col>
 						<el-col :span="6">
 							<el-form-item label="代理商姓名">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.salesMan" placeholder="代理商姓名"></el-input>
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="代理商姓名"></el-input>
 							</el-form-item>
 						</el-col>
 						<el-col :span="6">
@@ -67,7 +67,7 @@
 							<p class="textYellow" v-if="scope.row.agentGradeId === 266">微店</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="salesMan" label="代理商姓名">
+					<el-table-column prop="name" label="代理商姓名">
 					</el-table-column>
 					<el-table-column prop="shopName" label="店铺名称">
 					</el-table-column>
@@ -123,7 +123,7 @@ export default {
 				searchTime: '',			//下单时间
 				searchLevel: [],		//代理商等级
 				Level: [],			//代理商等级替代
-				salesMan:'',        //代理商姓名
+				searchName:'',        //代理商姓名
 				operator:"" ,       //运营人员
 			},
 			tableData: [
@@ -139,7 +139,7 @@ export default {
 					creator: '',			//变更人
 					orderStatus: '',		//状态
 					createdTime: '',		//变更时间
-					salesMan:'',             //代理商姓名
+					name:'',             //代理商姓名
 					operator:'', 	     //运营人员
 					searchLevel:''       //代理商等级 
 				}
@@ -217,7 +217,7 @@ export default {
 					'advanceDeposit.changeType': this.searchData.searchStatus,
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
-					'advanceDeposit.salesMan': this.searchData.salesMan,
+					'advanceDeposit.name': this.searchData.searchName,
 					'advanceDeposit.operator': this.searchData.operator,
 					'advanceDeposit.agentGradeIds':this.searchData.searchLevel
 				},
@@ -287,7 +287,7 @@ export default {
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
 					'advanceDeposit.agentGradeIds': this.searchData.level,
-					'advanceDeposit.salesMan': this.searchData.salesMan,
+					'advanceDeposit.name': this.searchData.searchName,
 					'advanceDeposit.operator': this.searchData.operator,
 					
 				},
@@ -389,11 +389,12 @@ export default {
 					'pager.pageIndex': 1,
 					'pager.pageSize': 999999,
 					'advanceDeposit.shopNo': this.searchData.searchId,
+					'advanceDeposit.name': this.searchData.searchName,
 					'advanceDeposit.phone': this.searchData.searchPhone,
 					'advanceDeposit.changeType': this.searchData.searchStatus,
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
-					'advanceDeposit.salesMan': this.searchData.salesMan,
+				
 					'advanceDeposit.operator': this.searchData.operator,
 				},
 				success(response) {
@@ -404,7 +405,7 @@ export default {
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
 											const tHeader = ['代理商编号', '代理商等级', '店铺名称', '代理商姓名', '变更类型', '变更金额','结余', '备注/单号', '变更人', '变更时间', '运营人员']
-											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'salesMan', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
+											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'name', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
 											const data = this.formatJson(filterVal, list);
 											// console.log(data)
@@ -441,16 +442,28 @@ export default {
 	created() {
 		var src = window.location.href.split('/');
 		this.searchData.searchId = src[5];
+		this.searchData.searchName = decodeURI(src[6])
+
+		// console.log(src)
+		// console.log(src[6])
+		if(src[6]  === 'undefined' || src[6]  === undefined){
+			this.searchData.searchName  = '';
+			console.log('ok')
+		}else{
+			this.searchData.searchName = decodeURI(src[6])
+		}
 		this.$getData({
 			url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data: {
 				'pager.pageIndex': this.currentPage,
 				'pager.pageSize': this.pageSize,
 				'advanceDeposit.shopNo': this.searchData.searchId,
+				'advanceDeposit.name': this.searchData.searchName,
+				
 				
 			},
 			success(response) {
-				console.log(response.data.result)
+				// console.log(response.data.result)
 				this.tableData = response.data.result;
 				this.totalNums = response.data.totalNums;
 			},
