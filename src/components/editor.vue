@@ -184,6 +184,7 @@ export default {
             this.urlData.productList.map(v => {
                 this.editor.focus();
                 this.editor.insertText(this.editor.getSelection().index, `\n卡片\n标题：${v.title}\n副标题：${v.subTitle}\n醉品价：${this.toFixed(v.salesPrice)}\n进货价：${this.toFixed(v.purchasePrice)}\n链接：${v.cardUrl}\nsku：##${v.proSku}##\n/卡片\n`, {});
+                this.editor.getSelection(length+1)
             })
         },
         // 点击icon触发事件
@@ -195,7 +196,7 @@ export default {
         // 获取OSS签名
         getTocken() {
             return new Promise((resolve, reject) => {
-                this.$ajax.post('/cbttest/oteao/file/getSignature', ).then((res) => {
+                this.$ajax.post('https://oadmin.zuipin.cn/cbttest/oteao/file/getSignature', ).then((res) => {
                     resolve(res)
                 })
             })
@@ -205,6 +206,7 @@ export default {
             console.log(this.$refs.imgBtn.files[0]);
             // 图片大于10M
             if (this.$refs.imgBtn.files[0].size > 10485760) {
+                console.log(this.$refs.imgBtn.files[0].size)
                 this.$message({
                     message: "图片超过10M，请重新选择",
                     type: "error"
@@ -223,15 +225,27 @@ export default {
                         secure:true
                     });
 
+
                     client.multipartUpload('/cashierImg/' + this.formatDate(new Date()).replace(/\s|\-|\:/g,'') + '.' + this.$refs.imgBtn.files[0].name.split('.').pop(), this.$refs.imgBtn.files[0]).then(res => {
+                        
                         if (res.res.status === 200) {
                             this.$message({
                                 message: "上传成功",
                                 type: "success"
                             });
                             //插入图片
-                            console.log(res);
-                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.url ? res.url : res.res.requestUrls[0].split('?')[0] );
+                            console.log(res);      
+                            
+                            this.editor.insertEmbed(this.editor.getSelection().index, 'image', res.url ? res.url : res.res.requestUrls[0].split('?')[0], );
+
+                            // console.log(this.editor.setSelection());
+        
+                            this.editor.setSelection(length + 1);
+
+                            // this.$refs.myQuillEditor = 'aaa'
+
+                            // console.log('1')
+                           
                         }
                     })
                 });
