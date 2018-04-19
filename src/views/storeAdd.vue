@@ -7,13 +7,36 @@
       <!-- 新增店铺弹窗 start -->
         <el-form :model="addForm" label-width="120px" ref="addForm">
             <el-row>
-                <el-col :span="12">
+                <!--第一行-->
+                <el-col :span="8">
+                    <el-form-item label="店铺名称：">
+                        <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="代理商姓名：">
+                        <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="代理商手机：">
+                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                        <div class="mark">
+                            代理商登录系统使用的账号
+                        </div>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+               <!--第二行-->
+                <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
                         <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+             
+                <el-col :span="8">
                     <el-form-item label="展示选项：">
                         <el-radio v-model="addForm.isShow" label="1">展示</el-radio>
                         <el-radio v-model="addForm.isShow" label="0">不展示</el-radio>
@@ -22,47 +45,74 @@
                         </div>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="店铺名称：">
-                        <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+
+                <el-col :span="8">
+                    <el-form-item label="代理商状态">
+                       ---
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="代理商姓名：">
-                        <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
-                    <el-form-item label="代理商手机：">
-                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
-                        <div class="mark">
-                            代理商登录系统使用的账号
-                        </div>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="12">
+            </el-row>
+            <el-row>
+                 <!--第三行-->
+         
+                <el-col :span="8">
                     <el-form-item label="合同签约日期：">
                         <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
-                <el-col :span="24">
+                <el-col :span="8">
+                    <el-form-item label="年度业绩目标：">
+                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                    </el-form-item>
+                  
+                </el-col>
+                <el-col :span="6">
+                      <el-form-item  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="">
+                            <template slot="prepend">店铺拓展：</template>
+                            <template slot="append"> 家</template></el-input>
+                    </el-form-item>
+                </el-col>
+            </el-row>         
+            <el-row>
+                <!--第四行-->
+                <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable>
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
-                </el-col>
-                <el-col :span="24" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                    <el-form-item label="代理234区域：">
-                        <addressComponent ref='addAgentAddress' :isDetail="false" />
+                </el-col> 
+            </el-row>
+            <el-row>
+                <!--第五行-->
+                <el-col :span="16" v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item label="所属区域：">
+                        <addressComponent ref='addAgentAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
-                <el-col :span="24">
+                <el-col :span="16" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                    <el-form-item label="代理区域：">
+                        <addressComponent ref='addAgentAddress' :isDetail="false" />   
+                    </el-form-item>
+                
+                </el-col>
+                <el-col :span="4"  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                    <el-form-item :span="2" label="类别：">
+                            <el-input v-model="addForm.phone"   :disabled="true" ></el-input>   
+                    </el-form-item>
+                </el-col>
+            </el-row>
+
+            <el-row>
+              <el-col :span="22">
                     <el-form-item label="收件地址：">
                         <addressComponent ref='addAddress' :isDetail="false" />
                     </el-form-item>
                 </el-col>
+            </el-row> 
+            <el-row>
                 <el-col :span="24">
                     <el-form-item label="详细地址：">
                         <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
@@ -71,9 +121,25 @@
                         </div>
                     </el-form-item>
                 </el-col>
+
+            </el-row>
+        
+            <el-row class="content_title">
+                <h2>账户信息</h2>
+            </el-row>
+            <el-row>
+                <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item label="括展上级：" prop="">
+                        <el-radio-group v-model="addForm.phone">
+                            <el-radio label="醉品"></el-radio>
+                            <el-radio label="代理商"></el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
                 <el-col class="search-yy-wrap" :span="12">
                     <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
-
                     <el-form-item label="运营人员">
                         <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="请选择" icon="caret-bottom">
                             <span class="search_left"></span>
@@ -82,13 +148,11 @@
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
                     <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-
                     <el-form-item label="业务人员">
                         <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="请选择" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-
             </el-row>
         </el-form>
         <!-- <div slot="footer" class="dialog-footer">
@@ -120,18 +184,6 @@ export default {
             totalSize: 0,
             pageSize: 30,
             user: '',
-            searchData: {
-                shopName: '',
-                phone: '',
-                name: '',
-                state: '',
-                signTime: [],
-                agentLevelIds: [],
-                operator: '',
-                salesMan: '',
-                operatorId: '',
-                salesManId: '', 
-            },
             addForm: {
                 shopName: '',
                 name: '',
@@ -600,11 +652,9 @@ export default {
         },
         deleteOperator(){
             this.addForm.operator='';
-            this.editForm.operator='';
         },
         deleteSalesMan(){
             this.addForm.salesMan='';
-            this.editForm.salesMan='';
             
         }
     },
@@ -666,7 +716,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 1094px;
         z-index: 1000;
     }
     .deleteOperatorName_left {

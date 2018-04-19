@@ -4,19 +4,16 @@
             <h2>基本信息</h2>
             <div class="content_closeBtn" @click="goBack">X</div>
         </el-row>
-    <!-- 修改店铺及店铺详情弹窗 start -->
-        <!-- <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
-        <el-form :model="addForm" label-width="120px" ref="addForm"> -->
-            
+    <!-- 修改店铺及店铺详情弹窗 start -->            
         <el-form :model="editForm" label-width="120px" ref="editForm">
             <el-row>
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio  v-model="editForm.shopType" label="AGENT">代理商</el-radio>
                         <el-radio  v-model="editForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="8">
                     <el-form-item label="展示选项：">
                         <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="1">展示</el-radio>
                         <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="0">不展示</el-radio>
@@ -24,6 +21,13 @@
                             是否展示到醉品线下M2O体验店
                         </div>
                     </el-form-item>
+                </el-col>
+                <el-col :span="8">
+                    <div>
+                            <timeComponent @time-end=" message = '倒计时结束' " :endTime='endTime'></timeComponent>
+                            <p>{{message}}</p>
+                    </div>
+            
                 </el-col>
             </el-row>
             <el-row>
@@ -115,6 +119,7 @@
 <script>
 import Utils from '../components/tools/Utils';
 import addressComponent from '../components/address.vue';
+import timeComponent from '../components/time.vue';
 import axios from 'axios';
 
 
@@ -185,11 +190,14 @@ export default {
                 editFormTitle: '',
                 isDisable: false,
                 order: '', //预存款排序
-                phoneLength: 11
+                phoneLength: 11,
+                message:'正在倒计时',
+                endTime:'2018-07-08',
         }
     },  
     components: {
-        addressComponent
+        addressComponent,
+        timeComponent,
     },
     methods:{
     //提交字段校验
@@ -514,13 +522,9 @@ export default {
 
                 if(this.editForm.salesMan == queryString){
 
-
                 this.editForm.salesMan2 = false;
     
                 }
-            
-            
-            
                 queryString = !this.editForm.salesMan2 ? '' : queryString;
             
             
@@ -583,18 +587,14 @@ export default {
                 this.editForm.salesMan =  item.userName;
                 
                 this.editForm.salesMan2  = false;
-                
             
                 //do something
             },
             deleteOperator(){
-                this.addForm.operator='';
                 this.editForm.operator='';
             },
             deleteSalesMan(){
-                this.addForm.salesMan='';
-                this.editForm.salesMan='';
-                
+                this.editForm.salesMan='';    
             }
         },
         created() {
@@ -603,9 +603,23 @@ export default {
             //获取id
             var src = window.location.href.split("/");
             this.id = src[5];
-            console.log(src)
-            console.log(src[5])
-            const self = this;        
+            // console.log(src)
+            // console.log(src[5])
+            const self = this;
+            //获取代理商等级列表
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
+                // console.log(response);
+                if (response.data.success == 1) {
+                    self.levelArray = response.data.result
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });        
             // 获取代理商信息
             self.$ajax.get('/api/http/shop/searchShop.jhtml', {
                 params: {
@@ -650,7 +664,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 165px;
         z-index: 1000;
     }
     .delete_right {
@@ -659,26 +673,8 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 169px;
         z-index: 1000;
-    }
-    .deleteOperatorName_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 31.5%;
-        z-index: 999;
-    }
-    .deleteSalesManName_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 81.5%;
-        z-index: 999;
     }
 }
 

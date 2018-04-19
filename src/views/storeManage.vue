@@ -11,7 +11,7 @@
                     </el-col>
 
                     <el-col :span="6">
-                        <el-form-item label="代理商姓名：">
+                        <el-form-item label="代理商姓名："> 
                             <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
@@ -45,7 +45,6 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
-
                         <el-form-item label="注册时间：">
                             <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                             </el-date-picker>
@@ -63,8 +62,8 @@
         <!-- 表格 start -->
         <div class="t-bodywrap">
             <el-row class="t-body">
-                <!-- <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button> -->
                 	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
+                    <el-button type="primary"  @click="allOutputExcel()">全部导出({{totalSize}}条)</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
@@ -73,20 +72,25 @@
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="姓名">
+                        <el-table-column prop="name" label="姓名" width:200>
                         </el-table-column>
                         <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
                             <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="agentGradeId" label="代理商等级" width="110">
+                        <el-table-column prop="agentGradeId" label="代理商等级" width="180">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.agentGradeId==31">单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265">区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266">微店代理</span>
                                 <span v-if="!scope.row.agentGradeId">-</span>
+                                <p class="textOrange" v-if="scope.row.agentGradeId === 31">S类</p>
+                                <p class="textRed" v-if="scope.row.agentGradeId === 265">A类</p>
+                                <p class="textGreen" v-if="scope.row.agentGradeId === 266">B类</p>
+                                <p class="textPurple" v-if="scope.row.agentGradeId === 266">C类</p>   
                             </template>
+                     
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="157">
                         </el-table-column>
@@ -102,6 +106,10 @@
                                 </p>
                             </template>
                         </el-table-column>
+                        <el-table-column prop="operator" label="剩余天数" sortable="custom" width="127">
+                        </el-table-column>
+                        <el-table-column prop="operator" label="目标完成" width="127">
+                        </el-table-column>
                         <el-table-column prop="operator" label="运营人员" width="127">
                         </el-table-column>
                         <el-table-column prop="salesMan" label="业务人员" width="127">
@@ -111,8 +119,8 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span> <router-link :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
-                                    <span> <router-link :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
+                                    <span> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
+                                    <span> <router-link class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
                             </template>
@@ -968,7 +976,130 @@ export default {
             }
             return true
         },
-        
+        //获取全部id
+        getAllId() {
+            const self = this;
+            let data = '';
+            let array = []
+            return self.$ajax({
+                async: false,
+                url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
+                method: 'post',
+                params:{
+                    'pager.pageSize': self.totalSize,
+                },
+                data: {
+                    // 'advanceDeposit.shopId': self.searchData.shopId,
+                    // 'advanceDeposit.shopName': self.searchData.shopName,
+                    // 'advanceDeposit.changeType': self.searchData.changeType,
+                    // 'advanceDeposit.alterMoney': self.searchData.alterMoney,
+                    // 'advanceDeposit.remark': self.searchData.shopNo,
+                    // 'advanceDeposit.creatorId': self.user.id,
+                    // 'advanceDeposit.updatorId': self.user.id,
+                    // 'advanceDeposit.isBackground': 1,          
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+
+            }).then(function(response) {
+                if (response.data.success === 1) {
+                    let myData = response.data.result;
+                    for (let i = 0; i < myData.length; i++) {
+                        array.push(myData[i].id)
+                    }
+                    self.allId = array.join(',')
+
+                    console.log(response.data)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+
+            }).catch(function(error) {
+
+            });
+        },
+        // 导出全部明细
+        allOutputExcel() {
+            let self = this;
+            self.$ajax.all([self.getAllId()]).then(
+                self.$ajax.spread(function(acct) {
+                    let ids = self.allId;
+                    self.outputExcel(ids);
+                })
+            );
+        },
+        // 导出明细
+        outputExcel(id, name, shopNo, createMonth) {
+            console.log(id);
+            console.log(name);
+            console.log(shopNo);
+            
+            let self = this;
+            self.loading = true;
+            self.$ajax({
+                url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
+                method: 'post',
+                params:{
+                    'pager.pageSize': self.totalSize,
+                },
+                data: {
+                    'verifiOrder.verifiOrderIds': id,
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                },
+            }).then(function(response) {
+                self.loading = false;
+                console.log(response.data)
+                if (response.data.success === 1) {
+                    self.downData = response.data.result;
+                    if(self.downData.length>0){
+                        require.ensure([], () => {
+                            const {
+                                export_json_to_excel
+                            } = require('../components/tools/Export2Excel')
+                            const tHeader = ['序号', '代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '年度进货额目标', '已完成', '进度','剩余时间','备注' ]
+                            const filterVal = ['No','shopNo', 'name', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
+                                'cityName', 'countyName'
+                            ]
+                            const list = self.downData;
+                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+                        })
+                    }else{
+                        self.$message({
+                            message: '订单暂无明细',
+                            type: 'error'
+                        })
+                    }
+
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function(error) {
+
+            });
+        },
         
         //重置新增表格内容
         resetAddForm() {
@@ -1173,5 +1304,8 @@ export default {
     top: 9px;
     left: 171px;
     z-index: 1000;
+}
+.router-link-active { 
+   color: #1990ff;
 }
 </style>
