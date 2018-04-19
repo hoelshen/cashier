@@ -63,7 +63,8 @@
         <!-- 表格 start -->
         <div class="t-bodywrap">
             <el-row class="t-body">
-                <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button>
+                <!-- <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button> -->
+                	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
@@ -110,8 +111,8 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span @click="openEditDialog(scope.row,'edit')">修改</span>
-                                    <span @click="openEditDialog(scope.row,'detail')">详情</span>
+                                    <span> <router-link :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
+                                    <span> <router-link :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
                             </template>
@@ -124,258 +125,61 @@
                 </div>
             </el-row>
         </div>
-        <!-- 表格 end -->
-        <!-- 新增店铺弹窗 start -->
-        <el-dialog title="新增店铺" :visible.sync="addDialogVisible" @close="resetAddForm">
-            <el-form :model="addForm" label-width="120px" ref="addForm">
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="店铺类型：">
-                            <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                            <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="展示选项：">
-                            <el-radio v-model="addForm.isShow" label="1">展示</el-radio>
-                            <el-radio v-model="addForm.isShow" label="0">不展示</el-radio>
-                            <div class="mark">
-                                是否展示到醉品线下M2O体验店
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="店铺名称：">
-                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="代理商姓名：">
-                            <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="代理商手机：">
-                            <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
-                            <div class="mark">
-                                代理商登录系统使用的账号
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="合同签约日期：">
-                            <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
-                            <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable>
-                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-form-item label="代理区域：">
-                            <addressComponent ref='addAgentAddress' :isDetail="false" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="收件地址：">
-                            <addressComponent ref='addAddress' :isDetail="false" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="详细地址：">
-                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
-                            <div class="mark">
-                                地址为店铺地址，会展示到醉品的线下门店展示平台
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                    <el-col class="search-yy-wrap" :span="12">
-                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
-
-                        <el-form-item label="运营人员">
-                            <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="请选择" icon="caret-bottom">
-                                <span class="search_left"></span>
-                            </el-autocomplete>
-                        </el-form-item>
-                    </el-col>
-                    <el-col class="search-yw-wrap" :span="12">
-                        <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-
-                        <el-form-item label="业务人员">
-                            <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="请选择" icon="caret-bottom">
-                            </el-autocomplete>
-                        </el-form-item>
-                    </el-col>
-    
-                </el-row>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="addAgent">确 定</el-button>
-                <el-button @click="addDialogVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
-        <!-- 新增店铺弹窗 end -->
-
-        <!-- 修改店铺及店铺详情弹窗 start -->
-        <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
-            <el-form :model="editForm" label-width="120px" ref="editForm">
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="店铺类型：">
-                            <el-radio disabled v-model="editForm.shopType" label="AGENT">代理商</el-radio>
-                            <el-radio disabled v-model="editForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="展示选项：">
-                            <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="1">展示</el-radio>
-                            <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="0">不展示</el-radio>
-                            <div class="mark">
-                                是否展示到醉品线下M2O体验店
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="店铺名称：">
-                            <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="代理商姓名：">
-                            <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="12">
-                        <el-form-item label="代理商手机：">
-                            <el-input v-model="editForm.phone" placeholder="代理商手机" :maxlength='phoneLength' :disabled="isDisable"></el-input>
-                            <div class="mark">
-                                代理商登录系统使用的账号
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="12">
-                        <el-form-item label="合同签约日期：">
-                            <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" disabled>
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                            <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
-                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-
-                    <el-col :span="24" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
-                        <el-form-item label="代理区域：">
-                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :isDetail="false" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="收件地址：">
-                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24">
-                        <el-form-item label="详细地址：">
-                            <el-input v-model="editForm.address" placeholder="详细地址" :disabled="isDisable"></el-input>
-                            <div class="mark">
-                                地址为店铺地址，会展示到醉品的线下门店展示平台
-                            </div>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="24" v-if="isDisable">
-                        <el-form-item label="预存款详情：">
-                            <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo,name:editForm.name}}">点击查看</router-link>
-                        </el-form-item>
-                    </el-col>
-                    <el-col class="xg-search-yy-wrap" :span="12">
-                        <el-form-item label="运营人员">
-                            <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
-                            <el-autocomplete v-model="editForm.operator"  :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
-                            </el-autocomplete>
-                        </el-form-item>
-                    </el-col>
-                    <el-col class="xg-search-yw-wrap" :span="12" :disabled="isDisable">
-                        <el-form-item label="业务人员">
-                            <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
-                            <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="业务人员" icon="caret-bottom" :disabled="isDisable">
-                            </el-autocomplete>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
-            <div slot="footer" class="dialog-footer">
-                <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
-                <el-button @click="editDialogVisible = false">取 消</el-button>
-            </div>
-        </el-dialog>
-        <!-- 修改店铺及店铺详情弹窗 end -->
+        <!-- 表格 end -->   
         <!-- 预存款变更弹窗 start -->
-        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
-            <el-form :model="changeForm">
-                <el-row>
-                    <el-col :span="22">
-                        <el-form-item label="店铺名称：" label-width="100px">
-                            <el-input v-model="changeForm.changeShopName" disabled></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+            <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
+                <el-form :model="changeForm">
+                    <el-row>
+                        <el-col :span="22">
+                            <el-form-item label="店铺名称：" label-width="100px">
+                                <el-input v-model="changeForm.changeShopName" disabled></el-input>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                <el-row>
-                    <el-col :span="22">
-                        <el-form-item label="变动类型：" label-width="100px">
-                            <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;">
-                                <el-option label="充值" value="TOP_UP"></el-option>
-                                <el-option label="扣款" value="DEDUCTIONS"></el-option>
-                            </el-select>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    <el-row>
+                        <el-col :span="22">
+                            <el-form-item label="变动类型：" label-width="100px">
+                                <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;">
+                                    <el-option label="充值" value="TOP_UP"></el-option>
+                                    <el-option label="扣款" value="DEDUCTIONS"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                <el-row :gutter="20">
-                    <el-col :span="5">
-                        <el-form-item label="变动金额：" label-width="100px">
-                            <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
-                            <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="17">
-                        <el-form-item>
-                            <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="padding-right:5px;"> </el-input>
-                            <p class="yuan">元</p>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+                    <el-row :gutter="20">
+                        <el-col :span="5">
+                            <el-form-item label="变动金额：" label-width="100px">
+                                <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
+                                <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :span="17">
+                            <el-form-item>
+                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="padding-right:5px;"> </el-input>
+                                <p class="yuan">元</p>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
 
-                <el-row>
-                    <el-col :span="22">
-                        <el-form-item label="备注说明：" label-width="100px">
-                            <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
-                            <p class="triangle"></p>
-                            <p class="msg">备注修改的原因，不超过50个中文字符</p>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-            </el-form>
+                    <el-row>
+                        <el-col :span="22">
+                            <el-form-item label="备注说明：" label-width="100px">
+                                <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
+                                <p class="triangle"></p>
+                                <p class="msg">备注修改的原因，不超过50个中文字符</p>
+                            </el-form-item>
+                        </el-col>
+                    </el-row>
+                </el-form>
 
-            <div slot="footer" class="dialog-footer">
-                <el-button @click="changeCancle">取 消</el-button>
-                <el-button type="primary" @click="onChange">确 定</el-button>
-            </div>
-        </el-dialog>
-        <!-- 预存款变更弹窗 end -->
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="changeCancle">取 消</el-button>
+                    <el-button type="primary" @click="onChange">确 定</el-button>
+                </div>
+            </el-dialog>
+            <!-- 预存款变更弹窗 end -->  
     </div>
 </template>
 
@@ -405,9 +209,7 @@ export default {
                 operator: '',
                 salesMan: '',
                 operatorId: '',
-                salesManId: '',
-                // operatorName: '',
-                // salesManName: '',
+                salesManId: '', 
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -442,55 +244,7 @@ export default {
                 salesManId: '',
                 operatorId: '',
             },
-            addForm: {
-                shopName: '',
-                name: '',
-                phone: '',
-                signedTime: '',
-                agentGradeId: '',
-                provinceCode: '',
-                province: '',
-                city: '',
-                cityCode: '',
-                countyCode: '',
-                agentProvince: '',
-                agentCity: '',
-                agentCounty: '',
-                address: '',
-                shopType: 'AGENT',
-                isShow: '1',
-                salesMan: '',
-                operator: '',
-                salesManId: '',
-                operatorId: '',
-
-            },
             editFormTitle: '',
-            editForm: {
-                id: '',
-                shopName: '',
-                name: '',
-                phone: '',
-                signedTime: '',
-                agentGradeId: '',
-                province: '',
-                city: '',
-                county: '',
-                cityCode: '',
-                countyCode: '',
-                agentProvince: '',
-                agentCity: '',
-                agentCounty: '',
-                address: '',
-                shopType: '',
-                isShow: '',
-                operator: '',
-                operator2: '',
-                operatorId: '',
-                salesMan: '',
-                salesMan2: '',                
-                salesManId: '',
-            },
             isDisable: false,
             order: '', //预存款排序
             phoneLength: 11
@@ -521,6 +275,7 @@ export default {
         });
         //获取列表数据
         self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
+
             params: {
                 'pager.pageIndex': self.currentPage,
                 'pager.pageSize': self.pageSize
@@ -529,7 +284,6 @@ export default {
             self.loading = false;
             self.myData = response.data.rows;
             self.totalSize = response.data.total
-            // console.log(response);
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -796,16 +550,6 @@ export default {
             });
 
         },
-        //打开新增店铺弹窗
-        openAddDialog() {
-            
-        //   console.log(this.addForm.areacode);
-        //   console.log(this.addForm.provinceCode);
-        //   console.log(this.addForm.cityCode); 
-        //   console.log(this.addForm.agentCity);
-        //   console.log(this.addForm.addAddress)    
-            this.addDialogVisible = true;
-        },
         //用户列表
         operatorQuerySearchAsync(queryString, callback) {
     
@@ -958,11 +702,6 @@ export default {
                 self.editForm = response.data.result;
                 self.operatorId = response.data.result.operatorId;
                 self.salesManId = response.data.result.salesManId;
-                // console.log(self.editForm.city)
-                // console.log(self.editForm.county)
-                // console.log(self.editForm.province)
-
-
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
@@ -1229,147 +968,8 @@ export default {
             }
             return true
         },
-        // 新增店铺
-        addAgent() {
-            const self = this;
-            if (!self.checkSession()) return;
-            self.loading = true;
-            const data = self.addForm;
-            let addAddress = self.$refs.addAddress.getData();
-            let addAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
-            if (!self.testData(data, addAddress, addAgentAddress)) return;
-            //请求
-            self.$ajax({
-                url: '/api/shop/shopManage/modify.jhtml',
-                method: 'post',
-                data: {
-                    'shop.shopName': data.shopName,
-                    'shop.name': data.name,
-                    'shop.phone': data.phone,
-                    'shop.signedTime': Utils.formatDayDate(data.signedTime),
-                    'shop.agentGradeId': data.agentGradeId,
-                    'shop.provinceCode': addAddress.provinceCode,
-                    'shop.cityCode': addAddress.cityCode,
-                    'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
-                    'shop.address': data.address,
-                    'shop.shopType': data.shopType,
-                    'shop.isShow': data.isShow,
-                    'shop.operator': data.operator,
-                    'shop.salesMan': data.salesMan,
-                    'shop.salesManId': this.salesManId,
-                    'shop.operatorId': this.operatorId || '',
-                },
-                transformRequest: [function (data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(function (response) {
-                self.loading = false;
-                // console.log(response)
-                if (response.data.result == 0) {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'success'
-                    })
-                    self.addDialogVisible = false;
-                    setTimeout(function () {
-                        self.handleCurrentChange(self.currentPage);
-                    }, 1000)
-                }
-            }).catch(function (err) {
-                self.loading = false;
-            });
-
-
-
-        },
-        // 修改店铺
-        editAgent() {
-            const self = this;
-            if (!self.checkSession()) return;
-            self.loading = true;
-            const data = self.editForm;
-            let editAddress = self.$refs.editAddress.getData();
-            
-            console.log(editAddress);
-            // return;
-            let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
-            if (!self.testData(data, editAddress, editAgentAddress)) return;
-            //请求
-            // console.log(data)
-            self.$ajax({
-                url: '/api/shop/shopManage/modify.jhtml',
-                method: 'post',
-                data: {
-                    'shop.id': data.id,
-                    'shop.shopName': data.shopName,
-                    'shop.name': data.name,
-                    'shop.phone': data.phone,
-                    'shop.signedTime': data.signedTime,
-                    'shop.agentGradeId': data.agentGradeId,
-                    'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
-                    'shop.address': data.address,
-                    'shop.shopType': data.shopType,
-                    'shop.city': data.city,
-                    'shop.provinceCode': editAddress.provinceCode,
-                    'shop.isShow': data.isShow,
-                    'shop.operator': data.operator,
-                    'shop.salesMan': data.salesMan,
-                    'shop.salesManId': this.salesManId || '',
-                    'shop.operatorId': this.operatorId || '',
-                },
-                transformRequest: [function (data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(function (response) {
-                self.loading = false;
-                // console.log(response)
-                if (response.data.result == 0) {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'success'
-                    })
-                    self.editDialogVisible = false;
-                    setTimeout(function () {
-                        self.handleCurrentChange(self.currentPage);
-                    }, 1000)
-                }
-
-            }).catch(function (err) {
-                self.loading = false;
-            });
-        },
+        
+        
         //重置新增表格内容
         resetAddForm() {
             const self = this;
