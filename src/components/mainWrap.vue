@@ -51,6 +51,12 @@ export default {
                 'messageAdd': '通知新增',
                 'updateMsg': '修改通知',
                 'lookMsg': '通知预览',
+                'rulesManage':'规则管理',
+                'storeAdd': '店铺管理/店铺新增',
+                'storeEdit': '店铺管理/店铺修改',
+                'storeDetail': '店铺管理/店铺详情',
+                
+                
             },
             user: {}
         }

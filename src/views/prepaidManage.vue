@@ -442,16 +442,11 @@ export default {
 	created() {
 		var src = window.location.href.split('/');
 		this.searchData.searchId = src[5];
-		this.searchData.searchName = decodeURI(src[6])
+		this.searchData.searchName = src[6] && decodeURI(src[6]) ;
 
-		// console.log(src)
-		// console.log(src[6])
-		if(src[6]  === 'undefined' || src[6]  === undefined){
-			this.searchData.searchName  = '';
-			console.log('ok')
-		}else{
-			this.searchData.searchName = decodeURI(src[6])
-		}
+	
+		console.log(typeof src[6]);
+		console.log(typeof decodeURI(src[6] ))
 		this.$getData({
 			url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data: {
@@ -459,8 +454,6 @@ export default {
 				'pager.pageSize': this.pageSize,
 				'advanceDeposit.shopNo': this.searchData.searchId,
 				'advanceDeposit.name': this.searchData.searchName,
-				
-				
 			},
 			success(response) {
 				// console.log(response.data.result)
