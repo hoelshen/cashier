@@ -10,16 +10,18 @@
                 <span>首批进货款</span>
             </p>
         </el-row>
-        <el-row  class="text-wrap">
-            <span>时间周期：</span>
-            <input type="radio" id="contractPeriod" name="zpTime">
-            <label for="contractPeriod">合同期</label>
-            <input type="radio" id="timeRang" name="zpTime">
-            <label for="timeRang">时间范围</label>
-        </el-row>
+        
 
         <el-form ref="form" v-model="contentData" label-width="200px">
-          <div>
+          <el-row  class="text-wrap">
+            <el-col  class="fl-left">
+                <el-form-item label="时间周期：" >
+                        <el-radio  v-model="b"  label="1">合同期</el-radio>
+                        <el-radio v-model="b" label="2">时间范围</el-radio>
+                </el-form-item>
+            </el-col>
+        </el-row>
+          <div v-if="b==1">
               <el-row class="fl-wrap">
                   <el-col :span="9">
                       <el-form-item label="所属单店返利点数：">
@@ -36,7 +38,7 @@
               </el-row>
           </div>
            
-           <div>
+           <div  v-if="b==2">
                <el-row>
                   <el-col :span="8">
                       <el-form-item label=" 1）正式签约起">
@@ -103,17 +105,14 @@
                 </p>
             </el-row>
             <el-row class="text-wrap">
-                <span>时间周期：</span>
-                <!-- <template> -->
-                  <!-- <el-radio v-model="radio" label="1">备选项</el-radio>
-                  <el-radio v-model="radio" label="2">备选项</el-radio> -->
-                <!-- </template> -->
-                <input type="radio" id="contractPeriod" name="dlTime" v-model="whichTime" value="1">
-                <label for="contractPeriod">合同期</label>
-                <input type="radio" id="timeRang" name="dlTime"  v-model="whichTime" value="2">
-                <label for="timeRang">时间范围</label>
+                  <el-col :span="12" class="fl-left">
+                      <el-form-item label="时间周期：">
+                              <el-radio v-model="a"  label="1">合同期</el-radio>
+                              <el-radio v-model="a" label="2">时间范围</el-radio>
+                      </el-form-item>
+                  </el-col>
             </el-row>
-            <div>
+            <div  v-if="a==1">
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属单店返利点数：">
@@ -130,7 +129,7 @@
                 </el-row>
             </div>
             
-            <div>
+            <div  v-if="a==2">
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label=" 1）正式签约起">
@@ -211,7 +210,8 @@ export default {
         url: "" //url
       },
       nowContent: "",
-      whichTime:1
+      a:"2",
+      b:"1",
     };
   },
   components: {
@@ -434,6 +434,7 @@ export default {
   }
   .text-wrap {
     padding: 10px;
+    
   }
   .oter-time-wrap {
     padding-top: 50px;
@@ -466,6 +467,9 @@ export default {
     top: 2px;
     right: -50px;
     color: #48576a;
+  }
+  .fl-left{
+    margin-left: -120px;
   }
 }
 </style>
