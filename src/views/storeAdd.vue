@@ -141,7 +141,7 @@
                 <el-col class="search-yy-wrap" :span="12">
                     <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
                     <el-form-item label="运营人员">
-                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="请选择" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -149,7 +149,7 @@
                 <el-col class="search-yw-wrap" :span="12">
                     <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
                     <el-form-item label="业务人员">
-                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="请选择" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>

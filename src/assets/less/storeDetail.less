@@ -1,0 +1,321 @@
+@import url('./tools');
+
+#detailStore{
+    background-color: rgb(255, 255, 255);
+    min-width: 1110px;
+    font-size: 14px;
+
+    // 详情单信息
+    .info{
+        width: 96%;
+        margin: 1%;
+        float: 70%;
+        height: 100%;
+        h2:first-child{
+            background-color: rgba(0, 0, 0, 0.1);
+            text-indent: 1%;
+            height: 40px;
+            font-size: 17px;
+            line-height: 40px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .el-row{
+            margin: 2%;
+        }
+
+        .warp{
+            height: 1px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 20px auto 10px auto;
+        }
+
+        h3{
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        p{
+            height: 36px;
+            line-height: 36px;
+        }
+
+        // 退款单信息主体
+        .orderInfo{
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0px 30px;
+            float: left;
+            .el-form{
+                margin-top: 2%;
+                .el-row{
+                    margin: 0px;
+
+                    .el-col{
+                        .el-button--primary{
+                            padding: 10px 25px;
+                            margin-left: 10px;
+                            margin-bottom: 20px;
+                        }
+                        .el-button--default{
+                            padding: 10px 25px;
+                            margin-left: 10px;
+                            margin-bottom: 20px;
+                        }
+
+                        .el-form-item{
+                            label{
+                                text-align: left;
+                            }
+                        }
+
+                        .vue-images{
+                            .gallery{
+                                .wrapper{
+                                    flex: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+                .imgList{
+                    img{
+                         margin-left: 10px;
+                    }
+                }
+            }
+            
+            .inputWidth{
+                width: 150px;
+            }
+
+            .el-table{
+                width: 96%;
+                margin: 2%;
+                
+            }
+
+            .hint{
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.21);
+                color: white;
+                display: inline-block;
+                margin: 8px auto auto 10px;
+                text-indent: 3.5px;
+                cursor: pointer;
+            }
+
+            .changeMoney{
+                display: inline-block;
+                margin-left: 5px;
+                color: rgba(0, 0, 255, 0.67);
+                cursor: pointer;
+            }
+
+            .money{
+                width: 100px;
+            }
+
+            .yes{
+                width: 27px;
+                height: 27px;
+                line-height: 27px;
+                background-color: rgba(0, 0, 0, 0.21);
+                display: inline-block;
+                font-size: 24px;
+                margin-top: 4px;
+                margin-left: 20px;
+                vertical-align: top;
+                color: white;
+                border-radius: 5px;
+                text-indent: 3px;
+                cursor: pointer;
+            }
+
+            .no{
+                width: 27px;
+                height: 27px;
+                line-height: 27px;
+                background-color: rgba(0, 0, 0, 0.21);
+                display: inline-block;
+                font-size: 24px;
+                margin-top: 4px;
+                margin-left: 20px;
+                vertical-align: top;
+                color: white;
+                border-radius: 5px;
+                text-indent: 3px;
+                cursor: pointer;
+            }
+
+            // 弹窗
+            .dialog{
+                span{
+                    display: inline-block;
+                    width: 75%;
+                }
+            }
+        }
+        .calendar{
+            background-image:url( ../images/syht_rl.png);
+            background-repeat: no-repeat;
+            background-size:100%; 
+            float: right;
+        }
+    }
+    .count{
+        width: 96%;
+        margin: 1%;
+        width: 30%;
+        h2:first-child{
+            background-color: rgba(0, 0, 0, 0.1);
+            text-indent: 1%;
+            height: 40px;
+            font-size: 17px;
+            line-height: 40px;
+            border-top-left-radius: 5px;
+            border-top-right-radius: 5px;
+        }
+
+        .el-row{
+            margin: 2%;
+        }
+
+        .warp{
+            height: 1px;
+            width: 100%;
+            background-color: rgba(0, 0, 0, 0.1);
+            margin: 20px auto 10px auto;
+        }
+
+        h3{
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        p{
+            height: 36px;
+            line-height: 36px;
+        }
+
+        // 退款单信息主体
+        .orderCount{
+            border: 1px solid rgba(0, 0, 0, 0.1);
+            padding: 0px 30px;
+
+            .el-form{
+                margin-top: 2%;
+                .el-row{
+                    margin: 0px;
+
+                    .el-col{
+                        .el-button--primary{
+                            padding: 10px 25px;
+                            margin-left: 10px;
+                            margin-bottom: 20px;
+                        }
+                        .el-button--default{
+                            padding: 10px 25px;
+                            margin-left: 10px;
+                            margin-bottom: 20px;
+                        }
+
+                        .el-form-item{
+                            label{
+                                text-align: left;
+                            }
+                        }
+
+                        .vue-images{
+                            .gallery{
+                                .wrapper{
+                                    flex: 0;
+                                }
+                            }
+                        }
+                    }
+                }
+             
+            }
+            
+            .inputWidth{
+                width: 150px;
+            }
+
+            .el-table{
+                width: 96%;
+                margin: 2%;
+                
+            }
+
+            .hint{
+                width: 20px;
+                height: 20px;
+                line-height: 20px;
+                border-radius: 50%;
+                background-color: rgba(0, 0, 0, 0.21);
+                color: white;
+                display: inline-block;
+                margin: 8px auto auto 10px;
+                text-indent: 3.5px;
+                cursor: pointer;
+            }
+
+            .changeMoney{
+                display: inline-block;
+                margin-left: 5px;
+                color: rgba(0, 0, 255, 0.67);
+                cursor: pointer;
+            }
+
+            .money{
+                width: 100px;
+            }
+
+            .yes{
+                width: 27px;
+                height: 27px;
+                line-height: 27px;
+                background-color: rgba(0, 0, 0, 0.21);
+                display: inline-block;
+                font-size: 24px;
+                margin-top: 4px;
+                margin-left: 20px;
+                vertical-align: top;
+                color: white;
+                border-radius: 5px;
+                text-indent: 3px;
+                cursor: pointer;
+            }
+
+            .no{
+                width: 27px;
+                height: 27px;
+                line-height: 27px;
+                background-color: rgba(0, 0, 0, 0.21);
+                display: inline-block;
+                font-size: 24px;
+                margin-top: 4px;
+                margin-left: 20px;
+                vertical-align: top;
+                color: white;
+                border-radius: 5px;
+                text-indent: 3px;
+                cursor: pointer;
+            }
+
+            // 弹窗
+            .dialog{
+                span{
+                    display: inline-block;
+                    width: 75%;
+                }
+            }
+        }
+    }
+}
+

@@ -1,10 +1,130 @@
 <template>
-   <div id="detailStore">
-        <el-row class="content_title">
-            <h2>基本信息</h2>
-            <div class="content_closeBtn" @click="goBack">X</div>
-        </el-row>
-    <!-- 修改店铺及店铺详情弹窗 start -->            
+    <div id="detailStore">
+        <div>
+            <el-row class="content_title">
+                <h2>基本信息({{detailForm.shopNo}})</h2>
+                <div class="content_closeBtn" @click="goBack">X</div>
+            </el-row>
+        </div>
+ 
+        <div class="info">
+            <div class="orderInfo">
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        店铺名称：{{ detailForm.shopName }}
+                    </el-col>
+                    <el-col :span="12">
+                        合同签约日期：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        店铺类型：{{ detailForm.shopType }}
+                    </el-col>
+                    <el-col :span="12">
+                        已达成进货业绩：{{ detailForm.shopType}}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        显示选项：展示到醉品线下M20体验店{{ detailForm.name }}
+                    </el-col>
+                    <el-col :span="12">
+                        年度目标进货业绩：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        代理商姓名：{{ detailForm.name }}
+                    </el-col>
+                    <el-col :span="12">
+                        进货业绩达成率：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="112">
+                        代理商手机：{{ detailForm.phone }}
+                    </el-col>
+                    <el-col :span="112">
+                        已达成店铺拓展：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="112">
+                        代理商状态：{{ detailForm.state }}
+                    </el-col>
+                    <el-col :span="8">
+                        年度目标店铺拓展：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="112">
+                        代理商等级：{{ detailForm.agentGradeId }}
+                    </el-col>
+                    <el-col :span="112">
+                        店铺拓展达成率：{{ detailForm.shopName }}
+                    </el-col>
+                </el-row>
+                <el-row :gutter="10">
+                    <el-col :span="12">
+                        店铺所属区域：{{ detailForm.province }}{{detailForm.city}}{{detailForm.county}}
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        收件地址：{{ detailForm.address }}
+                    </el-col>
+                </el-row>
+
+            </div>
+            <div class="calendar">
+                 <p>{{message}}</p>
+                <timeComponent @time-end=" message = '倒计时结束' " :endTime='endTime'></timeComponent>
+               
+            </div>
+        </div>
+
+        <div>
+            <el-row class="content_title">
+                <h2>账户信息</h2>        
+            </el-row>
+        </div>
+      
+        <div class="count">
+            <div class="orderCount">
+                <el-row :gutter="5">
+                    <el-col :span="24">
+                        预存款详情：
+                         <el-button type="primary">点击查看</el-button>                                            
+                    </el-col>
+                </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="24">
+                        代理商关系：
+                          <el-button type="primary">点击查看</el-button>                
+                    </el-col>
+                </el-row>    
+                <el-row :gutter="5">
+                    <el-col :span="24">
+                       代理商年度业绩： 
+                        <el-button type="primary">点击查看</el-button>
+                    </el-col>
+                </el-row>
+                <el-row :gutter="5"> 
+                    <el-col :span="24">
+                        业务人员：{{ detailForm.operator }}
+                    </el-col>
+                </el-row>        
+                <el-row :gutter="5">
+                    <el-col :span="24">
+                        运营人员：{{ detailForm.salesMan }}
+                    </el-col>  
+                </el-row>     
+            </div>
+        </div>
+    </div>
+    <!--
+    修改店铺及店铺详情弹窗 start         
         <el-form :model="editForm" label-width="120px" ref="editForm">
             <el-row>
                 <el-col :span="8">
@@ -109,9 +229,8 @@
         <div slot="footer" class="dialog-footer">
             <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
             <el-button @click="editDialogVisible = false">取 消</el-button>
-        </div>
+        </div>-->
         <!-- 修改店铺及店铺详情弹窗 end -->
-  </div>
 </template>
 
 <script type="text/javascript" src="../router.js"></script>
@@ -162,7 +281,7 @@ export default {
                         return time.getTime() > Date.now();
                     }
                 },
-                editForm: {
+                detailForm: {
                     id: '',
                     shopName: '',
                     name: '',
@@ -187,11 +306,11 @@ export default {
                     salesMan2: '',                
                     salesManId: '',
                 },
-                editFormTitle: '',
+                detailFormTitle: '',
                 isDisable: false,
                 order: '', //预存款排序
                 phoneLength: 11,
-                message:'正在倒计时',
+                message:'剩余天数',
                 endTime:'2018-07-08',
         }
     },  
@@ -389,213 +508,9 @@ export default {
                 }
             },
             goBack() {
-                this.$confirm(`你确定要放弃添加吗？`, '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    this.$router.push('/storeManage');
-                    this.$message('取消成功')
-                })
+                    this.$router.push('/storeManage');      
             },
-            // 修改店铺
-            editAgent() {
-                const self = this;
-                if (!self.checkSession()) return;
-                self.loading = true;
-                const data = self.editForm;
-                let editAddress = self.$refs.editAddress.getData();
-                
-                console.log(editAddress);
-                // return;
-                let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
-                if (!self.testData(data, editAddress, editAgentAddress)) return;
-                //请求
-                // console.log(data)
-                self.$ajax({
-                    url: '/api/shop/shopManage/modify.jhtml',
-                    method: 'post',
-                    data: {
-                        'shop.id': data.id,
-                        'shop.shopName': data.shopName,
-                        'shop.name': data.name,
-                        'shop.phone': data.phone,
-                        'shop.signedTime': data.signedTime,
-                        'shop.agentGradeId': data.agentGradeId,
-                        'shop.provinceCode': editAddress.provinceCode,
-                        'shop.cityCode': editAddress.cityCode,
-                        'shop.countyCode': editAddress.areaCode,
-                        'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
-                        'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
-                        'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
-                        'shop.address': data.address,
-                        'shop.shopType': data.shopType,
-                        'shop.city': data.city,
-                        'shop.provinceCode': editAddress.provinceCode,
-                        'shop.isShow': data.isShow,
-                        'shop.operator': data.operator,
-                        'shop.salesMan': data.salesMan,
-                        'shop.salesManId': this.salesManId || '',
-                        'shop.operatorId': this.operatorId || '',
-                    },
-                    transformRequest: [function (data) {
-                        let ret = ''
-                        for (let it in data) {
-                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                        }
-                        return ret
-                    }],
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
-                }).then(function (response) {
-                    self.loading = false;
-                    // console.log(response)
-                    if (response.data.result == 0) {
-                        self.$message({
-                            message: response.data.msg,
-                            type: 'error'
-                        })
-                    } else {
-                        self.$message({
-                            message: response.data.msg,
-                            type: 'success'
-                        })
-                        self.editDialogVisible = false;
-                        setTimeout(function () {
-                              self.$router.go(-1)
-                            // self.handleCurrentChange(self.currentPage);
-                        }, 1000)
-                    }
-
-                }).catch(function (err) {
-                    self.loading = false;
-                });
-            },
-            operatorQuerySearchAsync(queryString, callback) {
-                if(this.editForm.operator == queryString){
-                    this.editForm.operator2 = false;
-                }
     
-                queryString = !this.editForm.operator2 ? '' : queryString;
-                this.editForm.operator2 = true;
-
-                var list = [{}];
-                //调用的后台接口
-                let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
-                //从后台获取到对象数组
-                axios.get(url).then((response) => {
-                    //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                    for (let i of response.data.result) {
-                        i.value = i.userName;  //将CUSTOMER_NAME作为value
-                    }
-
-                    if (!queryString) {
-                        // console.log(response.data.result)
-
-                        for (let item of response.data.result) {
-                            list.push(item)
-                        }
-
-                        callback(list);
-
-                    } else {
-
-                        let QS = queryString.toLocaleLowerCase();
-
-                        for (let item of response.data.result) {
-                            if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
-                                list.push(item)
-                            }
-                        }
-                        // console.log(list);
-                        if (list.length == 1) {
-                            list.push({ value: `没有匹配结果"${queryString}"` });
-                        }
-                    }
-                    callback(list);
-                }).catch((error) => {
-                    console.log(error);
-            });
-            },
-            salesManQuerySearchAsync(queryString, callback) {
-
-                if(this.editForm.salesMan == queryString){
-
-                this.editForm.salesMan2 = false;
-    
-                }
-                queryString = !this.editForm.salesMan2 ? '' : queryString;
-            
-            
-                this.editForm.salesMan2 = true;
-
-                var list = [{}];
-                //调用的后台接口
-                let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
-                //从后台获取到对象数组
-                axios.get(url).then((response) => {
-                    //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                    for (let i of response.data.result) {
-                        i.value = i.userName;  //将CUSTOMER_NAME作为value
-                    }
-
-
-                    if (!queryString) {
-                        // console.log(response.data.result)
-
-                        for (let item of response.data.result) {
-                            list.push(item)
-                        }
-
-                        callback(list);
-
-                    } else {
-
-                        let QS = queryString.toLocaleLowerCase();
-
-                        for (let item of response.data.result) {
-                            if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
-                                list.push(item)
-                            }
-                        }
-                        if (list.length == 1) {
-                            list.push({ value: `没有匹配结果"${queryString}"` });
-                        }
-                    }
-
-
-                    callback(list);
-                }).catch((error) => {
-                    console.log(error);
-                });
-            },
-            //点击选中
-            handleoperatorSelect(item) {
-                this.operatorId = item.id;
-
-                this.editForm.operator  = item.userName;
-
-                this.editForm.operator2  = false;
-            
-
-                //do something
-            },
-            handlesalesManSelect(item) {
-                this.salesManId = item.id;
-
-                this.editForm.salesMan =  item.userName;
-                
-                this.editForm.salesMan2  = false;
-            
-                //do something
-            },
-            deleteOperator(){
-                this.editForm.operator='';
-            },
-            deleteSalesMan(){
-                this.editForm.salesMan='';    
-            }
         },
         created() {
             if (!this.checkSession()) return;
@@ -627,7 +542,7 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                self.editForm = response.data.result;
+                self.detailForm = response.data.result;
                 self.operatorId = response.data.result.operatorId;
                 self.salesManId = response.data.result.salesManId;
             }).catch(function (err) {
@@ -638,6 +553,16 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import url("../assets/less/storeDetail.less");
+
+.el-table .labelCss {
+    background-color: #fff;
+}
+
+.el-table .el-table__footer-wrapper {
+    font-weight: 600;
+}
+
 #detailStore {
     width: 98%;
     margin: 1%;
@@ -658,24 +583,7 @@ export default {
             cursor: pointer;
         }
     }
-    .delete_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 9px;
-        left: 165px;
-        z-index: 1000;
-    }
-    .delete_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 20px;
-        height: 20px;
-        top: 9px;
-        left: 169px;
-        z-index: 1000;
-    }
+
 }
 
 </style>
