@@ -135,6 +135,13 @@ const config = [{
                 name:'annualPerformance',
                 component:resolve =>  require(['./views/annualPerformance.vue'], resolve),
                 
+            },
+            {
+                // 业务拓展返利
+                path:'rebate',
+                name:'rebate',
+                component:resolve =>  require(['./views/rebate.vue'], resolve),
+                
             }
 
         ]
