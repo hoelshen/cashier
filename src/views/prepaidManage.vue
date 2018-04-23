@@ -444,9 +444,9 @@ export default {
 		this.searchData.searchId = src[5];
 		this.searchData.searchName = src[6] && decodeURI(src[6]) ;
 
-	
-		console.log(typeof src[6]);
-		console.log(typeof decodeURI(src[6] ))
+		console.log(src)
+		// console.log(typeof src[6]);
+		// console.log(typeof decodeURI(src[6] ))
 		this.$getData({
 			url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data: {

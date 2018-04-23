@@ -63,7 +63,7 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="年度业绩目标：">
-                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                        <el-input v-model="addForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
                     </el-form-item>
                   
                 </el-col>
@@ -71,6 +71,7 @@
                       <el-form-item  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                         <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="">
                             <template slot="prepend">店铺拓展：</template>
+                            <el-input v-model="addForm.annualExtendPerformance"  placeholder="店铺拓展"></el-input>
                             <template slot="append"> 家</template></el-input>
                     </el-form-item>
                 </el-col>
@@ -104,7 +105,6 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-
             <el-row>
               <el-col :span="22">
                     <el-form-item label="收件地址：">
@@ -122,18 +122,15 @@
                     </el-form-item>
                 </el-col>
 
-            </el-row>
-        
+            </el-row>      
             <el-row class="content_title">
                 <h2>账户信息</h2>
             </el-row>
             <el-row>
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级：" prop="">
-                        <el-radio-group v-model="addForm.phone">
-                            <el-radio label="醉品"></el-radio>
-                            <el-radio label="代理商"></el-radio>
-                        </el-radio-group>
+                    <el-form-item label="括展上级：">
+                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
+                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -205,6 +202,9 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
+                annualPurchasePerformance:'',
+                annualExtendPerformance:'',
+                extendSuperType:'',
             },
             editForm: {
                 id: '',
@@ -230,6 +230,8 @@ export default {
                 salesMan: '',
                 salesMan2: '',                
                 salesManId: '',
+                annualPurchasePerformance:'',
+                annualExtendPerformance:'',
             },
             levelArray: [], //代理商等级数组
             phoneLength: 11,
@@ -453,6 +455,11 @@ export default {
                     'shop.salesMan': data.salesMan,
                     'shop.salesManId': this.salesManId,
                     'shop.operatorId': this.operatorId || '',
+                    'shop.annualPurchasePerformance':data.annualPurchasePerformance,
+                    'shop.annualExtendPerformance':data.annualExtendPerformance,
+                    'shop.extendSuperType':data.extendSuperType,
+                    'shop.extendSuperNo':data.extendSuperNo,
+                    'shop.areaClass':data.areaClass,
                 },
                 transformRequest: [function (data) {
                     let ret = ''
@@ -643,9 +650,9 @@ export default {
         handlesalesManSelect(item) {
             this.salesManId = item.id;
 
-            this.editForm.salesMan =  item.userName;
+            this.addForm.salesMan =  item.userName;
             
-            this.editForm.salesMan2  = false;
+            this.addForm.salesMan2  = false;
             
          
             //do something

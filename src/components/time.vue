@@ -49,7 +49,7 @@
                    this.$emit('time-end')
                }
             //    this.time = `${d}天${h}小时${m}分${s}秒`
-               this.time = `${d}天`
+               this.time = `${d}`
                
            },
            formate (time) {

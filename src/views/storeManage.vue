@@ -72,7 +72,7 @@
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="姓名" width:200>
+                        <el-table-column prop="name" label="姓名" width="200">
                         </el-table-column>
                         <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
                             <template slot-scope="scope">
@@ -688,13 +688,6 @@ export default {
             
          
             //do something
-        },
-        //打开修改店铺及店铺详情弹窗
-        openEditDialog(data, type) {
-            type == 'edit' ? this.isDisable = false : this.isDisable = true
-            this.editFormTitle = type == 'edit' ? "编辑店铺（编号：" + data.shopNo + "）" : "查看店铺（编号：" + data.shopNo + "）"
-            this.getInfoById(data.id);
-            this.editDialogVisible = true;
         },
         // 获取选中店铺信息
         getInfoById(id) {
