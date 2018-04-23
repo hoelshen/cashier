@@ -16,29 +16,29 @@
           <el-row  class="text-wrap">
             <el-col  class="fl-left">
                 <el-form-item label="时间周期：" >
-                        <el-radio  v-model="b"  label="1">合同期</el-radio>
-                        <el-radio v-model="b" label="2">时间范围</el-radio>
+                        <el-radio  v-model="zpTimeChose"  label="1" >合同期</el-radio>
+                        <el-radio v-model="zpTimeChose" label="2">时间范围</el-radio>
                 </el-form-item>
             </el-col>
         </el-row>
-          <div v-if="b==1">
+          <div v-if="zpTimeChose==1">
               <el-row class="fl-wrap">
                   <el-col :span="9">
                       <el-form-item label="所属单店返利点数：">
-                          <el-input placeholder="请输入折扣率" ></el-input>
+                          <el-input placeholder="请输入折扣率" class="pencent-num"></el-input>
                       </el-form-item>
                   </el-col>
               </el-row>
               <el-row class="fl-wrap">
                   <el-col :span="9">
                       <el-form-item label="所属区域代理返利点数：">
-                          <el-input placeholder="请输入折扣率" ></el-input>
+                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
                       </el-form-item>
                   </el-col>
               </el-row>
           </div>
            
-           <div  v-if="b==2">
+           <div  v-if="zpTimeChose==2">
                <el-row>
                   <el-col :span="8">
                       <el-form-item label=" 1）正式签约起">
@@ -58,15 +58,15 @@
                     </tr>
                     <tr>
                       <td>所属单店</td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
                     </tr>
                     <tr>
                       <td>所属区域代理</td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
                     </tr>
                     
                   </tbody>
@@ -82,14 +82,14 @@
               <el-row class="fl-wrap">
                   <el-col :span="9">
                       <el-form-item label="所属单店返利点数：">
-                          <el-input placeholder="请输入折扣率" ></el-input>
+                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
                       </el-form-item>
                   </el-col>
               </el-row>
               <el-row class="fl-wrap">
                   <el-col :span="9">
                       <el-form-item label="所属区域代理返利点数：">
-                          <el-input placeholder="请输入折扣率" ></el-input>
+                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
                       </el-form-item>
                   </el-col>
               </el-row>
@@ -107,29 +107,29 @@
             <el-row class="text-wrap">
                   <el-col :span="12" class="fl-left">
                       <el-form-item label="时间周期：">
-                              <el-radio v-model="a"  label="1">合同期</el-radio>
-                              <el-radio v-model="a" label="2">时间范围</el-radio>
+                              <el-radio v-model="dlTimeChose"  label="1">合同期</el-radio>
+                              <el-radio v-model="dlTimeChose" label="2">时间范围</el-radio>
                       </el-form-item>
                   </el-col>
             </el-row>
-            <div  v-if="a==1">
+            <div  v-if="dlTimeChose==1">
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属单店返利点数：">
-                            <el-input placeholder="请输入折扣率" ></el-input>
+                            <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属区域代理返利点数：">
-                            <el-input placeholder="请输入折扣率" ></el-input>
+                            <el-input placeholder="请输入折扣率" class="pencent-num"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </div>
             
-            <div  v-if="a==2">
+            <div  v-if="dlTimeChose==2">
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label=" 1）正式签约起">
@@ -149,15 +149,15 @@
                       </tr>
                       <tr>
                         <td>所属单店</td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
                       </tr>
                       <tr>
                         <td>所属区域代理</td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
                       </tr>
                       
                     </tbody>
@@ -173,14 +173,14 @@
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属单店返利点数：">
-                            <el-input placeholder="请输入折扣率" ></el-input>
+                            <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属区域代理返利点数：">
-                            <el-input placeholder="请输入折扣率" ></el-input>
+                            <el-input placeholder="请输入折扣率" class="pencent-num" ></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -210,8 +210,8 @@ export default {
         url: "" //url
       },
       nowContent: "",
-      a:"2",
-      b:"1",
+      dlTimeChose:"2",
+      zpTimeChose:"1",
     };
   },
   components: {
@@ -470,6 +470,18 @@ export default {
   }
   .fl-left{
     margin-left: -120px;
+  }
+  .el-input{
+    position: relative;
+  }
+  .el-input.pencent-num:after{
+    content: "%";
+    width: 15px;
+    height: 15px;
+    display: block;
+    position: absolute;
+    top: 0;
+    right: 10px;
   }
 }
 </style>
