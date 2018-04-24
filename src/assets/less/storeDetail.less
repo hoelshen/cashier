@@ -4,22 +4,27 @@
     background-color: rgb(255, 255, 255);
     min-width: 1110px;
     font-size: 14px;
+    //标题
+    .content_title_top{
+        width: 1642px;
+        height: 38px;
+        background-color: #fafafa;
+        .content_closeBtn {
+            font-size: 19px;
+            float: right;
+            color: #0000ff9e;
+            cursor: pointer;
+        }
+        h2{
+            display: inline;
+        }
 
+    }
     // 详情单信息
     .info{
-        width: 1677px;
+        width: 1642px;
         height: 401px;
         background-color: #ffffff;
-
-        h2:first-child{
-            background-color: rgba(0, 0, 0, 0.1);
-            text-indent: 1%;
-            height: 40px;
-            font-size: 17px;
-            line-height: 40px;
-            border-top-left-radius: 5px;
-            border-top-right-radius: 5px;
-        }
 
         .el-row{
             margin: 2%;
@@ -38,11 +43,6 @@
             width: 100%;
             background-color: rgba(0, 0, 0, 0.1);
             margin: 20px auto 10px auto;
-        }
-
-        h3{
-            font-weight: 600;
-            font-size: 15px;
         }
 
         p{
@@ -95,17 +95,6 @@
                     }
                 }
             }
-            
-            .inputWidth{
-                width: 150px;
-            }
-
-            .el-table{
-                width: 96%;
-                margin: 2%;
-                
-            }
-
             .hint{
                 width: 20px;
                 height: 20px;
@@ -118,50 +107,6 @@
                 text-indent: 3.5px;
                 cursor: pointer;
             }
-
-            .changeMoney{
-                display: inline-block;
-                margin-left: 5px;
-                color: rgba(0, 0, 255, 0.67);
-                cursor: pointer;
-            }
-
-            .money{
-                width: 100px;
-            }
-
-            .yes{
-                width: 27px;
-                height: 27px;
-                line-height: 27px;
-                background-color: rgba(0, 0, 0, 0.21);
-                display: inline-block;
-                font-size: 24px;
-                margin-top: 4px;
-                margin-left: 20px;
-                vertical-align: top;
-                color: white;
-                border-radius: 5px;
-                text-indent: 3px;
-                cursor: pointer;
-            }
-
-            .no{
-                width: 27px;
-                height: 27px;
-                line-height: 27px;
-                background-color: rgba(0, 0, 0, 0.21);
-                display: inline-block;
-                font-size: 24px;
-                margin-top: 4px;
-                margin-left: 20px;
-                vertical-align: top;
-                color: white;
-                border-radius: 5px;
-                text-indent: 3px;
-                cursor: pointer;
-            }
-
             // 弹窗
             .dialog{
                 span{
@@ -209,16 +154,13 @@
         }
     }
     .content_title_bottom{
-        width: 1677px;
-        height: 474px;
-        background-color: #ffffff;
-        position: absolute;
-        top: 540px;
-        margin: 10px;
+        width: 1642px;
+        height: 38px;
+        background-color: #fafafa;
     }
     .count{
-        width: 1677px;
-        height: 474px;
+        width: 1642px;
+        height: 310px;
         background-color: #ffffff;
         margin: 1%;
         h2:first-child{
@@ -315,16 +257,6 @@
                 cursor: pointer;
             }
 
-            .changeMoney{
-                display: inline-block;
-                margin-left: 5px;
-                color: rgba(0, 0, 255, 0.67);
-                cursor: pointer;
-            }
-
-            .money{
-                width: 100px;
-            }
 
             .yes{
                 width: 27px;

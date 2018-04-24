@@ -1,11 +1,11 @@
 <template>
-    <div id="addStore">
-        <el-row class="content_title">
-            <h2>基本信息</h2>
-            <div class="content_closeBtn" @click="goBack">X</div>
-        </el-row>
+    <div id="addStore"> 
       <!-- 新增店铺弹窗 start -->
         <el-form :model="addForm" label-width="120px" ref="addForm">
+            <el-row class="content_title">
+                <h2 @click="a">基本信息</h2>
+                <div class="content_closeBtn" @click="goBack">X</div>
+            </el-row>
             <el-row>
                 <!--第一行-->
                 <el-col :span="8">
@@ -69,10 +69,16 @@
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="">
-                            <template slot="prepend">店铺拓展：</template>
-                            <el-input v-model="addForm.annualExtendPerformance"  placeholder="店铺拓展"></el-input>
-                            <template slot="append"> 家</template></el-input>
+                        <el-input v-model="addForm.annualExtendPerformance" :maxlength='phoneLength' placeholder="">
+                            <template slot="prepend">店铺拓展：
+                                
+                            </template>
+                                <template slot="append"> 家
+                            </template>      
+              
+
+                        </el-input>
+                      
                     </el-form-item>
                 </el-col>
             </el-row>         
@@ -95,13 +101,13 @@
                 </el-col>
                 <el-col :span="16" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent ref='addAgentAddress' :isDetail="false" />   
+                        <addressComponent ref='addAgentAddress2' :isDetail="false" />   
                     </el-form-item>
                 
                 </el-col>
                 <el-col :span="4"  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：">
-                            <el-input v-model="addForm.phone"   :disabled="true" ></el-input>   
+                            <el-input  v-model="addForm.areaClass" disabled></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -133,7 +139,18 @@
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
+                <el-col :span="4" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item :span="2" label="上级编号/姓名">
+                            <el-input v-model="addForm.extendSuperNo"></el-input>   
+                    </el-form-item>
+                </el-col>
+                <el-col :span="4"  v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item :span="2" label="上级代理商等级:">
+                            <el-input v-model="addForm.superAreaClass"></el-input>   
+                    </el-form-item>
+                 </el-col>
             </el-row>
+
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
                     <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
@@ -151,16 +168,11 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <el-row style="margin-top:20px;">
+                <el-button type="primary" @click="addAgent">保存</el-button>
+                <el-button @click="goBack">取消</el-button>
+            </el-row>
         </el-form>
-        <!-- <div slot="footer" class="dialog-footer">
-            <el-button type="primary" @click="addAgent">确 定</el-button>
-            <el-button @click="goBack">取消</el-button>
-        </div> -->
-
-        <el-row style="margin-top:20px;">
-            <el-button type="primary" @click="addAgent">保存</el-button>
-            <el-button @click="goBack">取消</el-button>
-        </el-row>
         <!-- 新增店铺弹窗 end -->
     </div>
 </template>
@@ -205,6 +217,8 @@ export default {
                 annualPurchasePerformance:'',
                 annualExtendPerformance:'',
                 extendSuperType:'',
+                superAreaClass:'',
+                extendSuperNo:'',
             },
             editForm: {
                 id: '',
@@ -240,12 +254,25 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
+            isCity:false
         }
     },
     components: {
         addressComponent
     },
+    computed:{
+        'addForm.areaClass'(){
+            console.log(this.$refs.addAgentAddress2.getData().cityName)
+           
+            console.log(this.$refs.addAgentAddress2.getData().cityName)
+            return this.isCity;
+        }
+    },
     methods:{
+        a(){
+            this.isCity = !this.isCity
+            console.log(this.isCity)
+        },
         //判断是否超时
         checkSession() {
             const self = this;
@@ -455,11 +482,11 @@ export default {
                     'shop.salesMan': data.salesMan,
                     'shop.salesManId': this.salesManId,
                     'shop.operatorId': this.operatorId || '',
-                    'shop.annualPurchasePerformance':data.annualPurchasePerformance,
-                    'shop.annualExtendPerformance':data.annualExtendPerformance,
-                    'shop.extendSuperType':data.extendSuperType,
-                    'shop.extendSuperNo':data.extendSuperNo,
-                    'shop.areaClass':data.areaClass,
+                    'shop.annualPurchasePerformance':data.annualPurchasePerformance ||'',
+                    'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
+                    'shop.extendSuperType':data.extendSuperType || '',
+                    'shop.extendSuperNo':data.extendSuperNo || '',
+                    'shop.areaClass':data.areaClass || '',
                 },
                 transformRequest: [function (data) {
                     let ret = ''
@@ -531,13 +558,8 @@ export default {
         },
         operatorQuerySearchAsync(queryString, callback) {
             if(this.editForm.operator == queryString){
-
-                this.editForm.operator2 = false;
-
-                
-            }
-
-            
+                this.editForm.operator2 = false;               
+            }      
             queryString = !this.editForm.operator2 ? '' : queryString;
             this.editForm.operator2 = true;
 
@@ -640,11 +662,9 @@ export default {
         handleoperatorSelect(item) {
             this.operatorId = item.id;
 
-            this.editForm.operator  = item.userName;
+            this.addForm.operator  = item.userName;
 
-            this.editForm.operator2  = false;
-          
-
+            this.addForm.operator2  = false;
             //do something
         },
         handlesalesManSelect(item) {
@@ -653,8 +673,6 @@ export default {
             this.addForm.salesMan =  item.userName;
             
             this.addForm.salesMan2  = false;
-            
-         
             //do something
         },
         deleteOperator(){
@@ -666,7 +684,9 @@ export default {
         }
     },
     created(){
+        console.log(this.isCity)
         const self = this;
+
         if (!self.checkSession()) return;
         self.loading = true;
         
@@ -723,7 +743,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 1094px;
+        left:284px;
         z-index: 1000;
     }
     .deleteOperatorName_left {

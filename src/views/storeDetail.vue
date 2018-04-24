@@ -1,6 +1,6 @@
 <template>
     <div id="detailStore">
-        <el-row class="content_title">
+        <el-row class="content_title_top">
             <h2>基本信息({{detailForm.shopNo}})</h2>
             <div class="content_closeBtn" @click="goBack">X</div>
         </el-row>
@@ -90,27 +90,24 @@
         </div>
           
 
-
-
-
         <div class="count">
             <div class="orderCount">
                 <el-row :gutter="5">
                     <el-col :span="24">
                         预存款详情：
-                        <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:'朱海波'}}">点击查看</router-link>                                         
+                        <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>                                         
                     </el-col>
                 </el-row>
                 <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
-                          <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>点击查看</span>                        
+                          <span @click='chengPre(detailForm.id,detailForm.shopName,detailForm.shopNo)'>点击查看</span>                        
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5">
                     <el-col :span="24">
                        代理商年度业绩： 
-                        <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>点击查看</span>
+                        <span @click='chengPre(detailForm.id,detailForm.shopName,detailForm.shopNo)'>点击查看</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="5"> 
@@ -128,7 +125,7 @@
 
 
         <!-- 查看代理商年度业绩(编号：xxx) start -->
-            <el-dialog :title="annualPurchasePerformanceTitle"  size="tiny" >
+            <!-- <el-dialog :title="annualPurchasePerformanceTitle"  size="tiny" >
                    <div>
                         <el-table-column prop="No" label="序号" sortable="custom" width="127">
                         </el-table-column>
@@ -152,7 +149,7 @@
             <div class="plPage clearfix">
                 <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
                 </el-pagination>
-            </div>
+            </div> -->
             <!-- 查看代理商年度业绩(编号：xxx) end -->  
     </div>
     
@@ -190,6 +187,7 @@ export default {
         operatorId: "",
         salesManId: ""
       },
+      annualPurchasePerformanceTitle:'',
       changeForm: {
         changeShopId: "",
         changeShopName: "",
@@ -435,10 +433,6 @@ export default {
         this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
         this.dialogFormVisible = true;
     },
-    dian(){
-        this.detailForm.sjh="shj"
-        console.log(this.detailForm.sjh)
-    },
     checkSession() {
       const self = this;
       if (window.sessionStorage) {
@@ -470,7 +464,41 @@ export default {
     },
     goBack() {
       this.$router.push("/storeManage");
-    }
+    },
+     //改变当前页
+    handleCurrentChange: function (val) {
+        const self = this;
+        if (!self.checkSession()) return;
+        self.currentPage = val;
+        self.loading = true;
+        self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
+            params: {
+                'pager.pageIndex': self.currentPage,
+                'pager.pageSize': self.pageSize,
+                'shop.shopName': self.searchData.shopName,
+                'shop.phone': self.searchData.phone,
+                'shop.name': self.searchData.name,
+                'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                'shop.state': self.searchData.state,
+                'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
+                'shop.sort': 'depositAmount',
+                'shop.order': self.order,
+                'shop.operator': self.searchData.operator,
+                'shop.salesMan': self.searchData.salesMan,
+                'shop.salesManId': this.salesManId,
+                'shop.salesManId': this.salesManId,
+            }
+        }).then(function (response) {
+            self.loading = false;
+            self.myData = response.data.rows;
+            self.totalSize = response.data.total
+            // console.log(response);
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
+    },
   },
   created() {
     console.log(this.detailForm.sjh);
@@ -520,33 +548,11 @@ export default {
 <style lang='less' scoped>
 @import url("../assets/less/storeDetail.less");
 
-.el-table .labelCss {
-  background-color: #fff;
-}
-
-.el-table .el-table__footer-wrapper {
-  font-weight: 600;
-}
 
 #detailStore {
   width: 98%;
   margin: 1%;
   padding: 20px;
   background-color: #ffffff;
-  .content_title {
-    margin: 0px 10px 10px 10px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid;
-    h2 {
-      display: inline;
-      font-weight: 600;
-    }
-    .content_closeBtn {
-      font-size: 19px;
-      float: right;
-      color: #0000ff9e;
-      cursor: pointer;
-    }
-  }
 }
 </style>
