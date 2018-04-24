@@ -142,6 +142,13 @@ const config = [{
                 name:'rebate',
                 component:resolve =>  require(['./views/rebate.vue'], resolve),
                 
+            },
+            {
+                // 业务拓展返利
+                path:'rebateDetail',
+                name:'rebateDetail',
+                component:resolve =>  require(['./views/rebateDetail.vue'], resolve),
+                
             }
 
         ]
