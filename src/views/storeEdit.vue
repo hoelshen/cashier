@@ -29,8 +29,8 @@
                         <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
-                    <el-form-item label="代理商姓名：">
+                <el-col :span="12" >
+                    <el-form-item label="代理商姓名：" >
                         <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
                     </el-form-item>
                 </el-col>
@@ -59,12 +59,34 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
-
-                <el-col :span="24" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
+            </el-row>
+            <el-row>
+                
+                <el-col :span="14" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :isDetail="false" />
                     </el-form-item>
                 </el-col>
+
+
+                <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
+                    <el-form-item label="类别：">
+                            <el-input v-model="editForm.phone"   :disabled="true" ></el-input>   
+                    </el-form-item>
+                </el-col>
+
+
+
+            </el-row>
+            <el-row>
+                <el-col :span="16" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item label="所属区域：">
+                        <addressComponent ref='addAgentAddress' :isDetail="false" />   
+                    </el-form-item>
+                </el-col>
+
+            </el-row>
+            <el-row>
                 <el-col :span="24">
                     <el-form-item label="收件地址：">
                         <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
@@ -83,14 +105,30 @@
                         <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo,name:editForm.name}}">点击查看</router-link>
                     </el-form-item>
                 </el-col>
-                <el-col class="xg-search-yy-wrap" :span="12">
+
+            </el-row>
+            <el-row class="content_title">
+                <h2>账户信息</h2>
+            </el-row>
+            <el-row>
+                <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                    <el-form-item label="括展上级：" prop="">
+                        <el-radio-group v-model="editForm.phone">
+                            <el-radio label="醉品"></el-radio>
+                            <el-radio label="代理商"></el-radio>
+                        </el-radio-group>
+                    </el-form-item>
+                </el-col>
+            </el-row>
+            <el-row>
+                <el-col class="xg-search-yy-wrap" :span="8">
                     <el-form-item label="运营人员">
                         <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
                         <el-autocomplete v-model="editForm.operator"  :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col class="xg-search-yw-wrap" :span="12" :disabled="isDisable">
+                <el-col class="xg-search-yw-wrap" :span="8" :disabled="isDisable">
                     <el-form-item label="业务人员">
                         <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
                         <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="业务人员" icon="caret-bottom" :disabled="isDisable">
@@ -121,6 +159,7 @@ import $ from 'jquery';
 export default {
     data(){
         return{
+            
             editForm: {
                     id: '',
                     shopName: '',
@@ -556,13 +595,10 @@ export default {
                 //do something
             },
             deleteOperator(){
-                this.addForm.operator='';
                 this.editForm.operator='';
             },
             deleteSalesMan(){
-                this.addForm.salesMan='';
-                this.editForm.salesMan='';
-                
+                this.editForm.salesMan='';     
             }
         },
         created() {
@@ -571,9 +607,27 @@ export default {
             //获取id
             var src = window.location.href.split("/");
             this.id = src[5];
-            console.log(src)
-            console.log(src[5])
-            const self = this;        
+            // console.log(src)
+            // console.log(src[5])
+            const self = this; 
+            
+            
+            self.loading = true;
+
+            //获取代理商等级列表
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
+                // console.log(response);
+                if (response.data.success == 1) {
+                    self.levelArray = response.data.result
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
             // 获取代理商信息
             self.$ajax.get('/api/http/shop/searchShop.jhtml', {
                 params: {
@@ -618,7 +672,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 165px;
         z-index: 1000;
     }
     .delete_right {
@@ -627,26 +681,8 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 169px;
         z-index: 1000;
-    }
-    .deleteOperatorName_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 31.5%;
-        z-index: 999;
-    }
-    .deleteSalesManName_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 81.5%;
-        z-index: 999;
     }
 }
 

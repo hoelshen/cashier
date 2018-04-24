@@ -361,8 +361,7 @@ export default {
                     let ids = self.allId;
                     self.outputExcel(ids);
                 })
-        );
-
+             );
         },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
