@@ -63,7 +63,7 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
-                    <el-button type="primary"  @click="allOutputExcel()">全部导出({{totalSize}}条)</el-button>
+                    <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
@@ -72,7 +72,7 @@
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="姓名" width="200">
+                        <el-table-column prop="name" label="姓名" width="190">
                         </el-table-column>
                         <el-table-column title="shopName" prop="shopName" label="店铺名称" width="190">
                             <template slot-scope="scope">
@@ -133,11 +133,6 @@
                 </div>
             </el-row>
         </div>
-
-
-
-
-
         <!-- 表格 end -->   
         <!-- 预存款变更弹窗 start -->
             <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
@@ -161,8 +156,8 @@
                         </el-col>
                     </el-row>
 
-                    <el-row :gutter="20">
-                        <el-col :span="5">
+                    <el-row :gutter="20" style=" margin-left: -10px;margin-right: -20px;">
+                        <el-col :span="5"   >
                             <el-form-item label="变动金额：" label-width="100px">
                                 <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
                                 <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
@@ -170,7 +165,7 @@
                         </el-col>
                         <el-col :span="17">
                             <el-form-item>
-                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="padding-right:5px;"> </el-input>
+                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="margin-left: -15px;"> </el-input>
                                 <p class="yuan">元</p>
                             </el-form-item>
                         </el-col>
@@ -201,9 +196,6 @@ import Utils from '../components/tools/Utils';
 import addressComponent from '../components/address.vue';
 import axios from 'axios';
 
-// import ElSearchTablePagination from 'el-search-table-pagination';
-
-
 import $ from 'jquery';
 export default {
     data() {
@@ -223,6 +215,14 @@ export default {
                 salesMan: '',
                 operatorId: '',
                 salesManId: '', 
+				searchId: '',			//代理商编号
+				searchStatus: '',		//订单状态
+				searchTime: '',			//下单时间
+				searchLevel: [],		//代理商等级
+				Level: [],			//代理商等级替代
+				searchName:'',        //代理商姓名
+                operator:"" ,       //运营人员
+                
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -457,37 +457,6 @@ export default {
                 console.log(err);
             });
         },
-        // 改变每页显示的条数
-        // handleSizeChange:function(val){
-        //     const self = this;
-        //     if(!self.checkSession())return;
-        //     self.pageSize = val;
-        //     self.currentPage = 1;
-        //     self.loading = true;
-        //     self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
-        //         params:{
-        //             'pager.pageIndex':self.currentPage,
-        //             'pager.pageSize':self.pageSize,
-        //             'shop.shopName':self.searchData.shopName,
-        //             'shop.phone':self.searchData.phone,
-        //             'shop.name':self.searchData.name,
-        //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
-        //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
-        //             'shop.state':self.searchData.state,
-        //             'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
-        //             'shop.sort':'depositAmount',
-        //             'shop.order':self.order
-        //         }
-        //     }).then(function(response){
-        //         self.loading = false;
-        //         self.myData = response.data.rows;
-        //         self.totalSize = response.data.total
-        //         console.log(response);
-        //     }).catch(function(err){
-        //         self.loading = false;
-        //         console.log(err);
-        //     });
-        // },
         //改变当前页
         handleCurrentChange: function (val) {
             const self = this;
@@ -974,128 +943,195 @@ export default {
             return true
         },
         //获取全部id
-        getAllId() {
-            const self = this;
-            let data = '';
-            let array = []
-            return self.$ajax({
-                async: false,
-                url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
-                method: 'post',
-                params:{
-                    'pager.pageSize': self.totalSize,
-                },
-                data: {
-                    
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-
-            }).then(function(response) {
-                if (response.data.success === 1) {
-                    console.log(response.data.success)
-
-
-
-                    let myData = response.data.result;
-                    for (let i = 0; i < myData.length; i++) {
-                        array.push(myData[i].id)
-                    }
-                    self.allId = array.join(',')
-                    // console.log('ok')
-                    console.log(response.data)
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
-
-            }).catch(function(error) {
-
-            });
-        },
+    
         // 导出全部明细
         allOutputExcel() {
-            let self = this;
-            self.$ajax.all([self.getAllId()]).then(
-                self.$ajax.spread(function(acct) {
-                    let ids = self.allId;
-                    console.log(ids)
-                    self.outputExcel(ids);
-                    console.log('ok')
-                    
-                })
-            );
+          this.outputExcel();
+        },
+        getData(obj){
+            const self = this;
+            obj.method = obj.method || 'get';
+            obj.url = obj.url || '';
+            obj.data = obj.data  || {};
+            obj.code = obj.code || function () {};
+            obj.fail = obj.fail || function () {};
+            obj.error = obj.error || function () {};
+            if (obj.method === 'get') {
+                var str = '?';
+                for(var item in obj.data){
+                    if (obj.data[item] != '' && obj.data[item] != undefined) {
+                        str  += item + '=' + obj.data[item] + '&';
+                    }
+                }
+                str = str.substring(0,str.length-1);
+                obj.url = obj.url+str;
+                self.$ajax({
+                    method: 'get',
+                    url: `api/${obj.url}`
+                }).then(function(response){
+                    if(response.data.code === 1){
+                        obj.success.call(self,response);
+                    }else{
+                        // console.log(response);
+                        obj.fail.call(self,response);
+                    }
+                }).catch(function(error){
+                    obj.error.call(self,error);
+                });
+            }
+        },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {
-            // console.log(id);
-            // console.log(name);
-            // console.log(shopNo);
-            
-            let self = this;
-            self.loading = true;
-            self.$ajax({
-                url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
-                method: 'post',
-                params:{
-                    'pager.pageSize': self.totalSize,
-                },
-                data: {
-                    'verifiOrder.verifiOrderIds': id,
-                },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+		outputExcel() {
+            if (!this.checkSession()) return;
+                var temp = new Date(this.searchData.searchTime[0]);
+                if (temp.getFullYear() > 2006) {
+                    var time1 = temp.getFullYear();
+                    if ((temp.getMonth() + 1) < 10) {
+                        time1 = time1 + '-0' + (temp.getMonth() + 1);
+                    } else {
+                        time1 = time1 + '-' + (temp.getMonth() + 1);
                     }
-                    return ret;
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-            }).then(function(response) {
-                self.loading = false;
-                console.log(response.data)
-                if (response.data.success === 1) {
-                    self.downData = response.data.result;
-                    if(self.downData.length>0){
-                        require.ensure([], () => {
-                            const {
-                                export_json_to_excel
-                            } = require('../components/tools/Export2Excel')
-                            const tHeader = ['序号', '代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '年度进货额目标', '已完成', '进度','剩余时间','备注' ]
-                            const filterVal = ['No','shopNo', 'areaClass', 'createMonth', 'orderNo', 'createTime'
-                            ]
-                            const list = self.downData;
-                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+                    if (temp.getDate() < 10) {
+                        time1 = time1 + '-0' + temp.getDate();
+                    } else {
+                        time1 = time1 + '-' + temp.getDate();
+                    }
+                    console.log(time1);
+                    temp = new Date(this.searchData.searchTime[1]);
+                    var time2 = temp.getFullYear();
+                    if ((temp.getMonth() + 1) < 10) {
+                        time2 = time2 + '-0' + (temp.getMonth() + 1);
+                    } else {
+                        time2 = time2 + '-' + (temp.getMonth() + 1);
+                    }
+                    if (temp.getDate() < 10) {
+                        time2 = time2 + '-0' + temp.getDate();
+                    } else {
+                        time2 = time2 + '-' + temp.getDate();
+                    }
+                    console.log(time2);
+                } else {
+                    var time1 = '';
+                    var time2 = '';
+                }
+                if (this.searchData.searchLevel != '') {
+                    this.searchData.level = this.searchData.searchLevel.join(',');
+                } else {
+                    this.searchData.level = '';
+                }
+
+                this.getData({
+                    url: 'shop/ShopManage/search.jhtml',
+                    data: {
+                        'pager.pageSize': 999999,
+                    },
+                    success(response) {                     
+                        if (response.data.code === 1) {
+
+                                self.tableData = response.data.rows;
+						        console.log( self.tableData )
+                                
+                                if(self.tableData.length>0){
+                                            require.ensure([], () => {
+                                                const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
+                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '进度', '年度进货业绩目标', '已完成', '进度','剩余时间','备注' ]
+                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass']
+                                                const list = self.tableData;
+                                                const data = this.formatJson(filterVal, list);
+                                                debugger
+                                                // console.log(data)
+                                                export_json_to_excel(tHeader, data, '代理商年度目标完成进度');
+                                            })
+                                }else{
+                                    self.$message({
+                                        message: '订单暂无明细',
+                                        type: 'error'
+                                    })
+                                }
+                            } else {
+                                self.$message({
+                                    message: response.data.msg,
+                                    type: 'error'
+                                })
+                            }
+                    },
+                    fail(response) {
+                        alert('ok')
+                        this.$message({
+                            message: response.data.msg,
+                            type: 'error'
                         })
-                    }else{
-                        self.$message({
-                            message: '订单暂无明细',
+                    },
+                    error(response) {
+                        this.$message({
+                            message: response.data.msg,
                             type: 'error'
                         })
                     }
+                });
+		},
 
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
-            }).catch(function(error) {
+        // outputExcel(id, name, shopNo, createMonth) {
+        //     // console.log(id);
+        //     // console.log(name);
+        //     // console.log(shopNo);
+            
+        //     let self = this;
+        //     self.loading = true;
+        //     self.$ajax({
+        //         url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
+        //         method: 'post',
+        //         params:{
+        //             'pager.pageSize': self.totalSize,
+        //         },
+        //         data: {
+        //             'verifiOrder.verifiOrderIds': id,
+        //         },
+        //         transformRequest: [function(data) {
+        //             let ret = ''
+        //             for (let it in data) {
+        //                 ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+        //             }
+        //             return ret;
+        //         }],
+        //         headers: {
+        //             'Content-Type': 'application/x-www-form-urlencoded'
+        //         },
+        //     }).then(function(response) {
+        //         self.loading = false;
+        //         // console.log(response.data)
+        //         if (response.data.success === 1) {
+        //             self.downData = response.data.result;
+        //             if(self.downData.length>0){
+        //                 require.ensure([], () => {
+        //                     const {
+        //                         export_json_to_excel
+        //                     } = require('../components/tools/Export2Excel')
+        //                     const tHeader = ['序号', '代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '年度进货额目标', '已完成', '进度','剩余时间','备注' ]
+        //                     const filterVal = ['No','shopNo', 'areaClass', 'createMonth', 'orderNo', 'createTime'
+        //                     ]
+        //                     const list = self.downData;
+        //                     export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+        //                 })
+        //             }else{
+        //                 self.$message({
+        //                     message: '订单暂无明细',
+        //                     type: 'error'
+        //                 })
+        //             }
 
-            });
-        },
+        //         } else {
+        //             self.$message({
+        //                 message: response.data.msg,
+        //                 type: 'error'
+        //             })
+        //         }
+        //     }).catch(function(error) {
+
+        //     });
         
         //重置新增表格内容
         resetAddForm() {
