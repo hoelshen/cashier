@@ -108,7 +108,7 @@
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id, scope.row.name, scope.row.shopNo, scope.row.annualCycle)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.name,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -194,6 +194,10 @@ export default {
         this.getFormData();
     },
     methods: {
+        // 格式化json
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
         getFormData() {
             const self = this;
             self.loading = true;
@@ -224,7 +228,7 @@ export default {
                 }
             }).then(function(response) {
                 self.loading = false;
-                // console.log(response)
+                console.log(response)
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
@@ -245,18 +249,15 @@ export default {
             let array = []
             return self.$ajax({
                 async: false,
-                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
+                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
                 method: 'post',
                 data: {
-                     'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
-                    'annualPerformanceOrder.shopNo': self.searchData.shopNo,
-                    'annualPerformanceOrder.phone': self.searchData.phone,
-                    'annualPerformanceOrder.status': self.searchData.status,
-                    'annualPerformanceOrder.name': self.searchData.name,
-                    'annualPerformanceOrder.agentGradeId':self.agentGradeId,
-                    'annualPerformanceOrder.annualCycle':self.annualCycle,
-                    'annualPerformanceOrder.annualPerformanceNo':self.searchData.payOrderNo                 
+                    'verifiOrderVo.shopNo': self.searchData.shopNo,
+                    'verifiOrderVo.phone': self.searchData.phone,
+                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
+                    'verifiOrderVo.status': self.searchData.status,
+                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
+                    'verifiOrderVo.name': self.searchData.name,                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -351,19 +352,19 @@ export default {
                     'verifiOrder.verifiOrderIds': id,
                     'verifiOrder.auditId': JSON.parse(sessionStorage.user).id,
                 },
-                // transformRequest: [function(data) {
-                //     let ret = ''
-                //     for (let it in data) {
-                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                //     }
-                //     return ret;
-                // }],
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
                 self.loading = false;
-                // console.log(response)
+                console.log(response)
                 if (response.data.success === 1) {
                     self.$message({
                         message: '核销成功',
@@ -396,21 +397,21 @@ export default {
                     let ids = self.allId;
                     self.outputExcel(ids);
                 })
-            );
+        );
 
         },
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
         // 导出明细
-        outputExcel(id, name, shopNo, annualCycle) {
+        outputExcel(id, name, shopNo, createMonth) {
+            console.log(id)
+            console.log(name);
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
+                url: '/api/http/verifiOrder/doExprotVerifiOrderDetail.jhtml',
                 method: 'post',
                 data: {
-                    'annualPerformanceOrder.shopNo': shopNo,
+                    'verifiOrder.verifiOrderIds': id,
+                    'verifiOrderVo.name': name,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -422,25 +423,24 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {debugger
+            }).then(function(response) {
                 self.loading = false;
-                // console.log(response.data)
+                console.log(response.data)
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
-                            } = require('../components/tools/Export2Excel2')
-                            const tHeader = ['代理商编号']
+                            } = require('../components/tools/Export2Excel')
+                            const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
                             const filterVal = [
-                                'shopNo'
+                                'shopNo', 'annualCycle','name', 'agentGradeId', 'agentGradeName','cycleBeginTime', 'createTime','cycleEndTime','selfPurchaseSum', '', '', 'orderNo',
+                                
                             ]
                             const list = self.downData;
                             console.log(list)
-                            const data = self.formatJson(filterVal, list);
-                            console.log(data)
-                            export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + '区域订单明细')
+                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + annualCycle + '年度业绩明细')
                         })
                     }else{
                         self.$message({
