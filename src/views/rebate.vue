@@ -1,139 +1,65 @@
 <template>
-    <div id="rebate">
-        <el-row class="content_title">
-            <h2>Zuipin拓展返利设置</h2>
-            <div class="content_closeBtn" @click="goBack">X</div>
-        </el-row>
-        <el-row class="text-wrap">
-            <p>
-                <span>进货款定义：</span>
-                <span>首批进货款</span>
-            </p>
-        </el-row>
-        
-
-        <el-form ref="form" v-model="contentData" label-width="200px">
-          <el-row  class="text-wrap">
-            <el-col  class="fl-left">
-                <el-form-item label="时间周期：" >
-                        <el-radio  v-model="zpTimeChose"  label="1" >合同期</el-radio>
-                        <el-radio v-model="zpTimeChose" label="2">时间范围</el-radio>
-                </el-form-item>
-            </el-col>
-        </el-row>
-          <div v-if="zpTimeChose==1">
-              <el-row class="fl-wrap">
-                  <el-col :span="9">
-                      <el-form-item label="所属单店返利点数：">
-                          <el-input placeholder="请输入折扣率" class="pencent-num"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-              <el-row class="fl-wrap">
-                  <el-col :span="9">
-                      <el-form-item label="所属区域代理返利点数：">
-                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-          </div>
-           
-           <div  v-if="zpTimeChose==2">
-               <el-row>
-                  <el-col :span="8">
-                      <el-form-item label=" 1）正式签约起">
-                          <el-input placeholder="请输入正整数"  class="sig-time1"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-            
-              <el-row class="rebate-tabel">
-                <table>
-                  <tbody>
-                    <tr>
-                      <th>返利点数</th>
-                      <th>拓展第 1 家</th>
-                      <th>拓展第 2 家</th>
-                      <th>拓展第 3 家及以上</th>
-                    </tr>
-                    <tr>
-                      <td>所属单店</td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                    </tr>
-                    <tr>
-                      <td>所属区域代理</td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                      <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                    </tr>
-                    
-                  </tbody>
-                </table>
-              </el-row>
-              <el-row class="oter-time-wrap">
-                  <el-col :span="8">
-                      <el-form-item label=" 2）正式签约起">
-                          <el-input placeholder="请输入正整数" class="sig-time2"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-              <el-row class="fl-wrap">
-                  <el-col :span="9">
-                      <el-form-item label="所属单店返利点数：">
-                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-              <el-row class="fl-wrap">
-                  <el-col :span="9">
-                      <el-form-item label="所属区域代理返利点数：">
-                          <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
-                      </el-form-item>
-                  </el-col>
-              </el-row>
-           </div>
-           
-            <el-row class="dl-rebate-title">
-              <h2>代理商拓展返利设置</h2>
-            </el-row>
-            <el-row class="text-wrap">
-                <p>
-                    <span>进货款定义：</span>
-                    <span>首批进货款</span>
-                </p>
-            </el-row>
-            <el-row class="text-wrap">
-                  <el-col :span="12" class="fl-left">
-                      <el-form-item label="时间周期：">
-                              <el-radio v-model="dlTimeChose"  label="1">合同期</el-radio>
-                              <el-radio v-model="dlTimeChose" label="2">时间范围</el-radio>
-                      </el-form-item>
-                  </el-col>
-            </el-row>
-            <div  v-if="dlTimeChose==1">
+<div>
+      <div class="rebate" v-if="!ifEdit">
+          <el-row class="content_title">
+              <h2>Zuipin拓展返利设置新增</h2>
+              <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
+          </el-row>
+          <el-row class="text-wrap">
+              <p>
+                  <span>进货款定义：</span>
+                  <span>首批进货款</span>
+              </p>
+          </el-row>
+          <el-form ref="form" :model="form"  label-width="200px">
+            <el-row  class="text-wrap">
+              <el-col  class="fl-left">
+                  <el-form-item label="时间周期：" >
+                          <el-radio  v-model="form.zpTimeChose"  label="CONTRACT_TERM" >合同期</el-radio>
+                          <el-radio v-model="form.zpTimeChose" label="TIME_RANGE">时间范围</el-radio>
+                  </el-form-item>
+              </el-col>
+          </el-row>
+            <div v-if="form.zpTimeChose=='CONTRACT_TERM'">
                 <el-row class="fl-wrap">
                     <el-col :span="9">
-                        <el-form-item label="所属单店返利点数：">
-                            <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
+                        <el-form-item label="所属单店返利点数："
+                        prop="zpSingleRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]" >
+                            <el-input type="zpSingleRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpSingleRebate"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
-                        <el-form-item label="所属区域代理返利点数：">
-                            <el-input placeholder="请输入折扣率" class="pencent-num"></el-input>
+                        <el-form-item label="所属区域代理返利点数："
+                        prop="zpAreaRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                            <el-input type="zpAreaRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </div>
             
-            <div  v-if="dlTimeChose==2">
+            <div  v-if="form.zpTimeChose=='TIME_RANGE'">
                 <el-row>
                     <el-col :span="8">
-                        <el-form-item label=" 1）正式签约起">
-                            <el-input placeholder="请输入正整数"  class="sig-time1"></el-input>
+                        <el-form-item label=" 1）正式签约起" 
+                        prop="zpTimeLimit.zpdateBefore"
+                          :rules="[
+                            { required: true, message: '时间不能为空'},
+                            { type: 'number', message: '时间必须为数字值'},
+                            { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
+                            ]">
+                            <el-input type="zpTimeLimit.zpdateBefore" placeholder="请输入正整数"  class="sig-time1" v-model.number="form.zpTimeLimit.zpdateBefore"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -149,15 +75,75 @@
                       </tr>
                       <tr>
                         <td>所属单店</td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td>
+                            <el-form-item label-width="0"
+                            prop="zpTimeLimit.zpSingleExtendsOne"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]" >
+                                <el-input type="zpTimeLimit.zpSingleExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsOne"></el-input>
+                            </el-form-item>
+                        </td>
+                        <td>
+                            <el-form-item label-width="0"
+                            prop="zpTimeLimit.zpSingleExtendsTwo"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]" >
+                                <el-input type="zpTimeLimit.zpSingleExtendsTwo"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsTwo"></el-input >
+                            </el-form-item>
+                        </td>
+                        <td>
+                            <el-form-item label-width="0"
+                            prop="zpTimeLimit.zpSingleExtendsThree"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]" >
+                                <el-input type="zpTimeLimit.zpSingleExtendsThree"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsThree"></el-input >
+                            </el-form-item>
+                        </td>
                       </tr>
                       <tr>
                         <td>所属区域代理</td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num"></el-input></td>
+                        <td>
+                            <el-form-item label-width="0"
+                             prop="zpTimeLimit.zpAreaExtendsOne"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]" >
+                                <el-input type="zpTimeLimit.zpAreaExtendsOne"  placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsOne"></el-input >
+                            </el-form-item >
+                        </td>
+                        <td>
+                            <el-form-item label-width="0"
+                            prop="zpTimeLimit.zpAreaExtendsTwo"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                                <el-input type="zpTimeLimit.zpAreaExtendsTwo"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsTwo"></el-input >
+                            </el-form-item>
+                        </td>
+                        <td>
+                            <el-form-item label-width="0"
+                             prop="zpTimeLimit.zpAreaExtendsThree"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                                <el-input type="zpTimeLimit.zpAreaExtendsThree"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsThree"></el-input >
+                            </el-form-item >
+                        </td>
                       </tr>
                       
                     </tbody>
@@ -165,61 +151,516 @@
                 </el-row>
                 <el-row class="oter-time-wrap">
                     <el-col :span="8">
-                        <el-form-item label=" 2）正式签约起">
-                            <el-input placeholder="请输入正整数" class="sig-time2"></el-input>
+                        <el-form-item label=" 2）正式签约起"
+                        prop="zpTimeLimit.zpdateAfter"
+                          :rules="[
+                             { required: true, message: '时间不能为空'},
+                            { type: 'number', message: '时间必须为数字值'},
+                            { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
+                            ]">
+                            <el-input type="zpTimeLimit.zpdateAfter" placeholder="请输入正整数" class="sig-time2"  v-model.number="form.zpTimeLimit.zpdateAfter"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
+                        <el-form-item label="所属单店返利点数："
+                        prop="zpSingleRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                            <el-input type="zpSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpSingleRebate"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="fl-wrap">
+                    <el-col :span="9">
+                        <el-form-item label="所属区域代理返利点数："
+                        prop="zpAreaRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                            <el-input type="zpAreaRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div>
+            
+              <el-row class="dl-rebate-title">
+                <h2>代理商拓展返利设置</h2>
+              </el-row>
+              <el-row class="text-wrap">
+                  <p>
+                      <span>进货款定义：</span>
+                      <span>首批进货款</span>
+                  </p>
+              </el-row>
+              <el-row class="text-wrap">
+                    <el-col :span="12" class="fl-left">
+                        <el-form-item label="时间周期：">
+                                <el-radio v-model="form.dlTimeChose"  label="CONTRACT_TERM">合同期</el-radio>
+                                <el-radio v-model="form.dlTimeChose" label="TIME_RANGE">时间范围</el-radio>
+                        </el-form-item>
+                    </el-col>
+              </el-row>
+              <div  v-if="form.dlTimeChose=='CONTRACT_TERM'">
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属单店返利点数："
+                           prop="dlSingleRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                              <el-input type="dlSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate"></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属区域代理返利点数："
+                          prop="dlAreaRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                              <el-input type="dlAreaRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate"></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+              </div>
+              
+              <div  v-if="form.dlTimeChose=='TIME_RANGE'">
+                  <el-row>
+                      <el-col :span="8">
+                          <el-form-item label=" 1）正式签约起"
+                           prop="dlTimeLimit.dldateBefore"
+                          :rules="[
+                            { required: true, message: '时间不能为空'},
+                            { type: 'number', message: '时间必须为数字值'},
+                            { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
+                            ]">
+                              <el-input type="dlTimeLimit.dldateBefore" placeholder="请输入正整数"  class="sig-time1" v-model="form.dlTimeLimit.dldateBefore"></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                
+                  <el-row class="rebate-tabel">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th>返利点数</th>
+                          <th>拓展第 1 家</th>
+                          <th>拓展第 2 家</th>
+                          <th>拓展第 3 家及以上</th>
+                        </tr>
+                        <tr>
+                          <td>所属单店</td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlSingleExtendsOne"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                                  <el-input type="dlTimeLimit.dlSingleExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsOne"></el-input>
+                                </el-form-item>
+                            </td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlSingleExtendsTwo"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]"> 
+                                  <el-input type="dlTimeLimit.dlSingleExtendsTwo" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsTwo"></el-input>
+                                </el-form-item>
+                            </td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlSingleExtendsThree"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]"> 
+                                  <el-input type="dlTimeLimit.dlSingleExtendsThree" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsThree"></el-input >
+                                </el-form-item >
+                            </td>
+                        </tr>
+                        <tr>
+                          <td>所属区域代理</td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlAreaExtendsOne"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                                   <el-input type="dlTimeLimit.dlAreaExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsOne"></el-input >
+                                </el-form-item>
+                            </td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlAreaExtendsTwo"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]"> 
+                                  <el-input type="dlTimeLimit.dlAreaExtendsTwo" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsTwo"></el-input >
+                                </el-form-item>
+                            </td>
+                          <td>
+                              <el-form-item label-width="0"
+                              prop="dlTimeLimit.dlAreaExtendsThree"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]"> 
+                                  <el-input type="dlTimeLimit.dlAreaExtendsThree" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsThree"></el-input >
+                                </el-form-item>
+                            </td>
+                        </tr>
+                        
+                      </tbody>
+                    </table>
+                  </el-row>
+                  <el-row class="oter-time-wrap">
+                      <el-col :span="8">
+                          <el-form-item label=" 2）正式签约起" 
+                           prop="dlTimeLimit.dldateAfter"
+                          :rules="[
+                            { required: true, message: '时间不能为空'},
+                            { type: 'number', message: '时间必须为数字值'},
+                            { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
+                            ]">
+                              <el-input type="dlTimeLimit.dldateAfter" placeholder="请输入正整数" class="sig-time2" v-model="form.dlTimeLimit.dldateAfter"></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属单店返利点数："
+                          prop="dlSingleRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                              <el-input type="dlSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate"></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属区域代理返利点数：" 
+                          prop="dlAreaRebate"
+                          :rules="[
+                            { required: true, message: '返利点数不能为空'},
+                            { type: 'number', message: '返利点数必须为数字值'},
+                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            ]">
+                              <el-input type="dlAreaRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate" ></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+              </div>
+              <el-row style="margin-top:20px;">
+                  <el-button @click="resetForm('form')">取消</el-button>
+                  <el-button type="primary" @click="save">保存</el-button>
+              </el-row>
+          </el-form>
+      </div>
+
+      <!-- 详情列表 -->
+      <div class="rebate"  v-if="ifEdit">
+          <el-row class="content_title">
+              <h2>Zuipin拓展返利设置</h2>
+              <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
+          </el-row>
+          <el-row class="text-wrap">
+              <p>
+                  <span>进货款定义：</span>
+                  <span>首批进货款</span>
+              </p>
+          </el-row>
+          
+
+          <el-form ref="form1"  label-width="200px">
+            <el-row  class="text-wrap">
+              <el-col  class="fl-left">
+                  <el-form-item label="时间周期：" >
+                          <el-radio  v-model="form.zpTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
+                          <el-radio v-model="form.zpTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
+                  </el-form-item>
+              </el-col>
+          </el-row>
+            <div v-if="form.zpTimeChose=='CONTRACT_TERM'">
+                <el-row class="fl-wrap">
+                    <el-col :span="9">
                         <el-form-item label="所属单店返利点数：">
-                            <el-input placeholder="请输入折扣率"  class="pencent-num"></el-input>
+                            <el-input placeholder="请输入折扣率"  v-model="form.zpSingleRebate" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属区域代理返利点数：">
-                            <el-input placeholder="请输入折扣率" class="pencent-num" ></el-input>
+                            <el-input placeholder="请输入折扣率" v-model="form.zpAreaRebate" disabled></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
             </div>
-            <el-row style="margin-top:20px;">
-                <el-button @click="goBack">取消</el-button>
-                <el-button type="primary" @click="save">保存</el-button>
-            </el-row>
-        </el-form>
-    </div>
+            
+            <div  v-if="form.zpTimeChose=='TIME_RANGE'">
+                <el-row>
+                    <el-col :span="8">
+                        <el-form-item label=" 1）正式签约起">
+                            <el-input placeholder="请输入正整数"  class="sig-time1" v-model="form.zpTimeLimit.zpdateBefore" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+              
+                <el-row class="rebate-tabel">
+                  <table>
+                    <tbody>
+                      <tr>
+                        <th>返利点数</th>
+                        <th>拓展第 1 家</th>
+                        <th>拓展第 2 家</th>
+                        <th>拓展第 3 家及以上</th>
+                      </tr>
+                      <tr>
+                          <td>所属单店</td>
+                          <td>{{form.zpTimeLimit.zpSingleExtendsOne | number}}</td>
+                          <td>{{form.zpTimeLimit.zpSingleExtendsTwo | number}}</td>
+                          <td>{{form.zpTimeLimit.zpSingleExtendsThree | number}}</td>
+                      </tr>
+                      <tr>
+                          <td>所属区域代理</td>
+                          <td>{{form.zpTimeLimit.zpAreaExtendsOne | number}}</td>
+                          <td>{{form.zpTimeLimit.zpAreaExtendsTwo | number}}</td>
+                          <td>{{form.zpTimeLimit.zpAreaExtendsThree | number}}</td>
+                      </tr>
+                      <!-- <tr>
+                        <td>所属单店</td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsOne"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsTwo"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsThree"></el-input></td>
+                      </tr>
+                      <tr>
+                        <td>所属区域代理</td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsOne"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsTwo"></el-input></td>
+                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsThree"></el-input></td>
+                      </tr> -->
+                      
+                    </tbody>
+                  </table>
+                </el-row>
+                <el-row class="oter-time-wrap">
+                    <el-col :span="8">
+                        <el-form-item label=" 2）正式签约起">
+                            <el-input placeholder="请输入正整数" class="sig-time2"  v-model="form.zpTimeLimit.zpdateAfter" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="fl-wrap">
+                    <el-col :span="9">
+                        <el-form-item label="所属单店返利点数：">
+                            <el-input placeholder="请输入折扣率"   v-model="form.zpSingleRebate" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row class="fl-wrap">
+                    <el-col :span="9">
+                        <el-form-item label="所属区域代理返利点数：">
+                            <el-input placeholder="请输入折扣率"   v-model="form.zpAreaRebate" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </div>
+            
+              <el-row class="dl-rebate-title">
+                <h2>代理商拓展返利设置</h2>
+              </el-row>
+              <el-row class="text-wrap">
+                  <p>
+                      <span>进货款定义：</span>
+                      <span>首批进货款</span>
+                  </p>
+              </el-row>
+              <el-row class="text-wrap">
+                    <el-col :span="12" class="fl-left">
+                        <el-form-item label="时间周期：">
+                                <el-radio v-model="form.dlTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
+                                <el-radio v-model="form.dlTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
+                        </el-form-item>
+                    </el-col>
+              </el-row>
+              <div  v-if="form.dlTimeChose=='CONTRACT_TERM'">
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属单店返利点数：">
+                              <el-input placeholder="请输入折扣率" v-model="form.dlSingleRebate" disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属区域代理返利点数：">
+                              <el-input placeholder="请输入折扣率" v-model="form.dlAreaRebate" disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+              </div>
+              
+              <div  v-if="form.dlTimeChose=='TIME_RANGE'">
+                  <el-row>
+                      <el-col :span="8">
+                          <el-form-item label=" 1）正式签约起">
+                              <el-input placeholder="请输入正整数"  class="sig-time1" v-model="form.dlTimeLimit.dldateBefore" disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                
+                  <el-row class="rebate-tabel">
+                    <table>
+                      <tbody>
+                        <tr>
+                          <th>返利点数</th>
+                          <th>拓展第 1 家</th>
+                          <th>拓展第 2 家</th>
+                          <th>拓展第 3 家及以上</th>
+                        </tr>
+                        <tr>
+                          <td>所属单店</td>
+                          <td>{{form.dlTimeLimit.dlSingleExtendsOne | number}}</td>
+                          <td>{{form.dlTimeLimit.dlSingleExtendsTwo | number}}</td>
+                          <td>{{form.dlTimeLimit.dlSingleExtendsThree | number}}</td>
+                      </tr>
+                      <tr>
+                          <td>所属区域代理</td>
+                          <td>{{form.dlTimeLimit.dlAreaExtendsOne | number}}</td>
+                          <td>{{form.dlTimeLimit.dlAreaExtendsTwo | number}}</td>
+                          <td>{{form.dlTimeLimit.dlAreaExtendsThree | number}}</td>
+                      </tr>
+                        <!-- <tr>
+                          <td>所属单店</td>
+                          <td><el-input placeholder="请输入折扣率" v-model="form.dlTimeLimit.dlSingleExtendsOne"></el-input></td>
+                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlSingleExtendsTwo"></el-input></td>
+                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlSingleExtendsThree"></el-input></td>
+                        </tr>
+                        <tr>
+                          <td>所属区域代理</td>
+                          <td><el-input placeholder="请输入折扣率" v-model="form.dlTimeLimit.dlAreaExtendsOne"></el-input></td>
+                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlAreaExtendsTwo"></el-input></td>
+                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlAreaExtendsThree"></el-input></td>
+                        </tr> -->
+                        
+                      </tbody>
+                    </table>
+                  </el-row>
+                  <el-row class="oter-time-wrap">
+                      <el-col :span="8">
+                          <el-form-item label=" 2）正式签约起">
+                              <el-input placeholder="请输入正整数" class="sig-time2" v-model="form.dlTimeLimit.dldateAfter" disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属单店返利点数：">
+                              <el-input placeholder="请输入折扣率"   v-model="form.dlSingleRebate" disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+                  <el-row class="fl-wrap">
+                      <el-col :span="9">
+                          <el-form-item label="所属区域代理返利点数：">
+                              <el-input placeholder="请输入折扣率"  v-model="form.dlAreaRebate"  disabled></el-input>
+                          </el-form-item>
+                      </el-col>
+                  </el-row>
+              </div>
+              <!-- <el-row style="margin-top:20px;">
+                  <el-button @click="goBack">取消</el-button>
+                  <el-button type="primary" @click="save">保存</el-button>
+              </el-row> -->
+          </el-form>
+      </div>
+</div>
+    
 </template>
 <script type="text/javascript" src="../router.js"></script>
 <script>
-import quillEditor from "../components/editor.vue";
+// import quillEditor from "../components/editor.vue";
 let qs = require("qs");
 export default {
   data() {
+    
     return {
-      // dialogFormVisible: false, //dialog
-      id: "",
-      contentData: {
-        title: "", //标题
-        type: "", //通知类型
-        status: "1", //通知状态
-        agent: "", //代理商类型
-        content: "", //内容
-        url: "" //url
+        ifEdit:false,
+      form:{
+        dlTimeChose:"CONTRACT_TERM",
+        zpTimeChose:"TIME_RANGE",
+        zpSingleRebate:"",
+        zpAreaRebate:"",
+        zpTimeLimit:{
+          zpdateBefore:"",
+          zpSingleExtendsOne:"",
+          zpSingleExtendsTwo:"",
+          zpSingleExtendsThree:"",
+          zpAreaExtendsOne:"",
+          zpAreaExtendsTwo:"",
+          zpAreaExtendsThree:"",
+          zpdateAfter:"",
+        },
+        dlSingleRebate:"",
+        dlAreaRebate:"",
+        dlTimeLimit:{
+          dldateBefore:"",
+          dlSingleExtendsOne:"",
+          dlSingleExtendsTwo:"",
+          dlSingleExtendsThree:"",
+          dlAreaExtendsOne:"",
+          dlAreaExtendsTwo:"",
+          dlAreaExtendsThree:"",
+          dldateAfter:"",
+        },
       },
-      nowContent: "",
-      dlTimeChose:"2",
-      zpTimeChose:"1",
     };
   },
-  components: {
-    quillEditor
+  // components: {
+  //   quillEditor
+  // },
+
+  filters: {
+    //保留2位小数点过滤器 不四舍五入
+    number(value) {
+      var toFixedNum = Number(value).toFixed(3);
+      var realVal = toFixedNum.substring(0, toFixedNum.toString().length - 1);
+      return realVal+"%";
+    }
   },
   methods: {
+    //   重置
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
     goBack() {
-      this.$confirm(`你确定要放弃编辑该通知吗？`, "提示", {
+      this.$confirm(`你确定要放弃编辑吗？`, "提示", {
         confirmButtonText: "确定",
         cancelButtonText: "取消",
         type: "warning"
@@ -247,15 +688,83 @@ export default {
         }
       }
     },
-    emitContent(data) {
-      this.contentData.content = data;
-    },
-    save() {
+    // refreshPage(){
+    //     this.$router.replace("/")
+    // },
+        save() {
+      if(this.form.zpTimeChose == 'TIME_RANGE'){
+                // 小数点后最多2位
+            var reg= /^(-?\d+)(\.\d{1,2})?$/
+           if(
+                !reg.test(this.form.zpTimeLimit.zpSingleExtendsOne)||
+                !reg.test(this.form.zpTimeLimit.zpSingleExtendsTwo)||
+                !reg.test(this.form.zpTimeLimit.zpSingleExtendsThree)||
+                !reg.test(this.form.zpTimeLimit.zpAreaExtendsOne)||
+                !reg.test(this.form.zpTimeLimit.zpAreaExtendsTwo)||
+                !reg.test(this.form.zpTimeLimit.zpAreaExtendsThree)
+                ){
+                    this.$message({
+                    message: "保存失败！小数点后最多2位",
+                    type: "warning"
+                    });
+                    return;
+                }
+
+         if(
+           !this.form.zpTimeLimit.zpdateBefore||
+            !this.form.zpTimeLimit.zpSingleExtendsOne ||
+            !this.form.zpTimeLimit.zpSingleExtendsTwo||
+            !this.form.zpTimeLimit.zpSingleExtendsThree||
+            !this.form.zpTimeLimit.zpAreaExtendsOne||
+            !this.form.zpTimeLimit.zpAreaExtendsTwo||
+            !this.form.zpTimeLimit.zpAreaExtendsThree||
+            !this.form.zpTimeLimit.zpdateAfter
+            ){
+                this.$message({
+            message: "保存失败！必填项未填写",
+            type: "warning"
+            });
+            return;
+            }
+      }
+      if(this.form.dlTimeChose == 'TIME_RANGE'){
+        //         // 小数点后最多2位
+            var reg= /^(-?\d+)(\.\d{1,2})?$/
+           if(
+                !reg.test(this.form.dlTimeLimit.dlSingleExtendsOne)||
+                !reg.test(this.form.dlTimeLimit.dlSingleExtendsTwo)||
+                !reg.test(this.form.dlTimeLimit.dlSingleExtendsThree)||
+               !reg.test(this.form.dlTimeLimit.dlAreaExtendsOne)||
+                !reg.test(this.form.dlTimeLimit.dlAreaExtendsTwo)||
+                !reg.test(this.form.dlTimeLimit.dlAreaExtendsThree)
+                ){
+                    this.$message({
+                    message: "保存失败！小数点后最多2位",
+                    type: "warning"
+                    });
+                    return;
+                }
+         if(
+           !this.form.dlTimeLimit.dlSingleExtendsOne||
+            !this.form.dlTimeLimit.dlSingleExtendsTwo||
+            !this.form.dlTimeLimit.dlSingleExtendsThree||
+            !this.form.dlTimeLimit.dlAreaExtendsOne||
+            !this.form.dlTimeLimit.dlAreaExtendsTwo||
+            !this.form.dlTimeLimit.dlAreaExtendsThree||
+            !this.form.dlTimeLimit.dldateAfter
+            ){
+                this.$message({
+            message: "保存失败！必填项未填写",
+            type: "warning"
+            });
+            return;
+            }
+      }
       if (
-        !this.contentData.title ||
-        !this.contentData.type ||
-        !this.contentData.content ||
-        this.contentData.agent.length < 1
+        !this.form.zpSingleRebate ||
+        !this.form.zpAreaRebate ||
+        !this.form.dlSingleRebate ||
+        !this.form.dlAreaRebate
       ) {
         this.$message({
           message: "保存失败！必填项未填写",
@@ -263,17 +772,23 @@ export default {
         });
         return;
       }
-      if (this.contentData.title.trim().length > 50) {
-        this.$message({
-          message: "通知标题长度不超过50个字符",
-          type: "warning"
-        });
-        return;
-      }
+    // 小数点后最多2位
+     var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
+      if(
+          !reg.test(this.form.zpSingleRebate)||
+          !reg.test(this.form.zpAreaRebate)||
+          !reg.test(this.form.dlAreaRebate)||
+          !reg.test(this.form.dlSingleRebate)
+          ){
+              this.$message({
+            message: "保存失败！小数点后最多2位",
+            type: "warning"
+            });
+            return;
+        }
+
       this.$confirm(
-        `你确定要保存${
-          this.contentData.status === "1" ? "并启用" : ""
-        }该通知吗？`,
+        `规则保存后立即生效，你确定要保存该规则吗？`,
         "提示",
         {
           confirmButtonText: "确定",
@@ -283,20 +798,33 @@ export default {
       ).then(() => {
         this.$ajax
           .post(
-            "/api/http/NoticeInfo/saveOrUpdateNoticeInfo.jhtml",
+            "/api/http/businessExtendsRule/saveOrUpdateBusinessExtendsRule.jhtml",
             qs.stringify({
-              "noticeInfo.id": this.$route.params.id
-                ? this.$route.params.id
-                : null,
-              "noticeInfo.noticeTitle": this.contentData.title,
-              "noticeInfo.noticeType": this.contentData.type,
-              "noticeInfo.noticeContent": this.contentData.content,
-              "noticeInfo.status": this.contentData.status,
-              "noticeInfo.agentType":
-                this.contentData.agent.length > 1
-                  ? this.contentData.agent.join(",")
-                  : this.contentData.agent[0],
-              "noticeInfo.updateId": this.user.id
+              "businessExtendsRule.zuipinCycleTime":this.form.zpTimeChose,
+              "businessExtendsRule.zuipinContractDaysInner":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpdateBefore:"",
+              "businessExtendsRule.zuipinSingleExtendsOne":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpSingleExtendsOne/100:"",
+              "businessExtendsRule.zuipinSingleExtendsTwo":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpSingleExtendsTwo/100:"",
+              "businessExtendsRule.zuipinSingleExtendsThree":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpSingleExtendsThree/100:"",
+              "businessExtendsRule.zuipinAreaExtendsOne":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpAreaExtendsOne/100:"",
+              "businessExtendsRule.zuipinAreaExtendsTwo":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpAreaExtendsTwo/100:"",
+              "businessExtendsRule.zuipinAreaExtendsThree":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpAreaExtendsThree/100:"",
+              "businessExtendsRule.zuipinContractDaysAfter":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpdateAfter:"",
+              "businessExtendsRule.zuipinSingleRebate":this.form.zpSingleRebate/100,
+              "businessExtendsRule.zuipinAreaRebate":this.form.zpAreaRebate/100,
+              "businessExtendsRule.agentCycleTime":this.form.dlTimeChose,
+              "businessExtendsRule.agentContractDaysInner":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dldateBefore/100 : "",
+              "businessExtendsRule.agentSingleExtendsOne":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsOne/100 : "",
+              "businessExtendsRule.agentSingleExtendsTwo":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsTwo/100 : "",
+              "businessExtendsRule.agentSingleExtendsThree":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsThree/100 : "",
+              "businessExtendsRule.agentAreaExtendsOne":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlAreaExtendsOne/100 : "",
+              "businessExtendsRule.agentAreaExtendsTwo":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlAreaExtendsTwo/100 : "",
+              "businessExtendsRule.agentAreaExtendsThree":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlAreaExtendsThree/100 : "",
+              "businessExtendsRule.agentContractDaysAfter":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dldateAfter : "",
+              "businessExtendsRule.agentSingleRebate":this.form.dlSingleRebate/100,
+              "businessExtendsRule.agentAreaRebate":this.form.dlAreaRebate/100,
+              "businessExtendsRule.agentPaymentDifinition":this.form.agentPaymentDifinition,
+              // "noticeInfo.noticeTitle": this.contentData.title,
+              
             }),
             {
               headers: {
@@ -307,10 +835,14 @@ export default {
           .then(res => {
             if (res.data.success === 1) {
               this.$message({
-                message: `保存“通知：【${this.contentData.title}】”成功~`,
+                message: `保存业务拓展返利规则成功~`,
                 type: "success"
               });
-              this.$router.push("/message");
+              location.reload();//强刷
+              
+              // this.$router.push("/rebate");
+              // this.refreshPage();
+              
             } else {
               this.$message({
                 message: res.data.msg,
@@ -320,59 +852,57 @@ export default {
           });
       });
     },
-    look() {
-      let routerNow = this.$router.resolve({
-        path: "/lookMsg",
-        query: {
-          content: this.contentData.content,
-          title: this.contentData.title
-        }
-      });
-      window.open(routerNow.href, "_blank");
-    }
   },
   created() {
     if (!this.checkSession()) return;
-    this.id = this.$route.params.id;
-    if (sessionStorage.user) {
-      this.user = JSON.parse(sessionStorage.getItem("user"));
-    }
-    if (this.id) {
-      this.$ajax
-        .post(
-          "/api/http/NoticeInfo/getNoticeInfoDetail.jhtml",
-          qs.stringify({
-            noticeId: this.$route.params.id
-          }),
-          {
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded"
-            }
-          }
-        )
-        .then(res => {
-          if (res.data.success === 1) {
-            this.contentData.content = res.data.result.noticeContent;
-            this.contentData.title = res.data.result.noticeTitle;
-            this.contentData.type = res.data.result.noticeType;
-            this.contentData.status = res.data.result.status.toString();
-            this.contentData.agent = this.contentData.agent.concat(
-              res.data.result.agentType.split(",")
-            );
-          } else {
-            this.$message({
-              message: res.data.msg,
-              type: "error"
-            });
-          }
+    
+        this.$getData({
+            url: 'http/businessExtendsRule/getBusinessExtendsRuleDetail.jhtml',
+            success(response) {
+                console.log(response.data);
+                this.form.zpTimeChose = response.data.result.zuipinCycleTime;
+                this.form.dlTimeChose = response.data.result.agentCycleTime;
+                this.form.zpTimeLimit.zpdateBefore = response.data.result.zuipinContractDaysInner;
+                this.form.zpTimeLimit.zpSingleExtendsOne = response.data.result.zuipinSingleExtendsOne*100;
+                this.form.zpTimeLimit.zpSingleExtendsTwo = response.data.result.zuipinSingleExtendsTwo*100;
+                this.form.zpTimeLimit.zpSingleExtendsThree = response.data.result.zuipinSingleExtendsThree*100;
+                this.form.zpTimeLimit.zpAreaExtendsOne = response.data.result.zuipinAreaExtendsOne*100;
+                this.form.zpTimeLimit.zpAreaExtendsTwo = response.data.result.zuipinAreaExtendsTwo*100;
+                this.form.zpTimeLimit.zpAreaExtendsThree = response.data.result.zuipinAreaExtendsThree*100;
+                this.form.zpTimeLimit.zpdateAfter = response.data.result.zuipinContractDaysAfter;
+                this.form.zpSingleRebate = (response.data.result.zuipinSingleRebate*100).toFixed(2)+"%";
+                this.form.zpAreaRebate = (response.data.result.zuipinAreaRebate*100).toFixed(2)+"%";
+
+                this.form.dlTimeLimit.dldateBefore = response.data.result.agentContractDaysInner;
+                this.form.dlTimeLimit.dlSingleExtendsOne = response.data.result.agentSingleExtendsOne*100;
+                this.form.dlTimeLimit.dlSingleExtendsTwo = response.data.result.agentSingleExtendsTwo*100;
+                this.form.dlTimeLimit.dlSingleExtendsThree = response.data.result.agentSingleExtendsThree*100;
+                this.form.dlTimeLimit.dlAreaExtendsOne = response.data.result.agentAreaExtendsOne*100;
+                this.form.dlTimeLimit.dlAreaExtendsTwo = response.data.result.agentAreaExtendsTwo*100;
+                this.form.dlTimeLimit.dlAreaExtendsThree = response.data.result.agentAreaExtendsThree*100;
+                this.form.dlTimeLimit.dldateAfter = response.data.result.agentContractDaysAfter;
+                this.form.dlSingleRebate = (response.data.result.agentSingleRebate*100).toFixed(2)+"%";
+                this.form.dlAreaRebate = (response.data.result.agentAreaRebate*100).toFixed(2)+"%";
+                 if(response.data.result.agentSingleRebate){
+                        this.ifEdit=true;
+                    }else{
+                        this.ifEdit=false;
+                    }
+            },
+            fail(response) {
+                this.$message({
+                    message: response.data.msg,
+                    type: 'error'
+                })
+            },
+           
         });
-    }
   }
 };
 </script>
 
 <style lang="less" scoped>
-#rebate {
+.rebate {
   width: 98%;
   margin: 1%;
   padding: 20px;
@@ -483,6 +1013,15 @@ export default {
     top: 0;
     right: 10px;
   }
+}
+.rebate-tabel .el-form-item{
+    margin-bottom: 0;
+}
+.rebate .rebate-tabel tr td{
+    width: 200px;
+}
+.rebate .rebate-tabel tr td:first-child{
+    width: 133px;
 }
 </style>
 
