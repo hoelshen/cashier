@@ -1001,6 +1001,10 @@ export default {
 
             }).then(function(response) {
                 if (response.data.success === 1) {
+                    console.log(response.data.success)
+
+
+
                     let myData = response.data.result;
                     for (let i = 0; i < myData.length; i++) {
                         array.push(myData[i].id)
@@ -1022,19 +1026,21 @@ export default {
         // 导出全部明细
         allOutputExcel() {
             let self = this;
-            // console.log('ok')
             self.$ajax.all([self.getAllId()]).then(
                 self.$ajax.spread(function(acct) {
                     let ids = self.allId;
+                    console.log(ids)
                     self.outputExcel(ids);
+                    console.log('ok')
+                    
                 })
             );
         },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
-            console.log(id);
-            console.log(name);
-            console.log(shopNo);
+            // console.log(id);
+            // console.log(name);
+            // console.log(shopNo);
             
             let self = this;
             self.loading = true;
