@@ -377,7 +377,7 @@
                   </el-row>
               </div>
               <el-row style="margin-top:20px;">
-                  <el-button @click="goBack">取消</el-button>
+                  <el-button @click="resetForm('form')">取消</el-button>
                   <el-button type="primary" @click="save">保存</el-button>
               </el-row>
           </el-form>
@@ -655,6 +655,10 @@ export default {
     }
   },
   methods: {
+    //   重置
+      resetForm(formName) {
+        this.$refs[formName].resetFields();
+      },
     goBack() {
       this.$confirm(`你确定要放弃编辑吗？`, "提示", {
         confirmButtonText: "确定",
@@ -784,7 +788,7 @@ export default {
         }
 
       this.$confirm(
-        `你确定要保存吗？`,
+        `规则保存后立即生效，你确定要保存该规则吗？`,
         "提示",
         {
           confirmButtonText: "确定",
@@ -831,7 +835,7 @@ export default {
           .then(res => {
             if (res.data.success === 1) {
               this.$message({
-                message: `保存成功~`,
+                message: `保存业务拓展返利规则成功~`,
                 type: "success"
               });
               location.reload();//强刷
