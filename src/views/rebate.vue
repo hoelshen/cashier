@@ -165,26 +165,26 @@
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属单店返利点数："
-                        prop="zpSingleRebate"
+                        prop="zpSingleRebate1"
                           :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
                             { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
                             ]">
-                            <el-input type="zpSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpSingleRebate"></el-input>
+                            <el-input type="zpSingleRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpSingleRebate1"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row class="fl-wrap">
                     <el-col :span="9">
                         <el-form-item label="所属区域代理返利点数："
-                        prop="zpAreaRebate"
+                        prop="zpAreaRebate1"
                           :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
                             { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
                             ]">
-                            <el-input type="zpAreaRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate"></el-input>
+                            <el-input type="zpAreaRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate1"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -246,7 +246,7 @@
                             { type: 'number', message: '时间必须为数字值'},
                             { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
                             ]">
-                              <el-input type="dlTimeLimit.dldateBefore" placeholder="请输入正整数"  class="sig-time1" v-model="form.dlTimeLimit.dldateBefore"></el-input>
+                              <el-input type="dlTimeLimit.dldateBefore" placeholder="请输入正整数"  class="sig-time1" v-model.number="form.dlTimeLimit.dldateBefore"></el-input>
                           </el-form-item>
                       </el-col>
                   </el-row>
@@ -345,40 +345,40 @@
                             { type: 'number', message: '时间必须为数字值'},
                             { pattern: /^[1-9]\d*$/, message: '必须为正整数' }
                             ]">
-                              <el-input type="dlTimeLimit.dldateAfter" placeholder="请输入正整数" class="sig-time2" v-model="form.dlTimeLimit.dldateAfter"></el-input>
+                              <el-input type="dlTimeLimit.dldateAfter" placeholder="请输入正整数" class="sig-time2" v-model.number="form.dlTimeLimit.dldateAfter"></el-input>
                           </el-form-item>
                       </el-col>
                   </el-row>
                   <el-row class="fl-wrap">
                       <el-col :span="9">
                           <el-form-item label="所属单店返利点数："
-                          prop="dlSingleRebate"
+                          prop="dlSingleRebate1"
                           :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
                             { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
                             ]">
-                              <el-input type="dlSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate"></el-input>
+                              <el-input type="dlSingleRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate1"></el-input>
                           </el-form-item>
                       </el-col>
                   </el-row>
                   <el-row class="fl-wrap">
                       <el-col :span="9">
                           <el-form-item label="所属区域代理返利点数：" 
-                          prop="dlAreaRebate"
+                          prop="dlAreaRebate1"
                           :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
                             { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
                             ]">
-                              <el-input type="dlAreaRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate" ></el-input>
+                              <el-input type="dlAreaRebate1" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate1" ></el-input>
                           </el-form-item>
                       </el-col>
                   </el-row>
               </div>
               <el-row style="margin-top:20px;">
                   <el-button @click="resetForm('form')">取消</el-button>
-                  <el-button type="primary" @click="save">保存</el-button>
+                  <el-button type="primary" @click="submitForm('form')">保存</el-button>
               </el-row>
           </el-form>
       </div>
@@ -614,9 +614,11 @@ export default {
         ifEdit:false,
       form:{
         dlTimeChose:"CONTRACT_TERM",
-        zpTimeChose:"TIME_RANGE",
+        zpTimeChose:"CONTRACT_TERM",
         zpSingleRebate:"",
         zpAreaRebate:"",
+        zpSingleRebate1:"",
+        zpAreaRebate1:"",
         zpTimeLimit:{
           zpdateBefore:"",
           zpSingleExtendsOne:"",
@@ -629,6 +631,8 @@ export default {
         },
         dlSingleRebate:"",
         dlAreaRebate:"",
+        dlSingleRebate1:"",
+        dlAreaRebate1:"",
         dlTimeLimit:{
           dldateBefore:"",
           dlSingleExtendsOne:"",
@@ -688,105 +692,129 @@ export default {
         }
       }
     },
-    // refreshPage(){
-    //     this.$router.replace("/")
-    // },
+    submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+           this.save()
+          } else {
+            console.log('error submit!!');
+            return false;
+          }
+        });
+      },
         save() {
       if(this.form.zpTimeChose == 'TIME_RANGE'){
-                // 小数点后最多2位
-            var reg= /^(-?\d+)(\.\d{1,2})?$/
-           if(
-                !reg.test(this.form.zpTimeLimit.zpSingleExtendsOne)||
-                !reg.test(this.form.zpTimeLimit.zpSingleExtendsTwo)||
-                !reg.test(this.form.zpTimeLimit.zpSingleExtendsThree)||
-                !reg.test(this.form.zpTimeLimit.zpAreaExtendsOne)||
-                !reg.test(this.form.zpTimeLimit.zpAreaExtendsTwo)||
-                !reg.test(this.form.zpTimeLimit.zpAreaExtendsThree)
+            
+
+            if(
+                !this.form.zpTimeLimit.zpdateBefore||
+                !this.form.zpTimeLimit.zpSingleExtendsOne ||
+                !this.form.zpTimeLimit.zpSingleExtendsTwo||
+                !this.form.zpTimeLimit.zpSingleExtendsThree||
+                !this.form.zpTimeLimit.zpAreaExtendsOne||
+                !this.form.zpTimeLimit.zpAreaExtendsTwo||
+                !this.form.zpTimeLimit.zpAreaExtendsThree||
+                !this.form.zpTimeLimit.zpdateAfter||
+                !this.form.zpSingleRebate1||
+                !this.form.zpAreaRebate1
                 ){
                     this.$message({
-                    message: "保存失败！小数点后最多2位",
-                    type: "warning"
-                    });
-                    return;
-                }
+                message: "保存失败！必填项未填写",
+                type: "warning"
+                });
+                return;
+                }else{
 
-         if(
-           !this.form.zpTimeLimit.zpdateBefore||
-            !this.form.zpTimeLimit.zpSingleExtendsOne ||
-            !this.form.zpTimeLimit.zpSingleExtendsTwo||
-            !this.form.zpTimeLimit.zpSingleExtendsThree||
-            !this.form.zpTimeLimit.zpAreaExtendsOne||
-            !this.form.zpTimeLimit.zpAreaExtendsTwo||
-            !this.form.zpTimeLimit.zpAreaExtendsThree||
-            !this.form.zpTimeLimit.zpdateAfter
+                                // 小数点后最多2位
+                    var reg= /^(-?\d+)(\.\d{1,2})?$/
+                if(
+                    !reg.test(this.form.zpTimeLimit.zpSingleExtendsOne)||
+                    !reg.test(this.form.zpTimeLimit.zpSingleExtendsTwo)||
+                    !reg.test(this.form.zpTimeLimit.zpSingleExtendsThree)||
+                    !reg.test(this.form.zpTimeLimit.zpAreaExtendsOne)||
+                    !reg.test(this.form.zpTimeLimit.zpAreaExtendsTwo)||
+                    !reg.test(this.form.zpTimeLimit.zpAreaExtendsThree)||
+                    !reg.test(this.form.zpSingleRebate1)||
+                    !reg.test(this.form.zpAreaRebate1)   
+                    ){
+                        this.$message({
+                        message: "保存失败！填写正确格式",
+                        type: "warning"
+                        });
+                        return;
+                    }
+                }
+      }else{
+        // 小数点后最多2位
+        var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
+        if(
+            !reg.test(this.form.zpSingleRebate)||
+            !reg.test(this.form.zpAreaRebate)
             ){
                 this.$message({
-            message: "保存失败！必填项未填写",
-            type: "warning"
-            });
-            return;
+                message: "保存失败！填写正确格式",
+                type: "warning"
+                });
+                return;
             }
+
       }
       if(this.form.dlTimeChose == 'TIME_RANGE'){
-        //         // 小数点后最多2位
-            var reg= /^(-?\d+)(\.\d{1,2})?$/
-           if(
-                !reg.test(this.form.dlTimeLimit.dlSingleExtendsOne)||
-                !reg.test(this.form.dlTimeLimit.dlSingleExtendsTwo)||
-                !reg.test(this.form.dlTimeLimit.dlSingleExtendsThree)||
-               !reg.test(this.form.dlTimeLimit.dlAreaExtendsOne)||
-                !reg.test(this.form.dlTimeLimit.dlAreaExtendsTwo)||
-                !reg.test(this.form.dlTimeLimit.dlAreaExtendsThree)
+        
+            if(
+                 !this.form.dlTimeLimit.dlSingleExtendsOne||
+                !this.form.dlTimeLimit.dlSingleExtendsTwo||
+                !this.form.dlTimeLimit.dlSingleExtendsThree||
+                !this.form.dlTimeLimit.dlAreaExtendsOne||
+                !this.form.dlTimeLimit.dlAreaExtendsTwo||
+                !this.form.dlTimeLimit.dlAreaExtendsThree||
+                !this.form.dlTimeLimit.dldateAfter||
+                !this.form.dlSingleRebate1 ||
+                !this.form.dlAreaRebate1
                 ){
                     this.$message({
-                    message: "保存失败！小数点后最多2位",
+                message: "保存失败！必填项未填写",
+                type: "warning"
+                });
+                return;
+                }else{
+                    //         // 小数点后最多2位
+                    var reg= /^(-?\d+)(\.\d{1,2})?$/
+                if(
+                    !reg.test(this.form.dlTimeLimit.dlSingleExtendsOne)||
+                    !reg.test(this.form.dlTimeLimit.dlSingleExtendsTwo)||
+                    !reg.test(this.form.dlTimeLimit.dlSingleExtendsThree)||
+                    !reg.test(this.form.dlTimeLimit.dlAreaExtendsOne)||
+                    !reg.test(this.form.dlTimeLimit.dlAreaExtendsTwo)||
+                    !reg.test(this.form.dlTimeLimit.dlAreaExtendsThree)||
+                    !reg.test(this.form.dlAreaRebate1)||
+                    !reg.test(this.form.dlSingleRebate1)
+                    ){
+                        this.$message({
+                        message: "保存失败！填写正确格式",
+                        type: "warning"
+                        });
+                        return;
+                    }
+                }
+      }else{
+
+              // 小数点后最多2位
+            var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
+            if(
+                !reg.test(this.form.dlAreaRebate)||
+                !reg.test(this.form.dlSingleRebate)
+                ){
+                    this.$message({
+                    message: "保存失败！填写正确格式",
                     type: "warning"
                     });
                     return;
                 }
-         if(
-           !this.form.dlTimeLimit.dlSingleExtendsOne||
-            !this.form.dlTimeLimit.dlSingleExtendsTwo||
-            !this.form.dlTimeLimit.dlSingleExtendsThree||
-            !this.form.dlTimeLimit.dlAreaExtendsOne||
-            !this.form.dlTimeLimit.dlAreaExtendsTwo||
-            !this.form.dlTimeLimit.dlAreaExtendsThree||
-            !this.form.dlTimeLimit.dldateAfter
-            ){
-                this.$message({
-            message: "保存失败！必填项未填写",
-            type: "warning"
-            });
-            return;
-            }
-      }
-      if (
-        !this.form.zpSingleRebate ||
-        !this.form.zpAreaRebate ||
-        !this.form.dlSingleRebate ||
-        !this.form.dlAreaRebate
-      ) {
-        this.$message({
-          message: "保存失败！必填项未填写",
-          type: "warning"
-        });
-        return;
-      }
-    // 小数点后最多2位
-     var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
-      if(
-          !reg.test(this.form.zpSingleRebate)||
-          !reg.test(this.form.zpAreaRebate)||
-          !reg.test(this.form.dlAreaRebate)||
-          !reg.test(this.form.dlSingleRebate)
-          ){
-              this.$message({
-            message: "保存失败！小数点后最多2位",
-            type: "warning"
-            });
-            return;
-        }
+        
 
+      }
+      
       this.$confirm(
         `规则保存后立即生效，你确定要保存该规则吗？`,
         "提示",
@@ -809,10 +837,10 @@ export default {
               "businessExtendsRule.zuipinAreaExtendsTwo":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpAreaExtendsTwo/100:"",
               "businessExtendsRule.zuipinAreaExtendsThree":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpAreaExtendsThree/100:"",
               "businessExtendsRule.zuipinContractDaysAfter":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpdateAfter:"",
-              "businessExtendsRule.zuipinSingleRebate":this.form.zpSingleRebate/100,
-              "businessExtendsRule.zuipinAreaRebate":this.form.zpAreaRebate/100,
+              "businessExtendsRule.zuipinSingleRebate":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpSingleRebate1/100:this.form.zpSingleRebate/100,
+              "businessExtendsRule.zuipinAreaRebate":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpAreaRebate1/100 : this.form.zpAreaRebate/100,
               "businessExtendsRule.agentCycleTime":this.form.dlTimeChose,
-              "businessExtendsRule.agentContractDaysInner":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dldateBefore/100 : "",
+              "businessExtendsRule.agentContractDaysInner":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dldateBefore : "",
               "businessExtendsRule.agentSingleExtendsOne":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsOne/100 : "",
               "businessExtendsRule.agentSingleExtendsTwo":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsTwo/100 : "",
               "businessExtendsRule.agentSingleExtendsThree":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlSingleExtendsThree/100 : "",
@@ -820,8 +848,8 @@ export default {
               "businessExtendsRule.agentAreaExtendsTwo":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlAreaExtendsTwo/100 : "",
               "businessExtendsRule.agentAreaExtendsThree":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dlAreaExtendsThree/100 : "",
               "businessExtendsRule.agentContractDaysAfter":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlTimeLimit.dldateAfter : "",
-              "businessExtendsRule.agentSingleRebate":this.form.dlSingleRebate/100,
-              "businessExtendsRule.agentAreaRebate":this.form.dlAreaRebate/100,
+              "businessExtendsRule.agentSingleRebate":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlSingleRebate1/100:this.form.dlSingleRebate/100,
+              "businessExtendsRule.agentAreaRebate":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlAreaRebate1/100:this.form.dlAreaRebate/100,
               "businessExtendsRule.agentPaymentDifinition":this.form.agentPaymentDifinition,
               // "noticeInfo.noticeTitle": this.contentData.title,
               

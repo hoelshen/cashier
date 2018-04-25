@@ -47,8 +47,9 @@
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="代理商等级： ">
-                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
-                            </el-date-picker>
+                            <el-select v-model="searchData.aglevel" placeholder="代理商等级" clearable>
+                                <el-option v-for="item in agencylevel" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
                         </el-form-item>
                     </el-col>
                     
@@ -145,6 +146,7 @@ export default {
                 status: 0,
                 createMonth: '',
                 name:'',
+                aglevel:""
             },
             myData: [],
             stateArray: [{
@@ -154,6 +156,23 @@ export default {
                 {
                     index: 1,
                     name: '已核销'
+                },
+            ],
+            agencylevel: [{
+                    index: 0,
+                    name: 'S级'
+                },
+                {
+                    index: 1,
+                    name: 'A级'
+                },
+                {
+                    index: 2,
+                    name: 'B级'
+                },
+                {
+                    index: 3,
+                    name: 'C级'
                 },
             ],
             //日期选择器
@@ -183,7 +202,7 @@ export default {
             self.loading = true;
             //获取列表数据
             self.$ajax({
-                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
+                url: '/api/http/annualPerformanceOrderDetail/findAnnalPerformanceDetail.jhtml',
                 method: 'post',
                 data: {
                     'pager.pageIndex': self.currentPage,
@@ -412,8 +431,8 @@ export default {
                             const {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excel')
-                            const tHeader = ['代理商编号', '代理商姓名', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                            const filterVal = ['shopNo', 'name', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
+                            const tHeader = ['代理商编号', '统计周期','代理商姓名',  '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
+                            const filterVal = ['shopNo', 'createMonth','name',  'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
                                 'cityName', 'countyName'
                             ]
                             const list = self.downData;
