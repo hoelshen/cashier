@@ -72,27 +72,27 @@
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="姓名" width:200>
+                        <el-table-column prop="name" label="姓名" width="200">
                         </el-table-column>
-                        <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
+                        <el-table-column title="shopName" prop="shopName" label="店铺名称" width="190">
                             <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="agentGradeId" label="代理商等级" width="180">
+                        <el-table-column prop="agentGradeId" label="代理商等级" width="160">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.agentGradeId==31">单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265">区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266">微店代理</span>
-                                <span v-if="!scope.row.agentGradeId">-</span>
-                                <p class="textOrange" v-if="scope.row.agentGradeId === 31">S类</p>
-                                <p class="textRed" v-if="scope.row.agentGradeId === 265">A类</p>
-                                <p class="textGreen" v-if="scope.row.agentGradeId === 266">B类</p>
-                                <p class="textPurple" v-if="scope.row.agentGradeId === 266">C类</p>   
+                                <span v-if="!scope.row.areaClass">-</span>
+                                <p class="textOrange" v-if="scope.row.areaClass ==='S' ">S类</p>
+                                <p class="textRed" v-if="scope.row.areaClass ==='A' ">A类</p>
+                                <p class="textGreen" v-if="scope.row.areaClass ==='B' ">B类</p>
+                                <p class="textPurple" v-if="scope.row.areaClass ==='C' ">C类</p>   
                             </template>
                      
                         </el-table-column>
-                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="157">
+                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
                         </el-table-column>
                         <el-table-column prop="signTime" label="注册时间" width="110">
                         </el-table-column>
@@ -106,13 +106,13 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="operator" label="剩余天数" sortable="custom" width="127">
+                        <el-table-column prop="remainDay" label="剩余天数" sortable="custom" width="100">
                         </el-table-column>
-                        <el-table-column prop="operator" label="目标完成" width="127">
+                        <el-table-column prop="goalCompletion" label="目标完成" width="100">
                         </el-table-column>
-                        <el-table-column prop="operator" label="运营人员" width="127">
+                        <el-table-column prop="operator" label="运营人员" width="100">
                         </el-table-column>
-                        <el-table-column prop="salesMan" label="业务人员" width="127">
+                        <el-table-column prop="salesMan" label="业务人员" width="100">
                         </el-table-column>
                         <el-table-column label="操作" width="240">
                             <template slot-scope="scope">
@@ -133,6 +133,11 @@
                 </div>
             </el-row>
         </div>
+
+
+
+
+
         <!-- 表格 end -->   
         <!-- 预存款变更弹窗 start -->
             <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
@@ -283,7 +288,6 @@ export default {
         });
         //获取列表数据
         self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-
             params: {
                 'pager.pageIndex': self.currentPage,
                 'pager.pageSize': self.pageSize
@@ -689,13 +693,6 @@ export default {
          
             //do something
         },
-        //打开修改店铺及店铺详情弹窗
-        openEditDialog(data, type) {
-            type == 'edit' ? this.isDisable = false : this.isDisable = true
-            this.editFormTitle = type == 'edit' ? "编辑店铺（编号：" + data.shopNo + "）" : "查看店铺（编号：" + data.shopNo + "）"
-            this.getInfoById(data.id);
-            this.editDialogVisible = true;
-        },
         // 获取选中店铺信息
         getInfoById(id) {
             const self = this;
@@ -989,14 +986,7 @@ export default {
                     'pager.pageSize': self.totalSize,
                 },
                 data: {
-                    // 'advanceDeposit.shopId': self.searchData.shopId,
-                    // 'advanceDeposit.shopName': self.searchData.shopName,
-                    // 'advanceDeposit.changeType': self.searchData.changeType,
-                    // 'advanceDeposit.alterMoney': self.searchData.alterMoney,
-                    // 'advanceDeposit.remark': self.searchData.shopNo,
-                    // 'advanceDeposit.creatorId': self.user.id,
-                    // 'advanceDeposit.updatorId': self.user.id,
-                    // 'advanceDeposit.isBackground': 1,          
+                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -1011,12 +1001,16 @@ export default {
 
             }).then(function(response) {
                 if (response.data.success === 1) {
+                    console.log(response.data.success)
+
+
+
                     let myData = response.data.result;
                     for (let i = 0; i < myData.length; i++) {
                         array.push(myData[i].id)
                     }
                     self.allId = array.join(',')
-
+                    // console.log('ok')
                     console.log(response.data)
                 } else {
                     self.$message({
@@ -1035,15 +1029,18 @@ export default {
             self.$ajax.all([self.getAllId()]).then(
                 self.$ajax.spread(function(acct) {
                     let ids = self.allId;
+                    console.log(ids)
                     self.outputExcel(ids);
+                    console.log('ok')
+                    
                 })
             );
         },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
-            console.log(id);
-            console.log(name);
-            console.log(shopNo);
+            // console.log(id);
+            // console.log(name);
+            // console.log(shopNo);
             
             let self = this;
             self.loading = true;
@@ -1077,8 +1074,7 @@ export default {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excel')
                             const tHeader = ['序号', '代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '年度进货额目标', '已完成', '进度','剩余时间','备注' ]
-                            const filterVal = ['No','shopNo', 'name', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
-                                'cityName', 'countyName'
+                            const filterVal = ['No','shopNo', 'areaClass', 'createMonth', 'orderNo', 'createTime'
                             ]
                             const list = self.downData;
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
@@ -1127,6 +1123,7 @@ export default {
                 cityCode: '',
                 countyCode: '',
                 areaCode:'',
+                areaClass:'',
             }
         },
         //重置修改表格内容
@@ -1154,6 +1151,7 @@ export default {
                 salesMan: '',
                 salesManId: '',
                 operatorId: '',
+                areaClass:'',
             }
 
         },
@@ -1164,15 +1162,6 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
-        deleteOperator(){
-            this.addForm.operator='';
-            this.editForm.operator='';
-        },
-        deleteSalesMan(){
-            this.addForm.salesMan='';
-            this.editForm.salesMan='';
-            
-        }
     }
 }
 </script>
