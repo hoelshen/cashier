@@ -55,8 +55,9 @@ export default {
                 'storeAdd': '店铺管理/店铺新增',
                 'storeEdit': '店铺管理/店铺修改',
                 'storeDetail': '店铺管理/店铺详情',
-                'rebate': '超级管理员规则管理 / 业务拓展返利',
-                'rebateDetail': '超级管理员规则管理 / 业务拓展返利',
+                'rebate': '规则管理 / 业务拓展返利',
+                'rebateDetail': '规则管理 / 业务拓展返利',
+                'annualPerformance': '达标返利核算',
             },
             user: {}
         }
