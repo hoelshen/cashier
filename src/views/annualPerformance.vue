@@ -108,7 +108,7 @@
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id, scope.row.name, scope.row.shopNo, scope.row.annualCycle)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.shopNo, scope.row.annualCycle)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -403,7 +403,7 @@ export default {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id, name, shopNo, annualCycle) {
+        outputExcel(id, shopNo, annualCycle) {
             let self = this;
             self.loading = true;
             self.$ajax({
