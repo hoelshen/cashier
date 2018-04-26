@@ -84,18 +84,18 @@
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="createMonth" label="年份" width="100">
+                        <el-table-column prop="annualCycle" label="年份" width="100">
                         </el-table-column>
-                        <el-table-column prop="verifiNum" label="店铺数">
+                        <el-table-column prop="finishShopNums" label="店铺数">
                         </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="贷款总金额" width="200">
+                        <el-table-column prop="selfPurchaseSum" label="贷款总金额" width="200">
                             <template slot-scope="scope">
-                                <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
+                                <span>{{scope.row.selfPurchaseSum.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="verifiAmount" label="返利金额" width="100">
+                        <el-table-column prop="rebateAmountSum" label="返利金额" width="100">
                             <template slot-scope="scope">
-                                <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
+                                <span>{{scope.row.rebateAmountSum.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="status" label="状态">
@@ -103,12 +103,12 @@
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号" width="100">
+                        <el-table-column prop="annualPerformanceNo" label="付款单号" width="100">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id,scope.row.name,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.shopNo, scope.row.annualCycle)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -139,12 +139,13 @@ export default {
             currentPage: 1,
             totalSize: 0,
             pageSize: 10,
+            agentGradeId:"",
+            annualCycle:"",
             searchData: {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
                 status: 0,
-                createMonth: '',
                 name:'',
                 aglevel:""
             },
@@ -193,40 +194,37 @@ export default {
         this.getFormData();
     },
     methods: {
-        // 格式化json
-        formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
-        },
         getFormData() {
             const self = this;
             self.loading = true;
             //获取列表数据
             self.$ajax({
-                url: '/api/http/annualPerformanceOrderDetail/findAnnalPerformanceDetail.jhtml',
+                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
                 method: 'post',
                 data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'verifiOrderVo.shopNo': self.searchData.shopNo,
-                    'verifiOrderVo.phone': self.searchData.phone,
-                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
-                    'verifiOrderVo.status': self.searchData.status,
-                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,
+                    'annualPerformanceOrder.shopNo': self.searchData.shopNo,
+                    'annualPerformanceOrder.phone': self.searchData.phone,
+                    'annualPerformanceOrder.status': self.searchData.status,
+                    'annualPerformanceOrder.name': self.searchData.name,
+                    'annualPerformanceOrder.agentGradeId':self.agentGradeId,
+                    'annualPerformanceOrder.annualCycle':self.annualCycle,
+                    'annualPerformanceOrder.annualPerformanceNo':self.searchData.payOrderNo
                 },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
+                // transformRequest: [function(data) {
+                //     let ret = ''
+                //     for (let it in data) {
+                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                //     }
+                //     return ret;
+                // }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
                 self.loading = false;
-                console.log(response)
+                // console.log(response)
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
@@ -247,15 +245,18 @@ export default {
             let array = []
             return self.$ajax({
                 async: false,
-                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
+                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
                 method: 'post',
                 data: {
-                    'verifiOrderVo.shopNo': self.searchData.shopNo,
-                    'verifiOrderVo.phone': self.searchData.phone,
-                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
-                    'verifiOrderVo.status': self.searchData.status,
-                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,                    
+                     'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'annualPerformanceOrder.shopNo': self.searchData.shopNo,
+                    'annualPerformanceOrder.phone': self.searchData.phone,
+                    'annualPerformanceOrder.status': self.searchData.status,
+                    'annualPerformanceOrder.name': self.searchData.name,
+                    'annualPerformanceOrder.agentGradeId':self.agentGradeId,
+                    'annualPerformanceOrder.annualCycle':self.annualCycle,
+                    'annualPerformanceOrder.annualPerformanceNo':self.searchData.payOrderNo                 
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -350,19 +351,19 @@ export default {
                     'verifiOrder.verifiOrderIds': id,
                     'verifiOrder.auditId': JSON.parse(sessionStorage.user).id,
                 },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
+                // transformRequest: [function(data) {
+                //     let ret = ''
+                //     for (let it in data) {
+                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                //     }
+                //     return ret;
+                // }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
                 self.loading = false;
-                console.log(response)
+                // console.log(response)
                 if (response.data.success === 1) {
                     self.$message({
                         message: '核销成功',
@@ -395,21 +396,21 @@ export default {
                     let ids = self.allId;
                     self.outputExcel(ids);
                 })
-        );
+            );
 
         },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
+        },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {
-            console.log(id)
-            console.log(name);
+        outputExcel(id, shopNo, annualCycle) {
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/verifiOrder/doExprotVerifiOrderDetail.jhtml',
+                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
                 method: 'post',
                 data: {
-                    'verifiOrder.verifiOrderIds': id,
-                    'verifiOrderVo.name': name,
+                    'annualPerformanceOrder.shopNo': shopNo,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -421,23 +422,26 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {
+            }).then(function(response) {debugger
                 self.loading = false;
-                console.log(response.data)
+                // console.log(response.data)
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
-                            } = require('../components/tools/Export2Excel')
-                            const tHeader = ['代理商编号', '统计周期','代理商姓名',  '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                            const filterVal = ['shopNo', 'createMonth','name',  'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
-                                'cityName', 'countyName'
+                            } = require('../components/tools/Export2Excel2')
+                            const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
+                            const filterVal = [
+                                'shopNo', 'annualCycle','name', 'agentGradeName', 'agentGradeId','cycleBeginTime', 'createTime','cycleEndTime','selfPurchaseSum', 'finishPerformanceSum/annualPerformanceAmount', 'finishPerformanceSum', 'annualPerformanceNo',
+                                
                             ]
                             const list = self.downData;
                             console.log(list)
-                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
+                            const data = self.formatJson(filterVal, list);
+                            console.log(data)
+                            export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (annualCycle ? annualCycle + '_' : '') + '年度业绩明细')
                         })
                     }else{
                         self.$message({

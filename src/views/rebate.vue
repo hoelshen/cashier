@@ -697,34 +697,38 @@ export default {
           if (valid) {
            this.save()
           } else {
-            console.log('error submit!!');
-            return false;
+             this.$message({
+                message: "保存失败！必填项未填写",
+                type: "warning"
+                });
+                return;
           }
         });
       },
         save() {
       if(this.form.zpTimeChose == 'TIME_RANGE'){
-            
-
-            if(
-                !this.form.zpTimeLimit.zpdateBefore||
-                !this.form.zpTimeLimit.zpSingleExtendsOne ||
-                !this.form.zpTimeLimit.zpSingleExtendsTwo||
-                !this.form.zpTimeLimit.zpSingleExtendsThree||
-                !this.form.zpTimeLimit.zpAreaExtendsOne||
-                !this.form.zpTimeLimit.zpAreaExtendsTwo||
-                !this.form.zpTimeLimit.zpAreaExtendsThree||
-                !this.form.zpTimeLimit.zpdateAfter||
-                !this.form.zpSingleRebate1||
-                !this.form.zpAreaRebate1
-                ){
-                    this.$message({
-                message: "保存失败！必填项未填写",
-                type: "warning"
-                });
-                return;
-                }else{
-
+            // if(
+            //     !this.form.zpTimeLimit.zpdateBefore||
+            //     !this.form.zpTimeLimit.zpSingleExtendsOne ||
+            //     !this.form.zpTimeLimit.zpSingleExtendsTwo||
+            //     !this.form.zpTimeLimit.zpSingleExtendsThree||
+            //     !this.form.zpTimeLimit.zpAreaExtendsOne||
+            //     !this.form.zpTimeLimit.zpAreaExtendsTwo||
+            //     !this.form.zpTimeLimit.zpAreaExtendsThree||
+            //     !this.form.zpTimeLimit.zpdateAfter||
+            //     !this.form.zpSingleRebate1||
+            //     !this.form.zpAreaRebate1
+            //     ){
+           
+            //         this.$message({
+            //         message: "保存失败！必填项未填写",
+            //         type: "warning"
+            //         });
+            //         return;
+                   
+                    
+            //     }else{
+                      
                                 // 小数点后最多2位
                     var reg= /^(-?\d+)(\.\d{1,2})?$/
                 if(
@@ -743,8 +747,19 @@ export default {
                         });
                         return;
                     }
-                }
+                // }
       }else{
+
+        //   if( 
+        //         !this.form.zpSingleRebate ||
+        //         !this.form.zpAreaRebate
+        //         ){
+        //             this.$message({
+        //             message: "保存失败！必填项未填写",
+        //             type: "warning"
+        //             });
+        //             return;
+        //         }
         // 小数点后最多2位
         var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
         if(
@@ -761,23 +776,28 @@ export default {
       }
       if(this.form.dlTimeChose == 'TIME_RANGE'){
         
-            if(
-                 !this.form.dlTimeLimit.dlSingleExtendsOne||
-                !this.form.dlTimeLimit.dlSingleExtendsTwo||
-                !this.form.dlTimeLimit.dlSingleExtendsThree||
-                !this.form.dlTimeLimit.dlAreaExtendsOne||
-                !this.form.dlTimeLimit.dlAreaExtendsTwo||
-                !this.form.dlTimeLimit.dlAreaExtendsThree||
-                !this.form.dlTimeLimit.dldateAfter||
-                !this.form.dlSingleRebate1 ||
-                !this.form.dlAreaRebate1
-                ){
-                    this.$message({
-                message: "保存失败！必填项未填写",
-                type: "warning"
-                });
-                return;
-                }else{
+            // if(
+            //      !this.form.dlTimeLimit.dlSingleExtendsOne||
+            //     !this.form.dlTimeLimit.dlSingleExtendsTwo||
+            //     !this.form.dlTimeLimit.dlSingleExtendsThree||
+            //     !this.form.dlTimeLimit.dlAreaExtendsOne||
+            //     !this.form.dlTimeLimit.dlAreaExtendsTwo||
+            //     !this.form.dlTimeLimit.dlAreaExtendsThree||
+            //     !this.form.dlTimeLimit.dldateAfter||
+            //     !this.form.dlSingleRebate1 ||
+            //     !this.form.dlAreaRebate1
+            //     ){
+                   
+            //         this.$message({
+            //         message: "保存失败！必填项未填写",
+            //         type: "warning"
+            //         });
+            //         return;
+                   
+                    
+            //     }else{
+
+                    
                     //         // 小数点后最多2位
                     var reg= /^(-?\d+)(\.\d{1,2})?$/
                 if(
@@ -796,8 +816,18 @@ export default {
                         });
                         return;
                     }
-                }
+                // }
       }else{
+        //   if( 
+        //         !this.form.dlSingleRebate ||
+        //         !this.form.dlAreaRebate
+        //         ){
+        //             this.$message({
+        //         message: "保存失败！必填项未填写",
+        //         type: "warning"
+        //         });
+        //         return;
+        //     }
 
               // 小数点后最多2位
             var reg= /^([0-9]\d?(\.\d{1,2})?|100)$/
@@ -811,8 +841,6 @@ export default {
                     });
                     return;
                 }
-        
-
       }
       
       this.$confirm(
@@ -911,7 +939,7 @@ export default {
                 this.form.dlTimeLimit.dldateAfter = response.data.result.agentContractDaysAfter;
                 this.form.dlSingleRebate = (response.data.result.agentSingleRebate*100).toFixed(2)+"%";
                 this.form.dlAreaRebate = (response.data.result.agentAreaRebate*100).toFixed(2)+"%";
-                 if(response.data.result.agentSingleRebate){
+                 if(response.data.result.agentSingleRebate||response.data.result.agentSingleRebate=='0'){
                         this.ifEdit=true;
                     }else{
                         this.ifEdit=false;
