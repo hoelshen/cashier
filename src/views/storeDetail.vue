@@ -101,13 +101,13 @@
                 <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
-                          <span @click='chengPre(detailForm.id,detailForm.shopName,detailForm.shopNo)'>点击查看</span>                        
+                          <el-button type="primary" @click='openEditDialog(detailForm.id,"agencyRelationsance")'>点击查看</el-button>                        
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5">
                     <el-col :span="24">
                        代理商年度业绩： 
-                        <span @click='chengPre(detailForm.id,detailForm.shopName,detailForm.shopNo)'>点击查看</span>
+                        <el-button type="primary" @click='openEditDialog(detailForm.id,"annualAgents")'>点击查看</el-button>
                     </el-col>
                 </el-row>
                 <el-row :gutter="5"> 
@@ -125,31 +125,55 @@
 
 
         <!-- 查看代理商年度业绩(编号：xxx) start -->
-            <!-- <el-dialog :title="annualPurchasePerformanceTitle"  size="tiny" >
-                   <div>
-                        <el-table-column prop="No" label="序号" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="代理商等级" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="day" label="年份" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="目标店铺" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="达成" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="目标进货额" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="达成" sortable="custom" width="127">
-                        </el-table-column>
-                        <el-table-column prop="agent" label="年度业绩" sortable="custom" width="127">
-                        </el-table-column>
-                   </div>
-                 
+            <el-dialog :title="annualAgentsTitle"  size="tiny" >
+                <div>
+                    <el-table-column prop="annualAgentsForm.No" label="序号" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="代理商等级" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.day" label="年份" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="目标店铺" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="达成" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="目标进货额" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="达成" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="annualAgentsForm.agent" label="年度业绩" sortable="custom" width="127">
+                    </el-table-column>
+                </div>
+                <div class="plPage clearfix">
+                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                    </el-pagination>
+                </div>
             </el-dialog>
-            <div class="plPage clearfix">
-                <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
-                </el-pagination>
-            </div> -->
+          
+            <!-- 查看代理商年度业绩(编号：xxx) end -->  
+            <!-- 查看代理商关系(编号：xxx) start -->
+            <el-dialog :title="agencyRelationsanceTitle"  size="tiny" >
+                <div></div>
+                <div>
+                    <el-table-column prop="agencyRelationsanceForm.No" label="序号" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="agencyRelationsanceForm.agent" label="代理商编号" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="agencyRelationsanceForm.day" label="代理商姓名" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="agencyRelationsanceForm.agent" label="代理商等级" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="agencyRelationsanceForm.agent" label="店铺注册" sortable="custom" width="127">
+                    </el-table-column>
+                    <el-table-column prop="agencyRelationsanceForm.agent" label="关系" sortable="custom" width="127">
+                    </el-table-column>
+                </div>
+                <div class="plPage clearfix">
+                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                    </el-pagination>
+                </div>
+            </el-dialog>
+        
             <!-- 查看代理商年度业绩(编号：xxx) end -->  
     </div>
     
@@ -187,17 +211,26 @@ export default {
         operatorId: "",
         salesManId: ""
       },
-      annualPurchasePerformanceTitle:'',
-      changeForm: {
-        changeShopId: "",
-        changeShopName: "",
-        changeType: "",
-        alterMoney: "",
-        remark: "",
-        salesMan: "",
-        operator: "",
-        salesManId: "",
-        operatorId: ""
+      annualAgentsTitle:'',
+      annualAgentsForm:{
+            No:'',
+            agent:'',
+            day:'',
+
+
+
+
+      },
+      agencyRelationsanceTitle:'',
+      agencyRelationsanceForm:{
+                No:'',
+                agent:'',
+                day:'',
+
+
+
+
+                
       },
       myData: [],
       levelArray: [], //代理商等级数组
@@ -419,20 +452,27 @@ export default {
       }
       return true;
     },
-    //查看代理商年度业绩
-    annualPurchasePerformance(id) {
-        if (!this.checkSession()) return;
-        this.changeForm.changeShopId = id;
-        this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-        this.dialogFormVisible = true;
+    openEditDialog(data,type){
+            type == 'annualPurchasePerformance' ? this.isDisable = false : this.isDisable = true
+            this.editFormTitle = type == 'edit' ? "查看代理商年度业绩（编号：" + data.shopNo + "）" : "查看代理商关系（编号：" + data.shopNo + "）"
+            this.getInfoById(data.id);
+            this.editDialogVisible = true;
     },
-     //查看代理商关系
-    annualPurchasePerformance(id) {
-        if (!this.checkSession()) return;
-        this.changeForm.changeShopId = id;
-        this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-        this.dialogFormVisible = true;
-    },
+
+    // //查看代理商年度业绩
+    // annualPurchasePerformance(id) {
+    //     if (!this.checkSession()) return;
+    //     this.annualPurchasePerformanceForm.annualPurchasePerformanceShopId = id;
+    //     this.annualPurchasePerformanceTitle = "编辑代理商店铺（编号：" + shopNo + "）"
+    //     this.dialogFormVisible = true;
+    // },
+    //  //查看代理商关系
+    // annualPurchasePerformance(id) {
+    //     if (!this.checkSession()) return;
+    //     this.changeForm.changeShopId = id;
+    //     this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
+    //     this.dialogFormVisible = true;
+    // },
     checkSession() {
       const self = this;
       if (window.sessionStorage) {
@@ -547,6 +587,42 @@ export default {
 </script>
 <style lang='less' scoped>
 @import url("../assets/less/storeDetail.less");
+.el-message-box {
+    width: 500px;
+}
+
+.el-message-box__btns {
+    text-align: left;
+    padding-left: 343px;
+}
+
+.forbidden-button {
+    background-color: #fe5500;
+    border-color: #fe5500;
+}
+
+.forbidden-button:hover {
+    background-color: #fe5500;
+    opacity: 0.7;
+    border-color: #fe5500;
+}
+
+.forbidden-button:active {
+    background-color: #fe5500;
+    border-color: #fe5500;
+}
+
+.el-message-box__header {
+    padding: 20px;
+    border-bottom: 1px solid #e0e0e0;
+}
+
+.el-message-box__content {
+    padding: 0px 20px 30px;
+}
+
+
+
 
 
 #detailStore {

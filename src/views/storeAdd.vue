@@ -3,7 +3,7 @@
       <!-- 新增店铺弹窗 start -->
         <el-form :model="addForm" label-width="120px" ref="addForm">
             <el-row class="content_title">
-                <h2 @click="a">基本信息</h2>
+                <h2>基本信息</h2>
                 <div class="content_closeBtn" @click="goBack">X</div>
             </el-row>
             <el-row>
@@ -69,16 +69,14 @@
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-input v-model="addForm.annualExtendPerformance" :maxlength='phoneLength' placeholder="">
+                        <el-input v-model="addForm.annualExtendPerformance"  placeholder="">
                             <template slot="prepend">店铺拓展：
                                 
                             </template>
                                 <template slot="append"> 家
                             </template>      
-              
 
                         </el-input>
-                      
                     </el-form-item>
                 </el-col>
             </el-row>         
@@ -101,13 +99,13 @@
                 </el-col>
                 <el-col :span="16" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent ref='addAgentAddress2' :isDetail="false" />   
+                        <addressComponent ref='addAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
                     </el-form-item>
                 
                 </el-col>
                 <el-col :span="4"  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                    <el-form-item :span="2" label="类别：">
-                            <el-input  v-model="addForm.areaClass" disabled></el-input>
+                    <el-form-item :span="2" label="类别：" >
+                            <el-input  v-model="addForm.areaClass" disabled style="width:50px"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -139,13 +137,16 @@
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
-                <el-col :span="4" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item :span="2" label="上级编号/姓名">
-                            <el-input v-model="addForm.extendSuperNo"></el-input>   
+                <el-col :span="8" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                    <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 826px;"></span>
+                    <el-form-item  :span="4"  label="上级编号/姓名">
+                        <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                            <span class="search_left"></span>
+                        </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4"  v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item :span="2" label="上级代理商等级:">
+                    <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="addForm.superAreaClass"></el-input>   
                     </el-form-item>
                  </el-col>
@@ -155,7 +156,7 @@
                 <el-col class="search-yy-wrap" :span="12">
                     <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
                     <el-form-item label="运营人员">
-                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -163,7 +164,7 @@
                 <el-col class="search-yw-wrap" :span="12">
                     <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
                     <el-form-item label="业务人员">
-                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -219,33 +220,7 @@ export default {
                 extendSuperType:'',
                 superAreaClass:'',
                 extendSuperNo:'',
-            },
-            editForm: {
-                id: '',
-                shopName: '',
-                name: '',
-                phone: '',
-                signedTime: '',
-                agentGradeId: '',
-                province: '',
-                city: '',
-                county: '',
-                cityCode: '',
-                countyCode: '',
-                agentProvince: '',
-                agentCity: '',
-                agentCounty: '',
-                address: '',
-                shopType: '',
-                isShow: '',
-                operator: '',
-                operator2: '',
-                operatorId: '',
-                salesMan: '',
-                salesMan2: '',                
-                salesManId: '',
-                annualPurchasePerformance:'',
-                annualExtendPerformance:'',
+                areaClass:'',
             },
             levelArray: [], //代理商等级数组
             phoneLength: 11,
@@ -254,24 +229,41 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
-            isCity:false
         }
     },
     components: {
         addressComponent
     },
-    computed:{
-        'addForm.areaClass'(){
-            console.log(this.$refs.addAgentAddress2.getData().cityName)
-           
-            console.log(this.$refs.addAgentAddress2.getData().cityName)
-            return this.isCity;
-        }
+    watch:{
+        
     },
     methods:{
-        a(){
-            this.isCity = !this.isCity
-            console.log(this.isCity)
+        //获得区域等级等级
+        getAreaName(){
+            // console.log(this.$refs.addAgentAddress.getData().cityName)
+            
+            const self = this;
+            //获取区域等级列表
+
+            let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' + self.$refs.addAgentAddress.getData().cityName
+            self.$ajax.post(url, {}).then(function (response) {
+                // console.log(response);
+                if (response.data.success == 1) {
+                    // console.log(response.data.result)
+                    // console.log(self.addForm.areaClass)
+                    self.addForm.areaClass = response.data.result
+
+                    // console.log(self.addForm.areaClass)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+            
         },
         //判断是否超时
         checkSession() {
@@ -480,9 +472,9 @@ export default {
                     'shop.isShow': data.isShow,
                     'shop.operator': data.operator,
                     'shop.salesMan': data.salesMan,
-                    'shop.salesManId': this.salesManId,
-                    'shop.operatorId': this.operatorId || '',
-                    'shop.annualPurchasePerformance':data.annualPurchasePerformance ||'',
+                    'shop.salesManId': data.salesManId,
+                    'shop.operatorId': data.operatorId || '',
+                    'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     'shop.extendSuperType':data.extendSuperType || '',
                     'shop.extendSuperNo':data.extendSuperNo || '',
@@ -546,6 +538,7 @@ export default {
                 areaCode:'',
             }
         },
+        //返回提示符
         goBack() {
             this.$confirm(`你确定要放弃添加吗？`, '提示', {
                 confirmButtonText: '确定',
@@ -556,12 +549,13 @@ export default {
                 this.$message('取消成功')
             })
         },
+        //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            if(this.editForm.operator == queryString){
-                this.editForm.operator2 = false;               
+            if(this.addForm.operator == queryString){
+                this.addForm.operator2 = false;               
             }      
-            queryString = !this.editForm.operator2 ? '' : queryString;
-            this.editForm.operator2 = true;
+            queryString = !this.addForm.operator2 ? '' : queryString;
+            this.addForm.operator2 = true;
 
 
             var list = [{}];
@@ -588,7 +582,7 @@ export default {
                     let QS = queryString.toLocaleLowerCase();
 
                     for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
+                        if (item.headPinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
                             list.push(item)
                         }
                     }
@@ -602,21 +596,15 @@ export default {
                 console.log(error);
             });
         },
+        //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
 
-            if(this.editForm.salesMan == queryString){
-
-
-            this.editForm.salesMan2 = false;
-  
+            if(this.addForm.salesMan == queryString){
+                    this.addForm.salesMan2 = false;
             }
-        
-        
-        
-            queryString = !this.editForm.salesMan2 ? '' : queryString;
-         
-          
-            this.editForm.salesMan2 = true;
+            queryString = !this.addForm.salesMan2 ? '' : queryString;
+                 
+            this.addForm.salesMan2 = true;
 
             var list = [{}];
             //调用的后台接口
@@ -627,8 +615,6 @@ export default {
                 for (let i of response.data.result) {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
                 }
-
-
                 if (!queryString) {
                     // console.log(response.data.result)
 
@@ -643,7 +629,7 @@ export default {
                     let QS = queryString.toLocaleLowerCase();
 
                     for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
+                        if (item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
                             list.push(item)
                         }
                     }
@@ -658,33 +644,84 @@ export default {
                 console.log(error);
             });
         },
+        //搜索上级代理商
+        extendSuperNoQuerySearchAsync(queryString, callback){
+
+            queryString = !this.addForm.extendSuperNo ? '' : queryString;
+    
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
+            //从后台获取到对象数组
+            axios.get(url).then((response) => {
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+
+                for (let i of response.data.result) {
+                    i.value = i.name;  //将CUSTOMER_NAME作为value
+                }
+
+                console.log(!queryString)
+
+                if (!queryString) {
+                    console.log(response.data.result)
+
+                    for (let item of response.data.result) {
+                        list.push(item)
+                    }
+                    // console.log(list)
+                    
+                    callback(list);
+
+                } else {
+
+                    let QS = queryString.toLocaleLowerCase();
+
+                    for (let item of response.data.result) {
+                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
+                            list.push(item)
+                        }
+                    }
+                    if (list.length == 1) {
+                        list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
+                    }
+                }
+
+
+                callback(list);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
         //点击选中
-        handleoperatorSelect(item) {
-            this.operatorId = item.id;
+        handleOperatorSelect(item) {
+            this.addForm.operatorId = item.id;
 
             this.addForm.operator  = item.userName;
 
-            this.addForm.operator2  = false;
             //do something
         },
-        handlesalesManSelect(item) {
-            this.salesManId = item.id;
+        handleSalesManSelect(item) {
+            this.addForm.salesManId = item.id;
 
             this.addForm.salesMan =  item.userName;
             
-            this.addForm.salesMan2  = false;
             //do something
+        },
+        handleExtendSuperNoSelect(item){
+                this.addForm.extendSuperNo = item.name;
+                this.addForm.superAreaClass = item.areaClass;
+        },
+        deleteExtendSuperNo(){
+                this.addForm.extendSuperNo = '' ;
         },
         deleteOperator(){
             this.addForm.operator='';
         },
         deleteSalesMan(){
-            this.addForm.salesMan='';
-            
+            this.addForm.salesMan='';    
         }
     },
     created(){
-        console.log(this.isCity)
         const self = this;
 
         if (!self.checkSession()) return;
@@ -743,27 +780,10 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left:284px;
+        left:1100px;
         z-index: 1000;
     }
-    .deleteOperatorName_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 31.5%;
-        z-index: 999;
-    }
-    .deleteSalesManName_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
-        position: absolute;
-        width: 2.5%;
-        height: 6%;
-        top: 78%;
-        left: 81.5%;
-        z-index: 999;
-    }
+
 }
 
 </style>

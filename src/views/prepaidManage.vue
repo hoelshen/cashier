@@ -335,15 +335,13 @@ export default {
 		//     console.log(jsonData)
             return jsonData.map(v => {
 		// 	   console.log(v)
-            return filterVal.map(j => {
-		//       console.log(j,v[j])
-		    	return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
-			// }
-			})
-		    
-						
+				return filterVal.map(j => {
+			//       console.log(j,v[j])
+					return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+				// }
+				})			
 			})	
-        },
+		},
 		//导出所选明细
 		outputExcel() {
 		if (!this.checkSession()) return;
@@ -398,7 +396,7 @@ export default {
 					'advanceDeposit.operator': this.searchData.operator,
 				},
 				success(response) {
-					// console.log(response.data.success)
+
 					if (response.data.success === 1) {
 							self.tableData = response.data.result;
 							if(self.tableData.length>0){
@@ -408,6 +406,7 @@ export default {
 											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'name', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
 											const data = this.formatJson(filterVal, list);
+											
 											// console.log(data)
 											export_json_to_excel(tHeader, data, '预存款明细');
 										})
