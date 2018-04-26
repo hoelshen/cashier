@@ -432,15 +432,16 @@ export default {
                             const {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excel2')
-                            const tHeader = ['代理商编号']
+                            const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
                             const filterVal = [
-                                'shopNo'
+                                'shopNo', 'annualCycle','name', 'agentGradeName', 'agentGradeId','cycleBeginTime', 'createTime','cycleEndTime','selfPurchaseSum', 'finishPerformanceSum/annualPerformanceAmount', 'finishPerformanceSum', 'annualPerformanceNo',
+                                
                             ]
                             const list = self.downData;
                             console.log(list)
                             const data = self.formatJson(filterVal, list);
                             console.log(data)
-                            export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + '区域订单明细')
+                            export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (annualCycle ? annualCycle + '_' : '') + '年度业绩明细')
                         })
                     }else{
                         self.$message({
