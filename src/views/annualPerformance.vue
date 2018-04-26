@@ -464,75 +464,7 @@ export default {
 
             });
         },
-        // 导出明细包
-        zip_down(id,shopNo="",annualCycle=""){
 
-             let self = this;
-            self.loading = true;
-            self.$ajax({
-                url: '/api/http/annualPerformanceOrderDetail/findAnnalPerformanceDetail.jhtml',
-                method: 'post',
-                data: {
-                    'searchAnnoalPerformanceOrderDetailVo.annualPerformanceIds': id ,
-                },
-                transformRequest: [function(data) {
-                    console.log(data);
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                },
-            }).then(function(response) {
-                self.loading = false;
-                console.log(response.data)
-                if (response.data.success === 1) {
-                    self.downData = response.data.result;
-                    if(self.downData.length>0){
-                        require.ensure([], () => {
-                             const { export_txt_to_zip } = require('../components/tools/Export2Zip')
-                            const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
-                            const filterVal = [
-                                'shopNo', 'annualCycle','name', 'agentGradeName', 'agentGradeId','cycleBeginTime', 'createTime','cycleEndTime','selfPurchaseSum', 'finishPerformanceSum/annualPerformanceAmount', 'finishPerformanceSum', 'annualPerformanceNo',
-                                
-                            ]
-                            const list = self.downData;
-                            // console.log(list)
-                            const data = self.formatJson(filterVal, list);
-                            // console.log(data)
-                            //  export_txt_to_zip(tHeader, data, '列表文本', '压缩文本')
-                             export_txt_to_zip(tHeader, data,filterVal, (shopNo ? shopNo + '_' : '') + (annualCycle ? annualCycle + '_' : '') + '年度业绩明细', '代理商年度业绩明细')
-                        })
-                    }else{
-                        self.$message({
-                            message: '订单暂无明细',
-                            type: 'error'
-                        })
-                    }
-
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
-            }).catch(function(error) {
-
-            });
-        // this.downloadLoading = true
-        // require.ensure([], () => {
-        //   const { export_txt_to_zip } = require('../components/tools/Export2Zip')
-        //   const tHeader = ['序号']
-        //   const filterVal = ['name']
-        //   const list = this.tableData
-        //   const data = this.formatJson(filterVal, list)
-        //   export_txt_to_zip(tHeader, data, '列表文本', '压缩文本')
-        //   this.downloadLoading = false
-        // })
-      },
         // 表格选择
         select(selection) {
             this.selectData = selection;
