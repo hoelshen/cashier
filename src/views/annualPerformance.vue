@@ -7,12 +7,12 @@
                 <el-row :gutter="10" class="searchbar">
                     <el-col :span="5">
                         <el-form-item label="代理商手机：">
-                            <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机"></el-input>
+                            <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机" ></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
-                        <el-form-item label="选择月份： ">
-                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
+                        <el-form-item label="选择年度： ">
+                            <el-date-picker value-format="yyyy" format="yyyy年" v-model="searchData.annualCycle" :picker-options="pickerOptions" type="year" placeholder="选择年度" >
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -47,7 +47,7 @@
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="代理商等级： ">
-                            <el-select v-model="searchData.aglevel" placeholder="代理商等级" clearable>
+                            <el-select v-model="searchData.agentGradeId" placeholder="代理商等级" clearable>
                                 <el-option v-for="item in agencylevel" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
@@ -84,7 +84,7 @@
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="annualCycle" label="年份" width="100">
+                        <el-table-column prop="annualCycle" label="年份" width="150">
                         </el-table-column>
                         <el-table-column prop="finishShopNums" label="店铺数">
                         </el-table-column>
@@ -103,7 +103,7 @@
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="annualPerformanceNo" label="付款单号" width="100">
+                        <el-table-column prop="annualPerformanceNo" label="付款单号" width="200">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
@@ -121,9 +121,9 @@
                 </div>
                 <div class="batch">
                     <span @click="confirmBatchVerification()">批量核销</span>
-                    <span @click="batchOutputExcel()">批量导出</span>
-                    <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
-                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span>
+                    <span @click="batchOutputExcel()">批量导出明细</span>
+                    <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
+                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span> -->
                 </div>
             </el-row>
         </div>
@@ -140,14 +140,15 @@ export default {
             totalSize: 0,
             pageSize: 10,
             agentGradeId:"",
-            annualCycle:"",
             searchData: {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: 0,
+                status: '',
                 name:'',
-                aglevel:""
+                aglevel:"",
+                annualCycle:'',
+                agentGradeId:""
             },
             myData: [],
             stateArray: [{
@@ -159,22 +160,22 @@ export default {
                     name: '已核销'
                 },
             ],
-            agencylevel: [{
-                    index: 0,
-                    name: 'S级'
+            agencylevel:[{
+                    index: '',
+                    name: '全部'
                 },
                 {
-                    index: 1,
-                    name: 'A级'
+                    index: 31,
+                    name: '单店代理'
                 },
                 {
-                    index: 2,
-                    name: 'B级'
+                    index: 265,
+                    name: '区域代理'
                 },
                 {
-                    index: 3,
-                    name: 'C级'
-                },
+                    index: 266,
+                    name: '区域代理'
+                }
             ],
             //日期选择器
             pickerOptions: {
@@ -204,27 +205,27 @@ export default {
                 data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'annualPerformanceOrder.shopNo': self.searchData.shopNo,
-                    'annualPerformanceOrder.phone': self.searchData.phone,
-                    'annualPerformanceOrder.status': self.searchData.status,
-                    'annualPerformanceOrder.name': self.searchData.name,
-                    'annualPerformanceOrder.agentGradeId':self.agentGradeId,
-                    'annualPerformanceOrder.annualCycle':self.annualCycle,
-                    'annualPerformanceOrder.annualPerformanceNo':self.searchData.payOrderNo
+                    'searchAnnualPerformanceOrderVo.shopNo': self.searchData.shopNo,
+                    'searchAnnualPerformanceOrderVo.phone': self.searchData.phone,
+                    'searchAnnualPerformanceOrderVo.status': self.searchData.status,
+                    'searchAnnualPerformanceOrderVo.name': self.searchData.name,
+                    'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),
+                    'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo
                 },
-                // transformRequest: [function(data) {
-                //     let ret = ''
-                //     for (let it in data) {
-                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                //     }
-                //     return ret;
-                // }],
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function(response) {
                 self.loading = false;
-                // console.log(response)
+                console.log(response)
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
@@ -341,23 +342,22 @@ export default {
             })
         },
         // 核销
-        verification(id) {
+        verification(id) {debugger
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/verifiOrder/doAuditVerifiOrder.jhtml',
+                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
                 method: 'post',
                 data: {
-                    'verifiOrder.verifiOrderIds': id,
-                    'verifiOrder.auditId': JSON.parse(sessionStorage.user).id,
+                   'searchAnnoalPerformanceOrderDetailVo.annualPerformanceIds': id ,
                 },
-                // transformRequest: [function(data) {
-                //     let ret = ''
-                //     for (let it in data) {
-                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                //     }
-                //     return ret;
-                // }],
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -386,6 +386,7 @@ export default {
         batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
+            console.log(ids)
             self.outputExcel(ids)
         },
         // 导出全部明细
@@ -403,16 +404,19 @@ export default {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id, shopNo, annualCycle) {
+        outputExcel(id,name, shopNo, createMonth) {
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
+                url: '/api/http/annualPerformanceOrderDetail/findAnnalPerformanceDetail.jhtml',
                 method: 'post',
                 data: {
-                    'annualPerformanceOrder.shopNo': shopNo,
+                    // 'annualPerformanceOrder.shopNo': shopNo || '',
+                    'searchAnnoalPerformanceOrderDetailVo.annualPerformanceIds': id ,
+                    // 'annualPerformanceOrder.annualCycle':createMonth ||'',
                 },
                 transformRequest: [function(data) {
+                    console.log(data);
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -422,26 +426,26 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {debugger
+            }).then(function(response) {
                 self.loading = false;
-                // console.log(response.data)
+                console.log(response.data)
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
-                            } = require('../components/tools/Export2Excel2')
+                            } = require('../components/tools/Export2Excelyj')
                             const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
                             const filterVal = [
-                                'shopNo', 'annualCycle','name', 'agentGradeName', 'agentGradeId','cycleBeginTime', 'createTime','cycleEndTime','selfPurchaseSum', 'finishPerformanceSum/annualPerformanceAmount', 'finishPerformanceSum', 'annualPerformanceNo',
+                                'shopNo', 'annualCycle','name', 'agentGradeName', 'relationship','signedTime', 'payTime','finishTimne','goodsAmount', 'ratio', 'getAmountShopId', 'remark',
                                 
                             ]
                             const list = self.downData;
-                            console.log(list)
-                            const data = self.formatJson(filterVal, list);
-                            console.log(data)
-                            export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (annualCycle ? annualCycle + '_' : '') + '年度业绩明细')
+                            // console.log(list)
+                            // const data = self.formatJson(filterVal, list);
+                            // console.log(data)
+                            export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
                         })
                     }else{
                         self.$message({
@@ -460,6 +464,7 @@ export default {
 
             });
         },
+
         // 表格选择
         select(selection) {
             this.selectData = selection;
