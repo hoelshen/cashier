@@ -124,7 +124,7 @@
 
 
         <!-- 查看代理商年度业绩(编号：xxx) start -->
-            <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" size="tiny" >
+            <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible"  >
                 <div>
                   <el-table :data="annualAgentsForm">
                       <el-table-column prop="annualAgentsForm.shopNo" label="序号"  width="127">
@@ -154,7 +154,7 @@
           
             <!-- 查看代理商年度业绩(编号：xxx) end -->  
             <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" size="tiny" >
+            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" >
                 <div></div>
                 <div>
                   <el-table :data="agencyRelationsanceForm">
@@ -449,7 +449,7 @@ export default {
       return true;
     },
     openEditDialog(data,type){
-         console.log(data)
+        //  console.log(data)
             type == 'annualPurchasePerformance' ? this.isDisable = false : this.isDisable = true
 
             this.editFormTitle = type == 'annualPurchasePerformance' ? "查看代理商年度业绩（编号：" + data.shopNo + "）" : "查看代理商关系（编号：" + data.shopNo + "）"
@@ -468,10 +468,16 @@ export default {
                 'shopNo': shopNo,
             }
         }).then(function (response) {
-          
+            // console.log(response)
             self.loading = false;
+            // console.log(response.data)
+            console.log(response.data.result)
+            self.agencyRelationsanceForm =  response.data.result;
+
+            // console.log(self.agencyRelationsanceForm)
+
             self.agencyRelationsanceForm.push(response.data.result);
-            console.log(self.agencyRelationsanceForm)
+            // console.log(self.agencyRelationsanceForm)
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -559,7 +565,6 @@ export default {
     },
   },
   created() {
-    console.log(this.detailForm.sjh);
     if (!this.checkSession()) return;
     this.uri = this.getUri();
     //获取id

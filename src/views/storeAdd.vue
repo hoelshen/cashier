@@ -587,11 +587,11 @@ export default {
         },
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            if(this.addForm.operator == queryString){
-                this.addForm.operator2 = false;               
-            }      
-            queryString = !this.addForm.operator2 ? '' : queryString;
-            this.addForm.operator2 = true;
+            // if(this.addForm.operator == queryString){
+            //     this.addForm.operator2 = false;               
+            // }      
+            // queryString = !this.addForm.operator2 ? '' : queryString;
+            // this.addForm.operator2 = true;
 
 
             var list = [{}];
@@ -646,6 +646,7 @@ export default {
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
             //从后台获取到对象数组
             axios.get(url).then((response) => {
+                console.log()
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
                 for (let i of response.data.result) {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
