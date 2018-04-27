@@ -150,7 +150,6 @@ const config = [{
                 component:resolve =>  require(['./views/rebateDetail.vue'], resolve),
                 
             }
-
         ]
     }
 ]

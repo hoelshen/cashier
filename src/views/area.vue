@@ -53,8 +53,10 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
-                        <el-table-column type="selection" width="50">
+                    <div class="checkAllText">
+                    </div>
+                    <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                        <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
@@ -72,9 +74,9 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="freightSum" label="订单总金额">
+                        <el-table-column prop="orderSum" label="订单总金额">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单运费">
+                        <el-table-column prop="freightSum" label="订单运费">
                         </el-table-column>
                         <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
@@ -108,6 +110,7 @@
                     </el-pagination>
                 </div>
                 <div class="batch">
+                    <span @click="isSelectAll">全选</span>
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
                     <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span> -->
@@ -124,6 +127,7 @@ import Utils from '../components/tools/Utils'
 export default {
     data() {
         return {
+            ifCheckAll:false,
             currentPage: 1,
             totalSize: 0,
             pageSize: 10,
@@ -163,6 +167,9 @@ export default {
         this.getFormData();
     },
     methods: {
+        isSelectAll(){
+            this.checkall();
+        },
         // 格式化json
         formatJson(filterVal, jsonData) {
             return jsonData.map(v => filterVal.map(j => v[j]))
@@ -200,6 +207,10 @@ export default {
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
+                    // for(let i in self.myData){
+                    //     self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
+                    // }
+  
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -213,19 +224,20 @@ export default {
         //获取全部id
         getAllId() {
             const self = this;
-            let data = '';
-            let array = []
-            return self.$ajax({
-                async: false,
+            self.loading = true;
+            //获取列表数据
+            self.$ajax({
                 url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
                 method: 'post',
                 data: {
+                    // 'pager.pageIndex': self.currentPage,
+                    // 'pager.pageSize': self.pageSize,
                     'verifiOrderVo.shopNo': self.searchData.shopNo,
                     'verifiOrderVo.phone': self.searchData.phone,
                     'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
                     'verifiOrderVo.status': self.searchData.status,
                     'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,                    
+                    'verifiOrderVo.name': self.searchData.name,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -236,22 +248,33 @@ export default {
                 }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                },
-
+                }
             }).then(function(response) {
+                self.loading = false;
+                console.log(response)
                 if (response.data.success === 1) {
-                    let myData = response.data.result;
-                    for (let i = 0; i < myData.length; i++) {
-                        array.push(myData[i].id)
+                    self.myData = response.data.result;
+                    self.totalSize = response.data.totalNums;
+                    console.log(self.ifCheckAll)
+                    if(!self.ifCheckAll){
+                        self.ifCheckAll = true;
+                        for(let i in self.myData){
+                            self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
+                        }
+                    }else{
+                        self.ifCheckAll = false;
+                        for(let i in self.myData){
+                            self.$refs.myTabel.clearSelection()
+                        }
                     }
-                    self.allId = array.join(',')
+                    // self.ifCheckAll = !self.ifCheckAll
+                    self.getFormData()
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-
             }).catch(function(error) {
 
             });
@@ -310,7 +333,7 @@ export default {
             })
         },
         // 核销
-        verification(id) {debugger
+        verification(id) {
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -368,7 +391,8 @@ export default {
              );
         },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {debugger
+        outputExcel(id, name, shopNo, createMonth) {
+        console.log(id)
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -422,11 +446,23 @@ export default {
 
             });
         },
+        checkall(selection){
+            this.getAllId();
+            // this.selectData = selection;
+        },
         // 表格选择
         select(selection) {
+            // this.getAllId();
+            
             this.selectData = selection;
+            
+            // console.log(this.selectData)
         },
         formatSelect() {
+            // var self = this;
+            // if(!this.ifCheckAll){
+            //      self.selectData =[]
+            // }
             let selectData = this.selectData;
             let array = []
             for (let i = 0; i < selectData.length; i++) {
@@ -441,5 +477,14 @@ export default {
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
+}
+.checkAllText{
+    position: absolute;
+    z-index: 2;
+    top: 21px;
+    left: 29px;
+    width: 40px;
+    height: 20px;
+    background-color: #eef1f6;
 }
 </style>
