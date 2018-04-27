@@ -72,6 +72,10 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
+                        <el-table-column prop="freightSum" label="订单总金额">
+                        </el-table-column>
+                        <el-table-column prop="orderSum" label="订单运费">
+                        </el-table-column>
                         <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
                                 <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
@@ -106,8 +110,8 @@
                 <div class="batch">
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
-                    <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
-                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span>
+                    <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span> -->
+                    <!-- <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span> -->
                 </div>
             </el-row>
         </div>
@@ -306,7 +310,7 @@ export default {
             })
         },
         // 核销
-        verification(id) {
+        verification(id) {debugger
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -364,7 +368,7 @@ export default {
              );
         },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {
+        outputExcel(id, name, shopNo, createMonth) {debugger
             let self = this;
             self.loading = true;
             self.$ajax({
