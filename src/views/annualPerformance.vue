@@ -430,6 +430,7 @@ export default {
                 self.loading = false;
                 console.log(response.data)
                 if (response.data.success === 1) {
+                    console.log(self.downData)
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
