@@ -403,7 +403,7 @@ export default {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id, shopNo, annualCycle) {
+        outputExcel( shopNo, annualCycle) {
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -411,8 +411,10 @@ export default {
                 method: 'post',
                 data: {
                     'annualPerformanceOrder.shopNo': shopNo,
+                     'annualPerformanceOrder.annualCycle': annualCycle || "",
                 },
                 transformRequest: [function(data) {
+                    // console.log(data)
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -426,6 +428,7 @@ export default {
                 self.loading = false;
                 // console.log(response.data)
                 if (response.data.success === 1) {
+                    console.log(self.downData)
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
@@ -438,9 +441,9 @@ export default {
                                 
                             ]
                             const list = self.downData;
-                            console.log(list)
+                            // console.log(list)
                             const data = self.formatJson(filterVal, list);
-                            console.log(data)
+                            // console.log(data)
                             export_json_to_excel(tHeader, data, (shopNo ? shopNo + '_' : '') + (annualCycle ? annualCycle + '_' : '') + '年度业绩明细')
                         })
                     }else{

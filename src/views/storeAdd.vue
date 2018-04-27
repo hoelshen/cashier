@@ -62,7 +62,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="年度业绩目标：">
+                    <el-form-item v-show="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-model="addForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
                     </el-form-item>
                   
@@ -84,7 +84,7 @@
                 <!--第四行-->
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable>
+                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"  clearable>
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                         </el-select>
                     </el-form-item>
@@ -92,20 +92,19 @@
             </el-row>
             <el-row>
                 <!--第五行-->
-                <el-col :span="16" v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="16" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
                         <addressComponent ref='addAgentAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
-                <el-col :span="16" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="16" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent ref='addAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
                     </el-form-item>
-                
                 </el-col>
                 <el-col :span="4"  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-input  v-model="addForm.areaClass" disabled style="width:50px"></el-input>
+                            <el-input  v-model="addForm.areaClass"  style="width:50px"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -217,7 +216,7 @@ export default {
                 operatorId: '',
                 annualPurchasePerformance:'',
                 annualExtendPerformance:'',
-                extendSuperType:'',
+                extendSuperType:'ZUIPIN',
                 superAreaClass:'',
                 extendSuperNo:'',
                 areaClass:'',
@@ -408,16 +407,26 @@ export default {
 
                     return false
                 }
-                //业务人员判断
-                if(!data.salesMan){
-                    // console.log(data.salesMan)
-                    self.loading = false;
-                    self.$message({
-                        message:'业务人员为必填项',
-                        type:'error'
-                    })
-                    return false;
-                }
+            
+            }
+            //业务人员判断
+            if(!data.salesMan){
+                // console.log(data.salesMan)
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
+            //年度业绩为必填项
+            if(!data.annualPurchasePerformance){
+                self.loading = false;
+                self.$message({
+                    message:'年度业绩为必填项',
+                    type:'error'
+                })
+                return false;
             }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
@@ -449,13 +458,8 @@ export default {
             self.loading = true;
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
-            let addAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
-            if (!this.testData(data, addAddress, addAgentAddress)) return;
-            //请求
-            self.$ajax({
-                url: '/api/shop/shopManage/modify.jhtml',
-                method: 'post',
-                data: {
+            let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
+            let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
                     'shop.phone': data.phone,
@@ -464,9 +468,9 @@ export default {
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
+                    'shop.agentProvince':  data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty':  data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -476,10 +480,22 @@ export default {
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
-                    'shop.extendSuperType':data.extendSuperType || '',
+                    
                     'shop.extendSuperNo':data.extendSuperNo || '',
                     'shop.areaClass':data.areaClass || '',
-                },
+                }
+                let data2 = {
+                    'shop.extendSuperType':data.extendSuperType || '',
+                }
+                if(data.agentGradeId != '265'){
+                    Object.assign(data1,data2)
+                }
+            if (!this.testData(data, addAddress, addAgentAddress)) return;
+            //请求
+            self.$ajax({
+                url: '/api/shop/shopManage/modify.jhtml',
+                method: 'post',
+                data: data1,
                 transformRequest: [function (data) {
                     let ret = ''
                     for (let it in data) {
@@ -498,7 +514,7 @@ export default {
                         message: response.data.msg,
                         type: 'error'
                     })
-                } else {
+                } else if(response.data.success == 0){
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
@@ -506,6 +522,13 @@ export default {
                     setTimeout(function () {
                         self.$router.go(-1)
                     }, 1000)
+                }else{
+                    self.loading = false;
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                    return false
                 }
             }).catch(function (err) {
                 self.loading = false;
@@ -708,7 +731,7 @@ export default {
             //do something
         },
         handleExtendSuperNoSelect(item){
-                this.addForm.extendSuperNo = item.name;
+                this.addForm.extendSuperNo = item.shopNo;
                 this.addForm.superAreaClass = item.areaClass;
         },
         deleteExtendSuperNo(){

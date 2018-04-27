@@ -252,8 +252,7 @@ export default {
                 }
             }).catch(function (err) {
                 console.log(err);
-            });
-            
+            });          
         },
         //提交字段校验
         testData(data, Address, AgentAddress) {
@@ -379,16 +378,26 @@ export default {
 
                     return false
                 }
-                //业务人员判断
-                if(!data.salesMan){
-                    // console.log(data.salesMan)
-                    self.loading = false;
-                    self.$message({
-                        message:'业务人员为必填项',
-                        type:'error'
-                    })
-                    return false;
-                }
+          
+            }
+            //业务人员判断
+            if(!data.salesMan){
+                // console.log(data.salesMan)
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
+            //年度业绩为必填项
+            if(!data.annualPurchasePerformance){
+                self.loading = false;
+                self.$message({
+                    message:'年度业绩为必填项',
+                    type:'error'
+                })
+                return false;
             }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
@@ -682,20 +691,16 @@ export default {
         //点击选中
         handleOperatorSelect(item) {
             this.editForm.operatorId = item.id;
-
             this.editForm.operator  = item.userName;        
-
             //do something
         },
         handleSalesManSelect(item) {
             this.editForm.salesManId = item.id;
-
             this.editForm.salesMan =  item.userName;
-        
             //do something
         },
         handleExtendSuperNoSelect(item){
-            this.editForm.extendSuperNo = item.name;
+            this.editForm.extendSuperNo = item.shopNo;
             this.editForm.superAreaClass = item.areaClass;
         },
         deleteOperator(){

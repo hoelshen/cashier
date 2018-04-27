@@ -106,7 +106,7 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remainDay" label="剩余天数" sortable="custom" width="100">
+                        <el-table-column prop="remainDay" label="剩余天数" width="100">
                         </el-table-column>
                         <el-table-column prop="goalCompletion" label="目标完成" width="100">
                         </el-table-column>
@@ -222,7 +222,6 @@ export default {
 				Level: [],			//代理商等级替代
 				searchName:'',        //代理商姓名
                 operator:"" ,       //运营人员
-                
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -784,166 +783,6 @@ export default {
 
             });
         },
-        //提交字段校验
-        testData(data, Address, AgentAddress) {
-            const self = this;
-            let isMobile = /^1\d{10}$/
-            //店铺名判断
-            if (!data.shopName) {
-                self.loading = false;
-                self.$message({
-                    message: '店铺名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (data.shopName.length > 50) {
-                    self.loading = false;
-                    self.$message({
-                        message: '店铺名长度不得大于50',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //代理商姓名判断
-            if (!data.name) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商姓名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (data.name.length > 10) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商姓名长度不得大于10',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //代理商手机判断
-            if (!data.phone) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商手机不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (!isMobile.test(data.phone)) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商手机格式有误',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //合同签约日期判断
-            if (!data.signedTime) {
-                self.loading = false;
-                self.$message({
-                    message: '合同签约日期不得为空',
-                    type: 'error'
-                })
-                return false
-            }
-            // 如果是直营直接转成区域代理
-            if (data.shopType == 'SELF_SUPPORT') {
-                data.agentGradeId = 265;
-            }
-            //代理商等级判断
-            if (!data.agentGradeId) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商等级不得为空',
-                    type: 'error'
-                })
-                return false
-            }
-            //收件地址判断
-            if (!Address.provinceCode || !Address.cityCode || !Address.areaCode) {
-                self.loading = false;
-                self.$message({
-                    message: '收件地址不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (Address.cityCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件城市',
-                        type: 'error'
-                    })
-                    return false
-                }
-                if (Address.areaCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件地区',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //详细地址判断
-            if (!data.address) {
-                self.loading = false;
-                self.$message({
-                    message: '详细地址不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (data.address.length > 100) {
-                    self.loading = false;
-                    self.$message({
-                        message: '详细地址长度不得大于100个字符',
-                        type: 'error'
-                    })
-
-                    return false
-                }
-                //业务人员判断
-                if(!data.salesMan){
-                    // console.log(data.salesMan)
-                    self.loading = false;
-                    self.$message({
-                        message:'业务人员为必填项',
-                        type:'error'
-                    })
-                    return false;
-                }
-            }
-            //代理区域判断
-            if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
-                if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理区域不得为空',
-                        type: 'error'
-                    })
-                    return false
-                } else {
-                    if (AgentAddress.cityCode == 1) {
-                        self.loading = false;
-                        self.$message({
-                            message: '请选择具体代理城市',
-                            type: 'error'
-                        })
-                        return false
-                    }
-                }
-
-            }
-            return true
-        },
-        //获取全部id
-    
         // 导出全部明细
         allOutputExcel() {
           this.outputExcel();
@@ -984,7 +823,7 @@ export default {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-		outputExcel() {
+		outputExcel(areaClass) {
             if (!this.checkSession()) return;
                 var temp = new Date(this.searchData.searchTime[0]);
                 if (temp.getFullYear() > 2006) {
@@ -1027,23 +866,19 @@ export default {
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
                         'pager.pageSize': 999999,
+                        
                     },
                     success(response) {                     
                         if (response.data.code === 1) {
-
                                 self.tableData = response.data.rows;
-						        console.log( self.tableData )
-                                
                                 if(self.tableData.length>0){
                                             require.ensure([], () => {
                                                 const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
-                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '进度', '年度进货业绩目标', '已完成', '进度','剩余时间','备注' ]
-                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass']
+                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '进度', '年度进货业绩目标', '已完成', '进度','剩余时间','备注', ]
+                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'remainDay', 'areaClass',]
                                                 const list = self.tableData;
                                                 const data = this.formatJson(filterVal, list);
-                                                debugger
-                                                // console.log(data)
-                                                export_json_to_excel(tHeader, data, '代理商年度目标完成进度');
+                                                export_json_to_excel(tHeader, data, '代理商' + (areaClass ? areaClass + '' : '') +'年度目标完成进度');
                                             })
                                 }else{
                                     self.$message({
@@ -1073,66 +908,6 @@ export default {
                     }
                 });
 		},
-
-        // outputExcel(id, name, shopNo, createMonth) {
-        //     // console.log(id);
-        //     // console.log(name);
-        //     // console.log(shopNo);
-            
-        //     let self = this;
-        //     self.loading = true;
-        //     self.$ajax({
-        //         url: '/api/shop/ShopManage/search.jhtml?pager.pageIndex=1',
-        //         method: 'post',
-        //         params:{
-        //             'pager.pageSize': self.totalSize,
-        //         },
-        //         data: {
-        //             'verifiOrder.verifiOrderIds': id,
-        //         },
-        //         transformRequest: [function(data) {
-        //             let ret = ''
-        //             for (let it in data) {
-        //                 ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-        //             }
-        //             return ret;
-        //         }],
-        //         headers: {
-        //             'Content-Type': 'application/x-www-form-urlencoded'
-        //         },
-        //     }).then(function(response) {
-        //         self.loading = false;
-        //         // console.log(response.data)
-        //         if (response.data.success === 1) {
-        //             self.downData = response.data.result;
-        //             if(self.downData.length>0){
-        //                 require.ensure([], () => {
-        //                     const {
-        //                         export_json_to_excel
-        //                     } = require('../components/tools/Export2Excel')
-        //                     const tHeader = ['序号', '代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '年度进货额目标', '已完成', '进度','剩余时间','备注' ]
-        //                     const filterVal = ['No','shopNo', 'areaClass', 'createMonth', 'orderNo', 'createTime'
-        //                     ]
-        //                     const list = self.downData;
-        //                     export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
-        //                 })
-        //             }else{
-        //                 self.$message({
-        //                     message: '订单暂无明细',
-        //                     type: 'error'
-        //                 })
-        //             }
-
-        //         } else {
-        //             self.$message({
-        //                 message: response.data.msg,
-        //                 type: 'error'
-        //             })
-        //         }
-        //     }).catch(function(error) {
-
-        //     });
-        
         //重置新增表格内容
         resetAddForm() {
             const self = this;
