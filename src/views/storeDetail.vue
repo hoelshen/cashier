@@ -126,22 +126,25 @@
         <!-- 查看代理商年度业绩(编号：xxx) start -->
             <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" size="tiny" >
                 <div>
-                    <el-table-column prop="annualAgentsForm.shopNo" label="序号"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="代理商等级" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="年份" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="目标店铺" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="目标进货额" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="年度业绩" width="127">
-                    </el-table-column>
+                  <el-table :data="annualAgentsForm">
+                      <el-table-column prop="annualAgentsForm.shopNo" label="序号"  width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="代理商等级" width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="年份" width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="目标店铺" width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="目标进货额" width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
+                      </el-table-column>
+                      <el-table-column prop="annualAgentsForm.startTime" label="年度业绩" width="127">
+                      </el-table-column>
+                  </el-table>
+            
                 </div>
                 <div class="plPage clearfix">
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
@@ -154,18 +157,20 @@
             <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" size="tiny" >
                 <div></div>
                 <div>
-                    <el-table-column prop="agencyRelationsanceForm.shopNo" label="序号"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="代理商编号" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.startTime" label="代理商姓名" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="代理商等级" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="店铺注册" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="关系" width="127">
-                    </el-table-column>
+                  <el-table :data="agencyRelationsanceForm">
+                      <el-table-column prop="agentNo" label="序号"  width="127">
+                      </el-table-column>
+                      <el-table-column prop="agentNo" label="代理商编号" width="127">
+                      </el-table-column>
+                      <el-table-column prop="aengtName" label="代理商姓名" width="127">
+                      </el-table-column>
+                      <el-table-column prop="agentGradeId" label="代理商等级" width="127">
+                      </el-table-column>
+                      <el-table-column prop="registTime" label="店铺注册" width="127">
+                      </el-table-column>
+                      <el-table-column prop="relationType" label="关系" width="127">
+                      </el-table-column>
+                  </el-table>
                 </div>
                 <div class="plPage clearfix">
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
@@ -177,7 +182,7 @@
                 </div>
             </el-dialog>
         
-            <!-- 查看代理商年度业绩(编号：xxx) end -->  
+             <!-- 查看代理商年度业绩(编号：xxx) end   -->
     </div>
     
 </template>
@@ -215,26 +220,9 @@ export default {
         salesManId: ""
       },
       annualAgentsTitle:'',
-      annualAgentsForm:{
-            shopNo:'',
-            agentGradeId:'',
-            startTime:'',
-
-
-
-
-      },
+      annualAgentsForm:'',
       agencyRelationsanceTitle:'',
-      agencyRelationsanceForm:{
-                shopNo:'',
-                agentGradeId:'',
-                startTime:'',
-
-
-
-
-                
-      },
+      agencyRelationsanceForm:[],
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -464,26 +452,26 @@ export default {
          console.log(data)
             type == 'annualPurchasePerformance' ? this.isDisable = false : this.isDisable = true
 
-            console.log(type)
             this.editFormTitle = type == 'annualPurchasePerformance' ? "查看代理商年度业绩（编号：" + data.shopNo + "）" : "查看代理商关系（编号：" + data.shopNo + "）"
             
-            this.getInfoById(data.id);
+            this.getInfoById(data.shopNo);
 
             this.agencyRelationsanceDialogVisible = true;
     },
     // 获取选中店铺信息
-    getInfoById(id) {
+    getInfoById(shopNo) {
         const self = this;
         if (!self.checkSession()) return;
         self.loading = true;
-        self.$ajax.get('/api/http/shop/searchShop.jhtml', {
+        self.$ajax.get('/api/shop/shopManage/getAgentRelationList.jhtml', {
             params: {
-                'shopId': id,
+                'shopNo': shopNo,
             }
         }).then(function (response) {
-          console.log(response.data.result)
+          
             self.loading = false;
-            self.agencyRelationsanceForm = response.data.result;
+            self.agencyRelationsanceForm.push(response.data.result);
+            console.log(self.agencyRelationsanceForm)
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
