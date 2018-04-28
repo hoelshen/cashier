@@ -298,8 +298,9 @@ export default {
             }
         }).then(function (response) {
             self.loading = false;
+            // console.log(response.data)
             self.myData = response.data.rows;
-            console.log(self.myData)
+            // console.log(self.myData)
             
             self.totalSize = response.data.total
         }).catch(function (err) {

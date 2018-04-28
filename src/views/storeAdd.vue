@@ -465,8 +465,8 @@ export default {
             // console.log(addBelongAddress)
             // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
-
-            console.log(addAgentAddress)
+            if (!this.testData(data, addAddress, addAgentAddress)) return;
+            // console.log(addAgentAddress)
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
@@ -503,7 +503,7 @@ export default {
                 if(data.agentGradeId != '265'){
                     Object.assign(data1,data2)
                 }
-            if (!this.testData(data, addAddress, addAgentAddress)) return;
+          
             //请求
             self.$ajax({
                 url: '/api/shop/shopManage/modify.jhtml',
@@ -527,6 +527,9 @@ export default {
                         message: response.data.msg,
                         type: 'success'
                     })
+                     setTimeout(function () {
+                        self.$router.go(-1)
+                    }, 1000)
                 } else if(response.data.success == 0){
                     self.$message({
                         message: response.data.msg,
