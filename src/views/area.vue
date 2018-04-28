@@ -131,7 +131,7 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 10,
+            pageSize: 30,
             searchData: {
                 shopNo: '',
                 phone: '',
@@ -253,7 +253,7 @@ export default {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
                     // 数据全选与否
-                    if(!self.ifCheckAll){
+                    if(!self.ifCheckAll){debugger
                         self.ifCheckAll = true;
                         for(let i in self.myData){
                             self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
@@ -278,7 +278,8 @@ export default {
         },
         onSubmit() {
             let self = this;
-            self.getFormData();
+            this.ifCheckAll = true;
+            self.getAllId();
         },
         handleCurrentChange(val) {
             let self = this;
