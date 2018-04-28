@@ -53,8 +53,10 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
-                        <el-table-column type="selection" width="50">
+                    <div class="checkAllText">
+                    </div>
+                    <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                        <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
@@ -72,9 +74,9 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="freightSum" label="订单总金额">
+                        <el-table-column prop="orderSum" label="订单总金额">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单运费">
+                        <el-table-column prop="freightSum" label="订单运费">
                         </el-table-column>
                         <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
@@ -108,6 +110,8 @@
                     </el-pagination>
                 </div>
                 <div class="batch">
+                    <span><span v-if="!ifCheckAll" @click="isSelectAll">全选</span><span v-if="ifCheckAll"  @click="isSelectAll">取消</span></span>
+                    <span>选中({{selectData.length}}条)</span>
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
                     <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span> -->
@@ -124,6 +128,7 @@ import Utils from '../components/tools/Utils'
 export default {
     data() {
         return {
+            ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
             pageSize: 10,
@@ -163,6 +168,9 @@ export default {
         this.getFormData();
     },
     methods: {
+        isSelectAll(){
+            this.checkall();
+        },
         // 格式化json
         formatJson(filterVal, jsonData) {
             return jsonData.map(v => filterVal.map(j => v[j]))
@@ -210,22 +218,23 @@ export default {
 
             });
         },
-        //获取全部id
+        //获取全部数据选中
         getAllId() {
             const self = this;
-            let data = '';
-            let array = []
-            return self.$ajax({
-                async: false,
+            self.loading = true;
+            //获取列表数据
+            self.$ajax({
                 url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
                 method: 'post',
                 data: {
+                    // 'pager.pageIndex': self.currentPage,
+                    // 'pager.pageSize': self.pageSize,
                     'verifiOrderVo.shopNo': self.searchData.shopNo,
                     'verifiOrderVo.phone': self.searchData.phone,
                     'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
                     'verifiOrderVo.status': self.searchData.status,
                     'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,                    
+                    'verifiOrderVo.name': self.searchData.name,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -236,22 +245,33 @@ export default {
                 }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                },
-
+                }
             }).then(function(response) {
+                self.loading = false;
+                console.log(response)
                 if (response.data.success === 1) {
-                    let myData = response.data.result;
-                    for (let i = 0; i < myData.length; i++) {
-                        array.push(myData[i].id)
+                    self.myData = response.data.result;
+                    self.totalSize = response.data.totalNums;
+                    // 数据全选与否
+                    if(!self.ifCheckAll){
+                        self.ifCheckAll = true;
+                        for(let i in self.myData){
+                            self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
+                        }
+                    }else{
+                        self.ifCheckAll = false;
+                        for(let i in self.myData){
+                            self.$refs.myTabel.clearSelection()
+                        }
                     }
-                    self.allId = array.join(',')
+                    // 再次调用分页
+                    self.handleCurrentChange(1)
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-
             }).catch(function(error) {
 
             });
@@ -294,23 +314,23 @@ export default {
             })
         },
         // 确认全部核销
-        confirmAllVerification() {
-            let self = this;
-            self.$confirm('确认核销本次查询的所有记录？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                self.$ajax.all([self.getAllId()]).then(
-                    self.$ajax.spread(function(acct) {
-                        let ids = self.allId;
-                        self.verification(ids);
-                    })
-                );
-            })
-        },
+        // confirmAllVerification() {
+        //     let self = this;
+        //     self.$confirm('确认核销本次查询的所有记录？', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //     }).then(() => {
+        //         self.$ajax.all([self.getAllId()]).then(
+        //             self.$ajax.spread(function(acct) {
+        //                 let ids = self.allId;
+        //                 self.verification(ids);
+        //             })
+        //         );
+        //     })
+        // },
         // 核销
-        verification(id) {debugger
+        verification(id) {
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -358,17 +378,18 @@ export default {
             self.outputExcel(ids)
         },
         // 导出全部明细
-        allOutputExcel() {
-            let self = this;
-            self.$ajax.all([self.getAllId()]).then(
-                self.$ajax.spread(function(acct) {
-                    let ids = self.allId;
-                    self.outputExcel(ids);
-                })
-             );
-        },
+        // allOutputExcel() {
+        //     let self = this;
+        //     self.$ajax.all([self.getAllId()]).then(
+        //         self.$ajax.spread(function(acct) {
+        //             let ids = self.allId;
+        //             self.outputExcel(ids);
+        //         })
+        //      );
+        // },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {debugger
+        outputExcel(id, name, shopNo, createMonth) {
+        console.log(id)
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -422,7 +443,11 @@ export default {
 
             });
         },
-        // 表格选择
+        // 全部选中
+        checkall(selection){
+            this.getAllId();
+        },
+        // 表格选择 表格某行选中
         select(selection) {
             this.selectData = selection;
         },
@@ -441,5 +466,14 @@ export default {
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
+}
+.checkAllText{
+    position: absolute;
+    z-index: 2;
+    top: 21px;
+    left: 29px;
+    width: 40px;
+    height: 20px;
+    background-color: #eef1f6;
 }
 </style>
