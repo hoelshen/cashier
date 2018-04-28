@@ -151,7 +151,7 @@ function formatJson(filterVal, jsonData) {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 区域订单导出自定义
-export function export_json_to_excel(th, jsonData, filterVal,classification, defaultTitle) {
+export function export_json_to_excel(th, jsonData, filterVal,classification, defaultTitle) {debugger
 
     /* original data */
 
@@ -160,8 +160,7 @@ export function export_json_to_excel(th, jsonData, filterVal,classification, def
     for (var i = 0; i < list.length; i++) {debugger
         var data = formatJson(filterVal, list[i].annualPerformanceOrderDetailVoList)
         data.unshift(th);
-        var ws_name = list[i].annualPerformanceOrderDetailVoList[0].shopNo + "_" + list[i].annualPerformanceOrderDetailVoList[0].id + "_"+ "年度业绩明细";
-        // var ws_name = list[i].annualPerformanceOrderDetailVoList[0].shopNo + "_" + list[i].annualPerformanceOrderDetailVoList[0].year + "_" + "年度业绩明细";
+        var ws_name = list[i].annualPerformanceOrderDetailVoList[0].shopNo + "_" + list[i].annualPerformanceOrderDetailVoList[0].createMonth + "_" + "年度业绩明细";
         var ws = sheet_from_array_of_arrays(data);
 
         /* add worksheet to workbook */
@@ -174,7 +173,7 @@ export function export_json_to_excel(th, jsonData, filterVal,classification, def
         bookSST: false,
         type: 'binary'
     });
-    var title = defaultTitle || '代理商年度业绩明细'
+    var title = defaultTitle || '列表'
     saveAs(new Blob([s2ab(wbout)], {
         type: "application/octet-stream"
     }), title + ".xlsx")
