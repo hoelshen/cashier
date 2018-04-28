@@ -107,11 +107,13 @@
                         </el-table-column>
                         <el-table-column prop="annualPerformanceNo" label="付款单号" width="200">
                         </el-table-column>
+                        <el-table-column prop="auditId" label="付款单号" width="200">
+                        </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
                                         <span @click="outputExcel(scope.row.id,scope.row.shopNo, scope.row.annualCycle)">导出明细</span>
-                                        <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
+                                        <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id,1,loginId)">核销</span>
                                     </p>
                                 </template>
                         </el-table-column>
@@ -124,7 +126,7 @@
                 <div class="batch">
                     <span><span v-if="!ifCheckAll" @click="isSelectAll">全选</span><span v-if="ifCheckAll"  @click="isSelectAll">取消</span></span>
                     <span>选中({{selectData.length}}条)</span>
-                    <span @click="confirmBatchVerification()">批量核销</span>
+                    <span @click="confirmBatchVerification(1,1,loginId)">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出明细</span>
                     <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
                     <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span> -->
@@ -140,10 +142,11 @@ import Utils from '../components/tools/Utils'
 export default {
     data() {
         return {
+            loginId:"",
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 10,
+            pageSize: 30,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
@@ -197,9 +200,34 @@ export default {
         }
     },
     created() {
+        if (!this.checkSession()) return;
+        if (sessionStorage.user) {
+            var user = JSON.parse(sessionStorage.getItem('user'));
+            this.loginId = user.id;
+        }
         this.getFormData();
     },
     methods: {
+        //判断是否超时
+        checkSession() {
+            const self = this;
+            if (window.sessionStorage) {
+                let nowDate = new Date().getTime();
+                let time = (nowDate - sessionStorage.haha) / 1000
+                //超过30秒没操作，重新登录
+                if (time > 1800) {
+                    self.$router.push('/login');
+                    self.$message({
+                        message: '登录超时，请重新登录',
+                    })
+                    return false;
+                } else {
+                    sessionStorage.haha = nowDate;
+                    return true;
+                }
+            }
+        },
+        //点击全选调用全选方法
          isSelectAll(){
             this.checkall();
         },
@@ -256,8 +284,8 @@ export default {
                 url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
                 method: 'post',
                 data: {
-                    'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
+                    // 'pager.pageIndex': self.currentPage,
+                    // 'pager.pageSize': self.pageSize,
                     'searchAnnualPerformanceOrderVo.shopNo': self.searchData.shopNo,
                     'searchAnnualPerformanceOrderVo.phone': self.searchData.phone,
                     'searchAnnualPerformanceOrderVo.status': self.searchData.status,
@@ -321,18 +349,18 @@ export default {
             self.getFormData();
         },
         // 确认核销
-        confirmVerification(id) {
+        confirmVerification(id,status,person) {
             let self = this;
             self.$confirm('确认核销本条记录？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                self.verification(id)
+                self.verification(id,status,person)
             })
         },
         // 确认批量核销
-        confirmBatchVerification() {
+        confirmBatchVerification(id,status,person) {
             let self = this;
             self.$confirm('确认核销选中的记录？', '提示', {
                 confirmButtonText: '确定',
@@ -340,7 +368,7 @@ export default {
                 type: 'warning'
             }).then(() => {
                 let ids = self.formatSelect()
-                self.verification(ids)
+                self.verification(ids,status,person)
             })
         },
         // 确认全部核销
@@ -360,14 +388,16 @@ export default {
             })
         },
         // 核销
-        verification(id) {debugger
+        verification(id,status,person) {debugger
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/annualPerformanceOrderDetail/doExportAnnualPerformanceOrderDetail.jhtml',
+                url: '/api/http/annualPerformanceOrder/doAuditAnnualPerformanceOrder.jhtml',
                 method: 'post',
                 data: {
-                   'searchAnnoalPerformanceOrderDetailVo.annualPerformanceIds': id ,
+                   'annualPerformanceOrder.annualPerformanceOrderIds': id ,
+                   'annualPerformanceOrder.status': status ,
+                   'annualPerformanceOrder.auditId': person ,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -448,7 +478,7 @@ export default {
                 self.loading = false;
                 console.log(response.data)
                 if (response.data.success === 1) {
-                    console.log(self.downData)
+                    // console.log(self.downData)
                     self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
