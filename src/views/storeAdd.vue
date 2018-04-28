@@ -94,7 +94,7 @@
                 <!--第五行-->
                 <el-col :span="16" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
-                        <addressComponent ref='addAgentAddress' :isDetail="false" />   
+                        <addressComponent ref='addBelongAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
                 <el-col :span="16" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
@@ -131,7 +131,7 @@
             </el-row>
             <el-row>
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级：">
+                    <el-form-item label="括展上级："> 
                             <el-radio v-model="addForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
                     </el-form-item>
@@ -220,6 +220,9 @@ export default {
                 superAreaClass:'',
                 extendSuperNo:'',
                 areaClass:'',
+                belongProvince:'',
+                belongCity:'',
+                belongCountry:'',
             },
             levelArray: [], //代理商等级数组
             phoneLength: 11,
@@ -458,7 +461,12 @@ export default {
             self.loading = true;
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
-            let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
+            let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.addBelongAddress.getData() : null;
+            // console.log(addBelongAddress)
+            // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
+            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
+
+            console.log(addAgentAddress)
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
@@ -468,9 +476,9 @@ export default {
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
-                    'shop.agentProvince':  data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
-                    'shop.agentCounty':  data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
+                    'shop.agentProvince':  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty':  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? addAgentAddress.areaCode : '',
                     'shop.address': data.address,
                     'shop.shopType': data.shopType,
                     'shop.isShow': data.isShow,
@@ -483,6 +491,11 @@ export default {
                     
                     'shop.extendSuperNo':data.extendSuperNo || '',
                     'shop.areaClass':data.areaClass || '',
+
+                    'shop.belongProvince':addBelongAddress  ? addBelongAddress.provinceCode : "",
+                    'shop.belongCity':addBelongAddress  ? addBelongAddress.cityCode : "",
+                    'shop.belongCountry':addBelongAddress ? addBelongAddress.areaCode : "",
+
                 }
                 let data2 = {
                     'shop.extendSuperType':data.extendSuperType || '',
@@ -509,10 +522,10 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 console.log(response)
-                if (response.data.result == 0) {
+                if (response.data.result == 1) {
                     self.$message({
                         message: response.data.msg,
-                        type: 'error'
+                        type: 'success'
                     })
                 } else if(response.data.success == 0){
                     self.$message({
@@ -574,11 +587,11 @@ export default {
         },
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            if(this.addForm.operator == queryString){
-                this.addForm.operator2 = false;               
-            }      
-            queryString = !this.addForm.operator2 ? '' : queryString;
-            this.addForm.operator2 = true;
+            // if(this.addForm.operator == queryString){
+            //     this.addForm.operator2 = false;               
+            // }      
+            // queryString = !this.addForm.operator2 ? '' : queryString;
+            // this.addForm.operator2 = true;
 
 
             var list = [{}];
@@ -621,19 +634,19 @@ export default {
         },
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
-
-            if(this.addForm.salesMan == queryString){
-                    this.addForm.salesMan2 = false;
-            }
-            queryString = !this.addForm.salesMan2 ? '' : queryString;
+            // if(this.addForm.salesMan == queryString){
+            //         this.addForm.salesMan2 = false;
+            // }
+            // queryString = !this.addForm.salesMan2 ? '' : queryString;
                  
-            this.addForm.salesMan2 = true;
+            // this.addForm.salesMan2 = true;
 
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
             //从后台获取到对象数组
             axios.get(url).then((response) => {
+                console.log()
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
                 for (let i of response.data.result) {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value

@@ -136,7 +136,7 @@
         <!-- 表格 end -->   
         <!-- 预存款变更弹窗 start -->
             <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
-                <el-form :model="changeForm">
+                <el-form   :model="changeForm">
                     <el-row>
                         <el-col :span="22">
                             <el-form-item label="店铺名称：" label-width="100px">
@@ -153,6 +153,10 @@
                                     <el-option label="扣款" value="DEDUCTIONS"></el-option>
                                 </el-select>
                             </el-form-item>
+                            <el-form-item  v-if="changeForm.changeType==='TOP_UP'" label="首批进货款：">
+                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="1" value="1">是</el-radio>
+                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0">否</el-radio>
+                            </el-form-item>
                         </el-col>
                     </el-row>
 
@@ -165,7 +169,7 @@
                         </el-col>
                         <el-col :span="17">
                             <el-form-item>
-                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="margin-left: -15px;"> </el-input>
+                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  style="margin-left: -15px;"> </el-input>
                                 <p class="yuan">元</p>
                             </el-form-item>
                         </el-col>
@@ -255,6 +259,7 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
+                isFirstBatchMoney:'',
             },
             editFormTitle: '',
             isDisable: false,
@@ -294,6 +299,8 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.myData = response.data.rows;
+            console.log(self.myData)
+            
             self.totalSize = response.data.total
         }).catch(function (err) {
             self.loading = false;
@@ -369,7 +376,8 @@ export default {
                     'advanceDeposit.remark': self.changeForm.remark,
                     'advanceDeposit.creatorId': self.user.id,
                     'advanceDeposit.updatorId': self.user.id,
-                    'advanceDeposit.isBackground': 1
+                    'advanceDeposit.isBackground': 1,
+                    'advanceDeposit.isFirstBatchMoney':self.changeForm.isFirstBatchMoney ||'',
                 },
                 transformRequest: [function (data) {
                     // Do whatever you want to transform the data

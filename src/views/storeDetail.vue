@@ -100,13 +100,13 @@
                 <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
-                          <el-button type="primary" @click='openEditDialog(detailForm,"agencyRelationsance")'>点击查看</el-button>                        
+                          <el-button type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</el-button>                        
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5">
                     <el-col :span="24">
                        代理商年度业绩： 
-                        <el-button type="primary" @click='openEditDialog(detailForm,"annualAgents")'>点击查看</el-button>
+                        <el-button type="primary" @click='openAnnualAgents(detailForm.id)'>点击查看</el-button>
                     </el-col>
                 </el-row>
                 <el-row :gutter="5"> 
@@ -123,49 +123,25 @@
         </div>
 
 
-        <!-- 查看代理商年度业绩(编号：xxx) start -->
-            <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" size="tiny" >
-                <div>
-                    <el-table-column prop="annualAgentsForm.shopNo" label="序号"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="代理商等级" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="年份" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="目标店铺" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="目标进货额" width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="达成"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="annualAgentsForm.startTime" label="年度业绩" width="127">
-                    </el-table-column>
-                </div>
-                <div class="plPage clearfix">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
-                    </el-pagination>
-                </div>
-            </el-dialog>
-          
-            <!-- 查看代理商年度业绩(编号：xxx) end -->  
+    
             <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" size="tiny" >
+            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" >
                 <div></div>
                 <div>
-                    <el-table-column prop="agencyRelationsanceForm.shopNo" label="序号"  width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="代理商编号" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.startTime" label="代理商姓名" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="代理商等级" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="店铺注册" width="127">
-                    </el-table-column>
-                    <el-table-column prop="agencyRelationsanceForm.agentGradeId" label="关系" width="127">
-                    </el-table-column>
+                  <el-table :data="agencyRelationsanceForm">
+                      <el-table-column prop="agentNo" label="序号"  width="127">
+                      </el-table-column>
+                      <el-table-column prop="agentNo" label="代理商编号" width="127">
+                      </el-table-column>
+                      <el-table-column prop="aengtName" label="代理商姓名" width="127">
+                      </el-table-column>
+                      <el-table-column prop="agentGradeId" label="代理商等级" width="127">
+                      </el-table-column>
+                      <el-table-column prop="registTime" label="店铺注册" width="127">
+                      </el-table-column>
+                      <el-table-column prop="relationType" label="关系" width="127">
+                      </el-table-column>
+                  </el-table>
                 </div>
                 <div class="plPage clearfix">
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
@@ -177,7 +153,44 @@
                 </div>
             </el-dialog>
         
-            <!-- 查看代理商年度业绩(编号：xxx) end -->  
+
+
+
+
+              <!-- 查看代理商年度业绩(编号：xxx) start -->
+                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible"  >
+                    <div>
+                      <el-table :data="annualAgentsForm">
+                          <!-- <el-table-column prop="shopNo" label="序号"  width="127">
+                          </el-table-column> -->
+                          <el-table-column prop="shopId" label="代理商等级" width="127">
+                          </el-table-column>
+                          <el-table-column prop="annualCycle" label="年份" width="127">
+                          </el-table-column>
+                          <el-table-column prop="shopNums" label="目标店铺" width="127">
+                          </el-table-column>
+                          <el-table-column prop="shopId" label="达成"  width="127">
+                          </el-table-column>
+                          <el-table-column prop="startTime" label="目标进货额" width="127">
+                          </el-table-column>
+                          <el-table-column prop="shopId" label="达成"  width="127">
+                          </el-table-column>
+                          <el-table-column prop="finishPerformanceSum" label="年度业绩" width="127">
+                          </el-table-column>
+                      </el-table>
+                    </div>
+                    <div class="plPage clearfix">
+                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                        </el-pagination>
+                    </div>
+                    <div slot="footer" class="dialog-footer">
+                        <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
+                        <el-button @click="annualAgentsDialogVisible = false">取 消</el-button>
+                    </div>
+                </el-dialog>
+          
+              <!-- 查看代理商年度业绩(编号：xxx) end -->  
+
     </div>
     
 </template>
@@ -215,26 +228,9 @@ export default {
         salesManId: ""
       },
       annualAgentsTitle:'',
-      annualAgentsForm:{
-            shopNo:'',
-            agentGradeId:'',
-            startTime:'',
-
-
-
-
-      },
+      annualAgentsForm:[],
       agencyRelationsanceTitle:'',
-      agencyRelationsanceForm:{
-                shopNo:'',
-                agentGradeId:'',
-                startTime:'',
-
-
-
-
-                
-      },
+      agencyRelationsanceForm:[],
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -299,209 +295,61 @@ export default {
     timeComponent
   },
   methods: {
-    //提交字段校验
-    testData(data, Address, AgentAddress) {
-      const self = this;
-      let isMobile = /^1\d{10}$/;
-      //店铺名判断
-      if (!data.shopName) {
-        self.loading = false;
-        self.$message({
-          message: "店铺名不得为空",
-          type: "error"
-        });
-        return false;
-      } else {
-        if (data.shopName.length > 50) {
-          self.loading = false;
-          self.$message({
-            message: "店铺名长度不得大于50",
-            type: "error"
-          });
-          return false;
-        }
-      }
-      //代理商姓名判断
-      if (!data.name) {
-        self.loading = false;
-        self.$message({
-          message: "代理商姓名不得为空",
-          type: "error"
-        });
-        return false;
-      } else {
-        if (data.name.length > 10) {
-          self.loading = false;
-          self.$message({
-            message: "代理商姓名长度不得大于10",
-            type: "error"
-          });
-          return false;
-        }
-      }
-      //代理商手机判断
-      if (!data.phone) {
-        self.loading = false;
-        self.$message({
-          message: "代理商手机不得为空",
-          type: "error"
-        });
-        return false;
-      } else {
-        if (!isMobile.test(data.phone)) {
-          self.loading = false;
-          self.$message({
-            message: "代理商手机格式有误",
-            type: "error"
-          });
-          return false;
-        }
-      }
-      //合同签约日期判断
-      if (!data.signedTime) {
-        self.loading = false;
-        self.$message({
-          message: "合同签约日期不得为空",
-          type: "error"
-        });
-        return false;
-      }
-      // 如果是直营直接转成区域代理
-      if (data.shopType == "SELF_SUPPORT") {
-        data.agentGradeId = 265;
-      }
-      //代理商等级判断
-      if (!data.agentGradeId) {
-        self.loading = false;
-        self.$message({
-          message: "代理商等级不得为空",
-          type: "error"
-        });
-        return false;
-      }
-      //收件地址判断
-      if (!Address.provinceCode || !Address.cityCode || !Address.areaCode) {
-        self.loading = false;
-        self.$message({
-          message: "收件地址不得为空",
-          type: "error"
-        });
-        return false;
-      } else {
-        if (Address.cityCode == 1) {
-          self.loading = false;
-          self.$message({
-            message: "请选择具体收件城市",
-            type: "error"
-          });
-          return false;
-        }
-        if (Address.areaCode == 1) {
-          self.loading = false;
-          self.$message({
-            message: "请选择具体收件地区",
-            type: "error"
-          });
-          return false;
-        }
-      }
-      //详细地址判断
-      if (!data.address) {
-        self.loading = false;
-        self.$message({
-          message: "详细地址不得为空",
-          type: "error"
-        });
-        return false;
-      } else {
-        if (data.address.length > 100) {
-          self.loading = false;
-          self.$message({
-            message: "详细地址长度不得大于100个字符",
-            type: "error"
-          });
-
-          return false;
-        }
-        //业务人员判断
-        if (!data.salesMan) {
-          // console.log(data.salesMan)
-          self.loading = false;
-          self.$message({
-            message: "业务人员为必填项",
-            type: "error"
-          });
-          return false;
-        }
-      }
-      //代理区域判断
-      if (data.agentGradeId == 265 && data.shopType != "SELF_SUPPORT") {
-        if (
-          !AgentAddress.provinceCode ||
-          !AgentAddress.cityCode ||
-          !AgentAddress.areaCode
-        ) {
-          self.loading = false;
-          self.$message({
-            message: "代理区域不得为空",
-            type: "error"
-          });
-          return false;
-        } else {
-          if (AgentAddress.cityCode == 1) {
-            self.loading = false;
-            self.$message({
-              message: "请选择具体代理城市",
-              type: "error"
-            });
-            return false;
-          }
-        }
-      }
-      return true;
-    },
-    openEditDialog(data,type){
-         console.log(data)
-            type == 'annualPurchasePerformance' ? this.isDisable = false : this.isDisable = true
-
-            console.log(type)
-            this.editFormTitle = type == 'annualPurchasePerformance' ? "查看代理商年度业绩（编号：" + data.shopNo + "）" : "查看代理商关系（编号：" + data.shopNo + "）"
+     //查看代理商关系
+      openAgencyRelationsance(shopNo) {
+        // console.log(shopNo)
+          if (!this.checkSession()) return;
+          const self = this;
+          this.agencyRelationsanceDialogVisible = true;
+          self.loading = true;
+          self.$ajax.get('/api/shop/shopManage/getAgentRelationList.jhtml', {
+              params: {
+                  'shopNo': shopNo,
+              }
+          }).then(function (response) {
+              // console.log('ok')
             
-            this.getInfoById(data.id);
+              // console.log(response)
+              self.loading = false;
+              // console.log(response.data)
+              // console.log(response.data.result)
+              self.agencyRelationsanceForm =  response.data.result;
 
-            this.agencyRelationsanceDialogVisible = true;
-    },
-    // 获取选中店铺信息
-    getInfoById(id) {
+              // console.log(self.agencyRelationsanceForm)
+
+              self.agencyRelationsanceForm.push(response.data.result);
+              // console.log(self.agencyRelationsanceForm)
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });
+      },
+    //查看代理商年度业绩
+    openAnnualAgents(shopId) {
+        // console.log('ok')
+        console.log(shopId)
+        this.annualAgentsDialogVisible = true;
+        if (!this.checkSession()) return;
         const self = this;
-        if (!self.checkSession()) return;
+        
         self.loading = true;
-        self.$ajax.get('/api/http/shop/searchShop.jhtml', {
+        self.$ajax.post('/api/http/annualPerformanceOrder/findList.jhtml', {
             params: {
-                'shopId': id,
+                'shopId': shopId,
             }
         }).then(function (response) {
-          console.log(response.data.result)
+          
             self.loading = false;
-            self.agencyRelationsanceForm = response.data.result;
+            // self.openAnnualAgentsForm =  response.data.result;
+
+            // console.log(self.openAnnualAgentsForm)
+
+            self.agencyRelationsanceForm.push(response.data.result);
+            console.log(self.agencyRelationsanceForm)
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
         });
-    },
-    //查看代理商年度业绩
-    annualPurchasePerformance(shopNo) {
-        if (!this.checkSession()) return;
-        this.annualPurchasePerformanceForm.annualPurchasePerformanceShopId = shopNo;
-        this.annualPurchasePerformanceTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-        this.dialogFormVisible = true;
-    },
-     //查看代理商关系
-    annualPurchasePerformance(shopNo) {
-        if (!this.checkSession()) return;
-        this.changeForm.changeShopId = shopNo;
-        this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-        this.dialogFormVisible = true;
     },
     checkSession() {
       const self = this;
@@ -571,7 +419,6 @@ export default {
     },
   },
   created() {
-    console.log(this.detailForm.sjh);
     if (!this.checkSession()) return;
     this.uri = this.getUri();
     //获取id
