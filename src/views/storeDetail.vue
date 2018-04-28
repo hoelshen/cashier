@@ -20,7 +20,7 @@
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
                     <el-col :span="12">
-                        已达成进货业绩：{{ detailForm.shopType}}
+                        已达成进货业绩：{{ detailForm.annualOwnAreadyPurchasePerformance}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -37,7 +37,18 @@
                     </el-col>
                     <el-col :span="12" width=100px;>
                         <span style="float:left">进货业绩达成率：</span> 
-                        <el-progress  :percentage="80" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;" ></el-progress>
+                        <!-- <div  :percentage="storeExpansionRate" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;" > -->
+                          <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
+                            <div v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
+                              style="float:left;border-radius: 10px;"
+                            >
+                            </div>
+                            <div v-bind:style="{height:detailForm.height  +'px',width:detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px','background-color':'#' +detailForm.activeColor2}"
+                              style="float:left;border-radius: 10px;"
+                            >
+                            </div>
+                          </div>
+                         <span style=" position:absolute ;right: 132px;"> {{detailForm.purchaseAchievementRate}}%</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -45,7 +56,7 @@
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
                     <el-col :span="12">
-                        已达成店铺拓展：{{ detailForm.annualAreadyExtendPerformance }}
+                        已达成店铺拓展：{{ detailForm.annualAreadyExtendPerformance}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -63,21 +74,26 @@
                     </el-col>
                     <el-col :span="12">
                        <span style="float:left"> 店铺拓展达成率：</span> 
-                       <el-progress :percentage="80" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;"></el-progress>
+                       <!-- <el-progress :percentage="purchaseAchievementRate" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;"></el-progress> -->
+                       <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
+                              <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
+                       </div>
+                       <span style=" right: 132px;position: absolute">{{detailForm.storeExpansionRate}}%</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="112">
-                        店铺所属区域：{{ detailForm.province }}{{detailForm.city}}{{detailForm.county}}
+                   <el-col :span="112" v-if="detailForm.agentGradeId === 265">
+                        店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
                     </el-col>
-
+                     <el-col :span="112" v-if="detailForm.agentGradeId === 266 && detailForm.agentGradeId ===31">
+                        店铺所属区域：{{ detailForm.belongProvince }}/{{detailForm.belongCountry}}/{{detailForm.belongCity}}
+                    </el-col>
                 </el-row>
-                <el-row :gutter="10">
+                <el-row :gutter="10" style="margin-top: 13px;">
                     <el-col :span="12">
-                        收件地址：{{ detailForm.address }}
+                        收件地址：{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}
                     </el-col>
                 </el-row>
-
             </div>
             <div class="calendar">
                  <p class="calendarMessage_top">{{message}}</p><br>
@@ -125,12 +141,11 @@
 
     
             <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" >
+            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" width="60%">
                 <div></div>
-                <div>
-                  <el-table :data="agencyRelationsanceForm">
-                      <el-table-column prop="agentNo" label="序号"  width="127">
-                      </el-table-column>
+                <div style="width:100%">
+                  <el-table :data="agencyRelationsanceForm" >
+                      <el-table-column type="index" label="序列"  width="80"></el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
                       </el-table-column>
                       <el-table-column prop="aengtName" label="代理商姓名" width="127">
@@ -144,12 +159,12 @@
                   </el-table>
                 </div>
                 <div class="plPage clearfix">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                     </el-pagination>
                 </div>
                 <div slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
-                    <el-button @click="agencyRelationsanceDialogVisible = false">取 消</el-button>
+                    <el-button @click="changeCancle()">取 消</el-button>
                 </div>
             </el-dialog>
         
@@ -158,34 +173,37 @@
 
 
               <!-- 查看代理商年度业绩(编号：xxx) start -->
-                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible"  >
+                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" width=60% >
                     <div>
                       <el-table :data="annualAgentsForm">
-                          <!-- <el-table-column prop="shopNo" label="序号"  width="127">
-                          </el-table-column> -->
+                         <el-table-column type="index" label="序列"  width="80"></el-table-column>
                           <el-table-column prop="shopId" label="代理商等级" width="127">
                           </el-table-column>
-                          <el-table-column prop="annualCycle" label="年份" width="127">
+                          <el-table-column  label="年份" width="127" >
+                            <template slot-scope="scope">
+                              {{scope.row.cycleBeginTime}}-{{scope.row.cycleEndTime}}
+                            </template>
+                
                           </el-table-column>
                           <el-table-column prop="shopNums" label="目标店铺" width="127">
                           </el-table-column>
-                          <el-table-column prop="shopId" label="达成"  width="127">
+                          <el-table-column prop="finishShopNums" label="达成"  width="127">
                           </el-table-column>
-                          <el-table-column prop="startTime" label="目标进货额" width="127">
+                          <el-table-column prop="annualPerformanceAmount" label="目标进货额" width="127">
                           </el-table-column>
-                          <el-table-column prop="shopId" label="达成"  width="127">
+                          <el-table-column prop="finishPerformanceSum" label="达成"  width="127">
                           </el-table-column>
-                          <el-table-column prop="finishPerformanceSum" label="年度业绩" width="127">
+                          <el-table-column prop="annualPerformanceRatio" label="年度业绩" width="127">
                           </el-table-column>
                       </el-table>
                     </div>
                     <div class="plPage clearfix">
-                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                         </el-pagination>
                     </div>
                     <div slot="footer" class="dialog-footer">
                         <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
-                        <el-button @click="annualAgentsDialogVisible = false">取 消</el-button>
+                        <el-button @click="changeCancle()">取 消</el-button>
                     </div>
                 </el-dialog>
           
@@ -211,6 +229,7 @@ export default {
       currentPage: 1,
       totalSize: 0,
       pageSize: 30,
+      totalNums:'',
       user: "",
       tableData:{
           agent:'',
@@ -229,6 +248,8 @@ export default {
       },
       annualAgentsTitle:'',
       annualAgentsForm:[],
+      annualAgentsFormcycleBeginTime:'',
+      annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
       myData: [],
@@ -277,8 +298,20 @@ export default {
         shopNo:"",
         annualExtendPerformance:"",  //年度目标店铺拓展
         annualAreadyExtendPerformance:'',   //已达成店铺拓展
+        annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
+        annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
+        annualOwnAreadyPurchasePerformanceRate:'',   //年度自己所完成的业绩比例
+        annualLowerAreadyPurchasePerformanceRate:'',  //年度下级协助所完成的业绩比例
         annualPurchasePerformance:'' ,  //年度目标进货业绩
-        createTime:'',    ///签约日期
+        purchaseAchievementRate:'',  //进货业绩达成率
+        storeExpansionRate:'',     //年度店铺扩展达成率
+        createTime:'',    ///签约日期,
+        belongCity:'',   //所属城市
+        belongCountry:'', //所属区域
+        belongProvince:'',  //所属省份
+        activeColor1:"ff6600",   //橙色
+        activeColor2:"ffd199",     //红色
+        height:10,   
       },
       agencyRelationsanceDialogVisible:false,
       annualAgentsDialogVisible:false,
@@ -295,30 +328,37 @@ export default {
     timeComponent
   },
   methods: {
+      //取消按钮
+      changeCancle() {
+        
+            this.agencyRelationsanceDialogVisible = false;
+            this.agencyRelationsanceForm = [];
+
+            this.annualAgentsForm = [];
+            this.annualAgentsDialogVisible = false;
+
+        },
      //查看代理商关系
       openAgencyRelationsance(shopNo) {
         // console.log(shopNo)
           if (!this.checkSession()) return;
           const self = this;
-          this.agencyRelationsanceDialogVisible = true;
+          self.agencyRelationsanceDialogVisible = true;
           self.loading = true;
           self.$ajax.get('/api/shop/shopManage/getAgentRelationList.jhtml', {
               params: {
                   'shopNo': shopNo,
               }
           }).then(function (response) {
-              // console.log('ok')
             
-              // console.log(response)
               self.loading = false;
-              // console.log(response.data)
+              // self.agencyRelationsanceForm = response.data.result;
+              // self.agencyRelationsanceForm =  response.data.result;
               // console.log(response.data.result)
-              self.agencyRelationsanceForm =  response.data.result;
+              for(let i of response.data.result){
+                self.agencyRelationsanceForm.push(i);
 
-              // console.log(self.agencyRelationsanceForm)
-
-              self.agencyRelationsanceForm.push(response.data.result);
-              // console.log(self.agencyRelationsanceForm)
+              }
           }).catch(function (err) {
               self.loading = false;
               console.log(err);
@@ -327,25 +367,36 @@ export default {
     //查看代理商年度业绩
     openAnnualAgents(shopId) {
         // console.log('ok')
-        console.log(shopId)
-        this.annualAgentsDialogVisible = true;
-        if (!this.checkSession()) return;
-        const self = this;
-        
+        // console.log(shopId)
+        if (!this.checkSession()) return; 
+        const self = this;               
+        self.annualAgentsDialogVisible = true;
         self.loading = true;
-        self.$ajax.post('/api/http/annualPerformanceOrder/findList.jhtml', {
-            params: {
-                'shopId': shopId,
-            }
-        }).then(function (response) {
-          
+        let url = '/api/http/annualPerformanceOrder/findList.jhtml?shopId=' + self.detailForm.id
+        self.$ajax.post(url, {}).then(function (response) {
+        
             self.loading = false;
-            // self.openAnnualAgentsForm =  response.data.result;
+            console.log(response.data.result)
+            self.totalNums =  response.data.totalNums;
 
-            // console.log(self.openAnnualAgentsForm)
+            // self.annualAgentsForm = response.data.result;
 
-            self.agencyRelationsanceForm.push(response.data.result);
-            console.log(self.agencyRelationsanceForm)
+            // console.log(response.data.result)
+            
+            // self.agencyRelationsanceForm =  response.data.result;
+            for(let i of response.data.result){
+               self.annualAgentsForm.push(i);
+
+            }
+           
+            // for(let annualAgentsFormcycleEndTime of  response.data.result){
+             
+            // self.annualAgentsForm.push( annualAgentsFormcycleEndTime)     
+            
+            // }
+            // console.log(self.annualAgentsForm);
+
+            
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -454,6 +505,10 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = response.data.result;
+        self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
+        self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
+        self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / response.data.result.annualPurchasePerformance
+        self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
       })
       .catch(function(err) {
         self.loading = false;
