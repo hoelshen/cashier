@@ -110,7 +110,8 @@
                     </el-pagination>
                 </div>
                 <div class="batch">
-                    <span @click="isSelectAll">全选</span>
+                    <span><span v-if="!ifCheckAll" @click="isSelectAll">全选</span><span v-if="ifCheckAll"  @click="isSelectAll">取消</span></span>
+                    <span>选中({{selectData.length}}条)</span>
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
                     <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span> -->
@@ -127,7 +128,7 @@ import Utils from '../components/tools/Utils'
 export default {
     data() {
         return {
-            ifCheckAll:false,
+            ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
             pageSize: 10,
@@ -207,10 +208,6 @@ export default {
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
-                    // for(let i in self.myData){
-                    //     self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
-                    // }
-  
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -221,7 +218,7 @@ export default {
 
             });
         },
-        //获取全部id
+        //获取全部数据选中
         getAllId() {
             const self = this;
             self.loading = true;
@@ -255,7 +252,7 @@ export default {
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
-                    console.log(self.ifCheckAll)
+                    // 数据全选与否
                     if(!self.ifCheckAll){
                         self.ifCheckAll = true;
                         for(let i in self.myData){
@@ -267,8 +264,8 @@ export default {
                             self.$refs.myTabel.clearSelection()
                         }
                     }
-                    // self.ifCheckAll = !self.ifCheckAll
-                    self.getFormData()
+                    // 再次调用分页
+                    self.handleCurrentChange(1)
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -317,21 +314,21 @@ export default {
             })
         },
         // 确认全部核销
-        confirmAllVerification() {
-            let self = this;
-            self.$confirm('确认核销本次查询的所有记录？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                self.$ajax.all([self.getAllId()]).then(
-                    self.$ajax.spread(function(acct) {
-                        let ids = self.allId;
-                        self.verification(ids);
-                    })
-                );
-            })
-        },
+        // confirmAllVerification() {
+        //     let self = this;
+        //     self.$confirm('确认核销本次查询的所有记录？', '提示', {
+        //         confirmButtonText: '确定',
+        //         cancelButtonText: '取消',
+        //         type: 'warning'
+        //     }).then(() => {
+        //         self.$ajax.all([self.getAllId()]).then(
+        //             self.$ajax.spread(function(acct) {
+        //                 let ids = self.allId;
+        //                 self.verification(ids);
+        //             })
+        //         );
+        //     })
+        // },
         // 核销
         verification(id) {
             let self = this;
@@ -381,15 +378,15 @@ export default {
             self.outputExcel(ids)
         },
         // 导出全部明细
-        allOutputExcel() {
-            let self = this;
-            self.$ajax.all([self.getAllId()]).then(
-                self.$ajax.spread(function(acct) {
-                    let ids = self.allId;
-                    self.outputExcel(ids);
-                })
-             );
-        },
+        // allOutputExcel() {
+        //     let self = this;
+        //     self.$ajax.all([self.getAllId()]).then(
+        //         self.$ajax.spread(function(acct) {
+        //             let ids = self.allId;
+        //             self.outputExcel(ids);
+        //         })
+        //      );
+        // },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
         console.log(id)
@@ -446,23 +443,15 @@ export default {
 
             });
         },
+        // 全部选中
         checkall(selection){
             this.getAllId();
-            // this.selectData = selection;
         },
-        // 表格选择
+        // 表格选择 表格某行选中
         select(selection) {
-            // this.getAllId();
-            
             this.selectData = selection;
-            
-            // console.log(this.selectData)
         },
         formatSelect() {
-            // var self = this;
-            // if(!this.ifCheckAll){
-            //      self.selectData =[]
-            // }
             let selectData = this.selectData;
             let array = []
             for (let i = 0; i < selectData.length; i++) {

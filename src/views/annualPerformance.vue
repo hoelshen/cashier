@@ -346,7 +346,7 @@ export default {
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml',
+                url: '/api/http/annualPerformanceOrderDetail/doExportAnnualPerformanceOrderDetail.jhtml',
                 method: 'post',
                 data: {
                    'searchAnnoalPerformanceOrderDetailVo.annualPerformanceIds': id ,
