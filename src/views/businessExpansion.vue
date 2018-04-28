@@ -12,22 +12,22 @@
                     </el-col>
                     
                     <el-col :span="5">
-                        <el-form-item label="选择月份： ">
-                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
+                        <el-form-item label="选择年份： ">
+                            <el-date-picker value-format="yyyy" v-model="searchData.year"  type="year" placeholder="选择年份">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
                 
                     <el-col :span="5">
                         <el-form-item label="核销状态：">
-                            <el-select v-model="searchData.status" placeholder="核销状态" clearable>
+                            <el-select v-model="searchData.entryStatus" placeholder="核销状态" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="付款单号：">
-                            <el-input v-model="searchData.payOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
+                            <el-input v-model="searchData.paymentOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="1">
@@ -39,12 +39,12 @@
                   
                       <el-col :span="5">
                         <el-form-item label="代理商编号：">
-                            <el-input v-model="searchData.shopNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
+                            <el-input v-model="searchData.agentNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="代理商姓名：" >
-                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                            <el-input v-model="searchData.agentName" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -58,43 +58,44 @@
                     <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column type="selection" width="50">
                         </el-table-column>
-                        <el-table-column prop="shopNo" label="代理商编号" width="200">
+                        <el-table-column prop="agentNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
-                                    <span>{{scope.row.shopNo}}</span>
+                                    <span>{{scope.row.agentNo}}</span>
                                 </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="代理商姓名" width="200">
+                        <el-table-column prop="agentName" label="代理商姓名" width="200">
                             <template slot-scope="scope">
-                                    <span>{{scope.row.name}}</span>
+                                    <span>{{scope.row.agentName}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="createMonth" label="年份" width="100">
+                        <el-table-column prop="year" label="年份" width="100">
                         </el-table-column>
-                        <el-table-column prop="createMonth" label="店铺数" width="100">
+                        <el-table-column prop="shopNum" label="店铺数" width="100">
                         </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="贷款总金额" width="200">
+                        <el-table-column prop="purcharseAmount" label="贷款总金额" width="200">
                             <template slot-scope="scope">
-                                <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
+                                <span>{{scope.row.purcharseAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="verifiAmount" label="返利金额" width="100">
+                        <el-table-column prop="rebateAmount" label="返利金额" width="100">
                             <template slot-scope="scope">
-                                <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
+                                <span>{{scope.row.rebateAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="status" label="状态">
+                        <el-table-column prop="entryStatus" label="状态">
                             <template slot-scope="scope">
-                                <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
+                                <span>{{scope.row.entryStatus=='WAIT_CHECK'?'未核销':'已核销'}}</span>
+                                <!-- <span>{{scope.row.entryStatus=='ALREADY_CLOSED'?'未核销':'已核销'}}</span> -->
                             </template>
                         </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号" width="100">
+                        <el-table-column prop="paymentOrderNo" label="付款单号" width="100">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id,scope.row.name,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.agentName,scope.row.shopNo,scope.row.year)">导出明细</span>
                                         <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -108,8 +109,8 @@
                 <div class="batch">
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
-                    <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
-                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span>
+                    <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
+                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span> -->
                 </div>
             </el-row>
         </div>
@@ -124,22 +125,22 @@ export default {
         return {
             currentPage: 1,
             totalSize: 0,
-            pageSize: 10,
+            pageSize: 30,
             searchData: {
-                shopNo: '',
+                agentName: '',
                 phone: '',
-                payOrderNo: '',
-                status: 0,
-                createMonth: '',
-                name:'',
+                agentNo: '',
+                entryStatus: '',
+                year:'',
+                paymentOrderNo:'',
             },
             myData: [],
             stateArray: [{
-                    index: 0,
+                    index: 'WAIT_CHECK',
                     name: '未核销'
                 },
                 {
-                    index: 1,
+                    index: 'ALREADY_CLOSED',
                     name: '已核销'
                 },
             ],
@@ -170,25 +171,25 @@ export default {
             self.loading = true;
             //获取列表数据
             self.$ajax({
-                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
+                url: '/api/http/BusinessRebateAccount/searchBusinessRebateAccountList.jhtml',
                 method: 'post',
                 data: {
-                    'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
-                    'verifiOrderVo.shopNo': self.searchData.shopNo,
-                    'verifiOrderVo.phone': self.searchData.phone,
-                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
-                    'verifiOrderVo.status': self.searchData.status,
-                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,
+                    'pageIndex': self.currentPage,
+                    'pageSize': self.pageSize,
+                    'accountSearchVo.phone': self.searchData.phone,
+                    'accountSearchVo.paymentOrderNo': self.searchData.paymentOrderNo,
+                    'accountSearchVo.entryStatus': self.searchData.entryStatus,
+                    'accountSearchVo.year': Utils.formatMonthDate(self.searchData.year),
+                    'accountSearchVo.agentName': self.searchData.agentName,
+                    'accountSearchVo.agentNo': self.searchData.agentNo,
                 },
-                transformRequest: [function(data) {
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-                    }
-                    return ret;
-                }],
+                // transformRequest: [function(data) {
+                //     let ret = ''
+                //     for (let it in data) {
+                //         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                //     }
+                //     return ret;
+                // }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
@@ -196,8 +197,9 @@ export default {
                 self.loading = false;
                 console.log(response)
                 if (response.data.success === 1) {
-                    self.myData = response.data.result;
-                    self.totalSize = response.data.totalNums;
+                    self.myData = response.data.result.list;
+                    console.log(response.data.result.list)
+                    self.totalSize = response.data.result.total;
                 } else {
                     self.$message({
                         message: response.data.msg,

@@ -404,11 +404,11 @@ export default {
             return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id,name, shopNo, createMonth) {
+        outputExcel(id, shopNo, createMonth) {
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/annualPerformanceOrderDetail/findAnnalPerformanceDetail.jhtml',
+                url: '/api/http/annualPerformanceOrderDetail/doExportAnnualPerformanceOrderDetail.jhtml',
                 method: 'post',
                 data: {
                     // 'annualPerformanceOrder.shopNo': shopNo || '',

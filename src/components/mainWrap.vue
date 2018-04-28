@@ -58,6 +58,7 @@ export default {
                 'rebate': '规则管理 / 业务拓展返利',
                 'rebateDetail': '规则管理 / 业务拓展返利',
                 'annualPerformance': '达标返利核算',
+                'businessExpansion': '业务返利核算',
             },
             user: {}
         }
