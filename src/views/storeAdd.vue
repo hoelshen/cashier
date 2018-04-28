@@ -131,7 +131,7 @@
             </el-row>
             <el-row>
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级：">
+                    <el-form-item label="括展上级："> 
                             <el-radio v-model="addForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
                     </el-form-item>
