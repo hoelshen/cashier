@@ -291,7 +291,7 @@ export default {
                     'searchAnnualPerformanceOrderVo.status': self.searchData.status,
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchData.annualCycle),
                     'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo
                 },
                 transformRequest: [function(data) {
@@ -309,6 +309,7 @@ export default {
                 console.log(response)
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
+                    console.log(response.data.result)
                     self.totalSize = response.data.totalNums;
                       // 数据全选与否
                     if(!self.ifCheckAll){
@@ -388,7 +389,7 @@ export default {
             })
         },
         // 核销
-        verification(id,status,person) {debugger
+        verification(id,status,person) {
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -435,7 +436,12 @@ export default {
             let self = this;
             let ids = self.formatSelect()
             console.log(ids)
-            self.outputExcel(ids)
+            if(!self.ifCheckAll){
+                 self.outputExcel(-1)
+            }else{
+                self.outputExcel(ids)
+            }
+            
         },
         // 导出全部明细
         allOutputExcel() {
@@ -542,7 +548,7 @@ export default {
     position: absolute;
     z-index: 2;
     top: 0;
-    left: 29px;
+    left: 20px;
     width: 40px;
     height: 40px;
     background-color: #eef1f6;

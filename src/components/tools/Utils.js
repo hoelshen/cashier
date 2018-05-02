@@ -38,6 +38,17 @@ let Utils = {
         }
 
     },
+    //格式化年份(年)
+    formatYearDate(data) {
+        if (data) {
+            let date = new Date(data)
+            let year = date.getFullYear();
+            return year 
+        } else {
+            return ''
+        }
+
+    },
     // 保留小数
     toFiexd(num, n = 2) {
         let type = typeof num;
