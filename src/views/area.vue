@@ -471,10 +471,11 @@ export default {
 .checkAllText{
     position: absolute;
     z-index: 2;
-    top: 21px;
-    left: 29px;
+    top: 0;
+    left: 20px;
     width: 40px;
-    height: 20px;
+    height: 40px;
     background-color: #eef1f6;
 }
+
 </style>

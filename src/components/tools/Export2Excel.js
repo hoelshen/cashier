@@ -151,7 +151,7 @@ function formatJson(filterVal, jsonData) {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 区域订单导出自定义
-export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {debugger
+export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     /* original data */
 
