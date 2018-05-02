@@ -83,12 +83,15 @@
                             <template slot-scope="scope">
                                 <span v-if="scope.row.agentGradeId==31">单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265">区域代理</span>
+                                    <p class="textOrange" v-if="myData[scope.$index].areaClass ==='s' ">S类</p>
+                                    <p class="textRed" v-if="myData[scope.$index].areaClass ==='a' ">A类</p>
+                                    <p class="textGreen" v-if="myData[scope.$index].areaClass  ==='b'">B类</p>
+                                    <!-- <p class="textGreen" v-if="Type(myData[scope.$index].areaClass)">B类</p> -->
+                                    <p class="textPurple" v-if="myData[scope.$index].areaClass  ==='c' ">C类</p>
+                                    <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
                                 <span v-if="scope.row.agentGradeId==266">微店代理</span>
                                 <span v-if="!scope.row.areaClass">-</span>
-                                <p class="textOrange" v-if="scope.row.areaClass ==='S' ">S类</p>
-                                <p class="textRed" v-if="scope.row.areaClass ==='A' ">A类</p>
-                                <p class="textGreen" v-if="scope.row.areaClass ==='B' ">B类</p>
-                                <p class="textPurple" v-if="scope.row.areaClass ==='C' ">C类</p>   
+                            
                             </template>
                      
                         </el-table-column>
@@ -106,9 +109,12 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remainDay" label="剩余天数" width="100">
+                        <el-table-column prop="remainDay" label="剩余天数" width="100" sortable="custom"  @sort-method="remainDaySort" >
                         </el-table-column>
                         <el-table-column prop="goalCompletion" label="目标完成" width="100">
+                            <template slot-scope="scope" >
+                                {{ scope.row.goalCompletion * 100 }}%
+                            </template>
                         </el-table-column>
                         <el-table-column prop="operator" label="运营人员" width="100">
                         </el-table-column>
@@ -160,19 +166,20 @@
                         </el-col>
                     </el-row>
 
-                    <el-row :gutter="20" style=" margin-left: -10px;margin-right: -20px;">
-                        <el-col :span="5"   >
-                            <el-form-item label="变动金额：" label-width="100px">
-                                <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
-                                <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
-                            </el-form-item>
-                        </el-col>
-                        <el-col :span="17">
-                            <el-form-item>
-                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  style="margin-left: -15px;"> </el-input>
+                    <el-row >
+                        <el-col :span="22"   >
+                            <el-form-item label="变动金额：" label-width="100px">  
+                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  >
+                                 <template slot="prepend" v-if="changeForm.changeType === 'TOP_UP'">➕</template>    
+                                 <template slot="prepend" v-if="changeForm.changeType === 'DEDUCTIONS'">➖</template>                                     
+                                 </el-input>
                                 <p class="yuan">元</p>
                             </el-form-item>
+                                 
+            
+              
                         </el-col>
+                   
                     </el-row>
 
                     <el-row>
@@ -300,8 +307,26 @@ export default {
             self.loading = false;
             // console.log(response.data)
             self.myData = response.data.rows;
-            // console.log(self.myData)
+            // console.log(response.data.rows)
             
+            for (var value of self.myData) {
+                if(!value.areaClass){
+                    value.areaClass ===''  
+                }else{
+                    //  console.log((value.areaClass).toLocaleLowerCase())
+                     
+                     value.areaClass =   (value.areaClass).toLocaleLowerCase()
+
+                     console.log(value.areaClass)
+                }
+            }
+            // response.data.rows.forEach(data => {
+                // console.log(data.areaClass)
+                //  console.log(data.areaClass.toLocaleLowerCase()) 
+            // });
+            
+            
+
             self.totalSize = response.data.total
         }).catch(function (err) {
             self.loading = false;
@@ -310,6 +335,10 @@ export default {
 
     },
     methods: {
+        // Type(val){
+        //     if(val)  {val = {a:val}}
+        //     console.log(String(val), typeof val)
+        // },
         //判断是否超时
         checkSession() {
             const self = this;
@@ -499,6 +528,7 @@ export default {
                 console.log(err);
             });
         },
+
         // 预存款余额排序
         sortAmount(row, column) {
             const self = this;
@@ -516,17 +546,17 @@ export default {
                 params: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'shop.shopName': self.searchData.shopName,
-                    'shop.phone': self.searchData.phone,
-                    'shop.name': self.searchData.name,
-                    'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                    'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                    'shop.state': self.searchData.state,
-                    'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
+                    // 'shop.shopName': self.searchData.shopName,
+                    // 'shop.phone': self.searchData.phone,
+                    // 'shop.name': self.searchData.name,
+                    // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                    // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                    // 'shop.state': self.searchData.state,
+                    // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
                     'shop.sort': 'depositAmount',
                     'shop.order': self.order,
-                    'shop.operator': self.searchData.operator,
-                    'shop.salesMan': self.searchData.salesMan,
+                    // 'shop.operator': self.searchData.operator,
+                    // 'shop.salesMan': self.searchData.salesMan,
                 }
             }).then(function (response) {
                 self.loading = false;
@@ -538,6 +568,10 @@ export default {
                 console.log(err);
             });
 
+        },
+        //剩余天数排序
+        remainDaySort(){
+            console.log('ok')
         },
         //用户列表
         operatorQuerySearchAsync(queryString, callback) {
@@ -883,8 +917,12 @@ export default {
                                 if(self.tableData.length>0){
                                             require.ensure([], () => {
                                                 const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
-                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标', '已完成', '进度', '年度进货业绩目标', '已完成', '进度','剩余时间','备注', ]
-                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'areaClass', 'remainDay', 'areaClass',]
+                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标',
+                                                                 '已完成', '进度', '年度进货业绩目标', '已完成', '进度',
+                                                                 '剩余时间','备注', ]
+                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 
+                                                                    'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'areaClass', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
+                                                                    'ReaminTime', 'remark',]
                                                 const list = self.tableData;
                                                 const data = this.formatJson(filterVal, list);
                                                 export_json_to_excel(tHeader, data, '代理商' + (areaClass ? areaClass + '' : '') +'年度目标完成进度');
@@ -982,6 +1020,9 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
+    },
+    computed:{
+        
     }
 }
 </script>
