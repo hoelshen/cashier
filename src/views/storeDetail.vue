@@ -27,7 +27,7 @@
                     <el-col :span="12">
                         显示选项:{{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12" >
                         年度目标进货业绩：{{ detailForm.annualPurchasePerformance }}
                     </el-col>
                 </el-row>
@@ -37,7 +37,6 @@
                     </el-col>
                     <el-col :span="12" width=100px;>
                         <span style="float:left">进货业绩达成率：</span> 
-                        <!-- <div  :percentage="storeExpansionRate" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;" > -->
                           <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                             <div v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
                               style="float:left;border-radius: 10px;"
@@ -48,22 +47,22 @@
                             >
                             </div>
                           </div>
-                         <span style=" position:absolute ;right: 132px;"> {{detailForm.purchaseAchievementRate}}%</span>
+                         <span style=" position:absolute ;right: 132px;"> {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="12">
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)">
                         已达成店铺拓展：{{ detailForm.annualAreadyExtendPerformance}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="12">
-                        代理商状态：{{ detailForm.state	=== 1 ? '启用' : '禁用' }}
+                    <el-col :span="12" >
+                        代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
                     </el-col>
                 </el-row>
@@ -72,20 +71,19 @@
                     <el-col :span="12">
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域" :  detailForm.agentGradeId === 266   ? '微店' : '单店'     }}
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)" >
                        <span style="float:left"> 店铺拓展达成率：</span> 
-                       <!-- <el-progress :percentage="purchaseAchievementRate" color="#8e71c7" :stroke-width="10" style="width:352px;float:right;padding-top: 10px;"></el-progress> -->
                        <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                               <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
                        </div>
-                       <span style=" right: 132px;position: absolute">{{detailForm.storeExpansionRate}}%</span>
+                       <span style=" right: 132px;position: absolute">{{Number(detailForm.storeExpansionRate).toFixed(2)}}%</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                    <el-col :span="112" v-if="detailForm.agentGradeId === 265">
                         店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
                     </el-col>
-                     <el-col :span="112" v-if="detailForm.agentGradeId === 266 && detailForm.agentGradeId ===31">
+                     <el-col :span="112" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
                         店铺所属区域：{{ detailForm.belongProvince }}/{{detailForm.belongCountry}}/{{detailForm.belongCity}}
                     </el-col>
                 </el-row>
@@ -141,11 +139,10 @@
 
     
             <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" width="60%">
-                <div></div>
-                <div style="width:100%">
-                  <el-table :data="agencyRelationsanceForm" >
-                      <el-table-column type="index" label="序列"  width="80"></el-table-column>
+            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible">
+                  <el-table :data="agencyRelationsanceForm" style="width: 100%">
+                      <el-table-column type="index" label="序列"  width="80">
+                      </el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
                       </el-table-column>
                       <el-table-column prop="aengtName" label="代理商姓名" width="127">
@@ -154,16 +151,14 @@
                       </el-table-column>
                       <el-table-column prop="registTime" label="店铺注册" width="127">
                       </el-table-column>
-                      <el-table-column prop="relationType" label="关系" width="127">
+                      <el-table-column prop="relationType" label="关系">
                       </el-table-column>
                   </el-table>
-                </div>
                 <div class="plPage clearfix">
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                     </el-pagination>
                 </div>
                 <div slot="footer" class="dialog-footer">
-                    <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
                     <el-button @click="changeCancle()">取 消</el-button>
                 </div>
             </el-dialog>
@@ -202,7 +197,6 @@
                         </el-pagination>
                     </div>
                     <div slot="footer" class="dialog-footer">
-                        <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
                         <el-button @click="changeCancle()">取 消</el-button>
                     </div>
                 </el-dialog>
