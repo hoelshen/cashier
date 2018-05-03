@@ -3,7 +3,7 @@
     <!-- 修改店铺页面 start -->
         <el-form :model="editForm" label-width="120px" ref="editForm">
             <el-row class="content_title">
-                <h2>基本信息</h2>
+                <h2>基本信息({{editForm.shopNo}})</h2>
                 <div class="content_closeBtn" @click="goBack">X</div>
             </el-row>
             <el-row>
@@ -47,8 +47,10 @@
                 </el-col>
 
                 <el-col :span="8">
-                    <el-form-item label="代理商状态">
-                       ---
+                    <el-form-item label="代理商状态：" disabled>
+                        <el-col :span="12">
+                            {{ editForm.state	=== 1 ? '启用' : '禁用' }}
+                        </el-col>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -57,7 +59,7 @@
          
                 <el-col :span="8">
                     <el-form-item label="合同签约日期：">
-                        <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions"  disabled>
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -94,7 +96,7 @@
                 <!--第五行-->
                 <el-col :span="16" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
-                        <addressComponent ref='editAgentAddress' :isDetail="false" />   
+                        <addressComponent ref='editBelongAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
                 <el-col :span="16" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
@@ -154,16 +156,15 @@
 
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
-                    <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
                     <el-form-item label="运营人员">
-                        <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">
-                            <span class="search_left"></span>
+                        <span class="delete_left" v-if="editForm.operator" @click="deleteOperator"></span>     
+                        <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">    
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
-                    <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
                     <el-form-item label="业务人员">
+                        <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>                       
                         <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
@@ -209,7 +210,7 @@ export default {
                     operatorId: '',
                     annualPurchasePerformance:'',
                     annualExtendPerformance:'',
-                    extendSuperType:'',
+                    extendSuperType:'ZUIPIN',
                     superAreaClass:'',
                     extendSuperNo:'',
                     areaClass:'',
@@ -255,7 +256,7 @@ export default {
             });          
         },
         //提交字段校验
-        testData(data, Address, AgentAddress) {
+        testData(data, Address, AgentAddress, BelongAddress ) {
             const self = this;
             let isMobile = /^1\d{10}$/
             //店铺名判断
@@ -420,6 +421,50 @@ export default {
                 }
 
             }
+            //所属区域判断
+            if (data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT') {
+                if (!BelongAddress.provinceCode || !BelongAddress.cityCode || !BelongAddress.areaCode) {
+                    // debugger
+                    self.loading = false;
+                    self.$message({
+                        message: '所属区域不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (BelongAddress.cityCode == 1) {
+                        self.loading = false;
+                        self.$message({
+                            message: '请选择具体所属城市',
+                            type: 'error'
+                        })
+                        return false
+                    }
+                }
+
+            }
+
+    // console.log(data.annualPurchasePerformance)
+            //年度业绩目标：
+            if(!data.annualPurchasePerformance ){
+                    
+                    self.loading = false;
+                    debugger
+                    self.$message({
+                    message: '年度业绩不得为空123123',
+                    type: 'error'
+                })
+                return false
+            }else{
+               if( data.annualPurchasePerformance===0){
+                    self.$message({
+                        message: '年度业绩不得为零12313',
+                        type: 'error'
+                    })
+                    return false
+               }
+            }
+            
             return true
         },
         //checksession                
@@ -478,10 +523,10 @@ export default {
                     i.value = i.name;  //将CUSTOMER_NAME作为value
                 }
 
-                console.log(!queryString)
+                // console.log(!queryString)
 
                 if (!queryString) {
-                    console.log(response.data.result)
+                    // console.log(response.data.result)
 
                     for (let item of response.data.result) {
                         list.push(item)
@@ -518,9 +563,19 @@ export default {
             const data = self.editForm;
 
             let editAddress = self.$refs.editAddress.getData();
-            console.log(editAddress);
-            let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
-            if (!self.testData(data, editAddress, editAgentAddress)) return;
+            console.log(!data.annualPurchasePerformance)
+            console.log(data.annualPurchasePerformance)
+            // console.log(editAddress);
+            let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
+
+            // console.log(editAgentAddress)
+
+            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )?  self.$refs.editBelongAddress.getData() : null;
+            // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
+
+            // console.log(editBelongAddress)
+            
+            if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
             //请求
             self.$ajax({
                 url: '/api/shop/shopManage/modify.jhtml',
@@ -548,9 +603,15 @@ export default {
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
-                    'shop.extendSuperType':data.extendSuperType || '',
-                    'shop.extendSuperNo':data.extendSuperNo || '',
+                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
+                    'shop.extendSuperNo':data.agentGradeId == 265 ? '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
+
+                    
+                    'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
+                    'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
+                    'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
+
                 },
                 transformRequest: [function (data) {
                     let ret = ''
@@ -587,12 +648,8 @@ export default {
             });
         },
         operatorQuerySearchAsync(queryString, callback) {
-            if(this.editForm.operator == queryString){
-                this.editForm.operator2 = false;
-            }
-
-            queryString = !this.editForm.operator2 ? '' : queryString;
-            this.editForm.operator2 = true;
+    
+            queryString = !this.editForm.operator ? '' : queryString;
 
             var list = [{}];
             //调用的后台接口
@@ -633,21 +690,8 @@ export default {
         });
         },
         salesManQuerySearchAsync(queryString, callback) {
-
-            if(this.editForm.salesMan == queryString){
-
-
-            this.editForm.salesMan2 = false;
-
-            }
+             queryString = !this.editForm.salesMan ? '' : queryString;
         
-        
-        
-            queryString = !this.editForm.salesMan2 ? '' : queryString;
-        
-        
-            this.editForm.salesMan2 = true;
-
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
@@ -748,7 +792,7 @@ export default {
             self.loading = false;
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
-
+            self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             // let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' +  self.preAddress
             //     self.$ajax.post(url, {}).then(function (response) {
             //         if (response.data.success == 1) {
@@ -799,7 +843,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 288px;
+        left: 164px;
         z-index: 1000;
     }
     .delete_right {
@@ -808,7 +852,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 1100px;
+        left: 164px;
         z-index: 1000;
     }
 }

@@ -132,13 +132,14 @@
             <el-row>
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级："> 
-                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
-                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                            
+                            <input type="radio" v-model="addForm.extendSuperType" label="ZUIPIN"  @click="deleteExtendSuperNo" >醉品</el-radio>
+                            <input type="radio" v-model="addForm.extendSuperType" label="AGENT">代理商</input>                            
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 826px;"></span>
                     <el-form-item  :span="4"  label="上级编号/姓名">
+                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
+                    
                         <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
@@ -153,16 +154,18 @@
 
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
-                    <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
                     <el-form-item label="运营人员">
+                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
+                        
                         <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
-                    <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
                     <el-form-item label="业务人员">
+                         <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
+                        
                         <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
@@ -454,6 +457,11 @@ export default {
             }
             return true
         },
+        //清除代理商编号、类别
+        deleteExtendSuperNo(){
+        this.addForm.extendSuperNo = '';
+        // console.log(this.addForm.extendSuperNo)
+        },
         // 新增店铺
         addAgent() {
             const self = this;
@@ -465,7 +473,7 @@ export default {
             // console.log(addBelongAddress)
             // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
-            if (!this.testData(data, addAddress, addAgentAddress)) return;
+            if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
             // console.log(addAgentAddress)
             let data1 = {
                     'shop.shopName': data.shopName,
@@ -490,7 +498,7 @@ export default {
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     
                     'shop.extendSuperNo':data.extendSuperNo || '',
-                    'shop.areaClass':data.areaClass || '',
+                    'shop.areaClass':(data.shopType ==='SELF_SUPPORT') ? '' : (data.areaClass || '') ,
 
                     'shop.belongProvince':addBelongAddress  ? addBelongAddress.provinceCode : "",
                     'shop.belongCity':addBelongAddress  ? addBelongAddress.cityCode : "",
@@ -750,7 +758,7 @@ export default {
                 this.addForm.extendSuperNo = item.shopNo;
                 this.addForm.superAreaClass = item.areaClass;
         },
-        deleteExtendSuperNo(){
+        deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
         },
         deleteOperator(){
@@ -810,7 +818,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 289px;
+        left: 164px;
         z-index: 1000;
     }
     .delete_right {
@@ -819,7 +827,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left:1100px;
+        left:164px;
         z-index: 1000;
     }
 
