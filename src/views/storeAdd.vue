@@ -92,12 +92,12 @@
             </el-row>
             <el-row>
                 <!--第五行-->
-                <el-col :span="16" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="18" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
                         <addressComponent ref='addBelongAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
-                <el-col :span="16" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="18" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent ref='addAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
                     </el-form-item>
@@ -109,7 +109,7 @@
                 </el-col>
             </el-row>
             <el-row>
-              <el-col :span="22">
+              <el-col :span="18">
                     <el-form-item label="收件地址：">
                         <addressComponent ref='addAddress' :isDetail="false" />
                     </el-form-item>
