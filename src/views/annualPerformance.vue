@@ -107,8 +107,6 @@
                         </el-table-column>
                         <el-table-column prop="annualPerformanceNo" label="付款单号" width="200">
                         </el-table-column>
-                        <el-table-column prop="auditId" label="付款单号" width="200">
-                        </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">

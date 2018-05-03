@@ -76,7 +76,7 @@
                         </el-table-column>
                         <el-table-column prop="shopNum" label="店铺数" width="100">
                         </el-table-column>
-                        <el-table-column prop="purcharseAmount" label="贷款总金额" width="200">
+                        <el-table-column prop="purcharseAmount" label="贷款总金额" width="150">
                             <template slot-scope="scope">
                                 <span>{{scope.row.purcharseAmount.toFixed(2)}}</span>
                             </template>
@@ -92,7 +92,7 @@
                                 <!-- <span>{{scope.row.entryStatus=='ALREADY_CLOSED'?'未核销':'已核销'}}</span> -->
                             </template>
                         </el-table-column>
-                        <el-table-column prop="paymentOrderNo" label="付款单号" width="100">
+                        <el-table-column prop="paymentOrderNo" label="付款单号" width="200">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
