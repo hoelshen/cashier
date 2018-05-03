@@ -32,7 +32,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="editForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
+                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="resetForm">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -64,7 +64,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="年度业绩目标：">
+                    <el-form-item label="年度业绩目标：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-input v-model="editForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
                     </el-form-item>
                   
@@ -107,7 +107,8 @@
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-input  v-model="editForm.areaClass" disabled style="width:50px"></el-input>
+                            <el-option v-for="item in areaClassArray" :key="item.index" :label="item.areaClass" :value="item.index"></el-option>                        
+                            <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -219,6 +220,7 @@ export default {
                 },
                 isDisable:false,
                 levelArray: [], //代理商等级数组,
+                areaClassArray:[],//类别等级数组,
                 phoneLength: 11,
                 pickerOptions: {
                     disabledDate(time) {
@@ -761,6 +763,34 @@ export default {
         deleteExtendSuperNo(){
             this.editForm.extendSuperNo = '' ;
         },
+        //重置不要的项
+        resetForm(){
+            const self = this;
+            console.log('okj')
+            // self.editForm = {
+            //     // agentProvince:'',
+            //     // agentCity:'',
+            //     // agentCounty:'',
+            //     // belongProvince:'',
+            //     // belongCity:'',
+            //     // belongCountry:'',
+            //     // extendSuperNo:'',
+            //     // superAgentGradeId:'',
+            //     annualPurchasePerformance:'',
+            // }
+
+            self.editForm.annualPurchasePerformance =  '',
+            self.editForm.agentProvince  = '' ,
+            self.editForm.agentCity = '' ,
+            self.editForm.agentCounty = '' ,
+            self.editForm.belongProvince = '' ,
+            self.editForm.belongCity = '' ,
+            self.editForm.belongCountry = '' ,
+            self.editForm.extendSuperNo = '' ,
+            self.editForm.superAgentGradeId = '' ,
+
+            console.log(self.editForm)
+        }
     },
     created() {
         if (!this.checkSession()) return;
