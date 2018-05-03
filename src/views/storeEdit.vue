@@ -391,15 +391,6 @@ export default {
                 })
                 return false;
             }
-            //年度业绩为必填项
-            if(!data.annualPurchasePerformance){
-                self.loading = false;
-                self.$message({
-                    message:'年度业绩为必填项',
-                    type:'error'
-                })
-                return false;
-            }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
@@ -444,28 +435,54 @@ export default {
 
             }
 
-    // console.log(data.annualPurchasePerformance)
+            // console.log(data.annualPurchasePerformance)
+         
+         
+
+
+       
+
+
             //年度业绩目标：
+            console.log(data.annualExtendPerformance)
             if(!data.annualPurchasePerformance ){
-                    
-                    self.loading = false;
-                    debugger
-                    self.$message({
-                    message: '年度业绩不得为空123123',
+                self.loading = false;
+                self.$message({
+                    message: '年度业绩不得为空/零',
                     type: 'error'
                 })
-                return false
+                return false   
             }else{
-               if( data.annualPurchasePerformance===0){
+                //     console.log('ok')
+                // if( data.annualPurchasePerformance == 0){
+                //      console.log('ok')
+                      
+                //     self.loading = false;
+                //     debugger
+                //     self.$message({
+                //         message: '年度业绩不得为零',
+                //         type: 'error'
+
+                //     })
+                //     return false
+                // }
+
+            }
+            //年度店铺拓展
+            // console.log(data.annualExtendPerformance)
+            if(data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualExtendPerformance){
+                    self.loading = false;
                     self.$message({
-                        message: '年度业绩不得为零12313',
+                        message: '年度店铺不得为空/零',
                         type: 'error'
                     })
-                    return false
-               }
+                    return false  
+                }
             }
-            
+         
             return true
+                 
         },
         //checksession                
         checkSession() {
@@ -563,8 +580,7 @@ export default {
             const data = self.editForm;
 
             let editAddress = self.$refs.editAddress.getData();
-            console.log(!data.annualPurchasePerformance)
-            console.log(data.annualPurchasePerformance)
+
             // console.log(editAddress);
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
@@ -574,8 +590,12 @@ export default {
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress)
-            
+ 
+
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
+            
+    
+
             //请求
             self.$ajax({
                 url: '/api/shop/shopManage/modify.jhtml',
