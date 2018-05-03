@@ -863,7 +863,16 @@ export default {
             }
         },
         formatJson(filterVal, jsonData) {
-            return jsonData.map(v => filterVal.map(j => v[j]))
+        //     ----> 格式化json
+        //     console.log(jsonData)
+            return jsonData.map(v => {
+        // 	   console.log(v)
+                return filterVal.map(j => {
+            //       console.log(j,v[j])
+                    return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+                // }
+                })			
+            })	
         },
         // 导出明细
 		outputExcel(areaClass) {
@@ -920,7 +929,7 @@ export default {
                                                 const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标',
                                                                  '已完成', '进度', '年度进货业绩目标', '已完成', '进度',
                                                                  '剩余时间','备注', ]
-                                                const filterVal =['shopNo', 'areaClass', 'shopName', 'areaClass', 
+                                                const filterVal =['shopNo', 'agentGradeId', 'shopName', 'areaClass', 
                                                                     'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'areaClass', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
                                                                     'ReaminTime', 'remark',]
                                                 const list = self.tableData;

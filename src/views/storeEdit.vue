@@ -140,8 +140,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
-                    <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 826px;"></span>
                     <el-form-item  :span="4"  label="上级编号/姓名">
+                        <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
@@ -149,7 +149,7 @@
                 </el-col>
                 <el-col :span="4"  v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item :span="4" label="上级代理商等级:">
-                            <el-input v-model="editForm.superAgentGradeId"></el-input>   
+                            <el-input v-model="editForm.superAgentGradeId"  disabled></el-input>   
                     </el-form-item>
                  </el-col>
             </el-row>
@@ -448,19 +448,11 @@ export default {
                 return false;
               
             }
-            if((data.annualPurchasePerformance) == 0){
-                self.loading = false;
-                self.$message({
-                    message: '年度业绩不得为零',
-                    type: 'error'
-                })
-                return false;   
-
-            }
+        
             // 年度店铺拓展
             // console.log(data.annualExtendPerformance)
-            console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
-            console.log(data.shopType != 'SELF_SUPPORT')
+            // console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
+            // console.log(data.shopType != 'SELF_SUPPORT')
 
             if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualExtendPerformance){

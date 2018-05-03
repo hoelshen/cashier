@@ -459,16 +459,6 @@ export default {
                     return false;
                 
                 }
-                if((data.annualPurchasePerformance) == 0){
-                        self.loading = false;
-                    
-                    self.$message({
-                        message: '年度业绩不得为零',
-                        type: 'error'
-                    })
-                    return false;   
-
-                }
             }
        
             // 年度店铺拓展
