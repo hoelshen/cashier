@@ -256,8 +256,8 @@ export default {
                 if (response.data.success == 1) {
                     // console.log(response.data.result)
                     // console.log(self.addForm.areaClass)
-                    self.addForm.areaClass = response.data.result
-
+                    self.addForm.areaClass = response.data.result.areaClass
+                    self.addForm.annualExtendPerformance =   response.data.result.shopNum
                     // console.log(self.addForm.areaClass)
                 } else {
                     self.$message({
@@ -425,15 +425,6 @@ export default {
                 })
                 return false;
             }
-            //年度业绩为必填项
-            if(!data.annualPurchasePerformance){
-                self.loading = false;
-                self.$message({
-                    message:'年度业绩为必填项',
-                    type:'error'
-                })
-                return false;
-            }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
@@ -455,12 +446,50 @@ export default {
                 }
 
             }
+                  //年度业绩目标：
+            // console.log(data.annualPurchasePerformance)
+            if(data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualPurchasePerformance ){
+                    self.loading = false;
+                    self.$message({
+                        message: '年度业绩不得为空',
+                        type: 'error'
+                    })                  
+                    
+                    return false;
+                
+                }
+                if((data.annualPurchasePerformance) == 0){
+                        self.loading = false;
+                    
+                    self.$message({
+                        message: '年度业绩不得为零',
+                        type: 'error'
+                    })
+                    return false;   
+
+                }
+            }
+       
+            // 年度店铺拓展
+            // console.log(data.annualExtendPerformance)
+
+            if( (data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualExtendPerformance){
+                    self.loading = false;
+                    self.$message({
+                        message: '年度店铺不得为空/零',
+                        type: 'error'
+                    })
+                    return false  
+                }
+            }
+         
             return true
         },
         //清除代理商编号、类别
         deleteExtendSuperNo(){
-        this.addForm.extendSuperNo = '';
-        // console.log(this.addForm.extendSuperNo)
+            this.addForm.extendSuperNo = '';
         },
         // 新增店铺
         addAgent() {
@@ -756,7 +785,7 @@ export default {
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
-                this.addForm.superAreaClass = item.areaClass;
+                this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.agentGradeId == 31 ? '单店' : '微店');
         },
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;

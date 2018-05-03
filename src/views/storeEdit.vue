@@ -436,52 +436,40 @@ export default {
 
             }
 
-            // console.log(data.annualPurchasePerformance)
-         
-         
-
-
-       
-
-
             //年度业绩目标：
-            console.log(data.annualExtendPerformance)
+            // console.log(data.annualPurchasePerformance)
             if(!data.annualPurchasePerformance ){
                 self.loading = false;
                 self.$message({
-                    message: '年度业绩不得为空/零',
+                    message: '年度业绩不得为空',
+                    type: 'error'
+                })                  
+                
+                return false;
+              
+            }
+            if((data.annualPurchasePerformance) == 0){
+                self.loading = false;
+                self.$message({
+                    message: '年度业绩不得为零',
                     type: 'error'
                 })
-                return false   
+                return false;   
+
             }
-            // else{
-                //     console.log('ok')
-                // if( data.annualPurchasePerformance == 0){
-                //      console.log('ok')
-                      
-                //     self.loading = false;
-                //     debugger
-                //     self.$message({
-                //         message: '年度业绩不得为零',
-                //         type: 'error'
-
-                //     })
-                //     return false
-                // }
-
-            // }
-            //年度店铺拓展
+            // 年度店铺拓展
             // console.log(data.annualExtendPerformance)
-            // if(data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT'){
-            //     if(!data.annualExtendPerformance){
-            //         self.loading = false;
-            //         self.$message({
-            //             message: '年度店铺不得为空/零',
-            //             type: 'error'
-            //         })
-            //         return false  
-            //     }
-            // }
+
+            if( (data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualExtendPerformance){
+                    self.loading = false;
+                    self.$message({
+                        message: '年度店铺不得为空/零',
+                        type: 'error'
+                    })
+                    return false  
+                }
+            }
          
             return true
                  
@@ -591,7 +579,7 @@ export default {
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )?  self.$refs.editBelongAddress.getData() : null;
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
-            console.log(editBelongAddress);
+            // console.log(editBelongAddress);
  
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
@@ -631,7 +619,7 @@ export default {
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ? '' :  (data.extendSuperNo || ''),
-                    'shop.superAgentGradeId':data.areaClass  || '',
+                    'shop.areaClass':data.areaClass  || '',
                     'shop.superAgentGradeId':data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 ) || '',
 
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -767,7 +755,8 @@ export default {
         },
         handleExtendSuperNoSelect(item){
             this.editForm.extendSuperNo = item.shopNo;
-            this.editForm.superAgentGradeId = item.agentGradeId == 265 ? '区域' : (item.agentGradeId == 31 ? '单店' : '微店');
+            // console.log(item)
+            this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
         },
         deleteOperator(){
             this.editForm.operator='';

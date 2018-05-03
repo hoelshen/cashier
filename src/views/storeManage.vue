@@ -317,7 +317,7 @@ export default {
                      
                      value.areaClass =   (value.areaClass).toLocaleLowerCase()
 
-                     console.log(value.areaClass)
+                    //  console.log(value.areaClass)
                 }
             }
             // response.data.rows.forEach(data => {
