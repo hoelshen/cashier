@@ -74,9 +74,15 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单总金额" width="100">
+                        <el-table-column prop="orderSum" label="订单总金额" width="150">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.orderSum.toFixed(2)}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="freightSum" label="订单运费" width="100">
+                            <template slot-scope="scope">
+                                <span>{{scope.row.freightSum.toFixed(2)}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
@@ -93,7 +99,7 @@
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号" width="100">
+                        <el-table-column prop="payOrderNo" label="付款单号" width="200">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
