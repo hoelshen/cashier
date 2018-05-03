@@ -266,7 +266,7 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                isFirstBatchMoney:'',
+                isFirstBatchMoney:'0',
             },
             editFormTitle: '',
             isDisable: false,

@@ -459,8 +459,10 @@ export default {
             }
             // 年度店铺拓展
             // console.log(data.annualExtendPerformance)
+            console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
+            console.log(data.shopType != 'SELF_SUPPORT')
 
-            if( (data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT'){
+            if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualExtendPerformance){
                     self.loading = false;
                     self.$message({
@@ -620,7 +622,7 @@ export default {
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ? '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
-                    'shop.superAgentGradeId':data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 ) || '',
+                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 )) || '',
 
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                     'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
