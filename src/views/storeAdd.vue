@@ -132,8 +132,8 @@
             <el-row>
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级："> 
-                            <input type="radio" v-model="addForm.extendSuperType" label="ZUIPIN"  @click="deleteExtendSuperNo" >醉品</el-radio>
-                            <input type="radio" v-model="addForm.extendSuperType" label="AGENT">代理商</input>                            
+                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品</el-radio>
+                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
                     </el-form-item>
                 </el-col>
                 <el-col :span="8" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
