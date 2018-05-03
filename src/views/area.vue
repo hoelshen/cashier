@@ -74,7 +74,7 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单总金额" width="100">
+                        <el-table-column prop="orderSum" label="订单总金额" width="150">
                         </el-table-column>
                         <el-table-column prop="freightSum" label="订单运费" width="100">
                         </el-table-column>
