@@ -423,7 +423,7 @@ export default {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excelyw')
                             const tHeader = ['代理商编号','统计周期','代理商姓名','代理商等级','签约时间','贷款金额','返点比例','分成金额','备注说明']
-                            const filterVal = ['agentNo','year','agentName','agentGradeId','signedTime','purcharseAmount','rebateRate','RebateAmount']
+                            const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','purcharseAmount','rebateRate','RebateAmount']
                             const list = self.downData;
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '业务拓展返利明细')
                         })
