@@ -96,7 +96,7 @@
                 <!--第五行-->
                 <el-col :span="16" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
-                        <addressComponent ref='editBelongAddress' :isDetail="false" />   
+                        <addressComponent ref='editBelongAddress' :provinceCode="editForm.belongProvince" :cityCode="editForm.belongCity " :areaCode="editForm.belongCountry"  :isDetail="false" />   
                     </el-form-item>
                 </el-col>
                 <el-col :span="16" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
@@ -149,7 +149,7 @@
                 </el-col>
                 <el-col :span="4"  v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item :span="4" label="上级代理商等级:">
-                            <el-input v-model="editForm.superAreaClass"></el-input>   
+                            <el-input v-model="editForm.superAgentGradeId"></el-input>   
                     </el-form-item>
                  </el-col>
             </el-row>
@@ -214,6 +214,7 @@ export default {
                     superAreaClass:'',
                     extendSuperNo:'',
                     areaClass:'',
+                    superAgentGradeId:'',
                     
                 },
                 isDisable:false,
@@ -242,8 +243,8 @@ export default {
                 // console.log(response);
                 if (response.data.success == 1) {
               
-                    self.editForm.areaClass = response.data.result
-
+                    self.editForm.areaClass = response.data.result.areaClass
+                    self.editForm.annualExtendPerformance = response.data.result.shopNum
                     // console.log(self.editForm.areaClass)
                 } else {
                     self.$message({
@@ -452,7 +453,8 @@ export default {
                     type: 'error'
                 })
                 return false   
-            }else{
+            }
+            // else{
                 //     console.log('ok')
                 // if( data.annualPurchasePerformance == 0){
                 //      console.log('ok')
@@ -467,19 +469,19 @@ export default {
                 //     return false
                 // }
 
-            }
+            // }
             //年度店铺拓展
             // console.log(data.annualExtendPerformance)
-            if(data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT'){
-                if(!data.annualExtendPerformance){
-                    self.loading = false;
-                    self.$message({
-                        message: '年度店铺不得为空/零',
-                        type: 'error'
-                    })
-                    return false  
-                }
-            }
+            // if(data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT'){
+            //     if(!data.annualExtendPerformance){
+            //         self.loading = false;
+            //         self.$message({
+            //             message: '年度店铺不得为空/零',
+            //             type: 'error'
+            //         })
+            //         return false  
+            //     }
+            // }
          
             return true
                  
@@ -589,7 +591,7 @@ export default {
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )?  self.$refs.editBelongAddress.getData() : null;
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
-            // console.log(editBelongAddress)
+            console.log(editBelongAddress);
  
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
@@ -606,16 +608,20 @@ export default {
                     'shop.name': data.name,
                     'shop.phone': data.phone,
                     'shop.signedTime': data.signedTime,
+
                     'shop.provinceCode': editAddress.provinceCode,
                     'shop.cityCode': editAddress.cityCode,
                     'shop.countyCode': editAddress.areaCode,
+                    
                     'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
                     'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
                     'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
+                    
                     'shop.agentGradeId': data.agentGradeId,                    
                     'shop.address': data.address,
-                    'shop.shopType': data.shopType,
                     'shop.city': data.city,
+                    'shop.shopType': data.shopType,
+                   
                     'shop.isShow': data.isShow,
                     'shop.operator': data.operator,
                     'shop.salesMan': data.salesMan,
@@ -625,9 +631,9 @@ export default {
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ? '' :  (data.extendSuperNo || ''),
-                    'shop.areaClass':data.areaClass  || '',
+                    'shop.superAgentGradeId':data.areaClass  || '',
+                    'shop.superAgentGradeId':data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 ) || '',
 
-                    
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                     'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
                     'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
@@ -676,20 +682,16 @@ export default {
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
             //从后台获取到对象数组
             axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                //在这里为这个数组中每一个对象加一个字段, 因为autocomplete只识别字段并在下拉列中显示
                 for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+                    i.value = i.userName;  //将CUSTOMER_NAME作为
                 }
-
                 if (!queryString) {
                     // console.log(response.data.result)
-
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-
                     callback(list);
-
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
@@ -717,9 +719,9 @@ export default {
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
             //从后台获取到对象数组
             axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                //在这里为这个数组中每一个对象加一个字段, 因为autocomplete只识别字段并在下拉列中显示
                 for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+                    i.value = i.userName;  //将CUSTOMER_NAME作为
                 }
 
 
@@ -765,7 +767,7 @@ export default {
         },
         handleExtendSuperNoSelect(item){
             this.editForm.extendSuperNo = item.shopNo;
-            this.editForm.superAreaClass = item.areaClass;
+            this.editForm.superAgentGradeId = item.agentGradeId == 265 ? '区域' : (item.agentGradeId == 31 ? '单店' : '微店');
         },
         deleteOperator(){
             this.editForm.operator='';
@@ -813,21 +815,8 @@ export default {
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-            // let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' +  self.preAddress
-            //     self.$ajax.post(url, {}).then(function (response) {
-            //         if (response.data.success == 1) {
-            //             self.editForm.areaClass = response.data.result
-            //             console.log(self.editForm.areaClass)
-            //             console.log('ok')
-            //         } else {
-            //             self.$message({
-            //                 message: response.data.msg,
-            //                 type: 'error'
-            //             })
-            //         }
-            //     }).catch(function (err) {
-            //         console.log(err);
-            //     });
+        
+            self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
         }).catch(function (err) {
             self.loading = false;
             console.log(err);

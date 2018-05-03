@@ -147,7 +147,7 @@
                 </el-col>
                 <el-col :span="4"  v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item :span="4" label="上级代理商等级:">
-                            <el-input v-model="addForm.superAreaClass"></el-input>   
+                            <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
                  </el-col>
             </el-row>
