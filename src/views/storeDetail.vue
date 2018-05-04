@@ -148,75 +148,101 @@
 
     
             <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible">
+            <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
                   <el-table :data="agencyRelationsanceForm" style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
                       </el-table-column>
-                      <el-table-column prop="aengtName" label="代理商姓名" width="127">
+                      <el-table-column prop="agentName" label="代理商姓名" width="127">
                       </el-table-column>
                       <el-table-column prop="agentGradeId" label="代理商等级" width="127">
+                           <template slot-scope="scope">
+                                <span v-if="scope.row.agentGradeId  == '266'">微店</span>
+                                <span v-if="scope.row.agentGradeId  == '265'">区域</span>
+                                <span v-if="scope.row.agentGradeId  == '31'">单店</span>
+                            </template>
                       </el-table-column>
                       <el-table-column prop="registTime" label="店铺注册" width="127">
                       </el-table-column>
                       <el-table-column prop="relationType" label="关系">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品关系</span>
+                                <span v-if="scope.row.relationType  == 'AGENT_EXTEND'">代理关系</span>
+                            </template>
                       </el-table-column>
                   </el-table>
                 <div class="plPage clearfix">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
+                    <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                     </el-pagination>
                 </div>
-                <div  class="dialog-footer" @click="changeCancle()">
+                <div slot="footer"   class="dialog-footer" @click="changeCancle()">
                 </div>
             </el-dialog>
         
 
 
-
-
               <!-- 查看代理商年度业绩(编号：xxx) start -->
-                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" width=100% >
-                    <div>
-                        <img src="../assets/images/Standard.png" alt="">
-                        <img src="../assets/images/DStandard.png" alt="">
+                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible"  size="180%"  :before-close="changeCancle">
+                    <div style="height:40px;">
+                        <div class="img" style="padding:0 10px 0 10px;margin:0 10px 0 10px;">
+                                <img style="margin-right:5px;margin-left:5px;padding-right:5px" src="../assets/images/Standard.png" alt="">已达标
+                                <img style="margin-right:5px;margin-left:5px;padding-right:5px"  src="../assets/images/DStandard.png" alt="">未达标
+                        </div>
+                        <!-- <div class="block">
+                            <p>组件值：{{  }}</p>
+                            <el-date-picker
+                            v-model="value13"
+                            type="daterange"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']">
+                            </el-date-picker>
+                        </div> -->
                     </div>
-                    <div>
-                      <el-table :data="annualAgentsForm">
+                    <div >
+                      <el-table :data="annualAgentsForm" style="width: 100%;">
                          <el-table-column prop="id" label="序列"  width="80"></el-table-column>
                           <el-table-column prop="agentGradeName" label="代理商等级" width="127">
                           </el-table-column>
                           <el-table-column prop="annualCycle" label="年份" width="127" >
                           </el-table-column>
                           <el-table-column prop="shopNums" label="目标店铺" width="100">
+                                <template slot-scope="scope">
+                                    <span v-if="scope.row.agentGradeId==265"> {{scope.row.shopNums}}</span> 
+                                    <span v-else>-</span>
+                               </template>
                           </el-table-column>
                           <el-table-column prop="finishShopNums" label="达成"  width="80"  align="right">
                           </el-table-column>
-                          <el-table-column prop="annualPerformanceAmount" label="目标进货额" width="127" align="right">
+                          <el-table-column prop="annualPerformanceAmount" label="目标进货额" width="157" align="right">
                                <template slot-scope="scope">
                                 <span>{{scope.row.annualPerformanceAmount.toFixed(2)}}</span>
-                            </template>
+                               </template>
                           </el-table-column>
                           <el-table-column prop="finishPerformanceSum" label="达成"  width="127" align="right">
                                <template slot-scope="scope">
                                 <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
-                            </template>
+                               </template>
                           </el-table-column>
-                          <el-table-column prop="finishRatio" label="年度业绩" width="127" align="right">
-                              <template slot-scope="scope">
-                                <span>{{scope.row.finishRatio.toFixed(2)}}{{'%'}}</span>
-                            </template>
+                          <el-table-column prop="finishRatio" label="年度业绩" width="177" align="right">
+                            <template slot-scope="scope">
+                                <span>{{(scope.row.finishRatio.toFixed(2))*10}}{{'%'}}</span>
+                                <div v-if="(scope.row.finishRatio.toFixed(2))*10 >= 100" >
+                                    <img src="../assets/images/Standard.png" alt="">已达标
+                                </div> 
+                                <div v-else >
+                                    <img  src="../assets/images/DStandard.png" alt="">未达标
+                                </div>
+                            </template> 
                           </el-table-column>
                       </el-table>
                     </div>
                     <div class="plPage clearfix">
-                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+                        <el-pagination @current-change="AnnualAgentsHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
                         </el-pagination>
                     </div>
-                    <!-- <div slot="title" class="dialog-title">
-                        <p><span>查看代理商年度业绩</span><span>()</span></p>
-                    </div> -->
-                    <div  class="dialog-footer" @click="changeCancle()">
+                    <div slot="footer" class="dialog-footer" @click="changeCancle()">
                     </div>
                 </el-dialog>
           
@@ -346,13 +372,15 @@ export default {
         
             this.agencyRelationsanceDialogVisible = false;
             this.agencyRelationsanceForm = [];
-
+    
             this.annualAgentsForm = [];
             this.annualAgentsDialogVisible = false;
 
         },
      //查看代理商关系
       openAgencyRelationsance(shopNo) {
+
+          this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
         // console.log(shopNo)
           if (!this.checkSession()) return;
           const self = this;
@@ -361,7 +389,11 @@ export default {
           self.$ajax.get('/api/shop/shopManage/getAgentRelationList.jhtml', {
               params: {
                   'shopNo': shopNo,
-              }
+              },
+              data: {
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+              },
           }).then(function (response) {
             
               self.loading = false;
@@ -456,12 +488,18 @@ export default {
       this.$router.push("/storeManage");
     },
 
-     //改变当前页
-     handleCurrentChange(val) {
+     //改变年度业绩当前页
+    AnnualAgentsHandleCurrentChange(val) {
             let self = this;
             self.currentPage = val;
             self.openAnnualAgents();
-        },
+    },
+    //改变代理商关系当前页
+    agencyRelationsanceHandleCurrentChange(val){
+             let self = this;
+            // self.currentPage = val;
+            self.openAgencyRelationsance();
+    }
   },
   created() {
     if (!this.checkSession()) return;
