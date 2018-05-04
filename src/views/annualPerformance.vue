@@ -148,13 +148,13 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 30,
+            pageSize: 5,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: 0,
+                status: '',
                 name:'',
                 aglevel:"",
                 annualCycle:'',
@@ -444,11 +444,11 @@ export default {
             });
         },
         // 批量导出明细
-        batchOutputExcel() {
+        batchOutputExcel() {debugger
             let self = this;
             let ids = self.formatSelect()
             console.log(ids)
-            if(!self.ifCheckAll){
+            if(self.selectData.length==0){
                  self.outputExcel(-1)
             }else{
                 self.outputExcel(ids)
@@ -498,6 +498,45 @@ export default {
                 if (response.data.success === 1) {
                     // console.log(self.downData)
                     self.downData = response.data.result;
+                    for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                            self.downData[i].annualPerformanceOrderDetailVos[j].ratio =  (self.downData[i].annualPerformanceOrderDetailVos[j].ratio*100).toFixed(2)+"%"
+                        }
+                    }
+                    
+                    for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                            self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =  ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)+"-"+ ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime)
+                        }
+                    }
+                     for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='31'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '单点代理'
+                            }
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='265'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '区域代理'
+                            }
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='266'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '微店代理'
+                            }
+                            
+                        }
+                     }
+                     for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='SELF'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '本人'
+                            }
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='BUSSINESS_DEVELOPMENT'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '业务拓展'
+                            }
+                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='ZUIPIN_DEVELOPMENT'){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '醉品开发'
+                            }
+                            
+                        }
+                     }
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
@@ -505,7 +544,7 @@ export default {
                             } = require('../components/tools/Export2Excelyj')
                             const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
                             const filterVal = [
-                                'shopNo', 'annualCycle','name', 'agentGradeName', 'relationship','signedTime', 'payTime','finishTimne','goodsAmount', 'ratio', 'getAmountShopId', 'remark',
+                                'shopNo', 'annualCycle','name', 'agentGradeId', 'relationship','signedTime', 'payTime','finishTime','goodsAmount', 'ratio', 'performanceAmount', 'billNo',
                                 
                             ]
                             const list = self.downData;
