@@ -90,12 +90,12 @@
                         </el-table-column>
                         <el-table-column prop="finishShopNums" label="店铺数">
                         </el-table-column>
-                        <el-table-column prop="selfPurchaseSum" label="贷款总金额" width="200">
+                        <el-table-column prop="finishPerformanceSum" label="货款总金额" width="150" align="right">
                             <template slot-scope="scope">
-                                <span>{{scope.row.selfPurchaseSum.toFixed(2)}}</span>
+                                <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="rebateAmountSum" label="返利金额" width="100">
+                        <el-table-column prop="rebateAmountSum" label="返利金额" width="150" align="right">
                             <template slot-scope="scope">
                                 <span>{{scope.row.rebateAmountSum.toFixed(2)}}</span>
                             </template>
@@ -150,7 +150,7 @@ export default {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: '',
+                status: 0,
                 name:'',
                 aglevel:"",
                 annualCycle:'',
@@ -180,7 +180,7 @@ export default {
                 },
                 {
                     index: 266,
-                    name: '区域代理'
+                    name: '微店代理'
                 }
             ],
             //日期选择器
@@ -188,7 +188,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
+                    return time.getYear() > date.getYear() && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据

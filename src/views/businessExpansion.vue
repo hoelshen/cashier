@@ -13,7 +13,7 @@
                     
                     <el-col :span="5">
                         <el-form-item label="选择年份： ">
-                            <el-date-picker value-format="yyyy" v-model="searchData.year"  type="year" placeholder="选择年份">
+                            <el-date-picker value-format="yyyy" v-model="searchData.year" :picker-options="pickerOptions" type="year" placeholder="选择年份">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -76,12 +76,12 @@
                         </el-table-column>
                         <el-table-column prop="shopNum" label="店铺数" width="100">
                         </el-table-column>
-                        <el-table-column prop="purcharseAmount" label="贷款总金额" width="150">
+                        <el-table-column prop="purcharseAmount" label="货款总金额" width="150" align="right">
                             <template slot-scope="scope">
                                 <span>{{scope.row.purcharseAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="rebateAmount" label="返利金额" width="100">
+                        <el-table-column prop="rebateAmount" label="返利金额" width="150" align="right">
                             <template slot-scope="scope">
                                 <span>{{scope.row.rebateAmount.toFixed(2)}}</span>
                             </template>
@@ -97,7 +97,7 @@
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id,scope.row.shopNo,scope.row.year)">导出明细</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.agentNo,scope.row.year)">导出明细</span>
                                         <span v-if="scope.row.entryStatus=='WAIT_CHECK'" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
@@ -135,7 +135,7 @@ export default {
                 agentName: '',
                 phone: '',
                 agentNo: '',
-                entryStatus: '',
+                entryStatus: 'WAIT_CHECK',
                 year:'',
                 paymentOrderNo:'',
             },
@@ -154,7 +154,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
+                    return time.getYear() > date.getYear() - 1 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据
@@ -422,8 +422,8 @@ export default {
                             const {
                                 export_json_to_excel
                             } = require('../components/tools/Export2Excelyw')
-                            const tHeader = ['代理商编号','统计周期','代理商姓名','代理商等级','签约时间','贷款金额','返点比例','分成金额','备注说明']
-                            const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','purcharseAmount','rebateRate','RebateAmount']
+                            const tHeader = ['代理商编号','统计周期','代理商姓名','代理商等级','签约时间','付款时间','货款金额','返点比例','分成金额','备注说明']
+                            const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','paymentTime','purcharseAmount','rebateRate','RebateAmount']
                             const list = self.downData;
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '业务拓展返利明细')
                         })
