@@ -32,7 +32,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="editForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="resetForm">直营店铺</el-radio>
+                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="deleteSelfSupport">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -473,7 +473,7 @@ export default {
             //年度业绩目标：
             // console.log(data.annualPurchasePerformance)
 
-            if(!String(data.annualPurchasePerformance) ){
+            if(!String(data.annualPurchasePerformance) && data.shopType != 'SELF_SUPPORT' ){
                 self.loading = false;
                 self.$message({
                     message: '年度业绩不得为空',
@@ -798,8 +798,8 @@ export default {
             this.editForm.extendSuperNo = '';
             this.editForm.superAgentGradeId = '';
         },
-        //重置不要的项
-        resetForm(){
+        //重置直营店铺不要的项
+        deleteSelfSupport(){
             const self = this;
             // console.log('okj')
             // self.editForm = {
