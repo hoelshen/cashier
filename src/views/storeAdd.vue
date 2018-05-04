@@ -136,7 +136,7 @@
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
                     </el-form-item>
                 </el-col>
-                <el-col :span="8"  v-if="addForm.agentGradeId=='31' || addForm.agentGradeId=='266' ">
+                <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
                     
@@ -145,7 +145,7 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-show="addForm.agentGradeId=='31'  || addForm.agentGradeId=='266' ">
+                <el-col :span="4"  v-show="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN'">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
