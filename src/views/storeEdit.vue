@@ -472,7 +472,8 @@ export default {
 
             //年度业绩目标：
             // console.log(data.annualPurchasePerformance)
-            if(!data.annualPurchasePerformance ){
+
+            if(!String(data.annualPurchasePerformance) ){
                 self.loading = false;
                 self.$message({
                     message: '年度业绩不得为空',
@@ -640,7 +641,7 @@ export default {
                     'shop.salesMan': data.salesMan,
                     'shop.salesManId': data.salesManId || '',
                     'shop.operatorId': data.operatorId || '',
-                    'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
+                    'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ?  '' :  (data.extendSuperNo || ''),
