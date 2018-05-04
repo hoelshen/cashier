@@ -104,7 +104,10 @@
                 </el-col>
                 <el-col :span="4"  v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-input  v-model="addForm.areaClass"  style="width:50px"></el-input>
+                            <!-- <el-input  v-model="addForm.areaClass"  style="width:50px"></el-input> -->
+                            <el-select v-model="addForm.areaClass" placeholder="类别"   clearable>
+                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -228,6 +231,23 @@ export default {
                 belongCountry:'',
             },
             levelArray: [], //代理商等级数组
+            areaClassArray: [{   //类别等级数组
+                value: 'S',
+                name: 'S'
+            },
+            {
+                value:'A',
+                name: 'A'
+            },
+            {
+                value: 'B',
+                name: 'B'
+            },
+            {
+                value: 'C',
+                name: 'C'
+            }
+            ],
             phoneLength: 11,
             pickerOptions: {
                 disabledDate(time) {
@@ -252,13 +272,9 @@ export default {
 
             let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' + self.$refs.addAgentAddress.getData().cityName
             self.$ajax.post(url, {}).then(function (response) {
-                // console.log(response);
                 if (response.data.success == 1) {
-                    // console.log(response.data.result)
-                    // console.log(self.addForm.areaClass)
                     self.addForm.areaClass = response.data.result.areaClass
                     self.addForm.annualExtendPerformance =   response.data.result.shopNum
-                    // console.log(self.addForm.areaClass)
                 } else {
                     self.$message({
                         message: response.data.msg,

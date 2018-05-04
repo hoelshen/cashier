@@ -49,7 +49,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商状态：" disabled>
                         <el-col :span="12">
-                            {{ editForm.state	=== 1 ? '启用' : '禁用' }}
+                            {{ editForm.state	=== 1 ? '禁用' : '启用' }}
                         </el-col>
                     </el-form-item>
                 </el-col>
@@ -87,7 +87,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
@@ -101,14 +101,16 @@
                 </el-col>
                 <el-col :span="16" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent  :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
+                        <addressComponent  :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false"  @click.native="changeAnnualExtendPerformance"/>   
                     </el-form-item>
                 
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-option v-for="item in areaClassArray" :key="item.index" :label="item.areaClass" :value="item.index"></el-option>                        
-                            <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input>
+                            <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
+                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>                    
+                            <!-- <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input> -->
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -136,19 +138,19 @@
             <el-row>
                 <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT">代理商</el-radio>                            
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo">醉品</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item  :span="4"  label="上级编号/姓名">
+                <el-col :span="8"  v-if="(editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
+                    <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="4"   v-if="(editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="editForm.superAgentGradeId"  disabled></el-input>   
                     </el-form-item>
@@ -217,16 +219,33 @@ export default {
                     areaClass:'',
                     superAgentGradeId:'',
                     
-                },
-                isDisable:false,
-                levelArray: [], //代理商等级数组,
-                areaClassArray:[],//类别等级数组,
-                phoneLength: 11,
-                pickerOptions: {
-                    disabledDate(time) {
-                        return time.getTime() > Date.now();
-                }
             },
+            isDisable:false,
+            levelArray: [], //代理商等级数组,
+            areaClassArray: [{   //类别等级数组,
+                    value: 'S',
+                    name: 'S'
+                },
+                {
+                    value:'A',
+                    name: 'A'
+                },
+                {
+                    value: 'B',
+                    name: 'B'
+                },
+                {
+                    value: 'C',
+                    name: 'C'
+                }
+            ],
+            phoneLength: 11,
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
+            },
+            flage:true,                
         }
     },
     components: {
@@ -244,9 +263,17 @@ export default {
             self.$ajax.post(url, {}).then(function (response) {
                 // console.log(response);
                 if (response.data.success == 1) {
-              
-                    self.editForm.areaClass = response.data.result.areaClass
-                    self.editForm.annualExtendPerformance = response.data.result.shopNum
+                        const data = response.data.result
+                    self.editForm.areaClass = data.areaClass
+                    if(!self.flage){
+                        self.editForm.annualExtendPerformance =   data.shopNum
+                    }
+                    // console.log(self.editForm.annualExtendPerformance)
+                    // if(self.editForm.annualExtendPerformance){
+                    //         console.log('ok')
+                    // }
+
+                    // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
                     // console.log(self.editForm.areaClass)
                 } else {
                     self.$message({
@@ -257,6 +284,11 @@ export default {
             }).catch(function (err) {
                 console.log(err);
             });          
+        },
+        //改变店铺拓展数
+        changeAnnualExtendPerformance(){
+            this.flage = false;
+            console.log('ok')
         },
         //提交字段校验
         testData(data, Address, AgentAddress, BelongAddress ) {
@@ -416,7 +448,7 @@ export default {
 
             }
             //所属区域判断
-            if (data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT') {
+            if ((data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT') {
                 if (!BelongAddress.provinceCode || !BelongAddress.cityCode || !BelongAddress.areaCode) {
                     // debugger
                     self.loading = false;
@@ -558,7 +590,7 @@ export default {
                 console.log(error);
             });
         },
-        // 修改店铺
+        // 确认修改店铺
         editAgent() {
             const self = this;
             if (!self.checkSession()) return;
@@ -570,17 +602,14 @@ export default {
             // console.log(editAddress);
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
-            // console.log(editAgentAddress)
+            // console.log(editAgentAddress);
 
-            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )?  self.$refs.editBelongAddress.getData() : null;
+            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.editBelongAddress.getData() : null;
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress);
- 
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-            
-    
 
             //请求
             self.$ajax({
@@ -614,9 +643,9 @@ export default {
                     'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
-                    'shop.extendSuperNo':data.agentGradeId == 265 ? '' :  (data.extendSuperNo || ''),
+                    'shop.extendSuperNo':data.agentGradeId == 265 ?  '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
-                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 )) || '',
+                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
 
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                     'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
@@ -751,7 +780,6 @@ export default {
         },
         handleExtendSuperNoSelect(item){
             this.editForm.extendSuperNo = item.shopNo;
-            // console.log(item)
             this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
         },
         deleteOperator(){
@@ -760,13 +788,19 @@ export default {
         deleteSalesMan(){
             this.editForm.salesMan='';     
         },
+        //清除代理商编号、类别
         deleteExtendSuperNo(){
-            this.editForm.extendSuperNo = '' ;
+
+            // if(shopType == 'AGENT' && agentGradeId == 31){
+
+            // }
+            this.editForm.extendSuperNo = '';
+            this.editForm.superAgentGradeId = '';
         },
         //重置不要的项
         resetForm(){
             const self = this;
-            console.log('okj')
+            // console.log('okj')
             // self.editForm = {
             //     // agentProvince:'',
             //     // agentCity:'',
@@ -790,7 +824,8 @@ export default {
             self.editForm.superAgentGradeId = '' ,
 
             console.log(self.editForm)
-        }
+        },
+    
     },
     created() {
         if (!this.checkSession()) return;
@@ -828,8 +863,15 @@ export default {
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-        
-            self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
+            if(self.flage){
+                    self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
+                    console.log(self.editForm.annualExtendPerformance)     
+                    
+            }
+            if(self.editForm.superAgentGradeId){
+                self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
+                
+            }
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
