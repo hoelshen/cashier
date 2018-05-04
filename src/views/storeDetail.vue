@@ -163,8 +163,7 @@
                     <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                     </el-pagination>
                 </div>
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="changeCancle()">取 消</el-button>
+                <div  class="dialog-footer" @click="changeCancle()">
                 </div>
             </el-dialog>
         
@@ -173,36 +172,43 @@
 
 
               <!-- 查看代理商年度业绩(编号：xxx) start -->
-                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" width=60% >
+                <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" width=100% >
                     <div>
                       <el-table :data="annualAgentsForm">
-                         <el-table-column type="index" label="序列"  width="80"></el-table-column>
-                          <el-table-column prop="shopId" label="代理商等级" width="127">
+                         <el-table-column prop="id" label="序列"  width="80"></el-table-column>
+                          <el-table-column prop="agentGradeName" label="代理商等级" width="127">
                           </el-table-column>
-                          <el-table-column  label="年份" width="127" >
-                            <template slot-scope="scope">
-                              {{scope.row.cycleBeginTime}}-{{scope.row.cycleEndTime}}
+                          <el-table-column prop="annualCycle" label="年份" width="127" >
+                          </el-table-column>
+                          <el-table-column prop="shopNums" label="目标店铺" width="100">
+                          </el-table-column>
+                          <el-table-column prop="finishShopNums" label="达成"  width="80"  align="right">
+                          </el-table-column>
+                          <el-table-column prop="annualPerformanceAmount" label="目标进货额" width="127" align="right">
+                               <template slot-scope="scope">
+                                <span>{{scope.row.annualPerformanceAmount.toFixed(2)}}</span>
                             </template>
-                
                           </el-table-column>
-                          <el-table-column prop="shopNums" label="目标店铺" width="127">
+                          <el-table-column prop="finishPerformanceSum" label="达成"  width="127" align="right">
+                               <template slot-scope="scope">
+                                <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
+                            </template>
                           </el-table-column>
-                          <el-table-column prop="finishShopNums" label="达成"  width="127">
-                          </el-table-column>
-                          <el-table-column prop="annualPerformanceAmount" label="目标进货额" width="127">
-                          </el-table-column>
-                          <el-table-column prop="finishPerformanceSum" label="达成"  width="127">
-                          </el-table-column>
-                          <el-table-column prop="annualPerformanceRatio" label="年度业绩" width="127">
+                          <el-table-column prop="finishRatio" label="年度业绩" width="127" align="right">
+                              <template slot-scope="scope">
+                                <span>{{scope.row.finishRatio.toFixed(2)}}{{'%'}}</span>
+                            </template>
                           </el-table-column>
                       </el-table>
                     </div>
                     <div class="plPage clearfix">
-                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
+                        <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
                         </el-pagination>
                     </div>
-                    <div slot="footer" class="dialog-footer">
-                        <el-button @click="changeCancle()">取 消</el-button>
+                    <!-- <div slot="title" class="dialog-title">
+                        <p><span>查看代理商年度业绩</span><span>()</span></p>
+                    </div> -->
+                    <div  class="dialog-footer" @click="changeCancle()">
                     </div>
                 </el-dialog>
           
@@ -227,25 +233,25 @@ export default {
     return {
       currentPage: 1,
       totalSize: 0,
-      pageSize: 30,
+      pageSize: 10,
       totalNums:'',
       user: "",
       tableData:{
           agent:'',
       },
-      searchData: {
-        shopName: "",
-        phone: "",
-        name: "",
-        state: "",
-        signTime: [],
-        agentLevelIds: [],
-        operator: "",
-        salesMan: "",
-        operatorId: "",
-        salesManId: ""
-      },
-      annualAgentsTitle:'',
+    //   searchData: {
+    //     shopName: "",
+    //     phone: "",
+    //     name: "",
+    //     state: "",
+    //     signTime: [],
+    //     agentLevelIds: [],
+    //     operator: "",
+    //     salesMan: "",
+    //     operatorId: "",
+    //     salesManId: ""
+    //   },
+      annualAgentsTitle:'44444',
       annualAgentsForm:[],
       annualAgentsFormcycleBeginTime:'',
       annualAgentsFormcycleEndTime:'',
@@ -365,36 +371,42 @@ export default {
       },
     //查看代理商年度业绩
     openAnnualAgents(shopId) {
-        // console.log('ok')
-        // console.log(shopId)
+       
         if (!this.checkSession()) return; 
         const self = this;               
         self.annualAgentsDialogVisible = true;
         self.loading = true;
-        let url = '/api/http/annualPerformanceOrder/findList.jhtml?shopId=' + self.detailForm.id
-        self.$ajax.post(url, {}).then(function (response) {
-        
-            self.loading = false;
-            console.log(response.data.result)
-            self.totalNums =  response.data.totalNums;
-
-            // self.annualAgentsForm = response.data.result;
-
-            // console.log(response.data.result)
-            
-            // self.agencyRelationsanceForm =  response.data.result;
-            for(let i of response.data.result){
-               self.annualAgentsForm.push(i);
-
-            }
-           
-            // for(let annualAgentsFormcycleEndTime of  response.data.result){
-             
-            // self.annualAgentsForm.push( annualAgentsFormcycleEndTime)     
-            
-            // }
-            // console.log(self.annualAgentsForm);
-
+        let url = '/api/http/annualPerformanceOrder/findByAnnualPerformanceOrderList.jhtml?shopId=' + self.detailForm.id
+        self.$ajax({
+                url: url,
+                 method: 'post',
+                 data: {
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                console.log(response)
+                self.loading = false;
+             if (response.data.success === 1) {
+                    self.annualAgentsForm = response.data.result;
+                    self.totalSize = response.data.totalNums;
+                    // self.handleCurrentChange(self.currentPage)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
             
         }).catch(function (err) {
             self.loading = false;
@@ -433,40 +445,13 @@ export default {
     goBack() {
       this.$router.push("/storeManage");
     },
+
      //改变当前页
-    handleCurrentChange: function (val) {
-        const self = this;
-        if (!self.checkSession()) return;
-        self.currentPage = val;
-        self.loading = true;
-        self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-            params: {
-                'pager.pageIndex': self.currentPage,
-                'pager.pageSize': self.pageSize,
-                'shop.shopName': self.searchData.shopName,
-                'shop.phone': self.searchData.phone,
-                'shop.name': self.searchData.name,
-                'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                'shop.state': self.searchData.state,
-                'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                'shop.sort': 'depositAmount',
-                'shop.order': self.order,
-                'shop.operator': self.searchData.operator,
-                'shop.salesMan': self.searchData.salesMan,
-                'shop.salesManId': this.salesManId,
-                'shop.salesManId': this.salesManId,
-            }
-        }).then(function (response) {
-            self.loading = false;
-            self.myData = response.data.rows;
-            self.totalSize = response.data.total
-            // console.log(response);
-        }).catch(function (err) {
-            self.loading = false;
-            console.log(err);
-        });
-    },
+     handleCurrentChange(val) {
+            let self = this;
+            self.currentPage = val;
+            self.openAnnualAgents();
+        },
   },
   created() {
     if (!this.checkSession()) return;
@@ -567,5 +552,22 @@ export default {
 
 .router-link-active { 
    color: #ffffff;
+}
+.dialog-title{
+    line-height: 50px;
+    height: 56px;
+	background-color: #f8f9fb;
+    border-radius: 5px 5px 0px 0px;
+    padding: 0;
+    width: 716px;
+    margin: -20px 0 0 -20px;
+
+}
+.dialog-footer{
+    width: 20px;height: 20px;
+    position: absolute;
+    right: 17px;
+    top: 18px;
+    cursor: pointer;
 }
 </style>

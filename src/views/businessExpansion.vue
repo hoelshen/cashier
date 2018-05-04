@@ -93,6 +93,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="paymentOrderNo" label="付款单号" width="200">
+                             <template slot-scope="scope">
+                                <span v-if="scope.row.paymentOrderNo">{{scope.row.paymentOrderNo}}</span>
+                                <span v-if="!scope.row.paymentOrderNo">{{'-'}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
@@ -306,14 +310,22 @@ export default {
         // 确认批量核销
         confirmBatchVerification() {
             let self = this;
-            self.$confirm('确认核销选中的记录？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let ids = self.formatSelect()
-                self.verification(ids)
-            })
+
+             if(self.selectData.length==0){
+                 self.$message({
+                        message: '请选择要核销的核销单',
+                        type: 'error'
+                    })
+            }else{
+                self.$confirm('确认核销选中的记录？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let ids = self.formatSelect()
+                    self.verification(ids)
+                })
+            }
         },
         // 确认全部核销
         // confirmAllVerification() {

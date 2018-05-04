@@ -106,6 +106,10 @@
                             </template>
                         </el-table-column>
                         <el-table-column prop="annualPerformanceNo" label="付款单号" width="200">
+                            <template slot-scope="scope">
+                                <span v-if="scope.row.annualPerformanceNo">{{scope.row.annualPerformanceNo}}</span>
+                                <span v-if="!scope.row.annualPerformanceNo">{{'-'}}</span>
+                            </template>
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
@@ -245,7 +249,8 @@ export default {
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
                     'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),
-                    'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo
+                    'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo,
+                    'searchAnnualPerformanceOrderVo.isNotFinsh':0,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -290,7 +295,8 @@ export default {
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
                     'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchData.annualCycle),
-                    'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo
+                    'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo,
+                     'searchAnnualPerformanceOrderVo.isNotFinsh':0,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -361,14 +367,22 @@ export default {
         // 确认批量核销
         confirmBatchVerification(id,status,person) {
             let self = this;
-            self.$confirm('确认核销选中的记录？', '提示', {
-                confirmButtonText: '确定',
-                cancelButtonText: '取消',
-                type: 'warning'
-            }).then(() => {
-                let ids = self.formatSelect()
-                self.verification(ids,status,person)
-            })
+            if(self.selectData.length==0){
+                 self.$message({
+                        message: '请选择要核销的核销单',
+                        type: 'error'
+                    })
+            }else{
+                 self.$confirm('确认核销选中的记录？', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    let ids = self.formatSelect()
+                    self.verification(ids,status,person)
+                })
+            }
+           
         },
         // 确认全部核销
         confirmAllVerification() {
