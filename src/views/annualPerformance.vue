@@ -90,9 +90,9 @@
                         </el-table-column>
                         <el-table-column prop="finishShopNums" label="店铺数">
                         </el-table-column>
-                        <el-table-column prop="selfPurchaseSum" label="货款总金额" width="150" align="right">
+                        <el-table-column prop="finishPerformanceSum" label="货款总金额" width="150" align="right">
                             <template slot-scope="scope">
-                                <span>{{scope.row.selfPurchaseSum.toFixed(2)}}</span>
+                                <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="rebateAmountSum" label="返利金额" width="150" align="right">
