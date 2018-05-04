@@ -32,7 +32,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
+                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteExtendSuperType">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -84,20 +84,20 @@
                 <!--第四行-->
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"  clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"   clearable>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
             </el-row>
             <el-row>
                 <!--第五行-->
-                <el-col :span="16" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="18" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
                         <addressComponent ref='addBelongAddress' :isDetail="false" />   
                     </el-form-item>
                 </el-col>
-                <el-col :span="16" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="18" v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent ref='addAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
                     </el-form-item>
@@ -109,7 +109,7 @@
                 </el-col>
             </el-row>
             <el-row>
-              <el-col :span="22">
+              <el-col :span="18">
                     <el-form-item label="收件地址：">
                         <addressComponent ref='addAddress' :isDetail="false" />
                     </el-form-item>
@@ -136,7 +136,7 @@
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
                     
@@ -145,9 +145,9 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="4"  v-show="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN'">
                     <el-form-item :span="4" label="上级代理商等级:">
-                            <el-input v-model="addForm.superAreaClass"></el-input>   
+                            <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
                  </el-col>
             </el-row>
@@ -211,18 +211,18 @@ export default {
                 agentCity: '',
                 agentCounty: '',
                 address: '',
-                shopType: 'AGENT',
+                shopType: 'AGENT',  //店铺类型
                 isShow: '1',
                 salesMan: '',
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                annualPurchasePerformance:'',
-                annualExtendPerformance:'',
-                extendSuperType:'ZUIPIN',
+                annualPurchasePerformance:'',   //店铺年度目标
+                annualExtendPerformance:'',   //店铺拓展
+                extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
-                extendSuperNo:'',
-                areaClass:'',
+                extendSuperNo:'',   
+                areaClass:'',     //所属类别
                 belongProvince:'',
                 belongCity:'',
                 belongCountry:'',
@@ -256,8 +256,8 @@ export default {
                 if (response.data.success == 1) {
                     // console.log(response.data.result)
                     // console.log(self.addForm.areaClass)
-                    self.addForm.areaClass = response.data.result
-
+                    self.addForm.areaClass = response.data.result.areaClass
+                    self.addForm.annualExtendPerformance =   response.data.result.shopNum
                     // console.log(self.addForm.areaClass)
                 } else {
                     self.$message({
@@ -425,15 +425,6 @@ export default {
                 })
                 return false;
             }
-            //年度业绩为必填项
-            if(!data.annualPurchasePerformance){
-                self.loading = false;
-                self.$message({
-                    message:'年度业绩为必填项',
-                    type:'error'
-                })
-                return false;
-            }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
@@ -455,12 +446,42 @@ export default {
                 }
 
             }
+                  //年度业绩目标：
+            // console.log(data.annualPurchasePerformance)
+            if(data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualPurchasePerformance ){
+                    self.loading = false;
+                    self.$message({
+                        message: '年度业绩不得为空',
+                        type: 'error'
+                    })                  
+                    
+                    return false;
+                
+                }
+            }
+       
+            // 年度店铺拓展
+            // console.log(data.annualExtendPerformance)
+            // console.log(data.agentGradeId)
+            // console.log(data.shopType)
+            if( (data.agentGradeId ==265) && data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualExtendPerformance){
+                    self.loading = false;
+                    self.$message({
+                        message: '年度店铺不得为空',
+                        type: 'error'
+                    })
+                    return false  
+                }
+            }
+         
             return true
         },
         //清除代理商编号、类别
         deleteExtendSuperNo(){
-        this.addForm.extendSuperNo = '';
-        // console.log(this.addForm.extendSuperNo)
+            this.addForm.extendSuperNo = '';
+            this.addForm.superAgentGradeId = '';
         },
         // 新增店铺
         addAgent() {
@@ -756,7 +777,7 @@ export default {
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
-                this.addForm.superAreaClass = item.areaClass;
+                this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.agentGradeId == 31 ? '单店' : '微店');
         },
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
@@ -766,7 +787,13 @@ export default {
         },
         deleteSalesMan(){
             this.addForm.salesMan='';    
+        },
+        deleteExtendSuperType(){
+            this.addForm.extendSuperNo= '';
+            this.addForm.superAgentGradeId= '';
+            
         }
+
     },
     created(){
         const self = this;

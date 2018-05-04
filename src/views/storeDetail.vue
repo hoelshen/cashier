@@ -35,7 +35,7 @@
                     <el-col :span="12">
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
-                    <el-col :span="12" width=100px;>
+                    <el-col :span="12" width=100px;  v-if="!detailForm.annualOwnAreadyPurchasePerformanceRate">
                         <span style="float:left">进货业绩达成率：</span> 
                           <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                             <div v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
@@ -54,24 +54,27 @@
                     <el-col :span="12">
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)">
-                        已达成店铺拓展：{{ detailForm.annualAreadyExtendPerformance}}
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)" >
+                        已达成店铺拓展：
+                        <span style="color:#20a0ff ">
+                            {{ detailForm.annualAreadyExtendPerformance}}家
+                        </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="12" >
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)">
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
                     </el-col>
                 </el-row>
           
                 <el-row :gutter="10">
                     <el-col :span="12">
-                        代理商等级：{{   detailForm.agentGradeId === 265 ? "区域" :  detailForm.agentGradeId === 266   ? '微店' : '单店'     }}
+                        代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)" >
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
                        <span style="float:left"> 店铺拓展达成率：</span> 
                        <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                               <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
@@ -108,7 +111,9 @@
                 <el-row :gutter="5">
                     <el-col :span="24">
                         预存款详情：
-                        <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>                                         
+                        <el-button style="background-color:#20a0ff ; color='#ffffff'" class="router-link-active" >
+                             <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>
+                        </el-button>                                           
                     </el-col>
                 </el-row>
                 <el-row :gutter="5">
@@ -499,6 +504,7 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = response.data.result;
+        self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
         self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
         self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / response.data.result.annualPurchasePerformance
@@ -556,5 +562,10 @@ export default {
   margin: 1%;
   padding: 20px;
   background-color: #ffffff;
+}
+
+
+.router-link-active { 
+   color: #ffffff;
 }
 </style>
