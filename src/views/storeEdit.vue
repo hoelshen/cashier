@@ -139,12 +139,12 @@
                 <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
                             <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo">醉品</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT"  >代理商</el-radio>                            
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"  v-if="(editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名" >
-                        <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" style="left: 164px;"></span>
+                        <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
@@ -448,7 +448,7 @@ export default {
 
             }
             //所属区域判断
-            if (data.agentGradeId == 266 && data.agentGradeId == 31 && data.shopType != 'SELF_SUPPORT') {
+            if ((data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT') {
                 if (!BelongAddress.provinceCode || !BelongAddress.cityCode || !BelongAddress.areaCode) {
                     // debugger
                     self.loading = false;
@@ -602,9 +602,9 @@ export default {
             // console.log(editAddress);
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
-            // console.log(editAgentAddress)
+            // console.log(editAgentAddress);
 
-            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )?  self.$refs.editBelongAddress.getData() : null;
+            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.editBelongAddress.getData() : null;
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress);
@@ -645,7 +645,7 @@ export default {
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ?  '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
-                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 :266 )) || '',
+                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
 
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                     'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
@@ -863,14 +863,15 @@ export default {
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-
             if(self.flage){
                     self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
                     console.log(self.editForm.annualExtendPerformance)     
                     
             }
-
-            self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
+            if(self.editForm.superAgentGradeId){
+                self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
+                
+            }
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
