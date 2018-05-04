@@ -151,14 +151,17 @@ function formatJson(filterVal, jsonData) {
     return jsonData.map(v => filterVal.map(j => v[j]))
 }
 // 区域订单导出自定义
-export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {debugger
+export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     /* original data */
 
     var list = jsonData;
     var wb = new Workbook();
-    for (var i = 0; i < list.length; i++) {
+    for (var i = 0; i < list.length; i++) {debugger
         var data = formatJson(filterVal, list[i].annualPerformanceOrderDetailVos)
+        // for(var j = 0; j < list[i].annualPerformanceOrderDetailVos.length; j++){
+        //     list[i].annualPerformanceOrderDetailVos[j].ratio =  list[i].annualPerformanceOrderDetailVos[j].ratio+"%"
+        // }
         data.unshift(th);
         var ws_name = list[i].shopNo + "_" + list[i].annualCycle + "("+i+ ")"+ "_"+ "年度业绩明细";
         var ws = sheet_from_array_of_arrays(data);
