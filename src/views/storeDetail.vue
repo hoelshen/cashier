@@ -57,7 +57,7 @@
                     <el-col :span="12">
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
-                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
+                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
                         已达成店铺拓展：
                         <span style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
@@ -68,7 +68,7 @@
                     <el-col :span="12" >
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 ">
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 && detailForm.agentGradeId === 265">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
                     </el-col>
                 </el-row>
@@ -129,7 +129,7 @@
                 <el-row :gutter="5">
                     <el-col :span="24">
                        代理商年度业绩： 
-                        <el-button type="primary" @click='openAnnualAgents(detailForm.id)'>点击查看</el-button>
+                        <el-button type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</el-button>
                     </el-col>
                 </el-row>
                 <el-row :gutter="5"> 
@@ -177,6 +177,10 @@
 
               <!-- 查看代理商年度业绩(编号：xxx) start -->
                 <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible" width=100% >
+                    <div>
+                        <img src="../assets/images/Standard.png" alt="">
+                        <img src="../assets/images/DStandard.png" alt="">
+                    </div>
                     <div>
                       <el-table :data="annualAgentsForm">
                          <el-table-column prop="id" label="序列"  width="80"></el-table-column>
@@ -255,7 +259,7 @@ export default {
     //     operatorId: "",
     //     salesManId: ""
     //   },
-      annualAgentsTitle:'44444',
+      annualAgentsTitle:'',
       annualAgentsForm:[],
       annualAgentsFormcycleBeginTime:'',
       annualAgentsFormcycleEndTime:'',
@@ -374,8 +378,8 @@ export default {
           });
       },
     //查看代理商年度业绩
-    openAnnualAgents(shopId) {
-       
+    openAnnualAgents(shopId,shopNo) {
+        this.annualAgentsTitle = "查看代理商年度业绩（编号：" + shopNo + "）"
         if (!this.checkSession()) return; 
         const self = this;               
         self.annualAgentsDialogVisible = true;
@@ -399,11 +403,13 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function (response) {
-                console.log(response)
+                // console.log(response)
                 self.loading = false;
              if (response.data.success === 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
+                    // console.log(response.data);
+                    // self.annualAgentsTitle = response.data;
                     // self.handleCurrentChange(self.currentPage)
                 } else {
                     self.$message({
