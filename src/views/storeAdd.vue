@@ -32,7 +32,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteExtendSuperType">直营店铺</el-radio>
+                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteSelfSupport">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -808,6 +808,16 @@ export default {
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
             
+        },
+        deleteSelfSupport(){
+            this.addForm.extendSuperNo= '';
+            this.addForm.superAgentGradeId= '';
+            this.addForm.annualAreadyExtendPerformance = '';
+            this.addForm.annualExtendPerformance = '';
+            this.addForm.annualLowerAreadyPurchasePerformance = '';
+            this.addForm.annualOwnAreadyPurchasePerformance = '' ;
+            this.addForm.extendSuperType = '';
+            this.addForm.superNo = '';
         }
 
     },

@@ -19,7 +19,7 @@
                     <el-col :span="12">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
-                    <el-col :span="12">
+                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
                         已达成进货业绩：{{ detailForm.annualOwnAreadyPurchasePerformance}}
                     </el-col>
                 </el-row>
@@ -27,8 +27,10 @@
                     <el-col :span="12">
                         显示选项:{{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
                     </el-col>
-                    <el-col :span="12" >
-                        年度目标进货业绩：{{ detailForm.annualPurchasePerformance }}
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT'">
+                        年度目标进货业绩：
+                        <span v-if="detailForm.annualPurchasePerformance !== 0 ">{{ detailForm.annualPurchasePerformance }}</span>
+                        <span v-else>-</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -36,25 +38,26 @@
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
                     <el-col :span="12" width=100px;  v-if="!detailForm.annualOwnAreadyPurchasePerformanceRate">
-                        <span style="float:left">进货业绩达成率：</span> 
-                          <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
-                            <div v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
+                        <span style="float:left" >进货业绩达成率：</span> 
+                          <div  v-if="detailForm.annualPurchasePerformance !== 0 " style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
+                                <div     v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
+                                 style="float:left;border-radius: 10px;"
+                                >
+                                </div>
+                                <div v-bind:style="{height:detailForm.height  +'px',width:detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px','background-color':'#' +detailForm.activeColor2}"
                               style="float:left;border-radius: 10px;"
-                            >
-                            </div>
-                            <div v-bind:style="{height:detailForm.height  +'px',width:detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px','background-color':'#' +detailForm.activeColor2}"
-                              style="float:left;border-radius: 10px;"
-                            >
-                            </div>
+                                 >
+                                </div>
+                                <span style=" position:absolute ;right: 132px;"> {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%</span> 
                           </div>
-                         <span style=" position:absolute ;right: 132px;"> {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%</span>
+                          <div v-else>-</div>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="12">
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)" >
+                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
                         已达成店铺拓展：
                         <span style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
@@ -65,29 +68,30 @@
                     <el-col :span="12" >
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate">
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 ">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
                     </el-col>
                 </el-row>
           
                 <el-row :gutter="10">
-                    <el-col :span="12">
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT'">
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
                     <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
                        <span style="float:left"> 店铺拓展达成率：</span> 
-                       <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
+                       <div  v-if="detailForm.annualExtendPerformance !== 0 "  style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                               <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
                        </div>
+                       <div v-else>-</div>
                        <span style=" right: 132px;position: absolute">{{Number(detailForm.storeExpansionRate).toFixed(2)}}%</span>
                     </el-col>
                 </el-row>
-                <el-row :gutter="10">
+                <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
                    <el-col :span="112" v-if="detailForm.agentGradeId === 265">
                         店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
                     </el-col>
                      <el-col :span="112" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
-                        店铺所属区域：{{ detailForm.belongProvince }}/{{detailForm.belongCountry}}/{{detailForm.belongCity}}
+                        店铺所属区域：{{ detailForm.belongProvinceName }}/{{detailForm.belongCountryName}}/{{detailForm.belongCityName}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10" style="margin-top: 13px;">
