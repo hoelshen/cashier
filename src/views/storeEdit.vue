@@ -460,7 +460,7 @@ export default {
                 if(!data.annualExtendPerformance){
                     self.loading = false;
                     self.$message({
-                        message: '年度店铺不得为空/零',
+                        message: '年度店铺不得为空',
                         type: 'error'
                     })
                     return false  
