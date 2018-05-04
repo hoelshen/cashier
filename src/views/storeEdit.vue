@@ -101,7 +101,7 @@
                 </el-col>
                 <el-col :span="16" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
-                        <addressComponent  :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false" />   
+                        <addressComponent  :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false"  @click.native="changeAnnualExtendPerformance"/>   
                     </el-form-item>
                 
                 </el-col>
@@ -219,10 +219,10 @@ export default {
                     areaClass:'',
                     superAgentGradeId:'',
                     
-                },
-                isDisable:false,
-                levelArray: [], //代理商等级数组,
-                areaClassArray: [{   //类别等级数组,
+            },
+            isDisable:false,
+            levelArray: [], //代理商等级数组,
+            areaClassArray: [{   //类别等级数组,
                     value: 'S',
                     name: 'S'
                 },
@@ -238,13 +238,14 @@ export default {
                     value: 'C',
                     name: 'C'
                 }
-                ],
-                phoneLength: 11,
-                pickerOptions: {
-                    disabledDate(time) {
-                        return time.getTime() > Date.now();
-                }
+            ],
+            phoneLength: 11,
+            pickerOptions: {
+                disabledDate(time) {
+                    return time.getTime() > Date.now();
+                },
             },
+            flage:true,                
         }
     },
     components: {
@@ -262,13 +263,15 @@ export default {
             self.$ajax.post(url, {}).then(function (response) {
                 // console.log(response);
                 if (response.data.success == 1) {
-              
-                    self.editForm.areaClass = response.data.result.areaClass
-
-                    if(!self.editForm.annualExtendPerformance){
-                             self.editForm.annualExtendPerformance =   response.data.result.shopNum
-
+                        const data = response.data.result
+                    self.editForm.areaClass = data.areaClass
+                    if(!self.flage){
+                        self.editForm.annualExtendPerformance =   data.shopNum
                     }
+                    // console.log(self.editForm.annualExtendPerformance)
+                    // if(self.editForm.annualExtendPerformance){
+                    //         console.log('ok')
+                    // }
 
                     // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
                     // console.log(self.editForm.areaClass)
@@ -281,6 +284,11 @@ export default {
             }).catch(function (err) {
                 console.log(err);
             });          
+        },
+        //改变店铺拓展数
+        changeAnnualExtendPerformance(){
+            this.flage = false;
+            console.log('ok')
         },
         //提交字段校验
         testData(data, Address, AgentAddress, BelongAddress ) {
@@ -801,7 +809,7 @@ export default {
         //重置不要的项
         resetForm(){
             const self = this;
-            console.log('okj')
+            // console.log('okj')
             // self.editForm = {
             //     // agentProvince:'',
             //     // agentCity:'',
@@ -864,8 +872,12 @@ export default {
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-            console.log(self.editForm.annualExtendPerformance)     
-            self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
+
+            if(flage){
+                    self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
+                    console.log(self.editForm.annualExtendPerformance)     
+                    
+            }
 
             self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
         }).catch(function (err) {

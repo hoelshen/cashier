@@ -109,7 +109,7 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remainDay" label="剩余天数" width="100" sortable="custom"  @sort-method="remainDaySort" >
+                        <el-table-column prop="remainDay" label="剩余天数" width="100" sortable="custom" >
                         </el-table-column>
                         <el-table-column prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
@@ -529,49 +529,93 @@ export default {
             });
         },
 
-        // 预存款余额排序
+        //排序
         sortAmount(row, column) {
-            const self = this;
-            // console.log(row.order)
-            if (row.order === 'ascending') {
-                self.order = 'asc';
-            } else if (row.order === 'descending') {
-                self.order = 'desc';
-            } else {
-                self.order = '';
-            }
-            if (!self.checkSession()) return;
-            self.loading = true;
-            self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-                params: {
-                    'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
-                    // 'shop.shopName': self.searchData.shopName,
-                    // 'shop.phone': self.searchData.phone,
-                    // 'shop.name': self.searchData.name,
-                    // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                    // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                    // 'shop.state': self.searchData.state,
-                    // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                    'shop.sort': 'depositAmount',
-                    'shop.order': self.order,
-                    // 'shop.operator': self.searchData.operator,
-                    // 'shop.salesMan': self.searchData.salesMan,
-                }
-            }).then(function (response) {
-                self.loading = false;
-                self.myData = response.data.rows;
-                self.totalSize = response.data.total
-                // console.log(response);
-            }).catch(function (err) {
-                self.loading = false;
-                console.log(err);
-            });
+            // console.log(row);
+            // 预存款余额
+            if(row.prop == 'depositAmount'){
+                    const self = this;
+                    // console.log(row.order)
+                    if (row.order === 'ascending') {
+                        self.order = 'asc';
+                    } else if (row.order === 'descending') {
+                        self.order = 'desc';
+                    } else {
+                        self.order = '';
+                    }
+                    if (!self.checkSession()) return;
+                    self.loading = true;
+                    self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
+                        params: {
+                            'pager.pageIndex': self.currentPage,
+                            'pager.pageSize': self.pageSize,
+                            // 'shop.shopName': self.searchData.shopName,
+                            // 'shop.phone': self.searchData.phone,
+                            // 'shop.name': self.searchData.name,
+                            // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                            // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                            // 'shop.state': self.searchData.state,
+                            // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
+                            'shop.sort': 'depositAmount',
+                            'shop.order': self.order,
+                            // 'shop.operator': self.searchData.operator,
+                            // 'shop.salesMan': self.searchData.salesMan,
+                        }
+                    }).then(function (response) {
+                        self.loading = false;
+                        self.myData = response.data.rows;
+                        self.totalSize = response.data.total
+                        console.log(self.myData)
+                        // console.log(response);
+                    }).catch(function (err) {
+                        self.loading = false;
+                        console.log(err);
+                    });
 
-        },
-        //剩余天数排序
-        remainDaySort(){
-            console.log('ok')
+            }
+
+            //剩余天数
+            if(row.prop == 'remainDay'){
+                // console.log('ok')
+                const self = this;
+                // console.log(row.order)
+                if (row.order === 'ascending') {
+                    self.order = 'asc';
+                } else if (row.order === 'descending') {
+                    self.order = 'desc';
+                } else {
+                    self.order = '';
+                }
+                if (!self.checkSession()) return;
+                self.loading = true;
+                self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
+                    params: {
+                        'pager.pageIndex': self.currentPage,
+                        'pager.pageSize': self.pageSize,
+                        // 'shop.shopName': self.searchData.shopName,
+                        // 'shop.phone': self.searchData.phone,
+                        // 'shop.name': self.searchData.name,
+                        // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                        // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                        // 'shop.state': self.searchData.state,
+                        // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
+                        'shop.sort': 'remainDay',
+                        'shop.order': self.order,
+                        // 'shop.operator': self.searchData.operator,
+                        // 'shop.salesMan': self.searchData.salesMan,
+                    }
+                }).then(function (response) {
+                    self.loading = false;
+                    self.myData = response.data.rows;
+                    self.totalSize = response.data.total
+                    console.log(self.myData);
+                    // console.log(response);
+                }).catch(function (err) {
+                    self.loading = false;
+                    console.log(err);
+                });
+            }
+            
         },
         //用户列表
         operatorQuerySearchAsync(queryString, callback) {
@@ -875,7 +919,7 @@ export default {
             })	
         },
         // 导出明细
-		outputExcel(areaClass) {
+		outputExcel() {
             if (!this.checkSession()) return;
                 var temp = new Date(this.searchData.searchTime[0]);
                 if (temp.getFullYear() > 2006) {
@@ -917,24 +961,25 @@ export default {
                 this.getData({
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
-                        'pager.pageSize': 9,
+                        'pager.pageSize': 30,
                         
                     },
                     success(response) {                     
                         if (response.data.code === 1) {
                                 self.tableData = response.data.rows;
+                                // console.log(self.tableData);
                                 if(self.tableData.length>0){
                                             require.ensure([], () => {
                                                 const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
                                                 const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标',
                                                                  '已完成', '进度', '年度进货业绩目标', '已完成', '进度',
                                                                  '剩余时间','备注', ]
-                                                const filterVal =['shopNo', 'agentGradeId', 'shopName', 'areaClass', 
-                                                                    'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'areaClass', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
+                                                const filterVal =['shopNo', 'agentGradeId', 'shopName', 'annualExtendPerformance', 
+                                                                    'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'annualPurchasePerformance', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
                                                                     'ReaminTime', 'remark',]
                                                 const list = self.tableData;
                                                 const data = this.formatJson(filterVal, list);
-                                                export_json_to_excel(tHeader, data, '代理商' + (areaClass ? areaClass + '' : '') +'年度目标完成进度');
+                                                export_json_to_excel(tHeader, data, '代理商' + (Utils.formatYearDate(self.tableData[0].signTime) ? Utils.formatYearDate(self.tableData[0].signTime)  + '' : '') +'年度目标完成进度');
                                             })
                                 }else{
                                     self.$message({
