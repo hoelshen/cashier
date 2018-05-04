@@ -13,7 +13,7 @@
                     
                     <el-col :span="5">
                         <el-form-item label="选择年份： ">
-                            <el-date-picker value-format="yyyy" v-model="searchData.year"  type="year" placeholder="选择年份">
+                            <el-date-picker value-format="yyyy" v-model="searchData.year" :picker-options="pickerOptions" type="year" placeholder="选择年份">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
@@ -135,7 +135,7 @@ export default {
                 agentName: '',
                 phone: '',
                 agentNo: '',
-                entryStatus: '',
+                entryStatus: 'WAIT_CHECK',
                 year:'',
                 paymentOrderNo:'',
             },
@@ -154,7 +154,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
+                    return time.getYear() > date.getYear() - 1 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据

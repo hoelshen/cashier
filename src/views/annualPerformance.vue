@@ -188,7 +188,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
+                    return time.getYear() > date.getYear() && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据
