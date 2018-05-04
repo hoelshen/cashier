@@ -1,0 +1,125 @@
+@import url('./tools.less');
+
+.searchwrap {
+    padding: 24px 20px 0;
+    position: relative;
+    background-color: #fff;
+    margin: 20px;
+    border-radius: 5px;
+}
+
+.t-bodywrap {
+    padding: 0 20px;
+
+    .t-body {
+        background: #fff;
+        padding: 20px 0;
+        margin-bottom: 20px;
+
+        .add-btn {
+            margin: 0 0 10px 20px;
+        }
+
+        .tablebar {
+            padding: 0 20px;
+            margin-bottom: 20px;
+        }
+
+        .plPage {
+            text-align: right;
+            margin-right: 50px;
+        }
+
+        .operation {
+            display: flex;
+
+            span {
+                color: #1990ff;
+                margin: 0 5px;
+                text-align: center;
+                cursor: pointer;
+            }
+
+            span:last-child {
+                flex: 1;
+            }
+
+            span:hover {
+                color: #4db3ff;
+            }
+        }
+
+        .limit-two {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 2;
+        }
+
+        .type-icon {
+            background: #1990ff;
+            color: #fff;
+            padding: 3px;
+            font-size: 12px;
+            border-radius: 3px;
+            margin-left: 2px;
+        }
+    }
+}
+
+.green-color {
+    background-color: #3AE045;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin: 0 5px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.red-color {
+    background-color: #FA2424;
+    display: inline-block;
+    width: 5px;
+    height: 5px;
+    margin: 0 5px;
+    vertical-align: middle;
+    border-radius: 50%;
+}
+
+.triangle {
+    height: 0;
+    width: 0;
+    border: 7px solid rgba(0, 0, 0, 0.35);
+    border-color: transparent transparent rgba(0, 0, 0, 0.35) transparent;
+    display: inline-block;
+    margin-left: 5px;
+}
+
+.msg {
+    display: inline-block;
+    font-size: 12px;
+    margin-left: 5px;
+}
+
+.yuan {
+    position: absolute;
+    left: 90%;
+    top: 0;
+    color: rgba(0, 0, 0, 0.35);
+}
+
+.el-form-item {
+    a {
+        color: #1990ff;
+    }
+}
+.mark{
+    position: absolute;
+    font-size: 12px;
+    line-height: normal;
+    color: #999;
+    padding-left: 12px;
+    background: url('../images/arrow.png') no-repeat center left;
+}
