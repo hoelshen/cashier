@@ -220,7 +220,23 @@ export default {
                 },
                 isDisable:false,
                 levelArray: [], //代理商等级数组,
-                areaClassArray:[],//类别等级数组,
+                areaClassArray: [{   //类别等级数组,
+                    value: 'S',
+                    name: 'S'
+                },
+                {
+                    value:'A',
+                    name: 'A'
+                },
+                {
+                    value: 'B',
+                    name: 'B'
+                },
+                {
+                    value: 'C',
+                    name: 'C'
+                }
+                ],
                 phoneLength: 11,
                 pickerOptions: {
                     disabledDate(time) {
