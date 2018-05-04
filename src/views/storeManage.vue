@@ -917,7 +917,7 @@ export default {
                 this.getData({
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
-                        'pager.pageSize': 999999,
+                        'pager.pageSize': 9,
                         
                     },
                     success(response) {                     

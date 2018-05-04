@@ -49,7 +49,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商状态：" disabled>
                         <el-col :span="12">
-                            {{ editForm.state	=== 1 ? '启用' : '禁用' }}
+                            {{ editForm.state	=== 1 ? '禁用' : '启用' }}
                         </el-col>
                     </el-form-item>
                 </el-col>
@@ -87,7 +87,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
@@ -107,8 +107,10 @@
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-option v-for="item in areaClassArray" :key="item.index" :label="item.areaClass" :value="item.index"></el-option>                        
-                            <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input>
+                            <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
+                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>                    
+                            <!-- <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input> -->
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -136,19 +138,19 @@
             <el-row>
                 <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN">醉品</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT">代理商</el-radio>                            
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo">醉品</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT"  @click.native="deleteSuperAgentGradeId" >代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item  :span="4"  label="上级编号/姓名">
+                <el-col :span="8"  v-if="(editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
+                    <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNo" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-show="(editForm.extendSuperType=='AGENT'&&editForm.shopType!='SELF_SUPPORT')||(editForm.extendSuperType=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="4"   v-if="(editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="editForm.superAgentGradeId"  disabled></el-input>   
                     </el-form-item>
@@ -262,7 +264,13 @@ export default {
                 if (response.data.success == 1) {
               
                     self.editForm.areaClass = response.data.result.areaClass
-                    self.editForm.annualExtendPerformance = response.data.result.shopNum
+
+                    if(!self.editForm.annualExtendPerformance){
+                             self.editForm.annualExtendPerformance =   response.data.result.shopNum
+
+                    }
+
+                    // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
                     // console.log(self.editForm.areaClass)
                 } else {
                     self.$message({
@@ -776,8 +784,19 @@ export default {
         deleteSalesMan(){
             this.editForm.salesMan='';     
         },
+        //上级代理商等级
+        deleteSuperAgentGradeId(){
+            this.editForm.superAgentGradeId = '';
+        },
+           //清除代理商编号、类别
         deleteExtendSuperNo(){
-            this.editForm.extendSuperNo = '' ;
+            this.editForm.extendSuperNo = '';
+            this.editForm.superAgentGradeId = '';
+        },
+        deleteExtendSuperType(){
+            this.editForm.extendSuperNo= '';
+            this.editForm.superAgentGradeId= '';
+            
         },
         //重置不要的项
         resetForm(){
@@ -806,7 +825,8 @@ export default {
             self.editForm.superAgentGradeId = '' ,
 
             console.log(self.editForm)
-        }
+        },
+    
     },
     created() {
         if (!this.checkSession()) return;
@@ -844,7 +864,9 @@ export default {
             self.editForm = response.data.result;
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-        
+            console.log(self.editForm.annualExtendPerformance)     
+            self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
+
             self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
         }).catch(function (err) {
             self.loading = false;
