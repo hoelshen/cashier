@@ -35,7 +35,7 @@
                     <el-col :span="12">
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
-                    <el-col :span="12" width=100px;>
+                    <el-col :span="12" width=100px;  v-if="!detailForm.annualOwnAreadyPurchasePerformanceRate">
                         <span style="float:left">进货业绩达成率：</span> 
                           <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                             <div v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
@@ -65,7 +65,7 @@
                     <el-col :span="12" >
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)">
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
                     </el-col>
                 </el-row>
@@ -74,7 +74,7 @@
                     <el-col :span="12">
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
-                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265)" >
+                    <el-col :span="12" v-if="(detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
                        <span style="float:left"> 店铺拓展达成率：</span> 
                        <div style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
                               <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
