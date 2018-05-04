@@ -32,7 +32,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
                         <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
+                        <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteExtendSuperType">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -84,8 +84,8 @@
                 <!--第四行-->
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"  clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"   clearable>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
@@ -136,7 +136,7 @@
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
                     </el-form-item>
                 </el-col>
-                <el-col :span="8" v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="8"  v-if="addForm.agentGradeId=='31' || addForm.agentGradeId=='266' ">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
                     
@@ -145,7 +145,7 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-show="(addForm.extendSuperType=='AGENT'&&addForm.shopType!='SELF_SUPPORT')||(addForm.extendSuperType=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="4"  v-show="addForm.agentGradeId=='31'  || addForm.agentGradeId=='266' ">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
@@ -211,18 +211,18 @@ export default {
                 agentCity: '',
                 agentCounty: '',
                 address: '',
-                shopType: 'AGENT',
+                shopType: 'AGENT',  //店铺类型
                 isShow: '1',
                 salesMan: '',
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                annualPurchasePerformance:'',
-                annualExtendPerformance:'',
-                extendSuperType:'ZUIPIN',
+                annualPurchasePerformance:'',   //店铺年度目标
+                annualExtendPerformance:'',   //店铺拓展
+                extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
-                extendSuperNo:'',
-                areaClass:'',
+                extendSuperNo:'',   
+                areaClass:'',     //所属类别
                 belongProvince:'',
                 belongCity:'',
                 belongCountry:'',
@@ -463,12 +463,13 @@ export default {
        
             // 年度店铺拓展
             // console.log(data.annualExtendPerformance)
-
-            if( (data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT'){
+            // console.log(data.agentGradeId)
+            // console.log(data.shopType)
+            if( (data.agentGradeId ==265) && data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualExtendPerformance){
                     self.loading = false;
                     self.$message({
-                        message: '年度店铺不得为空/零',
+                        message: '年度店铺不得为空',
                         type: 'error'
                     })
                     return false  
@@ -480,6 +481,7 @@ export default {
         //清除代理商编号、类别
         deleteExtendSuperNo(){
             this.addForm.extendSuperNo = '';
+            this.addForm.superAgentGradeId = '';
         },
         // 新增店铺
         addAgent() {
@@ -785,7 +787,13 @@ export default {
         },
         deleteSalesMan(){
             this.addForm.salesMan='';    
+        },
+        deleteExtendSuperType(){
+            this.addForm.extendSuperNo= '';
+            this.addForm.superAgentGradeId= '';
+            
         }
+
     },
     created(){
         const self = this;
