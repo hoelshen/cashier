@@ -84,13 +84,13 @@
                                 <span v-if="scope.row.agentGradeId==31">单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265">区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266">微店代理</span>
-                                <p class="textOrange" v-if="myData[scope.$index].areaClass ==='S' ">S类</p>
-                                <p class="textRed" v-if="myData[scope.$index].areaClass ==='A' ">A类</p>
-                                <p class="textGreen" v-if="myData[scope.$index].areaClass  ==='B'">B类</p>
+                                <p class="textOrange" v-if="myData[scope.$index].areaClass == 'S' ">S类</p>
+                                <p class="textRed" v-if="myData[scope.$index].areaClass == 'A' ">A类</p>
+                                <p class="textGreen" v-if="myData[scope.$index].areaClass  == 'B'">B类</p>
                                 <!-- <p class="textGreen" v-if="Type(myData[scope.$index].areaClass)">B类</p> -->
-                                <p class="textPurple" v-if="myData[scope.$index].areaClass  ==='C' ">C类</p>
+                                <p class="textPurple" v-if="myData[scope.$index].areaClass  == 'C' ">C类</p>
                                 <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
-                                <span v-if="!scope.row.areaClass">-</span>
+                                <!-- <span v-if="!myData[scope.$index].areaClass ">-</span> -->
                             </template>
                      
                         </el-table-column>
@@ -310,11 +310,11 @@ export default {
             
             for (var value of self.myData) {
                 if(!value.areaClass){
-                    value.areaClass ===''  
+                    value.areaClass ==''  
                 }else{
                     //  console.log((value.areaClass).toLocaleLowerCase())
                      
-                     value.areaClass =   (value.areaClass).toLocaleLowerCase()
+                     value.areaClass =  value.areaClass
 
                     //  console.log(value.areaClass)
                 }
