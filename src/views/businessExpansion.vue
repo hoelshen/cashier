@@ -284,7 +284,10 @@ export default {
         },
         onSubmit() {
             let self = this;
-            self.getFormData();
+            // self.getFormData();
+            // 搜索的时候 选中的状态要变为不选中 所以用一下两个
+            this.ifCheckAll = true;
+            self.getAllId();
         },
         handleCurrentChange(val) {
             let self = this;
