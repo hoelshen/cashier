@@ -56,7 +56,7 @@
             <el-row class="t-body">
                 <el-row class="tablebar" id="hMyTabel">
                     <el-table :data="myData" @select-all="checkall" ref="myTabel1" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
-                        <el-table-column type="selection" width="50" :reserve-selection="true" >
+                        <el-table-column  type="selection" width="50" :reserve-selection="true" >
                         </el-table-column>
                          <el-table-column prop="agentNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
@@ -169,16 +169,23 @@ export default {
         this.getFormData();
     },
      mounted(){
-        // 表头的选择框 隐藏
-    this.$nextTick(
-        () => {
-            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
-            }
-        )
-        
+         // 表头的选择框 隐藏
+        // this.$nextTick(
+        //     () => {
+        //         var tabelHeard = document.getElementsByClassName("el-table__header")[0];
+        //     // tabelHeard.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+        //     tabelHeard.getElementsByClassName("el-checkbox")[0].style.cssText="background-color:#f00;";            
+        //     console.log(tabelHeard.getElementsByClassName("el-checkbox")[0])
+        //     // console.log(document.getElementsByClassName("el-checkbox")[0])
+        //     }    
+        // )
     },
     methods: {
         // 表头添加class
+        getRowClass(row,rowIndex){
+            console.log(row,rowIndex)
+            return
+        },
         // 点击全选
         isSelectAll(){
             this.checkall();
@@ -437,7 +444,7 @@ export default {
             }).then(function(response) {debugger
                 self.loading = false;
                 // console.log(response.data)
-                 if(self.selectData.length>0){
+                
                     if (response.data.success === 1) {
                         self.downData = response.data.result;
                         for(var i = 0; i< self.downData.length; i++){
@@ -459,7 +466,7 @@ export default {
                                 
                             }
                         }
-                    
+                     if(self.downData.length>0){
                             require.ensure([], () => {
                                 const {
                                     export_json_to_excel
@@ -470,7 +477,12 @@ export default {
                                 export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '业务拓展返利明细')
                             })
                     
-
+                         }else{
+                        self.$message({
+                            message: '请选择要导出的核销单~',
+                            type: 'error'
+                        })
+                    }
                     } else {
                         self.$message({
                             message: response.data.msg,
@@ -478,12 +490,7 @@ export default {
                         })
                     }
 
-                 }else{
-                        self.$message({
-                            message: '请选择要导出的核销单~',
-                            type: 'error'
-                        })
-                    }
+                
             }).catch(function(error) {
 
             });
@@ -509,9 +516,13 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less">
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
+}
+.row-class{
+    display: none;
+    background-color: #f00;
 }
 </style>

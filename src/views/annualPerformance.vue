@@ -63,7 +63,7 @@
                 <el-row class="tablebar">
                     <!-- <div class="checkAllText">
                     </div> -->
-                    <el-table id="scrollTabel" :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                    <el-table id="scrollTabel" key="id1" :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
@@ -199,7 +199,9 @@ export default {
             selectData: [],
             allId: '',
             loading: false,
+            
         }
+        
     },
     created() {
         if (!this.checkSession()) return;
@@ -208,12 +210,18 @@ export default {
             this.loginId = user.id;
         }
         this.getFormData();
+        
+        // this.$nextTick(
+        // () => {debugger
+        //     document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+        //     }
+        // )
     },
     mounted(){
         // 表头的选择框 隐藏
     this.$nextTick(
         () => {
-            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            // document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
             }
         )
         
@@ -507,7 +515,7 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 // console.log(response.data)
-                if(self.selectData.length>0){
+               
                     if (response.data.success === 1) {
                         // console.log(self.downData)
                         self.downData = response.data.result;
@@ -550,31 +558,33 @@ export default {
                                 
                             }
                         }
-                        require.ensure([], () => {
-                            const {
-                                export_json_to_excel
-                            } = require('../components/tools/Export2Excelyj')
-                            const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
-                            const filterVal = [
-                                'shopNo', 'annualCycle','name', 'agentGradeId', 'relationship','signedTime', 'payTime','finishTime','goodsAmount', 'ratio', 'performanceAmount', 'billNo',
-                                
-                            ]
-                            const list = self.downData;
-                            export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
-                        })
-
+                        debugger
+                         if(self.downData.length>0){
+                            require.ensure([], () => {
+                                const {
+                                    export_json_to_excel
+                                } = require('../components/tools/Export2Excelyj')
+                                const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
+                                const filterVal = [
+                                    'shopNo', 'annualCycle','name', 'agentGradeId', 'relationship','signedTime', 'payTime','finishTime','goodsAmount', 'ratio', 'performanceAmount', 'billNo',
+                                    
+                                ]
+                                const list = self.downData;
+                                export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
+                            })
+                            }else{
+                            self.$message({
+                                message: '请选择要导出的核销单~',
+                                type: 'error'
+                            })
+                        }
                     } else {
                         self.$message({
                             message: response.data.msg,
                             type: 'error'
                         })
                     }
-                 }else{
-                        self.$message({
-                            message: '请选择要导出的核销单~',
-                            type: 'error'
-                        })
-                    }
+                 
             }).catch(function(error) {
 
             });
@@ -599,7 +609,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less" >
 @import url('../assets/less/annualPerformance.less');
 .el-date-editor.el-input{
     width: 100%

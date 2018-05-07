@@ -53,7 +53,7 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                    <el-table :data="myData" key="id3" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
@@ -179,7 +179,7 @@ export default {
         // 表头的选择框 隐藏
     this.$nextTick(
         () => {
-            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            // document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
             }
         )
         
@@ -400,6 +400,13 @@ export default {
         batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
+            if(self.selectData.length==0){
+                 self.$message({
+                    message: '请选择要导出的核销单~',
+                    type: 'error'
+                })
+                return
+            }
             self.outputExcel(ids)
         },
         // 导出全部明细
@@ -433,13 +440,13 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {
+            }).then(function(response) {debugger
                 self.loading = false;
                 console.log(response.data)
-                if(self.selectData.length>0){
-                    if (response.data.success === 1) {
+
+                    if (response.data.success === 1) {debugger
                         self.downData = response.data.result;
-                        
+                    if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
@@ -452,18 +459,25 @@ export default {
                             console.log(list)
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
                         })
+
+                         }else if(self.downData.length==0){
+                            self.$message({
+                                message: '没有数据',
+                                type: 'error'
+                            })
+                    }else{
+                        self.$message({
+                            message: '请选择要导出的核销单~',
+                            type: 'error'
+                        })
+                    }
                     } else {
                         self.$message({
                             message: response.data.msg,
                             type: 'error'
                         })
                     }
-                }else{
-                        self.$message({
-                            message: '请选择要导出的核销单~',
-                            type: 'error'
-                        })
-                    }
+               
             }).catch(function(error) {
 
             });
@@ -487,7 +501,7 @@ export default {
     }
 }
 </script>
-<style lang="less" scoped>
+<style lang="less" >
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
