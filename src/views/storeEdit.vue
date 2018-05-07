@@ -488,9 +488,10 @@ export default {
             // console.log(data.annualExtendPerformance)
             // console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
             // console.log(data.shopType != 'SELF_SUPPORT')
-
+            console.log(String(data.annualExtendPerformance));
+            console.log(!String(data.annualExtendPerformance));
             if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
-                if(!data.annualExtendPerformance){
+                if(!String(data.annualExtendPerformance)){
                     self.loading = false;
                     self.$message({
                         message: '年度店铺不得为空',
@@ -642,7 +643,7 @@ export default {
                     'shop.salesManId': data.salesManId || '',
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
+                    'shop.annualExtendPerformance':String(data.annualExtendPerformance) || '', 
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':data.agentGradeId == 265 ?  '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
@@ -797,6 +798,7 @@ export default {
             // }
             this.editForm.extendSuperNo = '';
             this.editForm.superAgentGradeId = '';
+            this.editForm.areaClass = '';
         },
         //重置直营店铺不要的项
         deleteSelfSupport(){
@@ -823,6 +825,7 @@ export default {
             self.editForm.belongCountry = '' ,
             self.editForm.extendSuperNo = '' ,
             self.editForm.superAgentGradeId = '' ,
+            self.editForm.areaClass  = '',
 
             console.log(self.editForm)
         },
@@ -866,7 +869,6 @@ export default {
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             if(self.flage){
                     self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
-                    console.log(self.editForm.annualExtendPerformance)     
                     
             }
             if(self.editForm.superAgentGradeId){
