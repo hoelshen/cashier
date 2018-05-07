@@ -25,6 +25,17 @@ let Utils = {
             day = day < 10 ? '0' + day : day;
             return `${year}-${month}-${day}`
         },
+        //格式化日期成字符串(年月日)
+        formatDayDateStyleTwo(date) {
+
+            let year = date.getFullYear();
+            let month = date.getMonth() + 1;
+            let day = date.getDate();
+            let hours = date.getHours();
+            month = month < 10 ? '0' + month : month;
+            day = day < 10 ? '0' + day : day;
+            return `${year}/${month}/${day}`
+        },
         //格式化月份(年月)
         formatMonthDate(data) {
             if (data) {

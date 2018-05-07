@@ -61,9 +61,9 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <div class="checkAllText">
-                    </div>
-                    <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                    <!-- <div class="checkAllText">
+                    </div> -->
+                    <el-table id="scrollTabel" :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
@@ -148,13 +148,13 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 5,
+            pageSize: 30,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: '',
+                status: 0,
                 name:'',
                 aglevel:"",
                 annualCycle:'',
@@ -209,6 +209,15 @@ export default {
         }
         this.getFormData();
     },
+    mounted(){
+        // 表头的选择框 隐藏
+    this.$nextTick(
+        () => {
+            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            }
+        )
+        
+    },
     methods: {
         //判断是否超时
         checkSession() {
@@ -248,7 +257,7 @@ export default {
                     'searchAnnualPerformanceOrderVo.status': self.searchData.status,
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),//日期格式转换
                     'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo,
                     'searchAnnualPerformanceOrderVo.isNotFinsh':0,
                 },
@@ -341,7 +350,10 @@ export default {
         },
         onSubmit() {
             let self = this;
-            self.getFormData();
+            // self.getFormData();
+             // 搜索的时候 选中的状态要变为不选中 所以用一下两个
+            this.ifCheckAll = true;
+            self.getAllId();
         },
         handleCurrentChange(val) {
             let self = this;
@@ -444,7 +456,7 @@ export default {
             });
         },
         // 批量导出明细
-        batchOutputExcel() {debugger
+        batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
             console.log(ids)
@@ -494,50 +506,50 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                console.log(response.data)
-                if (response.data.success === 1) {
-                    // console.log(self.downData)
-                    self.downData = response.data.result;
-                    for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            self.downData[i].annualPerformanceOrderDetailVos[j].ratio =  (self.downData[i].annualPerformanceOrderDetailVos[j].ratio*100).toFixed(2)+"%"
+                // console.log(response.data)
+                if(self.selectData.length>0){
+                    if (response.data.success === 1) {
+                        // console.log(self.downData)
+                        self.downData = response.data.result;
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].ratio =  (self.downData[i].annualPerformanceOrderDetailVos[j].ratio*100).toFixed(2)+"%"
+                            }
                         }
-                    }
-                    
-                    for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =  ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)+"-"+ ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime)
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =   Utils.formatDayDateStyleTwo( new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime))+"-"+ Utils.formatDayDateStyleTwo(  new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime))
+                            // console.log(typeof self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)
+                            }
                         }
-                    }
-                     for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='31'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '单点代理'
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='31'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '单店代理'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='265'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '区域代理'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='266'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '微店代理'
+                                }
+                                
                             }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='265'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '区域代理'
-                            }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='266'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '微店代理'
-                            }
-                            
                         }
-                     }
-                     for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='SELF'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '本人'
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='SELF'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '本人'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='BUSSINESS_DEVELOPMENT'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '业务拓展'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='ZUIPIN_DEVELOPMENT'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '醉品开发'
+                                }
+                                
                             }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='BUSSINESS_DEVELOPMENT'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '业务拓展'
-                            }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='ZUIPIN_DEVELOPMENT'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '醉品开发'
-                            }
-                            
                         }
-                     }
-                    if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
@@ -548,24 +560,21 @@ export default {
                                 
                             ]
                             const list = self.downData;
-                            // console.log(list)
-                            // const data = self.formatJson(filterVal, list);
-                            // console.log(data)
                             export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
                         })
-                    }else{
+
+                    } else {
                         self.$message({
-                            message: '订单暂无明细',
+                            message: response.data.msg,
                             type: 'error'
                         })
                     }
-
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
+                 }else{
+                        self.$message({
+                            message: '请选择要导出的核销单~',
+                            type: 'error'
+                        })
+                    }
             }).catch(function(error) {
 
             });
@@ -586,7 +595,7 @@ export default {
                 array.push(selectData[i].id)
             }
             return array.join(',')
-        }
+        },
     }
 }
 </script>
@@ -594,14 +603,5 @@ export default {
 @import url('../assets/less/annualPerformance.less');
 .el-date-editor.el-input{
     width: 100%
-}
-.checkAllText{
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: #eef1f6;
 }
 </style>
