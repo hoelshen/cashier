@@ -960,7 +960,7 @@ export default {
                 this.getData({
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
-                        'pager.pageSize': 30,
+                        'pager.pageSize': 9999999,
                         
                     },
                     success(response) {                     

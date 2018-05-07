@@ -19,8 +19,9 @@
                     <el-col :span="12">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
-                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
-                        已达成进货业绩：{{ detailForm.annualOwnAreadyPurchasePerformance}}
+                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'" style="color:#ff6600">
+                        已达成进货业绩：
+                        ￥{{ detailForm.annualOwnAreadyPurchasePerformance}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -160,7 +161,21 @@
     
             <!-- 查看代理商关系(编号：xxx) start -->
             <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
-                  <el-table :data="agencyRelationsanceForm" style="width: 100%">
+                <div>
+
+                    <div class="block">
+                            <el-date-picker
+                            v-model="registTime"
+                            type="daterange"
+                            start-placeholder="开始日期"
+                            end-placeholder="结束日期"
+                            :default-time="['00:00:00', '23:59:59']">
+                            </el-date-picker>
+                        </div>
+
+                </div>
+                <div>
+                    <el-table :data="agencyRelationsanceForm" style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
@@ -183,6 +198,7 @@
                             </template>
                       </el-table-column>
                   </el-table>
+                </div>
                 <div class="plPage clearfix">
                     <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
                     </el-pagination>
@@ -201,7 +217,7 @@
                                 <img style="margin-right:5px;margin-left:5px;padding-right:5px"  src="../assets/images/DStandard.png" alt="">未达标
                         </div>
                         <!-- <div class="block">
-                            <p>组件值：{{  }}</p>
+                            <p>组件值：{{ registTime }}</p>
                             <el-date-picker
                             v-model="value13"
                             type="daterange"
