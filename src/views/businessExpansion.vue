@@ -55,8 +55,6 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar" id="hMyTabel">
-                    <div class="checkAllText">
-                    </div>
                     <el-table :data="myData" @select-all="checkall" ref="myTabel1" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column type="selection" width="50" :reserve-selection="true" >
                         </el-table-column>
@@ -169,6 +167,15 @@ export default {
     },
     created() {
         this.getFormData();
+    },
+     mounted(){
+        // 表头的选择框 隐藏
+    this.$nextTick(
+        () => {
+            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            }
+        )
+        
     },
     methods: {
         // 表头添加class
@@ -432,6 +439,25 @@ export default {
                 // console.log(response.data)
                 if (response.data.success === 1) {
                     self.downData = response.data.result;
+                    for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].list.length; j++){
+                            self.downData[i].list[j].rebateRate =  (self.downData[i].list[j].rebateRate*100).toFixed(2)+"%"
+                        }
+                    }
+                    for(var i = 0; i< self.downData.length; i++){
+                        for(var j = 0; j < self.downData[i].list.length; j++){
+                            if(self.downData[i].list[j].agentGradeId=='31'){
+                                self.downData[i].list[j].agentGradeId = '单点代理'
+                            }
+                            if(self.downData[i].list[j].agentGradeId=='265'){
+                                self.downData[i].list[j].agentGradeId = '区域代理'
+                            }
+                            if(self.downData[i].list[j].agentGradeId=='266'){
+                                self.downData[i].list[j].agentGradeId = '微店代理'
+                            }
+                            
+                        }
+                     }
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
@@ -484,18 +510,5 @@ export default {
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
-}
-.checkAllText{
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: #eef1f6;
-    // display: none;
-}
-.first-row{
-    background-color: blue;
 }
 </style>

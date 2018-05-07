@@ -53,8 +53,6 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <div class="checkAllText">
-                    </div>
                     <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
@@ -177,6 +175,15 @@ export default {
     created() {
         this.getFormData();
     },
+     mounted(){
+        // 表头的选择框 隐藏
+    this.$nextTick(
+        () => {
+            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            }
+        )
+        
+    },
     methods: {
         isSelectAll(){
             this.checkall();
@@ -263,7 +270,7 @@ export default {
                     self.myData = response.data.result;
                     self.totalSize = response.data.totalNums;
                     // 数据全选与否
-                    if(!self.ifCheckAll){debugger
+                    if(!self.ifCheckAll){
                         self.ifCheckAll = true;
                         for(let i in self.myData){
                             self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
@@ -485,14 +492,4 @@ export default {
 .el-date-editor.el-input{
     width: 100%
 }
-.checkAllText{
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: #eef1f6;
-}
-
 </style>

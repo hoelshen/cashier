@@ -157,10 +157,10 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     var list = jsonData;
     var wb = new Workbook();
-    for (var i = 0; i < list.length; i++) {debugger
+    for (var i = 0; i < list.length; i++) {
         var data = formatJson(filterVal, list[i].list)
         data.unshift(th);
-        var ws_name = list[i].agentNo + "_" + list[i].year + "_" + "业务拓展返利明细";
+        var ws_name = list[i].agentNo + "_" + list[i].year + "("+i+ ")"+ "_" + "业务拓展返利明细";
         var ws = sheet_from_array_of_arrays(data);
 
         /* add worksheet to workbook */
