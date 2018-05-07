@@ -485,7 +485,20 @@ export default {
                     return false  
                 }
             }
-         
+
+            //检验上级代理商的状态
+
+            if(data.agentGradeId=='31' || data.agentGradeId=='266'){
+                   if(data.state!=0){
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商的上级为禁用状态',
+                            type: 'error'
+                        })
+                        return false    
+                    }
+            }
+
             return true
         },
         //清除代理商编号、类别
