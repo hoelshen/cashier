@@ -52,10 +52,14 @@
         </div>
         <!-- 搜索 end -->
         <!-- 表格 start -->
+        
         <div class="t-bodywrap">
             <el-row class="t-body">
+                
                 <el-row class="tablebar" id="hMyTabel">
+                    <div class="inputCover"> </div>
                     <el-table :data="myData" @select-all="checkall" ref="myTabel1" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                       
                         <el-table-column  type="selection" width="50" :reserve-selection="true" >
                         </el-table-column>
                          <el-table-column prop="agentNo" label="代理商编号" width="200">
@@ -170,15 +174,10 @@ export default {
     },
      mounted(){
          // 表头的选择框 隐藏
-        // this.$nextTick(
-        //     () => {
-        //         var tabelHeard = document.getElementsByClassName("el-table__header")[0];
-        //     // tabelHeard.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
-        //     tabelHeard.getElementsByClassName("el-checkbox")[0].style.cssText="background-color:#f00;";            
-        //     console.log(tabelHeard.getElementsByClassName("el-checkbox")[0])
-        //     // console.log(document.getElementsByClassName("el-checkbox")[0])
-        //     }    
-        // )
+         setTimeout(function(){
+            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            document.getElementsByClassName("inputCover")[0].style.cssText
+        },100)
     },
     methods: {
         // 表头添加class
@@ -521,8 +520,16 @@ export default {
 .el-date-editor.el-input{
     width: 100%
 }
-.row-class{
-    display: none;
-    background-color: #f00;
+.tablebar{
+    position: relative;
+}
+.inputCover{
+    width: 40px;
+    height: 39px;
+    top:  1px;
+    left: 22px;
+    background-color: #eef1f6;
+    position: absolute;
+    z-index: 2;
 }
 </style>
