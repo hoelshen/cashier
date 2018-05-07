@@ -63,7 +63,7 @@
                 <el-row class="tablebar">
                     <div class="checkAllText">
                     </div>
-                    <el-table :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                    <el-table id="scrollTabel" :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
@@ -148,7 +148,7 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 5,
+            pageSize: 30,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
@@ -208,6 +208,9 @@ export default {
             this.loginId = user.id;
         }
         this.getFormData();
+    },
+    mounted(){
+        this.scrolLR();
     },
     methods: {
         //判断是否超时
@@ -590,7 +593,7 @@ export default {
                 array.push(selectData[i].id)
             }
             return array.join(',')
-        }
+        },
     }
 }
 </script>

@@ -157,7 +157,7 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     var list = jsonData;
     var wb = new Workbook();
-    for (var i = 0; i < list.length; i++) {debugger
+    for (var i = 0; i < list.length; i++) {
         var data = formatJson(filterVal, list[i].annualPerformanceOrderDetailVos)
         // for(var j = 0; j < list[i].annualPerformanceOrderDetailVos.length; j++){
         //     list[i].annualPerformanceOrderDetailVos[j].ratio =  list[i].annualPerformanceOrderDetailVos[j].ratio+"%"
