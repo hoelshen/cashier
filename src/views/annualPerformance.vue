@@ -506,51 +506,50 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                console.log(response.data)
-                if (response.data.success === 1) {
-                    // console.log(self.downData)
-                    self.downData = response.data.result;
-                    for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            self.downData[i].annualPerformanceOrderDetailVos[j].ratio =  (self.downData[i].annualPerformanceOrderDetailVos[j].ratio*100).toFixed(2)+"%"
+                // console.log(response.data)
+                if(self.selectData.length>0){
+                    if (response.data.success === 1) {
+                        // console.log(self.downData)
+                        self.downData = response.data.result;
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].ratio =  (self.downData[i].annualPerformanceOrderDetailVos[j].ratio*100).toFixed(2)+"%"
+                            }
                         }
-                    }
-                    
-                    for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =   Utils.formatDayDateStyleTwo( new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime))+"-"+ Utils.formatDayDateStyleTwo(  new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime))
-                        // console.log(typeof self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =   Utils.formatDayDateStyleTwo( new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime))+"-"+ Utils.formatDayDateStyleTwo(  new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime))
+                            // console.log(typeof self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)
+                            }
                         }
-                    }
-                     for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='31'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '单点代理'
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='31'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '单店代理'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='265'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '区域代理'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='266'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '微店代理'
+                                }
+                                
                             }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='265'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '区域代理'
-                            }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId=='266'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].agentGradeId = '微店代理'
-                            }
-                            
                         }
-                     }
-                     for(var i = 0; i< self.downData.length; i++){
-                        for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='SELF'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '本人'
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='SELF'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '本人'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='BUSSINESS_DEVELOPMENT'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '业务拓展'
+                                }
+                                if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='ZUIPIN_DEVELOPMENT'){
+                                    self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '醉品开发'
+                                }
+                                
                             }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='BUSSINESS_DEVELOPMENT'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '业务拓展'
-                            }
-                            if(self.downData[i].annualPerformanceOrderDetailVos[j].relationship=='ZUIPIN_DEVELOPMENT'){
-                                self.downData[i].annualPerformanceOrderDetailVos[j].relationship = '醉品开发'
-                            }
-                            
                         }
-                     }
-                    if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
@@ -561,24 +560,21 @@ export default {
                                 
                             ]
                             const list = self.downData;
-                            // console.log(list)
-                            // const data = self.formatJson(filterVal, list);
-                            // console.log(data)
                             export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
                         })
-                    }else{
+
+                    } else {
                         self.$message({
-                            message: '订单暂无明细',
+                            message: response.data.msg,
                             type: 'error'
                         })
                     }
-
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
+                 }else{
+                        self.$message({
+                            message: '请选择要导出的核销单~',
+                            type: 'error'
+                        })
+                    }
             }).catch(function(error) {
 
             });

@@ -436,9 +436,10 @@ export default {
             }).then(function(response) {
                 self.loading = false;
                 console.log(response.data)
-                if (response.data.success === 1) {
-                    self.downData = response.data.result;
-                    if(self.downData.length>0){
+                if(self.selectData.length>0){
+                    if (response.data.success === 1) {
+                        self.downData = response.data.result;
+                        
                         require.ensure([], () => {
                             const {
                                 export_json_to_excel
@@ -451,19 +452,18 @@ export default {
                             console.log(list)
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
                         })
-                    }else{
+                    } else {
                         self.$message({
-                            message: '订单暂无明细',
+                            message: response.data.msg,
                             type: 'error'
                         })
                     }
-
-                } else {
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'error'
-                    })
-                }
+                }else{
+                        self.$message({
+                            message: '请选择要导出的核销单~',
+                            type: 'error'
+                        })
+                    }
             }).catch(function(error) {
 
             });
