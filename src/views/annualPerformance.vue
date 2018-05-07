@@ -148,7 +148,7 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 3,
+            pageSize: 30,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
