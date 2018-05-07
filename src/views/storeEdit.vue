@@ -488,8 +488,8 @@ export default {
             // console.log(data.annualExtendPerformance)
             // console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
             // console.log(data.shopType != 'SELF_SUPPORT')
-            console.log(String(data.annualExtendPerformance));
-            console.log(!String(data.annualExtendPerformance));
+            // console.log(String(data.annualExtendPerformance));
+            // console.log(!String(data.annualExtendPerformance));
             if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
                 if(!String(data.annualExtendPerformance)){
                     self.loading = false;
@@ -816,19 +816,19 @@ export default {
             //     annualPurchasePerformance:'',
             // }
 
-            self.editForm.annualPurchasePerformance =  '',
-            self.editForm.agentProvince  = '' ,
-            self.editForm.agentCity = '' ,
-            self.editForm.agentCounty = '' ,
-            self.editForm.belongProvince = '' ,
-            self.editForm.belongCity = '' ,
-            self.editForm.belongCountry = '' ,
-            self.editForm.extendSuperNo = '' ,
-            self.editForm.superAgentGradeId = '' ,
-            self.editForm.areaClass  = '',
+            self.editForm.annualPurchasePerformance =  '';
+            self.editForm.agentProvince  = '' ;
+            self.editForm.agentCity = '' ;
+            self.editForm.agentCounty = '' ;
+            self.editForm.belongProvince = ''
+            self.editForm.belongCity = '' 
+            self.editForm.belongCountry = '' 
+            self.editForm.extendSuperNo = '' 
+            self.editForm.superAgentGradeId = '' 
+            self.editForm.areaClass  = ''
 
-            console.log(self.editForm)
-        },
+            // console.log(self.editForm)
+        }
     
     },
     created() {
@@ -884,6 +884,8 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import url("../assets/less/storeAdd.less");
+
 #editStore {
     width: 98%;
     margin: 1%;
