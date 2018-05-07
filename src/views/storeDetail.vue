@@ -39,18 +39,15 @@
                     </el-col>
                     <el-col :span="12" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' && !detailForm.annualOwnAreadyPurchasePerformanceRate">
                         <span  style="float:left" >进货业绩达成率：</span> 
-                          <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 " style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 0px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
-                                <div    v-bind:style="{height:detailForm.height +'px',width:detailForm.annualOwnAreadyPurchasePerformanceRate *144 + 'px','background-color':'#'+detailForm.activeColor1}"
-                                          style="float:left;border-radius: 10px;"
-                                >
-                                </div>
-                                <div v-bind:style="{height:detailForm.height  +'px',width:detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px','background-color':'#' +detailForm.activeColor2}"
-                                         style="float:left;border-radius: 10px;"
-                                 >
-                                </div>
-                                <span style=" position:absolute ;right: 132px;"> {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%</span> 
+                          <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 " class="annualPurchasePerformanceCss">
+                                <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
+                                <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
                           </div>
-                          <div v-else>-</div>
+                          <div v-else>-</div>                         
+                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
+                               {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%
+                          </span> 
+                          
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -79,11 +76,13 @@
                     </el-col>
                     <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 店铺拓展达成率：</span> 
-                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  style="height:10px;;width:144px;background-color:#e3e5e6;padding-top: 10px;float:right;border-radius:10px;position: absolute;top: 9px;left: 610px;">
-                                        <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="{height:detailForm.height  +'px',width:detailForm.storeExpansionRate *144 +'px' ,'background-color':'#'+detailForm.activeColor1}  "></div>
+                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  class="annualExtendPerformanceCss">
+                                <div  style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
                             </div>
                             <div v-else>-</div>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  style=" right: 132px;position: absolute">{{Number(detailForm.storeExpansionRate).toFixed(2)}}%</span>
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  style=" right: 132px;position: absolute">
+                                {{Number(detailForm.storeExpansionRate).toFixed(2)}}%
+                            </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
@@ -102,7 +101,8 @@
             </div>
             <div class="calendar">
                  <p class="calendarMessage_top">{{message}}</p><br>
-                <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='endTime'></timeComponent>  
+                 <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
+                <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
             </div>
         </div>
         <div class="content_title_bottom">
@@ -273,18 +273,6 @@ export default {
       tableData:{
           agent:'',
       },
-    //   searchData: {
-    //     shopName: "",
-    //     phone: "",
-    //     name: "",
-    //     state: "",
-    //     signTime: [],
-    //     agentLevelIds: [],
-    //     operator: "",
-    //     salesMan: "",
-    //     operatorId: "",
-    //     salesManId: ""
-    //   },
       annualAgentsTitle:'',
       annualAgentsForm:[],
       annualAgentsFormcycleBeginTime:'',
@@ -337,20 +325,39 @@ export default {
         shopNo:"",
         annualExtendPerformance:"",  //年度目标店铺拓展
         annualAreadyExtendPerformance:'',   //已达成店铺拓展
+        storeExpansionRate:'',     //年度店铺扩展达成率  
+        
+        purchaseAchievementRate:'',  //进货业绩达成率
+
         annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
         annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
-        annualOwnAreadyPurchasePerformanceRate:'',   //年度自己所完成的业绩比例
-        annualLowerAreadyPurchasePerformanceRate:'',  //年度下级协助所完成的业绩比例
-        annualPurchasePerformance:'' ,  //年度目标进货业绩
-        purchaseAchievementRate:'',  //进货业绩达成率
-        storeExpansionRate:'',     //年度店铺扩展达成率
+        annualPurchasePerformance:'' ,  //年度目标进货业绩        
+        annualOwnAreadyPurchasePerformanceRate:'',   //年度自己所完成的业绩率
+        annualLowerAreadyPurchasePerformanceRate:'',  //年度下级协助所完成的业绩率
+
         createTime:'',    ///签约日期,
         belongCity:'',   //所属城市
         belongCountry:'', //所属区域
         belongProvince:'',  //所属省份
         activeColor1:"ff6600",   //橙色
         activeColor2:"ffd199",     //红色
+        endTime: '',        
         height:10,   
+      },
+      annualOwnAreadyPurchasePerformanceRateObject:{
+          height:10 +'px',
+          width:'',
+          backgroundColor:'',
+      },
+      annualLowerAreadyPurchasePerformanceRateObject:{
+          height:10  +'px',
+          width:'',
+          backgroundColor:'',
+      },
+      annualExtendPerformanceObject:{
+          height:10  +'px',
+          width:'',
+          backgroundColor:''
       },
       agencyRelationsanceDialogVisible:false,
       annualAgentsDialogVisible:false,
@@ -359,7 +366,6 @@ export default {
       order: "", //预存款排序
       phoneLength: 11,
       message: "剩余天数",
-      endTime: "2018-07-08"
     };
   },
   components: {
@@ -537,11 +543,36 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = response.data.result;
+               
         self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
+
         self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
+        //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
-        self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / response.data.result.annualPurchasePerformance
+        //年度下级协助所完成的业绩率   ////年度下级协助所完成的业绩   //年度目标进货业绩
+        self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  /  response.data.result.annualPurchasePerformance
+        //年度店铺扩展达成率    //已达成店铺拓展   //年度目标店铺拓展
         self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
+
+
+    //    console.log( (self.detailForm.annualOwnAreadyPurchasePerformanceRate *144).toFixed(2) + 'px')
+        
+
+       self.annualOwnAreadyPurchasePerformanceRateObject.width  =   self.detailForm.annualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
+       
+       //    console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
+
+       self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
+
+       
+       //年度下级协助所完成的业绩率 
+       self.annualLowerAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px'
+       self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' +self.detailForm.activeColor2
+       //年度目标店铺拓展
+       self.annualExtendPerformanceObject.width = self.detailForm.storeExpansionRate *144 +'px' ,
+       self.annualExtendPerformanceObject.backgroundColor = '#'+self.detailForm.activeColor1
+
+       self.detailForm.endTime = response.data.result.remainDay;
       })
       .catch(function(err) {
         self.loading = false;
@@ -587,7 +618,16 @@ export default {
 }
 
 
-
+.annualPurchasePerformanceCss {
+    height:10px;
+    width:144px;
+    background-color:#e3e5e6;
+    padding-top: 0px;
+    float:right;
+    border-radius:10px;
+    position: absolute;
+    top: 9px;left: 610px;
+}
 
 
 #detailStore {
@@ -597,6 +637,17 @@ export default {
   background-color: #ffffff;
 }
 
+.annualExtendPerformanceCss{
+        height:10px;
+        width:144px;
+        background-color:#e3e5e6;
+        padding-top: 10px;
+        float:right;
+        border-radius:10px;
+        position: absolute;
+        top: 9px;
+        left: 610px;
+}
 
 .router-link-active { 
    color: #ffffff;

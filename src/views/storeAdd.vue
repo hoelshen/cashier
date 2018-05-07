@@ -793,8 +793,10 @@ export default {
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
-                this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.agentGradeId == 31 ? '单店' : '微店');
-        },
+                // console.log(item.superAgentGradeId)
+                this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
+                // console.log(this.addForm.superAgentGradeId)
+        },  
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
         },
@@ -818,7 +820,8 @@ export default {
             this.addForm.annualOwnAreadyPurchasePerformance = '' ;
             this.addForm.extendSuperType = '';
             this.addForm.superNo = '';
-        }
+            this.addForm.areaClass  = '';
+        },
 
     },
     created(){
