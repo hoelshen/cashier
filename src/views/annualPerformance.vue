@@ -209,9 +209,6 @@ export default {
         }
         this.getFormData();
     },
-    mounted(){
-        this.scrolLR();
-    },
     methods: {
         //判断是否超时
         checkSession() {
