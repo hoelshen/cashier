@@ -61,8 +61,8 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <div class="checkAllText">
-                    </div>
+                    <!-- <div class="checkAllText">
+                    </div> -->
                     <el-table id="scrollTabel" :data="myData" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
                         <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
                         </el-table-column>
@@ -148,7 +148,7 @@ export default {
             ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 30,
+            pageSize: 3,
             agentGradeId:"",
             searchData: {
                 shopNo: '',
@@ -208,6 +208,15 @@ export default {
             this.loginId = user.id;
         }
         this.getFormData();
+    },
+    mounted(){
+        // 表头的选择框 隐藏
+    this.$nextTick(
+        () => {
+            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
+            }
+        )
+        
     },
     methods: {
         //判断是否超时
@@ -447,7 +456,7 @@ export default {
             });
         },
         // 批量导出明细
-        batchOutputExcel() {debugger
+        batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
             console.log(ids)
@@ -598,14 +607,5 @@ export default {
 @import url('../assets/less/annualPerformance.less');
 .el-date-editor.el-input{
     width: 100%
-}
-.checkAllText{
-    position: absolute;
-    z-index: 2;
-    top: 0;
-    left: 20px;
-    width: 40px;
-    height: 40px;
-    background-color: #eef1f6;
 }
 </style>
