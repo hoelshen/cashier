@@ -823,6 +823,7 @@ export default {
             self.editForm.belongCountry = '' ,
             self.editForm.extendSuperNo = '' ,
             self.editForm.superAgentGradeId = '' ,
+            self.editForm.areaClass  = '',
 
             console.log(self.editForm)
         },
