@@ -154,7 +154,7 @@ export default {
                 shopNo: '',
                 phone: '',
                 payOrderNo: '',
-                status: '',
+                status: 0,
                 name:'',
                 aglevel:"",
                 annualCycle:'',
@@ -248,7 +248,7 @@ export default {
                     'searchAnnualPerformanceOrderVo.status': self.searchData.status,
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),//日期格式转换
                     'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo,
                     'searchAnnualPerformanceOrderVo.isNotFinsh':0,
                 },
@@ -341,7 +341,10 @@ export default {
         },
         onSubmit() {
             let self = this;
-            self.getFormData();
+            // self.getFormData();
+             // 搜索的时候 选中的状态要变为不选中 所以用一下两个
+            this.ifCheckAll = true;
+            self.getAllId();
         },
         handleCurrentChange(val) {
             let self = this;
@@ -506,7 +509,8 @@ export default {
                     
                     for(var i = 0; i< self.downData.length; i++){
                         for(var j = 0; j < self.downData[i].annualPerformanceOrderDetailVos.length; j++){
-                            self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =  ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)+"-"+ ( self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime)
+                            self.downData[i].annualPerformanceOrderDetailVos[j].annualCycle =   Utils.formatDayDateStyleTwo( new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime))+"-"+ Utils.formatDayDateStyleTwo(  new Date(self.downData[i].annualPerformanceOrderDetailVos[j].cycleEndTime))
+                        // console.log(typeof self.downData[i].annualPerformanceOrderDetailVos[j].cycleBeginTime)
                         }
                     }
                      for(var i = 0; i< self.downData.length; i++){
