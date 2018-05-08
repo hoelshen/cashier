@@ -125,7 +125,7 @@
             </el-row>
             <el-row >
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级："> 
+                    <el-form-item label="括展上级：">
                             <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品</el-radio>
                             <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
                     </el-form-item>
@@ -487,7 +487,7 @@ export default {
             }
 
             //检验上级代理商的状态
-
+            console.log(data.state)
             if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
                    if(data.state!=0){
                         self.loading = false;
@@ -803,9 +803,14 @@ export default {
                 // console.log(item.superAgentGradeId)
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 // console.log(this.addForm.superAgentGradeId)
+
+                this.addForm.state = item.state;
         },  
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
+                this.addForm.superAgentGradeId = '';
+                this.addForm.state = '';
+                
         },
         deleteOperator(){
             this.addForm.operator='';
