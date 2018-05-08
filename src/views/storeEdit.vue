@@ -989,10 +989,14 @@ export default {
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             if(self.flage){
                 self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
+
+                self.editForm.areaClass = response.data.result.areaClass;
                 // console.log(self.editForm.annualExtendPerformance)
                 !self.flage;
                 // console.log('ok')
             }
+
+
             // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
