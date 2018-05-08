@@ -393,7 +393,6 @@ export default {
                     self.verification(ids,status,person)
                 })
             }
-           
         },
         // 确认全部核销
         confirmAllVerification() {
@@ -599,7 +598,7 @@ export default {
     }
 }
 </script>
-<style lang="less" >
+<style lang="less" scoped>
 @import url('../assets/less/annualPerformance.less');
 .el-date-editor.el-input{
     width: 100%

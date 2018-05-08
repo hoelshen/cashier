@@ -1086,8 +1086,6 @@ export default {
     top: 72%;
     left: 60%;
 }
-</style>
-<style>
 .el-message-box {
     width: 500px;
 }
