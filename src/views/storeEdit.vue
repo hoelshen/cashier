@@ -704,18 +704,16 @@ export default {
                         message: response.data.msg,
                         type: 'error'
                     })
+                    return  false;                    
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
                     })
-                    self.editDialogVisible = false;
                     setTimeout(function () {
                         self.$router.go(-1)
-                        // self.handleCurrentChange(self.currentPage);
                     }, 1000)
                 }
-
             }).catch(function (err) {
                 self.loading = false;
             });
