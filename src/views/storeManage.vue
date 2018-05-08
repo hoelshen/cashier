@@ -66,6 +66,8 @@
                     <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
+                        <el-table-column  type="selection" width="50" :reserve-selection="true">
+                        </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
@@ -110,9 +112,18 @@
                         </el-table-column>
                         <el-table-column prop="remainDay" label="剩余天数" width="150" sortable="custom" >
                         </el-table-column>
-                        <el-table-column prop="goalCompletion" label="目标完成" width="100">
+                        <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                {{ scope.row.goalCompletion * 100 }}%
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==266 && scope.row.annualPurchasePerformance!=0)">
+                                     {{ scope.row.goalCompletion * 100 }}%
+                                </span>
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance!=0)">
+                                     {{ scope.row.goalCompletion * 100 }}%
+                                </span>
+                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && (scope.row.agentGradeId ==265 && scope.row.annualPurchasePerformance!=0 && scope.row.annualExtendPerformance!=0 )"> 
+                                     {{ scope.row.goalCompletion * 100 }}%
+                                </span>
+                                <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="operator" label="运营人员" width="100">
@@ -306,7 +317,8 @@ export default {
             self.loading = false;
             // console.log(response.data)
             self.myData = response.data.rows;
-            // console.log(response.data.rows)
+            console.log(response.data.rows);
+            // console.log(response.data.rows.goalCompletion[0])
             
             for (var value of self.myData) {
                 if(!value.areaClass){
@@ -323,8 +335,8 @@ export default {
                 // console.log(data.areaClass)
                 //  console.log(data.areaClass.toLocaleLowerCase()) 
             // });
-            
-            
+            // console.log(self.scope.row.shopType!='SELF_SUPPORT' && ( self.scope.row.agentGradeId='266' && self.scope.row.annualPurchasePerformance!=0))
+            // console.log(self.scope.row.shopType!='SELF_SUPPORT' && ( self.scope.row.agentGradeId='31' && (self.scope.row.annualExtendPerformance!=0 && self.scope.row.annualPurchasePerformance!=0)))
 
             self.totalSize = response.data.total
         }).catch(function (err) {
@@ -869,9 +881,19 @@ export default {
 
             });
         },
+        // formatSelect() {
+        //     let myData = this.myData;
+        //     let array = []
+        //     for (let i = 0; i < selectData.length; i++) {
+        //         array.push(selectData[i].id)
+        //     }
+        //     return array.join(',')
+        // },
+
         // 导出全部明细
         allOutputExcel() {
-          this.outputExcel();
+          let self  = this;
+          self.outputExcel()
         },
         getData(obj){
             const self = this;
@@ -906,16 +928,16 @@ export default {
             }
         },
         formatJson(filterVal, jsonData) {
-        //     ----> 格式化json
-        //     console.log(jsonData)
-            return jsonData.map(v => {
-        // 	   console.log(v)
-                return filterVal.map(j => {
-            //       console.log(j,v[j])
-                    return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
-                // }
-                })			
-            })	
+            //     ----> 格式化json
+            //     console.log(jsonData)
+                return jsonData.map(v => {
+            // 	   console.log(v)
+                    return filterVal.map(j => {
+                //       console.log(j,v[j])
+                        return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+                    // }
+                    })			
+                })	
         },
         // 导出明细
 		outputExcel() {
@@ -961,7 +983,14 @@ export default {
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
                         'pager.pageSize': 9999999,
-                        
+                        'shop.name':data.name,
+                        'shop.shopName': data.shopName,
+                        'shop.operator':data.operator,
+                        'shop.salesMan':data.salesMan,
+                        'shop.state':data.state,
+                        'shop.agentGradeIds':data.agentGradeIds,
+                        'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                        'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
                     },
                     success(response) {                     
                         if (response.data.code === 1) {

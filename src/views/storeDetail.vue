@@ -297,6 +297,7 @@ export default {
       annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
+      annualAgentsFormSignTime: [],
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -488,6 +489,9 @@ export default {
              if (response.data.success === 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
+                    // console.log(response.data.result)
+                    // console.log(response.data.result[0].annualCycle);
+                    // console.log(self.annualAgentsForm.annualCycle)
                     // console.log(response.data);
                     // self.annualAgentsTitle = response.data;
                     // self.handleCurrentChange(self.currentPage)
@@ -535,7 +539,29 @@ export default {
     goBack() {
       this.$router.push("/storeManage");
     },
+    //年度业绩年份
+    annualAgentsFormAnnualCycle(){
+        const self = this;
+            if (!self.checkSession()) return;
 
+            console.log(self.detailForm.id)
+            //清除排序
+            self.loading = true;
+            self.$ajax.post('/api/http/annualPerformanceCycle/findListByShopId.jhtml', {
+                params: {
+                    'shopId':self.detailForm.id,
+                    'annualCycle': Utils.formatYearDate( self.annualAgentsFormSignTime[0]),
+                }
+            }).then(function (response) {
+                self.loading = false;
+                self.annualAgentsForm = response.data.rows;
+                self.totalSize = response.data.total;
+               
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
+    },
      //改变年度业绩当前页
     AnnualAgentsHandleCurrentChange(val) {
             let self = this;
