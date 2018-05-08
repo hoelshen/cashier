@@ -115,7 +115,7 @@
                 </el-col>
             </el-row>
             <el-row>
-              <el-col :span="22">
+              <el-col :span="16">
                     <el-form-item label="收件地址：">
                         <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
                     </el-form-item>
@@ -138,7 +138,7 @@
             <el-row>
                 <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo">醉品</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品</el-radio>
                             <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
@@ -218,7 +218,7 @@ export default {
                     extendSuperNo:'',
                     areaClass:'',
                     superAgentGradeId:'',
-                    
+                    state:''
             },
             isDisable:false,
             levelArray: [], //代理商等级数组,
@@ -485,11 +485,7 @@ export default {
             }
         
             // 年度店铺拓展
-            // console.log(data.annualExtendPerformance)
-            // console.log((data.agentGradeId == 266 || data.agentGradeId == 31));
-            // console.log(data.shopType != 'SELF_SUPPORT')
-            console.log(String(data.annualExtendPerformance));
-            console.log(!String(data.annualExtendPerformance));
+         
             if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
                 if(!String(data.annualExtendPerformance)){
                     self.loading = false;
@@ -500,7 +496,21 @@ export default {
                     return false  
                 }
             }
-         
+
+            //检验上级代理商的状态  
+            // console.log(data.state)
+            // console.log(data.extendSuperType)
+            if( (data.agentGradeId==31 || data.agentGradeId==266) && data.extendSuperType!='ZUIPIN'){
+                   if(data.state!=0){
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商的上级为禁用状态',
+                            type: 'error'
+                        })
+                        return false     
+                    }
+            }  
+          
             return true
                  
         },
@@ -610,7 +620,8 @@ export default {
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress);
-
+            
+            // console.log(String(data.annualExtendPerformance))
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
             //请求
@@ -644,10 +655,10 @@ export default {
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
                     'shop.annualExtendPerformance':String(data.annualExtendPerformance) || '', 
-                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
-                    'shop.extendSuperNo':data.agentGradeId == 265 ?  '' :  (data.extendSuperNo || ''),
                     'shop.areaClass':data.areaClass  || '',
-                    'shop.superAgentGradeId':(data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
+                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
+                    'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
+                    'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
 
                     'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                     'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
@@ -783,6 +794,7 @@ export default {
         handleExtendSuperNoSelect(item){
             this.editForm.extendSuperNo = item.shopNo;
             this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
+            this.editForm.state = item.state;
         },
         deleteOperator(){
             this.editForm.operator='';
@@ -816,19 +828,19 @@ export default {
             //     annualPurchasePerformance:'',
             // }
 
-            self.editForm.annualPurchasePerformance =  '',
-            self.editForm.agentProvince  = '' ,
-            self.editForm.agentCity = '' ,
-            self.editForm.agentCounty = '' ,
-            self.editForm.belongProvince = '' ,
-            self.editForm.belongCity = '' ,
-            self.editForm.belongCountry = '' ,
-            self.editForm.extendSuperNo = '' ,
-            self.editForm.superAgentGradeId = '' ,
-            self.editForm.areaClass  = '',
+            self.editForm.annualPurchasePerformance =  '';
+            self.editForm.agentProvince  = '' ;
+            self.editForm.agentCity = '' ;
+            self.editForm.agentCounty = '' ;
+            self.editForm.belongProvince = ''
+            self.editForm.belongCity = '' 
+            self.editForm.belongCountry = '' 
+            self.editForm.extendSuperNo = '' 
+            self.editForm.superAgentGradeId = '' 
+            self.editForm.areaClass  = ''
 
-            console.log(self.editForm)
-        },
+            // console.log(self.editForm)
+        }
     
     },
     created() {
@@ -884,6 +896,8 @@ export default {
 }
 </script>
 <style lang='less' scoped>
+@import url("../assets/less/storeAdd.less");
+
 #editStore {
     width: 98%;
     margin: 1%;
