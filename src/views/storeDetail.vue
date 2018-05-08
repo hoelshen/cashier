@@ -491,8 +491,8 @@ export default {
              if (response.data.success === 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
-                    console.log(response.data.result)
-                    console.log(response.data.result[0].annualCycle);
+                    // console.log(response.data.result)
+                    // console.log(response.data.result[0].annualCycle);
                     // console.log(self.annualAgentsForm.annualCycle)
                     // console.log(response.data);
                     // self.annualAgentsTitle = response.data;
@@ -545,20 +545,20 @@ export default {
     annualAgentsFormAnnualCycle(){
         const self = this;
             if (!self.checkSession()) return;
+
+            console.log(self.detailForm.id)
             //清除排序
             self.loading = true;
             self.$ajax.post('/api/http/annualPerformanceCycle/findListByShopId.jhtml', {
                 params: {
-                    'annualAgentsFormAnnualCycle.startTime': self.annualAgentsFormSignTime && self.annualAgentsFormSignTime[0] ? Utils.formatDayDate(this.annualAgentsFormSignTime[0]) : '',
-                    'annualAgentsFormAnnualCycle.endTime': self.annualAgentsFormSignTime && self.annualAgentsFormSignTime[1] ? Utils.formatDayDate(this.annualAgentsFormSignTime[0]) : '',
-                    // 'annualAgentsFormAnnualCycle.annualCycle':self.annualAgentsFormSignTime[0],
+                    'shopId':self.detailForm.id,
+                    'annualCycle': Utils.formatYearDate( self.annualAgentsFormSignTime[0]),
                 }
             }).then(function (response) {
                 self.loading = false;
                 self.annualAgentsForm = response.data.rows;
                 self.totalSize = response.data.total;
-                console.log('ok')
-                console.log(response);
+               
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);

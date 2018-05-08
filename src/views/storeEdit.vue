@@ -644,7 +644,7 @@ export default {
             
             // console.log(String(data.annualExtendPerformance))
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-
+            console.log((data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT'))
             //请求
             self.$ajax({
                 url: '/api/shop/shopManage/modify.jhtml',
@@ -675,7 +675,7 @@ export default {
                     'shop.salesManId': data.salesManId || '',
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':String(data.annualExtendPerformance) || '', 
+                    'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
                     'shop.areaClass':data.areaClass  || '',
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
