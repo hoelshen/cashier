@@ -699,12 +699,12 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 // console.log(response)
-                if (response.data.result == 0) {
+                if (response.data.result!=1) {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
-                    return  false;                    
+                    return  false;             
                 } else {
                     self.$message({
                         message: response.data.msg,
