@@ -109,7 +109,7 @@
                     <el-form-item :span="2" label="类别：" >
                         <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
                             <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
-                            <span>数字{{item.num}}</span>
+                            <!-- <span>数字{{item.num}}</span> -->
                         </el-select>                    
                     </el-form-item>
                 </el-col>
@@ -130,7 +130,6 @@
                         </div>
                     </el-form-item>
                 </el-col>
-
             </el-row>      
             <el-row class="content_title">
                 <h2>账户信息</h2>
@@ -514,6 +513,24 @@ export default {
                         return false     
                     }
             }  
+
+            //拓展上级姓名必填
+            // console.log(data.extendSuperNo);
+            // console.log(data.superAgentGradeId);
+            // console.log(!data.extendSuperNo && !data.superAgentGradeId)
+            // console.log(!data.extendSuperNo)
+            // console.log(!data.superAgentGradeId)
+            if(data.extendSuperType =='AGENT'){
+                if(!data.extendSuperNo && !data.superAgentGradeId){
+                    self.loading = false;
+                    self.$message({
+                        message: ' 拓展上级编号/姓名必填',
+                        type: 'error'
+                    })
+                    return false 
+                }
+                  
+            }
           
             return true
                  
