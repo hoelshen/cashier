@@ -110,9 +110,10 @@
                         </el-table-column>
                         <el-table-column prop="remainDay" label="剩余天数" width="150" sortable="custom" >
                         </el-table-column>
-                        <el-table-column prop="goalCompletion" label="目标完成" width="100">
+                        <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                {{ scope.row.goalCompletion * 100 }}%
+                                <span v-if="scope.row.goalCompletion!=''">{{ scope.row.goalCompletion * 100 }}%</span>
+                                <span>-</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="operator" label="运营人员" width="100">
@@ -306,7 +307,8 @@ export default {
             self.loading = false;
             // console.log(response.data)
             self.myData = response.data.rows;
-            // console.log(response.data.rows)
+            console.log(response.data.rows);
+            // console.log(response.data.rows.goalCompletion[0])
             
             for (var value of self.myData) {
                 if(!value.areaClass){

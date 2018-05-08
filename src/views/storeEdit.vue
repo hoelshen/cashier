@@ -520,7 +520,7 @@ export default {
             // console.log(!data.extendSuperNo && !data.superAgentGradeId)
             // console.log(!data.extendSuperNo)
             // console.log(!data.superAgentGradeId)
-            if(data.extendSuperType =='AGENT'){
+            if(data.extendSuperType =='AGENT'&&data.agentGradeId!='265'){
                 if(!data.extendSuperNo && !data.superAgentGradeId){
                     self.loading = false;
                     self.$message({

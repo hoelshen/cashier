@@ -164,16 +164,6 @@
             <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
                 <div>
 
-                    <!-- <div class="block">
-                        <el-date-picker
-                        v-model="registTime"
-                        type="daterange"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        :default-time="['00:00:00', '23:59:59']">
-                        </el-date-picker>
-                    </div> -->
-
                 </div>
                 <div>
                     <el-table :data="agencyRelationsanceForm" style="width: 100%">
@@ -227,6 +217,32 @@
                             :default-time="['00:00:00', '23:59:59']">
                             </el-date-picker>
                         </div> -->
+                        <!-- <div>
+                            <el-form-item label="时间：">
+                                <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
+                                </el-date-picker>
+                            </el-form-item>
+
+
+                        </div> -->
+                        
+                            <div class="block" style=" position: absolute;left: 800px;top: 55px;">
+                
+                                <el-date-picker v-model="annualAgentsFormSignTime" 
+                                                type="daterange" placeholder="选择日期范围" 
+                                                :picker-options="pickerOptions"
+                                                @change="annualAgentsFormAnnualCycle">
+                                
+                                </el-date-picker>
+                
+                
+                                <!-- <el-date-picker
+                                v-model="annualAgentsForm.annualAgentsFormSignTime"
+                                type="year"
+                                placeholder="选择年"
+                                @change="annualAgentsFormAnnualCycle">
+                                </el-date-picker> -->
+                            </div>
                     </div>
                     <div >
                       <el-table :data="annualAgentsForm" style="width: 100%;">
@@ -307,6 +323,7 @@ export default {
       annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
+      annualAgentsFormSignTime: [],
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -474,6 +491,9 @@ export default {
              if (response.data.success === 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
+                    console.log(response.data.result)
+                    console.log(response.data.result[0].annualCycle);
+                    // console.log(self.annualAgentsForm.annualCycle)
                     // console.log(response.data);
                     // self.annualAgentsTitle = response.data;
                     // self.handleCurrentChange(self.currentPage)
@@ -521,7 +541,29 @@ export default {
     goBack() {
       this.$router.push("/storeManage");
     },
-
+    //年度业绩年份
+    annualAgentsFormAnnualCycle(){
+        const self = this;
+            if (!self.checkSession()) return;
+            //清除排序
+            self.loading = true;
+            self.$ajax.post('/api/http/annualPerformanceCycle/findListByShopId.jhtml', {
+                params: {
+                    'annualAgentsFormAnnualCycle.startTime': self.annualAgentsFormSignTime && self.annualAgentsFormSignTime[0] ? Utils.formatDayDate(this.annualAgentsFormSignTime[0]) : '',
+                    'annualAgentsFormAnnualCycle.endTime': self.annualAgentsFormSignTime && self.annualAgentsFormSignTime[1] ? Utils.formatDayDate(this.annualAgentsFormSignTime[0]) : '',
+                    // 'annualAgentsFormAnnualCycle.annualCycle':self.annualAgentsFormSignTime[0],
+                }
+            }).then(function (response) {
+                self.loading = false;
+                self.annualAgentsForm = response.data.rows;
+                self.totalSize = response.data.total;
+                console.log('ok')
+                console.log(response);
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
+    },
      //改变年度业绩当前页
     AnnualAgentsHandleCurrentChange(val) {
             let self = this;
