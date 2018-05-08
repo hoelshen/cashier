@@ -102,7 +102,7 @@ export default [{
     },
     {
         title: '规则管理',
-        icon: 'icon-tongzhiguanli',
+        icon: 'icon-shouyinhoutai_guizeshezhi',
         children: [{
             title: '业务扩展返利',
             path: '/rebate',
