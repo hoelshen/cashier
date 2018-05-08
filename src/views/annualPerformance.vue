@@ -212,7 +212,7 @@ export default {
     },
      mounted(){
          // 表头的选择框 隐藏
-         setTimeout(function(){debugger
+         setTimeout(function(){
             document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
             document.getElementsByClassName("inputCover")[0].style.cssText="display:none;"
         },1000)
@@ -549,7 +549,6 @@ export default {
                                 
                             }
                         }
-                        debugger
                          if(self.downData.length>0){
                             require.ensure([], () => {
                                 const {

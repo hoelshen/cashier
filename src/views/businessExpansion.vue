@@ -440,7 +440,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {debugger
+            }).then(function(response) {
                 self.loading = false;
                 // console.log(response.data)
                 
