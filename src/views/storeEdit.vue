@@ -70,15 +70,15 @@
                   
                 </el-col>
                 <el-col :span="6">
-                      <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
-                        <el-input v-model="editForm.annualExtendPerformance"  placeholder="">
-                            <template slot="prepend">店铺拓展：
-                                
-                            </template>
-                                <template slot="append"> 家
-                            </template>      
-
-                        </el-input>
+                    <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">       
+                            <el-input  v-model="editForm.annualExtendPerformance">
+                                <template slot="prepend">店铺拓展：
+                                    
+                                </template>
+                                    <template slot="append"> 家
+                                </template> 
+                    
+                            </el-input>
                     </el-form-item>
                 </el-col>
             </el-row>         
@@ -107,10 +107,10 @@
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
-                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
-                            </el-select>                    
-                            <!-- <el-input  v-model="editForm.areaClass"  style="width:50px"></el-input> -->
+                        <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
+                            <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            <!-- <span>数字{{item.num}}</span> -->
+                        </el-select>                    
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -130,7 +130,6 @@
                         </div>
                     </el-form-item>
                 </el-col>
-
             </el-row>      
             <el-row class="content_title">
                 <h2>账户信息</h2>
@@ -224,19 +223,23 @@ export default {
             levelArray: [], //代理商等级数组,
             areaClassArray: [{   //类别等级数组,
                     value: 'S',
-                    name: 'S'
+                    name: 'S',
+                    num:8,
                 },
                 {
                     value:'A',
-                    name: 'A'
+                    name: 'A',
+                    num:6,
                 },
                 {
                     value: 'B',
-                    name: 'B'
+                    name: 'B',
+                    num:4,
                 },
                 {
                     value: 'C',
-                    name: 'C'
+                    name: 'C',
+                    num:4,
                 }
             ],
             phoneLength: 11,
@@ -510,6 +513,24 @@ export default {
                         return false     
                     }
             }  
+
+            //拓展上级姓名必填
+            // console.log(data.extendSuperNo);
+            // console.log(data.superAgentGradeId);
+            // console.log(!data.extendSuperNo && !data.superAgentGradeId)
+            // console.log(!data.extendSuperNo)
+            // console.log(!data.superAgentGradeId)
+            if(data.extendSuperType =='AGENT'){
+                if(!data.extendSuperNo && !data.superAgentGradeId){
+                    self.loading = false;
+                    self.$message({
+                        message: ' 拓展上级编号/姓名必填',
+                        type: 'error'
+                    })
+                    return false 
+                }
+                  
+            }
           
             return true
                  
