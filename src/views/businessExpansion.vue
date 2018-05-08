@@ -250,7 +250,7 @@ export default {
                     'accountSearchVo.phone': self.searchData.phone,
                     'accountSearchVo.paymentOrderNo': self.searchData.paymentOrderNo,
                     'accountSearchVo.entryStatus': self.searchData.entryStatus,
-                    'accountSearchVo.year': Utils.formatMonthDate(self.searchData.year),
+                    'accountSearchVo.year': Utils.formatYearDate(self.searchData.year),
                     'accountSearchVo.agentName': self.searchData.agentName,
                     'accountSearchVo.agentNo': self.searchData.agentNo,
                 },
@@ -515,7 +515,7 @@ export default {
     }
 }
 </script>
-<style lang="less">
+<style lang="less" scoped >
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
