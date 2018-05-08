@@ -256,7 +256,7 @@ export default {
                     'searchAnnualPerformanceOrderVo.status': self.searchData.status,
                     'searchAnnualPerformanceOrderVo.name': self.searchData.name,
                     'searchAnnualPerformanceOrderVo.agentGradeId':self.searchData.agentGradeId,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatMonthDate(self.searchData.annualCycle),//日期格式转换
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchData.annualCycle),//日期格式转换
                     'searchAnnualPerformanceOrderVo.annualPerformanceNo':self.searchData.payOrderNo,
                     'searchAnnualPerformanceOrderVo.isNotFinsh':0,
                 },

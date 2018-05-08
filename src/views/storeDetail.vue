@@ -68,8 +68,8 @@
                     <el-col :span="12" >
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
-                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 && detailForm.agentGradeId === 265">
-                        年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
+                        年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}家
                     </el-col>
                 </el-row>
           
@@ -83,11 +83,11 @@
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
                             </span> 
-                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  class="annualExtendPerformanceCss">
+                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' "  class="annualExtendPerformanceCss">
                                 <div style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
                             </div>
-                            <div v-else>-</div>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  style="right: 132px;position: absolute">
+                            <!-- <div v-else>-</div> -->
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'"  style="right: 132px;position: absolute">
                                 {{Number(detailForm.storeExpansionRate).toFixed(2)}}%
                             </span>
                     </el-col>
@@ -133,7 +133,8 @@
                         </el-button>                                           
                     </el-col>
                 </el-row>
-                <el-row :gutter="5">
+                <div v-if="detailForm.shopType!='SELF_SUPPORT'">
+                    <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
                           <el-button type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</el-button>                        
@@ -145,6 +146,8 @@
                         <el-button type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</el-button>
                     </el-col>
                 </el-row>
+                </div>
+                
                 <el-row :gutter="5"> 
                     <el-col :span="24">
                         业务人员：{{ detailForm.operator }}
@@ -163,7 +166,8 @@
             <!-- 查看代理商关系(编号：xxx) start -->
             <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
                 <div>
-
+                     <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" v-model="searchRegistTime" type="year" placeholder="选择年度" >
+                    </el-date-picker>
                 </div>
                 <div>
                     <el-table :data="agencyRelationsanceForm" style="width: 100%">
@@ -171,27 +175,28 @@
                       </el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
                       </el-table-column>
-                      <el-table-column prop="agentName" label="代理商姓名" width="127">
+                      <el-table-column prop="agentName" label="代理商姓名" width="150">
                       </el-table-column>
                       <el-table-column prop="agentGradeId" label="代理商等级" width="127">
                            <template slot-scope="scope">
-                                <span v-if="scope.row.agentGradeId  == '266'">微店</span>
-                                <span v-if="scope.row.agentGradeId  == '265'">区域</span>
-                                <span v-if="scope.row.agentGradeId  == '31'">单店</span>
+                                <span v-if="scope.row.agentGradeId  == '266'">微店代理</span>
+                                <span v-if="scope.row.agentGradeId  == '265'">区域代理</span>
+                                <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
                             </template>
                       </el-table-column>
                       <el-table-column prop="registTime" label="店铺注册" width="127">
                       </el-table-column>
-                      <el-table-column prop="relationType" label="关系">
+                      <el-table-column prop="relationType" label="关系" width="127">
                             <template slot-scope="scope">
-                                <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品关系</span>
-                                <span v-if="scope.row.relationType  == 'AGENT_EXTEND'">代理关系</span>
+                                <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品开发</span>
+                                <span v-if="scope.row.relationType  == 'BUSINESS_EXTEND'">业务拓展</span>
+                                <span v-if="scope.row.relationType  == 'AGENT_EXTEND'">直接上级</span>
                             </template>
                       </el-table-column>
                   </el-table>
                 </div>
                 <div class="plPage clearfix">
-                    <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" >
+                    <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
                     </el-pagination>
                 </div>
                 <div slot="footer"   class="dialog-footer" @click="changeCancle()">
@@ -203,46 +208,12 @@
               <!-- 查看代理商年度业绩(编号：xxx) start -->
                 <el-dialog :title="annualAgentsTitle"  :visible.sync="annualAgentsDialogVisible"  size="180%"  :before-close="changeCancle">
                     <div style="height:40px;">
-                        <div class="img" style="padding:0 10px 0 10px;margin:0 10px 0 10px;">
+                        <div class="img search-time-wrap" style="padding:0 10px 0 10px;margin:0 10px 0 10px;">
                                 <img style="margin-right:5px;margin-left:5px;padding-right:5px" src="../assets/images/Standard.png" alt="">已达标
                                 <img style="margin-right:5px;margin-left:5px;padding-right:5px"  src="../assets/images/DStandard.png" alt="">未达标
+                                 <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" v-model="searchRegistTimeAnnual" :picker-options="pickerOptionsAnnual" type="year" placeholder="选择年度" >
+                                </el-date-picker>
                         </div>
-                        <!-- <div class="block">
-                            <p>组件值：{{ registTime }}</p>
-                            <el-date-picker
-                            v-model="value13"
-                            type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            :default-time="['00:00:00', '23:59:59']">
-                            </el-date-picker>
-                        </div> -->
-                        <!-- <div>
-                            <el-form-item label="时间：">
-                                <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
-                                </el-date-picker>
-                            </el-form-item>
-
-
-                        </div> -->
-                        
-                            <div class="block" style=" position: absolute;left: 800px;top: 55px;">
-                
-                                <el-date-picker v-model="annualAgentsFormSignTime" 
-                                                type="daterange" placeholder="选择日期范围" 
-                                                :picker-options="pickerOptions"
-                                                @change="annualAgentsFormAnnualCycle">
-                                
-                                </el-date-picker>
-                
-                
-                                <!-- <el-date-picker
-                                v-model="annualAgentsForm.annualAgentsFormSignTime"
-                                type="year"
-                                placeholder="选择年"
-                                @change="annualAgentsFormAnnualCycle">
-                                </el-date-picker> -->
-                            </div>
                     </div>
                     <div >
                       <el-table :data="annualAgentsForm" style="width: 100%;">
@@ -272,11 +243,11 @@
                           <el-table-column prop="finishRatio" label="年度业绩" width="177" align="right">
                             <template slot-scope="scope">
                                 <span>{{(scope.row.finishRatio.toFixed(2))*10}}{{'%'}}</span>
-                                <div v-if="(scope.row.finishRatio.toFixed(2))*10 >= 100" >
-                                    <img src="../assets/images/Standard.png" alt="">已达标
+                                <div v-if="(scope.row.finishRatio.toFixed(2))*10 >= 100" style="display:inline">
+                                    <img src="../assets/images/Standard.png" alt="">
                                 </div> 
-                                <div v-else >
-                                    <img  src="../assets/images/DStandard.png" alt="">未达标
+                                <div v-else  style="display:inline">
+                                    <img  src="../assets/images/DStandard.png" alt="">
                                 </div>
                             </template> 
                           </el-table-column>
@@ -312,7 +283,10 @@ export default {
       currentPage: 1,
       totalSize: 0,
       pageSize: 10,
+      currentPageAgency: 1,
+      pageSizeAgency: 10,
       totalNums:'',
+      totalSizeAgency:0,
       user: "",
       tableData:{
           agent:'',
@@ -340,6 +314,11 @@ export default {
       //日期选择器
       pickerOptions: {
         disabledDate(time) {
+          return time.getTime() > Date.now();
+        }
+      },
+      pickerOptionsAnnual: {
+        getformdata(time) {
           return time.getTime() > Date.now();
         }
       },
@@ -411,6 +390,8 @@ export default {
       order: "", //预存款排序
       phoneLength: 11,
       message: "剩余天数",
+      searchRegistTime:"",
+      searchRegistTimeAnnual:""
     };
   },
   components: {
@@ -437,24 +418,40 @@ export default {
           const self = this;
           self.agencyRelationsanceDialogVisible = true;
           self.loading = true;
-          self.$ajax.get('/api/shop/shopManage/getAgentRelationList.jhtml', {
-              params: {
-                  'shopNo': shopNo,
-              },
+          self.$ajax({
+              url:'/api/shop/shopManage/getAgentRelationList.jhtml',
+              method: 'post',
               data: {
-                    'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
+                    'shopNo': shopNo,
+                    'pageIndex': self.currentPageAgency,
+                    'pageSize': self.pageSizeAgency,
+                    'registTime': Utils.formatYearDate(self.searchRegistTime),
               },
-          }).then(function (response) {
-            
-              self.loading = false;
-              // self.agencyRelationsanceForm = response.data.result;
-              // self.agencyRelationsanceForm =  response.data.result;
-              // console.log(response.data.result)
-              for(let i of response.data.result){
-                self.agencyRelationsanceForm.push(i);
-
-              }
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {debugger
+               self.loading = false;
+             if (response.data.success === 1) {
+                    self.agencyRelationsanceForm = response.data.result.list;
+                    console.log(response.data.result)
+                    self.totalSizeAgency = response.data.result.total;
+                    // console.log(response.data);
+                    // self.annualAgentsTitle = response.data;
+                    // self.handleCurrentChange(self.currentPage)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
           }).catch(function (err) {
               self.loading = false;
               console.log(err);
@@ -474,6 +471,7 @@ export default {
                  data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchRegistTimeAnnual)
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -638,10 +636,10 @@ export default {
        
 
 
-        console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        console.log(self.detailForm.shopType)
-        console.log(self.detailForm.shopType!='SELF_SUPPORT' && self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log(self.detailForm.shopType)
+        // console.log(self.detailForm.shopType!='SELF_SUPPORT' && self.detailForm.annualOwnAreadyPurchasePerformanceRate)
        //年度下级协助所完成的业绩率 
        self.annualLowerAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px'
        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' +self.detailForm.activeColor2
@@ -655,6 +653,14 @@ export default {
         self.loading = false;
         console.log(err);
       });
+  },
+  watch:{
+      searchRegistTimeAnnual(){
+          this.openAnnualAgents(this.detailForm.id,this.detailForm.shopNo)
+      },
+      searchRegistTime(){
+          this.openAgencyRelationsance(this.detailForm.shopNo)
+      }
   }
 };
 </script>
@@ -745,5 +751,13 @@ export default {
     right: 17px;
     top: 18px;
     cursor: pointer;
+}
+.picker-time{
+    margin-bottom: 10px;
+    float: right;
+}
+.search-time-wrap .picker-time{
+    margin-top: -10px;
+    
 }
 </style>
