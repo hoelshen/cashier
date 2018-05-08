@@ -122,11 +122,16 @@
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance!=0 && 
+                                             scope.row.annualPurchasePerformance!=0 || 
                                              scope.row.annualExtendPerformance!=0 
                                             )"> 
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
+                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
+                                            (scope.row.agentGradeId ==265 &&
+                                             scope.row.annualPurchasePerformance==0 && 
+                                             scope.row.annualExtendPerformance==0 
+                                            )">-</span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
