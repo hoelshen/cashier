@@ -985,6 +985,11 @@ export default {
                     this.searchData.level = '';
                 }
 
+                let data = this.myData;
+
+                console.log(data.name)
+                console.log(data.shopName)
+
                 this.getData({
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
@@ -995,8 +1000,8 @@ export default {
                         'shop.salesMan':data.salesMan || '',
                         'shop.state':data.state || '',
                         'shop.agentGradeIds':data.agentGradeIds || '',
-                        'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                        'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                        // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                        // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
                     },
                     success(response) {                     
                         if (response.data.code === 1) {
