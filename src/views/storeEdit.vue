@@ -671,7 +671,7 @@ export default {
                     'shop.salesManId': data.salesManId || '',
                     'shop.operatorId': data.operatorId || '',
                     'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
+                    'shop.annualExtendPerformance':'', 
                     'shop.areaClass':data.areaClass  || '',
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
@@ -751,7 +751,7 @@ export default {
                     'shop.operatorId': data.operatorId || '',
 
                     'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
+                    'shop.annualExtendPerformance':'', 
                     'shop.areaClass':data.areaClass  || '',
                     'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
                     'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
