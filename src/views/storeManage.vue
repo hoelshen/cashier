@@ -117,10 +117,12 @@
                                 <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==266 && scope.row.annualPurchasePerformance!=0)">
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
-                                <!-- <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId='31' && (scope.row.annualExtendPerformance!=0 && scope.row.annualPurchasePerformance!=0))">
-                                       {{ scope.row.goalCompletion * 100 }}%
-                                </span> -->
-                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && (scope.row.agentGradeId ==31 && scope.row.annualPurchasePerformance!=0 && scope.row.annualExtendPerformance!=0 )">  {{ scope.row.goalCompletion * 100 }}%</span>
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance!=0)">
+                                     {{ scope.row.goalCompletion * 100 }}%
+                                </span>
+                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && (scope.row.agentGradeId ==265 && scope.row.annualPurchasePerformance!=0 && scope.row.annualExtendPerformance!=0 )"> 
+                                     {{ scope.row.goalCompletion * 100 }}%
+                                </span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
@@ -879,35 +881,19 @@ export default {
 
             });
         },
-        // 全部选中
-        checkall(selection){
-            this.getAllId();
-        },
-        // 表格选择 表格某行选中
-        select(selection) {
-            this.selectData = selection;
-        },
-        // 批量导出明细        
-        batchOutputExcel() {
-            let self = this;
-            let ids = self.formatSelect()
-            self.outputExcel(ids)
-        },
-        formatSelect() {
-            let selectData = this.selectData;
-            let array = []
-            for (let i = 0; i < selectData.length; i++) {
-                array.push(selectData[i].id)
-            }
-            return array.join(',')
-        },
-        isSelectAll(){
-            this.checkall();
-        },
+        // formatSelect() {
+        //     let myData = this.myData;
+        //     let array = []
+        //     for (let i = 0; i < selectData.length; i++) {
+        //         array.push(selectData[i].id)
+        //     }
+        //     return array.join(',')
+        // },
+
         // 导出全部明细
         allOutputExcel() {
           let self  = this;
-          self.outputExcel(ids)
+          self.outputExcel()
         },
         getData(obj){
             const self = this;
@@ -954,8 +940,7 @@ export default {
                 })	
         },
         // 导出明细
-		outputExcel(ids) {
-            console.log(ids)
+		outputExcel() {
             if (!this.checkSession()) return;
                 var temp = new Date(this.searchData.searchTime[0]);
                 if (temp.getFullYear() > 2006) {
@@ -998,7 +983,14 @@ export default {
                     url: 'shop/ShopManage/search.jhtml',
                     data: {
                         'pager.pageSize': 9999999,
-                        
+                        'shop.name':data.name,
+                        'shop.shopName': data.shopName,
+                        'shop.operator':data.operator,
+                        'shop.salesMan':data.salesMan,
+                        'shop.state':data.state,
+                        'shop.agentGradeIds':data.agentGradeIds,
+                        'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                        'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
                     },
                     success(response) {                     
                         if (response.data.code === 1) {
