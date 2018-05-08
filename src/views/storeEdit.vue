@@ -71,13 +71,12 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">       
-                            <el-input  v-model="editForm.annualExtendPerformance">
-                                <template slot="prepend">店铺拓展：
-                                    
+                            <!-- <el-input v-if="editForm.annualExtendPerformance"  :value="item.num"  @change="areaClassNum" > -->
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && editForm.annualExtendPerformance) || item.num"  @change="areaClassNum" >                              
+                                <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
                                 </template> 
-                    
                             </el-input>
                     </el-form-item>
                 </el-col>
@@ -87,7 +86,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperNo"></el-option>
+                            <el-option v-for="item in levelArray" :key="item.index" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
@@ -107,8 +106,8 @@
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                        <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
-                            <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                        <el-select v-model="editForm.areaClass" placeholder="类别"   clearable @visible-change="areaClassFlag = false">
+                            <el-option v-for="item in areaClassArray" :key="item.value" :label="item.name" :value="item.value"></el-option>
                             <!-- <span>数字{{item.num}}</span> -->
                         </el-select>                    
                     </el-form-item>
@@ -248,7 +247,8 @@ export default {
                     return time.getTime() > Date.now();
                 },
             },
-            flage:true,                
+            flage:true,
+            areaClassFlag: true,            
         }
     },
     components: {
@@ -268,9 +268,7 @@ export default {
                 if (response.data.success == 1) {
                         const data = response.data.result
                     self.editForm.areaClass = data.areaClass
-                    if(!self.flage){
-                        self.editForm.annualExtendPerformance =   data.shopNum
-                    }
+
                     // console.log(self.editForm.annualExtendPerformance)
                     // if(self.editForm.annualExtendPerformance){
                     //         console.log('ok')
@@ -644,7 +642,7 @@ export default {
             
             // console.log(String(data.annualExtendPerformance))
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-            console.log((data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT'))
+
             let datas;
             //单店
             if(data.agentGradeId==31){
@@ -919,6 +917,10 @@ export default {
             this.editForm.superAgentGradeId = '';
             // this.editForm.areaClass = '';
         },
+        areaClassNum(val){
+            console.log(val);
+            this.editForm.annualExtendPerformance = val;
+        },
         //重置直营店铺不要的项
         deleteSelfSupport(){
             const self = this;
@@ -951,6 +953,7 @@ export default {
     
     },
     created() {
+        // console.log(item.num)
         if (!this.checkSession()) return;
         this.uri = this.getUri();
         //获取id
@@ -987,9 +990,12 @@ export default {
             self.editForm.areaClass = self.editForm.agentCityName
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             if(self.flage){
-                    self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
-                    
+                self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
+                console.log(self.editForm.annualExtendPerformance)
+                !self.flage;
+                console.log('ok')
             }
+
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
                 

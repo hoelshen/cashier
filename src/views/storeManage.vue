@@ -120,7 +120,11 @@
                                 <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance!=0)">
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
-                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && (scope.row.agentGradeId ==265 && scope.row.annualPurchasePerformance!=0 && scope.row.annualExtendPerformance!=0 )"> 
+                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
+                                            (scope.row.agentGradeId ==265 &&
+                                             scope.row.annualPurchasePerformance!=0 && 
+                                             scope.row.annualExtendPerformance!=0 
+                                            )"> 
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
@@ -335,9 +339,11 @@ export default {
                 // console.log(data.areaClass)
                 //  console.log(data.areaClass.toLocaleLowerCase()) 
             // });
-            // console.log(self.scope.row.shopType!='SELF_SUPPORT' && ( self.scope.row.agentGradeId='266' && self.scope.row.annualPurchasePerformance!=0))
-            // console.log(self.scope.row.shopType!='SELF_SUPPORT' && ( self.scope.row.agentGradeId='31' && (self.scope.row.annualExtendPerformance!=0 && self.scope.row.annualPurchasePerformance!=0)))
+            
+    
 
+                                           
+                                            
             self.totalSize = response.data.total
         }).catch(function (err) {
             self.loading = false;
@@ -498,7 +504,7 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.myData = response.data.rows;
-                self.totalSize = response.data.total
+                self.totalSize = response.data.total;
                 // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
