@@ -112,7 +112,7 @@
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                <span v-if="scope.row.goalCompletion!=''">{{ scope.row.goalCompletion * 100 }}%</span>
+                                <span v-if="!scope.row.goalCompletion">{{ scope.row.goalCompletion * 100 }}%</span>
                                 <span>-</span>
                             </template>
                         </el-table-column>
