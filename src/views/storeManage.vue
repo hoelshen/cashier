@@ -66,6 +66,8 @@
                     <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
+                        <el-table-column  type="selection" width="50" :reserve-selection="true">
+                        </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
@@ -877,9 +879,35 @@ export default {
 
             });
         },
+        // 全部选中
+        checkall(selection){
+            this.getAllId();
+        },
+        // 表格选择 表格某行选中
+        select(selection) {
+            this.selectData = selection;
+        },
+        // 批量导出明细        
+        batchOutputExcel() {
+            let self = this;
+            let ids = self.formatSelect()
+            self.outputExcel(ids)
+        },
+        formatSelect() {
+            let selectData = this.selectData;
+            let array = []
+            for (let i = 0; i < selectData.length; i++) {
+                array.push(selectData[i].id)
+            }
+            return array.join(',')
+        },
+        isSelectAll(){
+            this.checkall();
+        },
         // 导出全部明细
         allOutputExcel() {
-          this.outputExcel();
+          let self  = this;
+          self.outputExcel(ids)
         },
         getData(obj){
             const self = this;
@@ -914,19 +942,20 @@ export default {
             }
         },
         formatJson(filterVal, jsonData) {
-        //     ----> 格式化json
-        //     console.log(jsonData)
-            return jsonData.map(v => {
-        // 	   console.log(v)
-                return filterVal.map(j => {
-            //       console.log(j,v[j])
-                    return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
-                // }
-                })			
-            })	
+            //     ----> 格式化json
+            //     console.log(jsonData)
+                return jsonData.map(v => {
+            // 	   console.log(v)
+                    return filterVal.map(j => {
+                //       console.log(j,v[j])
+                        return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+                    // }
+                    })			
+                })	
         },
         // 导出明细
-		outputExcel() {
+		outputExcel(ids) {
+            console.log(ids)
             if (!this.checkSession()) return;
                 var temp = new Date(this.searchData.searchTime[0]);
                 if (temp.getFullYear() > 2006) {
