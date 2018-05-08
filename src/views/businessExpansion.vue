@@ -176,8 +176,8 @@ export default {
          // 表头的选择框 隐藏
          setTimeout(function(){
             document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
-            document.getElementsByClassName("inputCover")[0].style.cssText
-        },100)
+            document.getElementsByClassName("inputCover")[0].style.cssText="display:none;"
+        },1000)
     },
     methods: {
         // 表头添加class
@@ -440,7 +440,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 },
-            }).then(function(response) {debugger
+            }).then(function(response) {
                 self.loading = false;
                 // console.log(response.data)
                 
@@ -527,7 +527,7 @@ export default {
     width: 40px;
     height: 39px;
     top:  1px;
-    left: 22px;
+    left: 21px;
     background-color: #eef1f6;
     position: absolute;
     z-index: 2;
