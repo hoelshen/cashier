@@ -21,7 +21,7 @@
                     </el-col>
                     <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'" style="color:#ff6600">
                         已达成进货业绩：
-                        ￥{{ detailForm.annualOwnAreadyPurchasePerformance}}
+                        ￥{{ Number(detailForm.annualOwnAreadyPurchasePerformance)  + Number(detailForm.annualLowerAreadyPurchasePerformance)  }}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">

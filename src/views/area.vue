@@ -410,18 +410,18 @@ export default {
             self.outputExcel(ids)
         },
         // 导出全部明细
-        // allOutputExcel() {
-        //     let self = this;
-        //     self.$ajax.all([self.getAllId()]).then(
-        //         self.$ajax.spread(function(acct) {
-        //             let ids = self.allId;
-        //             self.outputExcel(ids);
-        //         })
-        //      );
-        // },
+        allOutputExcel() {
+            let self = this;
+            self.$ajax.all([self.getAllId()]).then(
+                self.$ajax.spread(function(acct) {
+                    let ids = self.allId;
+                    self.outputExcel(ids);
+                })
+             );
+        },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
-        console.log(id)
+        // console.log(id)
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -442,7 +442,7 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                console.log(response.data)
+                    // console.log(response.data)
 
                     if (response.data.success === 1) {
                         self.downData = response.data.result;
