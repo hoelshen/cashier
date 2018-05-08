@@ -488,7 +488,7 @@ export default {
 
             //检验上级代理商的状态
 
-            if(data.agentGradeId=='31' || data.agentGradeId=='266'){
+            if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
                    if(data.state!=0){
                         self.loading = false;
                         self.$message({

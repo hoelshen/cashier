@@ -73,11 +73,13 @@
                       <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                         <el-input v-model="editForm.annualExtendPerformance"  placeholder="">
                             <template slot="prepend">店铺拓展：
-                                
+                                    
                             </template>
                                 <template slot="append"> 家
                             </template>      
-
+                            <el-select v-model="editForm.areaClass" placeholder="类别"   clearable>
+                                <el-option v-for="item in annualExtendPerformanceArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            </el-select>  
                         </el-input>
                     </el-form-item>
                 </el-col>
@@ -245,6 +247,23 @@ export default {
                     return time.getTime() > Date.now();
                 },
             },
+            annualExtendPerformanceArray: [{
+                index: 'S',
+                name: '8'
+            },
+            {
+                index: 'A',
+                name: '6'
+            },
+            {
+                index: 'B',
+                name: '4'
+            },
+            {
+                index: 'C',
+                name: '4'
+            },
+            ],
             flage:true,                
         }
     },

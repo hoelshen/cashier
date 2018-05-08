@@ -39,7 +39,7 @@
                     <el-col :span="12">
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
-                    <el-col :span="12" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualOwnAreadyPurchasePerformanceRate">
+                    <el-col :span="12" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' ">
                         <span  style="float:left" >
                             进货业绩达成率：
                         </span> 
@@ -50,8 +50,7 @@
                           <div v-else>-</div>                         
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
                                {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%
-                          </span> 
-                          
+                          </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -81,7 +80,9 @@
                     </el-col>
 
                     <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 店铺拓展达成率：</span> 
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
+                                店铺拓展达成率：
+                            </span> 
                              <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance !== 0 "  class="annualExtendPerformanceCss">
                                 <div style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
                             </div>
@@ -163,15 +164,15 @@
             <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
                 <div>
 
-                    <div class="block">
-                            <el-date-picker
-                            v-model="registTime"
-                            type="daterange"
-                            start-placeholder="开始日期"
-                            end-placeholder="结束日期"
-                            :default-time="['00:00:00', '23:59:59']">
-                            </el-date-picker>
-                        </div>
+                    <!-- <div class="block">
+                        <el-date-picker
+                        v-model="registTime"
+                        type="daterange"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :default-time="['00:00:00', '23:59:59']">
+                        </el-date-picker>
+                    </div> -->
 
                 </div>
                 <div>
