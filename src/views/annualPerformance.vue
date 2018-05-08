@@ -385,7 +385,7 @@ export default {
                     })
             }else{
                  self.$confirm('确认核销选中的记录？', '提示', {
-                    confirmButtonText: '确定21132',
+                    confirmButtonText: '确定',
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
