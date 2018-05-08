@@ -71,7 +71,6 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">       
-                            <!-- <el-input v-if="editForm.annualExtendPerformance"  :value="item.num"  @change="areaClassNum" > -->
                             <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && editForm.annualExtendPerformance) || item.num"  @change="areaClassNum" >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
@@ -86,7 +85,7 @@
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable>
-                            <el-option v-for="item in levelArray" :key="item.index" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
                 </el-col> 
@@ -108,7 +107,6 @@
                     <el-form-item :span="2" label="类别：" >
                         <el-select v-model="editForm.areaClass" placeholder="类别"   clearable @visible-change="areaClassFlag = false">
                             <el-option v-for="item in areaClassArray" :key="item.value" :label="item.name" :value="item.value"></el-option>
-                            <!-- <span>数字{{item.num}}</span> -->
                         </el-select>                    
                     </el-form-item>
                 </el-col>
@@ -991,15 +989,16 @@ export default {
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             if(self.flage){
                 self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
-                console.log(self.editForm.annualExtendPerformance)
+                // console.log(self.editForm.annualExtendPerformance)
                 !self.flage;
-                console.log('ok')
+                // console.log('ok')
             }
-
+            // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
-                self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店');
-                
+                self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
+            console.log(self.editForm.superAgentGradeId)
+            
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
