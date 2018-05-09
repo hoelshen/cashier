@@ -78,7 +78,7 @@
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
 
-                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265) && !detailForm.storeExpansionRate" >
+                    <el-col :span="12" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)" >
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
                             </span> 
