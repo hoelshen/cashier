@@ -446,6 +446,7 @@ export default {
                 
                     if (response.data.success === 1) {
                         self.downData = response.data.result;
+                        console.log(self.downData)
                         for(var i = 0; i< self.downData.length; i++){
                             for(var j = 0; j < self.downData[i].list.length; j++){
                                 self.downData[i].list[j].rebateRate =  (self.downData[i].list[j].rebateRate*100).toFixed(2)+"%"
@@ -471,7 +472,7 @@ export default {
                                     export_json_to_excel
                                 } = require('../components/tools/Export2Excelyw')
                                 const tHeader = ['代理商编号','统计周期','代理商姓名','代理商等级','签约时间','付款时间','货款金额','返点比例','分成金额','备注说明']
-                                const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','paymentTime','purcharseAmount','rebateRate','remark']
+                                const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','paymentTime','purcharseAmount','rebateRate','rebateAmount','remark']
                                 const list = self.downData;
                                 export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '业务拓展返利明细')
                             })
