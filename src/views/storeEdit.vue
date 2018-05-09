@@ -71,7 +71,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">       
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && (editForm.agentGradeId==265 ? editForm.annualExtendPerformance : String(editForm.annualExtendPerformance) ) ) || item.num"  @change="areaClassNum" >                              
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="( areaClassFlag && String(editForm.annualExtendPerformance)  ) || item.num"  @change="areaClassNum" >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
@@ -84,7 +84,7 @@
                 <!--第四行-->
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable>
+                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable>
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
@@ -938,6 +938,8 @@ export default {
             // }
             // this.editForm.extendSuperNo = '';
             // this.editForm.superAgentGradeId = '';
+
+            asd
             this.editForm.areaClass = '';
         },
 
