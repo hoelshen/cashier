@@ -296,7 +296,7 @@ export default {
       totalSize: 0,
       pageSize: 30,
       currentPageAgency: 1,
-      pageSizeAgency: 10,
+      pageSizeAgency: 30,
       totalNums:'',
       totalSizeAgency:0,
       user: "",
@@ -435,7 +435,7 @@ export default {
               method: 'post',
               data: {
                     'shopNo': shopNo,
-                    'pager.pageIndex': self.currentPageAgency,
+                    'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
                     'registTime': Utils.formatYearDate(self.searchRegistTime),
               },
