@@ -21,7 +21,8 @@
                     </el-col>
                     <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'" style="color:#ff6600">
                         已达成进货业绩：
-                        ￥{{detailForm.hasReachedPurchasePerformance}}
+                        <span> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
+                       
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -49,9 +50,16 @@
                           <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 " class="annualPurchasePerformanceCss">
                                 <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
                                 <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
-                          </div>                        
+                          </div> 
+                          <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss">
+                                <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
+                               
+                          </div>                     
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
                                {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%
+                          </span>
+                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">
+                               0%
                           </span>
                     </el-col>
                 </el-row>
@@ -221,7 +229,7 @@
                     </div>
                     <div >
                       <el-table :data="annualAgentsForm" style="width: 100%;">
-                         <el-table-column prop="id" label="序列"  width="80"></el-table-column>
+                         <el-table-column type="index" label="序列"  width="80"></el-table-column>
                           <el-table-column prop="agentGradeName" label="代理商等级" width="127">
                           </el-table-column>
                           <el-table-column prop="annualCycle" label="年份" width="127" >
@@ -632,11 +640,12 @@ export default {
         
         // console.log( (self.detailForm.annualOwnAreadyPurchasePerformanceRate *144).toFixed(2) + 'px')
         
-
+    //    self.detailForm.activeColor1 = 'ff6600';
+       
        self.annualOwnAreadyPurchasePerformanceRateObject.width  =   self.detailForm.annualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
        
        //    console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
-
+        
        self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
 
        

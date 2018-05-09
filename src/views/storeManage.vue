@@ -952,11 +952,15 @@ export default {
                 return jsonData.map(v => {
             // 	   console.log(v)
                     return filterVal.map(j => {
-                //       console.log(j,v[j])
+                      console.log(j,v[j])
                             if(j === "agentGradeId" ){
                                  return v[j] =     ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  )  ;
                             }
-                            
+                            if(j === 'remark'){
+                                 return v[j] =     ( v[j] == 0 ?  "达标" : ( v[j] == 1 ? "未达标" : "无上年度业绩")  )  ;
+                            }
+
+                           return  v[j]  = v[j];
                     // }
                     })			
                 })	
