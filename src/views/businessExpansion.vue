@@ -446,7 +446,6 @@ export default {
                 
                     if (response.data.success === 1) {
                         self.downData = response.data.result;
-                        console.log(self.downData)
                         for(var i = 0; i< self.downData.length; i++){
                             for(var j = 0; j < self.downData[i].list.length; j++){
                                 self.downData[i].list[j].rebateRate =  (self.downData[i].list[j].rebateRate*100).toFixed(2)+"%"
