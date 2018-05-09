@@ -70,8 +70,8 @@
                   
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">       
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && String(editForm.annualExtendPerformance) ) || item.num"  @change="areaClassNum" >                              
+                    <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">       
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && (editForm.agentGradeId==265 ? editForm.annualExtendPerformance : String(editForm.annualExtendPerformance) ) ) || item.num"  @change="areaClassNum" >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
@@ -267,6 +267,7 @@ export default {
                         const data = response.data.result
                     if(!self.flage){
                          self.editForm.areaClass = data.areaClass 
+                         console.log('yu'+ self.editForm.areaClass)
                     }
 
                     // console.log(self.editForm.annualExtendPerformance)
@@ -707,7 +708,6 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                    
                         'shop.isShow': data.isShow,
                         'shop.operator': data.operator,
                         'shop.salesMan': data.salesMan,
@@ -781,7 +781,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                                
+                        'shop.agentGradeId':265,                         
                         'shop.isShow': data.isShow,
                         'shop.operator': data.operator,
                         'shop.salesMan': data.salesMan,
@@ -1017,9 +1017,10 @@ export default {
             self.loading = false;
             self.editForm = response.data.result;
             // console.log(self.areaClassFlag);
-            if(self.flage){
+            if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
-                console.log(self.editForm.areaClass) 
+                console.log(self.editForm.areaClass) ;
+
             }else{
                 self.editForm.areaClass = self.editForm.agentCityName        
             }
