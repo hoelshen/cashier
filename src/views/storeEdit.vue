@@ -71,7 +71,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">       
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && (editForm.agentGradeId==265 ? editForm.annualExtendPerformance : String(editForm.annualExtendPerformance)) ) || item.num"  @change="areaClassNum" >                              
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && (editForm.agentGradeId==265 ? editForm.annualExtendPerformance : String(editForm.annualExtendPerformance) ) ) || item.num"  @change="areaClassNum" >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
@@ -702,7 +702,7 @@ export default {
 
 
                         'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                        'shop.annualExtendPerformance': '' , 
+                        'shop.annualExtendPerformance': String(data.annualExtendPerformance) , 
                         'shop.areaClass':data.areaClass  || '',
 
                         'shop.address': data.address,
