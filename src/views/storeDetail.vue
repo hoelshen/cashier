@@ -565,13 +565,13 @@ export default {
     AnnualAgentsHandleCurrentChange(val) {
             let self = this;
             self.currentPage = val;
-            self.openAnnualAgents();
+            self.openAnnualAgents(this.detailForm.id,this.detailForm.shopNo);
     },
     //改变代理商关系当前页
     agencyRelationsanceHandleCurrentChange(val){
              let self = this;
             // self.currentPage = val;
-            self.openAgencyRelationsance();
+            self.openAgencyRelationsance(this.detailForm.shopNo);
     }
   },
   created() {
