@@ -642,122 +642,151 @@ export default {
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
             let datas;
-            //单店
-            if(data.agentGradeId==31){
-                datas={
-                    'shop.id': data.id,
-                    'shop.shopName': data.shopName,
-                    'shop.name': data.name,
-                    'shop.phone': data.phone,
-                    'shop.signedTime': data.signedTime,
+            if(data.shopType=='AGENT'){
+                //单店
+                if(data.agentGradeId==31){
+                    datas={
+                        'shop.id': data.id,
+                        'shop.shopName': data.shopName,
+                        'shop.name': data.name,
+                        'shop.phone': data.phone,
+                        'shop.signedTime': data.signedTime,
 
-                    'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
+                        'shop.provinceCode': editAddress.provinceCode,
+                        'shop.cityCode': editAddress.cityCode,
+                        'shop.countyCode': editAddress.areaCode,
+                        
+                        'shop.address': data.address,
+                        'shop.city': data.city,
+                        'shop.shopType': data.shopType,
                     
-                    'shop.address': data.address,
-                    'shop.city': data.city,
-                    'shop.shopType': data.shopType,
-                   
+                        
+                        'shop.agentGradeId': data.agentGradeId,                    
+                        'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
+                        'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
+                        'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
                     
-                    'shop.agentGradeId': data.agentGradeId,                    
-                    'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
-                    'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
-                    'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
-                   
-                    'shop.isShow': data.isShow,
-                    'shop.operator': data.operator,
-                    'shop.salesMan': data.salesMan,
-                    'shop.salesManId': data.salesManId || '',
-                    'shop.operatorId': data.operatorId || '',
-                    'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':'', 
-                    'shop.areaClass':data.areaClass  || '',
-                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
-                    'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
-                    'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
+                        'shop.isShow': data.isShow,
+                        'shop.operator': data.operator,
+                        'shop.salesMan': data.salesMan,
+                        'shop.salesManId': data.salesManId || '',
+                        'shop.operatorId': data.operatorId || '',
+                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
+                        'shop.annualExtendPerformance': '' , 
+                        'shop.areaClass':data.areaClass  || '',
+                        'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
+                        'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
+                        'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
+                    }
                 }
-                }
-            //区域
-            if(data.agentGradeId==265){
-                datas = {
-                    'shop.id': data.id,
-                    'shop.shopName': data.shopName,
-                    'shop.name': data.name,
-                    'shop.phone': data.phone,
-                    'shop.signedTime': data.signedTime,
+                //区域
+                if(data.agentGradeId==265){
+                    datas = {
+                        'shop.id': data.id,
+                        'shop.shopName': data.shopName,
+                        'shop.name': data.name,
+                        'shop.phone': data.phone,
+                        'shop.signedTime': data.signedTime,
 
-                    'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
+                        'shop.provinceCode': editAddress.provinceCode,
+                        'shop.cityCode': editAddress.cityCode,
+                        'shop.countyCode': editAddress.areaCode,
 
-                    'shop.agentGradeId': data.agentGradeId,                    
-                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
-                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
-                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
+                        'shop.agentGradeId': data.agentGradeId,                    
+                        'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
+                        'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
+                        'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
 
 
-                    'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
-                    'shop.areaClass':data.areaClass  || '',
+                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
+                        'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
+                        'shop.areaClass':data.areaClass  || '',
 
-                    'shop.address': data.address,
-                    'shop.city': data.city,
-                    'shop.shopType': data.shopType,
-                   
-                    'shop.isShow': data.isShow,
-                    'shop.operator': data.operator,
-                    'shop.salesMan': data.salesMan,
-                    'shop.salesManId': data.salesManId || '',
-                    'shop.operatorId': data.operatorId || '',
-                }
-
+                        'shop.address': data.address,
+                        'shop.city': data.city,
+                        'shop.shopType': data.shopType,
                     
+                        'shop.isShow': data.isShow,
+                        'shop.operator': data.operator,
+                        'shop.salesMan': data.salesMan,
+                        'shop.salesManId': data.salesManId || '',
+                        'shop.operatorId': data.operatorId || '',
+                    }
+
+                        
+                }
+                //微店
+                if(data.agentGradeId ==266){
+                    datas={
+                        'shop.id': data.id,
+                        'shop.shopName': data.shopName,
+                        'shop.name': data.name,
+                        'shop.phone': data.phone,
+                        'shop.signedTime': data.signedTime,
+
+
+                        'shop.provinceCode': editAddress.provinceCode,
+                        'shop.cityCode': editAddress.cityCode,
+                        'shop.countyCode': editAddress.areaCode,
+                        
+                        'shop.agentGradeId': data.agentGradeId,                                        
+                        'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
+                        'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
+                        'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
+
+
+                        'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
+                        'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
+                        'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
+
+
+                        'shop.agentGradeId': data.agentGradeId,                    
+                        'shop.address': data.address,
+                        'shop.city': data.city,
+                        'shop.shopType': data.shopType,
+                    
+                        'shop.isShow': data.isShow,
+                        'shop.operator': data.operator,
+                        'shop.salesMan': data.salesMan,
+                        'shop.salesManId': data.salesManId || '',
+                        'shop.operatorId': data.operatorId || '',
+
+                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
+                        'shop.annualExtendPerformance': '', 
+                        'shop.areaClass':data.areaClass  || '',
+                        'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
+                        'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
+                        'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
+                    }
+                    
+                }
             }
-            //微店
-            if(data.agentGradeId ==266){
+            
+            //直营
+            if(data.shopType=='SELF.SUPPORT'){
+                
                 datas={
-                    'shop.id': data.id,
-                    'shop.shopName': data.shopName,
-                    'shop.name': data.name,
-                    'shop.phone': data.phone,
-                    'shop.signedTime': data.signedTime,
+                        'shop.id': data.id,
+                        'shop.shopName': data.shopName,
+                        'shop.name': data.name,
+                        'shop.phone': data.phone,
+                        'shop.signedTime': data.signedTime,
 
+                        'shop.provinceCode': editAddress.provinceCode,
+                        'shop.cityCode': editAddress.cityCode,
+                        'shop.countyCode': editAddress.areaCode,
+                        
+                        'shop.address': data.address,
+                        'shop.city': data.city,
+                        'shop.shopType': data.shopType,
+                                
+                        'shop.isShow': data.isShow,
+                        'shop.operator': data.operator,
+                        'shop.salesMan': data.salesMan,
+                        'shop.salesManId': data.salesManId || '',
+                        'shop.operatorId': data.operatorId || '',
+                    }
 
-                    'shop.provinceCode': editAddress.provinceCode,
-                    'shop.cityCode': editAddress.cityCode,
-                    'shop.countyCode': editAddress.areaCode,
-                    
-                    'shop.agentGradeId': data.agentGradeId,                                        
-                    'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
-                    'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
-                    'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
-
-
-                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
-                    'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
-                    'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
-
-
-                    'shop.agentGradeId': data.agentGradeId,                    
-                    'shop.address': data.address,
-                    'shop.city': data.city,
-                    'shop.shopType': data.shopType,
-                   
-                    'shop.isShow': data.isShow,
-                    'shop.operator': data.operator,
-                    'shop.salesMan': data.salesMan,
-                    'shop.salesManId': data.salesManId || '',
-                    'shop.operatorId': data.operatorId || '',
-
-                    'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                    'shop.annualExtendPerformance':'', 
-                    'shop.areaClass':data.areaClass  || '',
-                    'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
-                    'shop.extendSuperNo':  (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ?  '' :  (data.extendSuperNo || ''),
-                    'shop.superAgentGradeId': (data.agentGradeId != 265 && data.extendSuperType=='ZUIPIN') ? '' :  (data.superAgentGradeId == '区域' ? 265 : (data.superAgentGradeId == '单店'  ? 31 : 266 )) || '',
-                }
-                 
             }
             //请求
             self.$ajax({

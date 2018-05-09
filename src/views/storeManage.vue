@@ -953,10 +953,15 @@ export default {
             // 	   console.log(v)
                     return filterVal.map(j => {
                 //       console.log(j,v[j])
-                        return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+                            if(j === "agentGradeId" ){
+                                 return v[j] =     ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  )  ;
+                            }
+                            
                     // }
                     })			
                 })	
+
+                
         },
         // 导出明细
 		outputExcel() {
@@ -1025,7 +1030,7 @@ export default {
                                                                  '剩余时间','备注', ]
                                                 const filterVal =['shopNo', 'agentGradeId', 'shopName', 'annualExtendPerformance', 
                                                                     'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'annualPurchasePerformance', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
-                                                                    'ReaminTime', 'remark',]
+                                                                    'remainDay', 'remark',]
                                                 const list = self.tableData;
                                                 const data = this.formatJson(filterVal, list);
                                                 export_json_to_excel(tHeader, data, '代理商' + (Utils.formatYearDate(self.tableData[0].signTime) ? Utils.formatYearDate(self.tableData[0].signTime)  + '' : '') +'年度目标完成进度');
