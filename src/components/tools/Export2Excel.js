@@ -157,7 +157,6 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     var list = jsonData;
     var wb = new Workbook();
-    console.log(list)
     for (var i = 0; i < list.length; i++) {
         var data = formatJson(filterVal, list[i].areaOrderVos)
         data.unshift(th);

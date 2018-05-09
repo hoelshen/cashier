@@ -53,9 +53,8 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 <el-row class="tablebar">
-                    <div class="inputCover"> </div>
-                    <el-table :data="myData" key="id3" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
-                        <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
+                    <el-table :data="myData" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                        <el-table-column type="selection" width="50">
                         </el-table-column>
                         <el-table-column prop="shopNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
@@ -73,22 +72,12 @@
                         </el-table-column>
                         <el-table-column prop="verifiNum" label="订单数">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单总金额" width="150" align="right">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.orderSum.toFixed(2)}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="freightSum" label="订单运费" width="100" align="right">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.freightSum.toFixed(2)}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="商品总金额" width="150" align="right">
+                        <el-table-column prop="productTotalAmount" label="商品总金额" width="200">
                             <template slot-scope="scope">
                                 <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="verifiAmount" label="分成金额" width="150" align="right">
+                        <el-table-column prop="verifiAmount" label="分成金额" width="100">
                             <template slot-scope="scope">
                                 <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
                             </template>
@@ -98,11 +87,7 @@
                                 <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号" width="200">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.payOrderNo">{{scope.row.payOrderNo}}</span>
-                                <span v-if="!scope.row.payOrderNo">{{'-'}}</span>
-                            </template>
+                        <el-table-column prop="payOrderNo" label="付款单号" width="100">
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
@@ -119,12 +104,10 @@
                     </el-pagination>
                 </div>
                 <div class="batch">
-                    <span><span v-if="!ifCheckAll" @click="isSelectAll">全选</span><span v-if="ifCheckAll"  @click="isSelectAll">取消</span></span>
-                    <span>选中({{selectData.length}}条)</span>
                     <span @click="confirmBatchVerification()">批量核销</span>
                     <span @click="batchOutputExcel()">批量导出</span>
-                    <!-- <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span> -->
-                    <!-- <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span> -->
+                    <span @click="confirmAllVerification()">全部核销({{totalSize}}条)</span>
+                    <span @click="allOutputExcel()">全部导出({{totalSize}}条)</span>
                 </div>
             </el-row>
         </div>
@@ -137,10 +120,9 @@ import Utils from '../components/tools/Utils'
 export default {
     data() {
         return {
-            ifCheckAll:false,//判断是否全选
             currentPage: 1,
             totalSize: 0,
-            pageSize: 30,
+            pageSize: 10,
             searchData: {
                 shopNo: '',
                 phone: '',
@@ -175,19 +157,8 @@ export default {
     },
     created() {
         this.getFormData();
-        
-    },
-     mounted(){
-         // 表头的选择框 隐藏
-         setTimeout(function(){
-            document.getElementsByClassName("el-checkbox")[0].style.cssText="display:none;";
-            document.getElementsByClassName("inputCover")[0].style.cssText="display:none;"
-        },1000)
     },
     methods: {
-        isSelectAll(){
-            this.checkall();
-        },
         // 格式化json
         formatJson(filterVal, jsonData) {
             return jsonData.map(v => filterVal.map(j => v[j]))
@@ -235,23 +206,22 @@ export default {
 
             });
         },
-        //获取全部数据选中
+        //获取全部id
         getAllId() {
             const self = this;
-            self.loading = true;
-            //获取列表数据
-            self.$ajax({
+            let data = '';
+            let array = []
+            return self.$ajax({
+                async: false,
                 url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
                 method: 'post',
                 data: {
-                    // 'pager.pageIndex': self.currentPage,
-                    // 'pager.pageSize': self.pageSize,
                     'verifiOrderVo.shopNo': self.searchData.shopNo,
                     'verifiOrderVo.phone': self.searchData.phone,
                     'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
                     'verifiOrderVo.status': self.searchData.status,
                     'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,
+                    'verifiOrderVo.name': self.searchData.name,                    
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -262,41 +232,29 @@ export default {
                 }],
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
-                }
+                },
+
             }).then(function(response) {
-                self.loading = false;
-                console.log(response)
                 if (response.data.success === 1) {
-                    self.myData = response.data.result;
-                    self.totalSize = response.data.totalNums;
-                    // 数据全选与否
-                    if(!self.ifCheckAll){
-                        self.ifCheckAll = true;
-                        for(let i in self.myData){
-                            self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
-                        }
-                    }else{
-                        self.ifCheckAll = false;
-                        for(let i in self.myData){
-                            self.$refs.myTabel.clearSelection()
-                        }
+                    let myData = response.data.result;
+                    for (let i = 0; i < myData.length; i++) {
+                        array.push(myData[i].id)
                     }
-                    // 再次调用分页
-                    self.handleCurrentChange(1)
+                    self.allId = array.join(',')
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
+
             }).catch(function(error) {
 
             });
         },
         onSubmit() {
             let self = this;
-            this.ifCheckAll = true;
-            self.getAllId();
+            self.getFormData();
         },
         handleCurrentChange(val) {
             let self = this;
@@ -322,38 +280,31 @@ export default {
         // 确认批量核销
         confirmBatchVerification() {
             let self = this;
-             if(self.selectData.length==0){
-                 self.$message({
-                        message: '请选择要核销的核销单',
-                        type: 'error'
-                    })
-            }else{
-                self.$confirm('确认核销选中的记录？', '提示', {
-                    confirmButtonText: '确定',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(() => {
-                    let ids = self.formatSelect()
-                    self.verification(ids)
-                })
-            }
+            self.$confirm('确认核销选中的记录？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                let ids = self.formatSelect()
+                self.verification(ids)
+            })
         },
         // 确认全部核销
-        // confirmAllVerification() {
-        //     let self = this;
-        //     self.$confirm('确认核销本次查询的所有记录？', '提示', {
-        //         confirmButtonText: '确定',
-        //         cancelButtonText: '取消',
-        //         type: 'warning'
-        //     }).then(() => {
-        //         self.$ajax.all([self.getAllId()]).then(
-        //             self.$ajax.spread(function(acct) {
-        //                 let ids = self.allId;
-        //                 self.verification(ids);
-        //             })
-        //         );
-        //     })
-        // },
+        confirmAllVerification() {
+            let self = this;
+            self.$confirm('确认核销本次查询的所有记录？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                self.$ajax.all([self.getAllId()]).then(
+                    self.$ajax.spread(function(acct) {
+                        let ids = self.allId;
+                        self.verification(ids);
+                    })
+                );
+            })
+        },
         // 核销
         verification(id) {
             let self = this;
@@ -400,13 +351,6 @@ export default {
         batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
-            if(self.selectData.length==0){
-                 self.$message({
-                    message: '请选择要导出的核销单~',
-                    type: 'error'
-                })
-                return
-            }
             self.outputExcel(ids)
         },
         // 导出全部明细
@@ -417,11 +361,13 @@ export default {
                     let ids = self.allId;
                     self.outputExcel(ids);
                 })
-             );
+        );
+
         },
         // 导出明细
         outputExcel(id, name, shopNo, createMonth) {
-        // console.log(id)
+            console.log(id)
+            console.log(name);
             let self = this;
             self.loading = true;
             self.$ajax({
@@ -429,6 +375,7 @@ export default {
                 method: 'post',
                 data: {
                     'verifiOrder.verifiOrderIds': id,
+                    'verifiOrderVo.name': name,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -442,10 +389,9 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                    // console.log(response.data)
-
-                    if (response.data.success === 1) {
-                        self.downData = response.data.result;
+                console.log(response.data)
+                if (response.data.success === 1) {
+                    self.downData = response.data.result;
                     if(self.downData.length>0){
                         require.ensure([], () => {
                             const {
@@ -459,34 +405,24 @@ export default {
                             console.log(list)
                             export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
                         })
-
-                         }else if(self.downData.length==0){
-                            self.$message({
-                                message: '没有数据',
-                                type: 'error'
-                            })
                     }else{
                         self.$message({
-                            message: '请选择要导出的核销单~',
+                            message: '订单暂无明细',
                             type: 'error'
                         })
                     }
-                    } else {
-                        self.$message({
-                            message: response.data.msg,
-                            type: 'error'
-                        })
-                    }
-               
+
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
             }).catch(function(error) {
 
             });
         },
-        // 全部选中
-        checkall(selection){
-            this.getAllId();
-        },
-        // 表格选择 表格某行选中
+        // 表格选择
         select(selection) {
             this.selectData = selection;
         },
@@ -501,18 +437,9 @@ export default {
     }
 }
 </script>
-<style lang="less" >
+<style lang="less" scoped>
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
-}
-.inputCover{
-    width: 40px;
-    height: 39px;
-    top:  1px;
-    left: 21px;
-    background-color: #eef1f6;
-    position: absolute;
-    z-index: 2;
 }
 </style>
