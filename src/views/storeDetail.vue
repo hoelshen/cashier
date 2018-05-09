@@ -17,78 +17,9 @@
                     <el-col :span="24">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
-<<<<<<< HEAD
                     <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
                         已完成进货业绩：
                         <span  style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
-=======
-                 
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24">
-                        显示选项:{{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
-                    </el-col>
-            
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24">
-                        代理商姓名：{{ detailForm.name }}
-                    </el-col>
-                
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24">
-                        代理商手机：{{ detailForm.phone }}
-                    </el-col>
-              
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24" >
-                        代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
-                    </el-col>
-             
-                </el-row>
-          
-                <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                        代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
-                    </el-col>
-                </el-row>
-
-
-                <el-row :gutter="10" v-if="detailForm.shopType =='AGENT'">
-                    <el-col :span="124" v-if="detailForm.agentGradeId === 265">
-                        店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
-                        24
-                    </el-col>
-                    <el-col :span="124" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
-                        店铺所属区域：{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}
-                    </el-col>
-                </el-row>
-
-
-                <el-row :gutter="10" style="margin-top: 65px;">
-                    <el-col :span="24">
-                        收件地址：{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}
-                    </el-col>
-                </el-row>
-            </div>
-
-
-
-            <div class="orderInfo" v-if="detailForm.RuleId">
-                <el-row :gutter="10">
-                    <el-col :span="24">
-                        合同签约日期：{{ detailForm.signedTime}}
-                    </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                
-                    <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
-                        已达成进货业绩：
-                        <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
->>>>>>> 3f260cfe7f3b8eaa8326b2daec17a205e7031afe
                        
                     </el-col>
                 </el-row>
