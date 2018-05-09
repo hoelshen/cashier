@@ -31,17 +31,13 @@
         }
 
         .operation {
-            display: flex;
+            text-align: left;
 
             span {
                 color: #1990ff;
                 margin: 0 5px;
                 text-align: center;
                 cursor: pointer;
-            }
-
-            span:last-child {
-                flex: 1;
             }
 
             span:hover {
@@ -115,57 +111,28 @@
         color: #1990ff;
     }
 }
-.mark{
+
+.mark {
     position: absolute;
     font-size: 12px;
     line-height: normal;
     color: #999;
     padding-left: 12px;
-    background: url('../images/arrow.png') no-repeat center left;
+    background: url("../images/arrow.png") no-repeat center left;
 }
 
+.batch {
+    position: absolute;
+    left: 20px;
+    bottom: 30px;
 
+    span {
+        padding-right: 10px;
+        color: #1990ff;
+        cursor: pointer;
+    }
 
-
-.textRed {
-    display: inline-block;
-    height: 20px;
-    line-height: 20px;
-    color: white;
-    background-color: #FF0033;
-    border: 1px solid #FF0033;
-    border-radius: 40%;
-    margin-left: 5px;
-}
-
-.textOrange {
-    display: inline-block;
-    height: 20px;
-    line-height: 20px;
-    color: white;
-    background-color: #ff6600;
-    border: 1px solid #ff6600;
-    border-radius: 40%;
-    margin-left: 5px;
-}
-
-.textGreen {
-    display: inline-block;
-    height: 20px;
-    line-height: 20px;
-    color: white;
-    background-color: #66CC00;
-    border: 1px solid #66CC00;
-    border-radius: 40%;
-    margin-left: 5px;
-}
-.textPurple {
-    display: inline-block;
-    height: 20px;
-    line-height: 20px;
-    color: white;
-    background-color: #9933FF;
-    border: 1px solid #9933FF;
-    border-radius: 40%;
-    margin-left: 5px;
+    span:hover {
+        color: #4db3ff;
+    }
 }

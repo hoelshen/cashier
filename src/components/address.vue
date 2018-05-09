@@ -167,6 +167,7 @@ export default {
         getAllData() {
             this.$nextTick(() => {
                 this.$emit("getAllData", this.getData());
+                this.$emit("getAreaName");
             });
         },
         getAddress() {
