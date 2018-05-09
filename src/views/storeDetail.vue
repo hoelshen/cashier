@@ -19,9 +19,9 @@
                     <el-col :span="12">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
-                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'" style="color:#ff6600">
-                        已达成进货业绩：
-                        <span> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
+                    <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'">
+                        已完成进货业绩：
+                        <span  style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
                        
                     </el-col>
                 </el-row>
@@ -34,9 +34,9 @@
                         <span v-if=" detailForm.annualPurchasePerformance !== 0 " style="color:#ff6600">
                             ￥{{ detailForm.annualPurchasePerformance }}
                         </span>
-                         <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
+                         <!-- <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
                             ￥{{ detailForm.annualPurchasePerformance }}
-                        </span>
+                        </span> -->
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -55,11 +55,13 @@
                                 <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
                                
                           </div>                     
-                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
-                               {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance != 0 "  style=" float:left;margin-left: 168px;">
+                               <span v-if="detailForm.purchaseAchievementRate != 0">
+                                   {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                               </span>
                           </span>
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">
-                               0%
+                               
                           </span>
                     </el-col>
                 </el-row>
@@ -483,7 +485,8 @@ export default {
                  data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchRegistTimeAnnual)
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchRegistTimeAnnual),
+                    'searchAnnualPerformanceOrderVo.shopNo':shopNo
                 },
                 transformRequest: [function(data) {
                     let ret = ''
