@@ -959,6 +959,24 @@ export default {
                             if(j === 'remark'){
                                  return v[j] =     ( v[j] == 0 ?  "达标" : ( v[j] == 1 ? "未达标" : "无上年度业绩")  )  ;
                             }
+                            if(j === 'annualExtendPerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "0" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualAreadyExtendPerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualExtendPerformanceSchedule'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualPurchasePerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualAreadyPurchasePerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'aannualPurchasePerformanceSchedule'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
 
                            return  v[j]  = v[j];
                     // }
@@ -1021,7 +1039,7 @@ export default {
                             }else{
                                     self.tableData =  (response.data.total == this.myData.length)  ? response.data.rows : this.myData ;
                             }
-                            console.log(response.data.total)
+                            // console.log(self.tableData)
                             // console.log( (response.data.total == this.myData.length)  )
                                
 
