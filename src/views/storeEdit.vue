@@ -916,7 +916,7 @@ export default {
             // this.editForm.areaClass = '';
         },
         areaClassNum(val){
-            console.log(val);
+            // console.log(val);
             this.editForm.annualExtendPerformance = val;
         },
         //重置直营店铺不要的项
