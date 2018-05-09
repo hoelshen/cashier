@@ -140,22 +140,22 @@
                 <el-row :gutter="5">
                     <el-col :span="24">
                         预存款详情：
-                        <el-button style="background-color:#20a0ff ; color='#ffffff'" class="router-link-active" >
+                        <span  class="router-link-active" >
                              <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>
-                        </el-button>                                           
+                        </span>                                           
                     </el-col>
                 </el-row>
                 <div v-if="detailForm.shopType!='SELF_SUPPORT'">
                     <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
-                          <el-button type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</el-button>                        
+                          <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>                        
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5">
                     <el-col :span="24">
                        代理商年度业绩： 
-                        <el-button type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</el-button>
+                        <span  class="router-link-active" type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
                 </el-row>
                 </div>
@@ -254,7 +254,7 @@
                           </el-table-column>
                           <el-table-column prop="finishRatio" label="年度业绩" width="177" align="right">
                             <template slot-scope="scope">
-                                <span>{{(scope.row.finishRatio.toFixed(2))*10}}{{'%'}}</span>
+                                <span>{{((scope.row.finishRatio*100).toFixed(2))}}{{'%'}}</span>
                                 <div v-if="(scope.row.finishRatio.toFixed(2))*10 >= 100" style="display:inline">
                                     <img src="../assets/images/Standard.png" alt="">
                                 </div> 
@@ -748,7 +748,11 @@ export default {
 }
 
 .router-link-active { 
-   color: #ffffff;
+   color: #20a0ff;
+   cursor: pointer;
+}
+.router-link-active:hover { 
+   color: #1699fd;
 }
 .dialog-title{
     line-height: 50px;
