@@ -114,10 +114,10 @@
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && !scope.row.annualPurchasePerformance)">
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 )  && !scope.row.annualPurchasePerformance)">
                                      -
                                 </span>
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance)">
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 ) && scope.row.annualPurchasePerformance)">
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
