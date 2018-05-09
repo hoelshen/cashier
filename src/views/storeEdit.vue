@@ -265,7 +265,9 @@ export default {
                 // console.log(response);
                 if (response.data.success == 1) {
                         const data = response.data.result
-                    self.editForm.areaClass = data.areaClass
+                    if(!self.flage){
+                         self.editForm.areaClass = data.areaClass 
+                    }
 
                     // console.log(self.editForm.annualExtendPerformance)
                     // if(self.editForm.annualExtendPerformance){
@@ -699,7 +701,7 @@ export default {
 
 
                         'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                        'shop.annualExtendPerformance':(data.agentGradeId !=265 && data.shopType != 'SELF_SUPPORT') ? '': (String(data.annualExtendPerformance) || ''), 
+                        'shop.annualExtendPerformance': String(data.annualExtendPerformance) , 
                         'shop.areaClass':data.areaClass  || '',
 
                         'shop.address': data.address,
@@ -1014,23 +1016,26 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
-            self.editForm.areaClass = self.editForm.agentCityName
-            self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-            if(self.flage){
-                self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
-
+            // console.log(self.areaClassFlag);
+            if(self.areaClassFlag){
                 self.editForm.areaClass = response.data.result.areaClass;
-                // console.log(self.editForm.annualExtendPerformance)
-                !self.flage;
-                // console.log('ok')
+                console.log(self.editForm.areaClass) 
+            }else{
+                self.editForm.areaClass = self.editForm.agentCityName        
             }
 
+            self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
+            
+            if(self.flage){
+                self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
+                // console.log(self.editForm.annualExtendPerformance)
+            }
 
             // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-            console.log(self.editForm.superAgentGradeId)
+            // console.log(self.editForm.superAgentGradeId)
             
         }).catch(function (err) {
             self.loading = false;
