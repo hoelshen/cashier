@@ -33,6 +33,9 @@
                         <span v-if=" detailForm.annualPurchasePerformance !== 0 " style="color:#ff6600">
                             ￥{{ detailForm.annualPurchasePerformance }}
                         </span>
+                         <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
+                            ￥{{ detailForm.annualPurchasePerformance }}
+                        </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -82,10 +85,12 @@
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
                             </span> 
-                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' "  class="annualExtendPerformanceCss">
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' "  class="annualExtendPerformanceCss">
                                 <div style="position:absolute;top:0px;border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
                             </div>
-                            <!-- <div v-else>-</div> -->
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) " >
+                                <div style="position:absolute;top:0px;border-radius: 10px;background:#368ee0" ></div>
+                            </div>
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'"  style="right: 132px;position: absolute">
                                 {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                             </span>
@@ -189,7 +194,7 @@
                             <template slot-scope="scope">
                                 <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品开发</span>
                                 <span v-if="scope.row.relationType  == 'BUSINESS_EXTEND'">业务拓展</span>
-                                <span v-if="scope.row.relationType  == 'AGENT_EXTEND'">直接上级</span>
+                                <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
                             </template>
                       </el-table-column>
                   </el-table>
@@ -281,7 +286,7 @@ export default {
     return {
       currentPage: 1,
       totalSize: 0,
-      pageSize: 10,
+      pageSize: 30,
       currentPageAgency: 1,
       pageSizeAgency: 10,
       totalNums:'',
@@ -422,7 +427,7 @@ export default {
               method: 'post',
               data: {
                     'shopNo': shopNo,
-                    'pageIndex': self.currentPageAgency,
+                    'pager.pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
                     'registTime': Utils.formatYearDate(self.searchRegistTime),
               },
@@ -436,11 +441,11 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-          }).then(function (response) {debugger
+          }).then(function (response) {
                self.loading = false;
              if (response.data.success === 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
-                    console.log(response.data.result)
+                    // console.log(response.data.result)
                     self.totalSizeAgency = response.data.result.total;
                     // console.log(response.data);
                     // self.annualAgentsTitle = response.data;
