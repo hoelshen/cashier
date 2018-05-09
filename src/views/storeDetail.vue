@@ -56,7 +56,7 @@
                                
                           </div>                     
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
-                               {{Number(detailForm.purchaseAchievementRate).toFixed(2)}}%
+                               {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
                           </span>
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">
                                0%
