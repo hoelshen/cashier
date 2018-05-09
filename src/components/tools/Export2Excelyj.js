@@ -157,11 +157,13 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
 
     var list = jsonData;
     var wb = new Workbook();
-    console.log(list)
     for (var i = 0; i < list.length; i++) {
-        var data = formatJson(filterVal, list[i].areaOrderVos)
+        var data = formatJson(filterVal, list[i].annualPerformanceOrderDetailVos)
+        // for(var j = 0; j < list[i].annualPerformanceOrderDetailVos.length; j++){
+        //     list[i].annualPerformanceOrderDetailVos[j].ratio =  list[i].annualPerformanceOrderDetailVos[j].ratio+"%"
+        // }
         data.unshift(th);
-        var ws_name = list[i].areaOrderVos[0].shopNo + "_" + list[i].areaOrderVos[0].createMonth + "_" + "区域订单明细";
+        var ws_name = list[i].shopNo + "_" + list[i].annualCycle + "("+i+ ")"+ "_"+ "年度业绩明细";
         var ws = sheet_from_array_of_arrays(data);
 
         /* add worksheet to workbook */
@@ -174,7 +176,7 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
         bookSST: false,
         type: 'binary'
     });
-    var title = defaultTitle || '列表'
+    var title = defaultTitle || '代理商年度业绩明细'
     saveAs(new Blob([s2ab(wbout)], {
         type: "application/octet-stream"
     }), title + ".xlsx")
