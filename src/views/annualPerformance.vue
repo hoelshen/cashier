@@ -555,9 +555,8 @@ export default {
                                 } = require('../components/tools/Export2Excelyj')
                                 const tHeader = ['代理商编号', '统计周期','代理商姓名','代理商等级','关系', '签约时间','付款时间','完成时间','货款金额', '系数比例','组成业绩','订单号/备注说明']
                                 const filterVal = [
-                                    'shopNo', 'annualCycle','name', 'agentGradeId', 'relationship','signedTime', 'payTime','finishTime','goodsAmount', 'ratio', 'performanceAmount', 'billNo',
-                                    
-                                ]
+                                    'shopNo', 'annualCycle','name', 'agentGradeId', 'relationship','signedTime', 'payTime','finishTime','goodsAmount', 'ratio', 'performanceAmount', 'billNo'
+]
                                 const list = self.downData;
                                 export_json_to_excel(tHeader, list  ,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '年度业绩明细')
                             })
