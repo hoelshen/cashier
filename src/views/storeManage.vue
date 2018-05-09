@@ -114,24 +114,25 @@
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==266 && scope.row.annualPurchasePerformance!=0)">
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && !scope.row.annualPurchasePerformance)">
+                                     -
                                 </span>
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance!=0)">
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance)">
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance!=0 || 
-                                             scope.row.annualExtendPerformance!=0 
+                                             (scope.row.annualPurchasePerformance!=0 || 
+                                             scope.row.annualExtendPerformance!=0 )
                                             )"> 
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance==0 && 
-                                             scope.row.annualExtendPerformance==0 
-                                            )">-</span>
+                                             (scope.row.annualPurchasePerformance==0 && 
+                                             scope.row.annualExtendPerformance==0 )
+                                            )">-
+                                </span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
@@ -510,7 +511,12 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.myData = response.data.rows;
-                console.log(self.myData)
+                // console.log(self.myData)
+
+                console.log(self.myData.annualPurchasePerformance)
+                if(self.myData.annualPurchasePerformance){
+                    console.log('1')
+                }
                 self.totalSize = response.data.total;
                 // console.log(response);
             }).catch(function (err) {
