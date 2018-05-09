@@ -21,7 +21,7 @@
                     </el-col>
                     <el-col :span="12"  v-if="detailForm.shopType!='SELF_SUPPORT'" style="color:#ff6600">
                         已达成进货业绩：
-                        ￥{{ Number(detailForm.annualOwnAreadyPurchasePerformance)  + Number(detailForm.annualLowerAreadyPurchasePerformance)  }}
+                        ￥{{detailForm.hasReachedPurchasePerformance}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
@@ -87,7 +87,7 @@
                             </div>
                             <!-- <div v-else>-</div> -->
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'"  style="right: 132px;position: absolute">
-                                {{Number(detailForm.storeExpansionRate).toFixed(2)}}%
+                                {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                             </span>
                     </el-col>
 
@@ -351,7 +351,7 @@ export default {
         storeExpansionRate:'',     //年度店铺扩展达成率  
         
         purchaseAchievementRate:'',  //进货业绩达成率
-
+        hasReachedPurchasePerformance:'' ,   // 已达成进货业绩：
         annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
         annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
         annualPurchasePerformance:'' ,  //年度目标进货业绩        
@@ -612,18 +612,20 @@ export default {
         self.detailForm = response.data.result;
                
         self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
-
-        self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
+        self.detailForm.hasReachedPurchasePerformance   = Utils.addCommas( Number(self.detailForm.annualOwnAreadyPurchasePerformance)  + Number(self.detailForm.annualLowerAreadyPurchasePerformance)  )  
+       
+       self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
         //年度下级协助所完成的业绩率   ////年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  /  response.data.result.annualPurchasePerformance
         //年度店铺扩展达成率    //已达成店铺拓展   //年度目标店铺拓展
         self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
-        console.log(self.detailForm.shopType)
-        console.log(self.detailForm.shopType!='SELF_SUPPORT');
-        console.log(self.detailForm.agentGradeId)
-         //    console.log( (self.detailForm.annualOwnAreadyPurchasePerformanceRate *144).toFixed(2) + 'px')
+        // console.log(self.detailForm.shopType)
+        // console.log(self.detailForm.shopType!='SELF_SUPPORT');
+        // console.log(self.detailForm.agentGradeId)
+        
+        // console.log( (self.detailForm.annualOwnAreadyPurchasePerformanceRate *144).toFixed(2) + 'px')
         
 
        self.annualOwnAreadyPurchasePerformanceRateObject.width  =   self.detailForm.annualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
@@ -633,7 +635,7 @@ export default {
        self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
 
        
-
+        // console.log(response.data.result.annualPurchasePerformance)
 
         // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
         // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
