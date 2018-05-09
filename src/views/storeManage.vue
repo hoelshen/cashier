@@ -122,11 +122,16 @@
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance!=0 && 
+                                             scope.row.annualPurchasePerformance!=0 || 
                                              scope.row.annualExtendPerformance!=0 
                                             )"> 
                                      {{ scope.row.goalCompletion * 100 }}%
                                 </span>
+                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
+                                            (scope.row.agentGradeId ==265 &&
+                                             scope.row.annualPurchasePerformance==0 && 
+                                             scope.row.annualExtendPerformance==0 
+                                            )">-</span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
@@ -986,48 +991,8 @@ export default {
                 } else {
                     this.searchData.level = '';
                 }
-                
-
-                // //获取列表数据
-                // this.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-                // }).then(function (response) {
-                    
-                //     this.myData = response.data.rows;
-                                                      
-                                                    
-                //     this.totalSize = response.data.total
-                // }).catch(function (err) {
-                //     self.loading = false;
-                //     console.log(err);
-                // });
 
 
-                let data = this.myData
-
-                // self.tableData =  this.myData
-
-                // console.log(data)
-                // console.log(self.tableData.total)
-                // if(self.tableData.length>0){
-                //             require.ensure([], () => {
-                //                 const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
-                //                 const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标',
-                //                                     '已完成', '进度', '年度进货业绩目标', '已完成', '进度',
-                //                                     '剩余时间','备注', ]
-                //                 const filterVal =['shopNo', 'agentGradeId', 'shopName', 'annualExtendPerformance', 
-                //                                     'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'annualPurchasePerformance', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
-                //                                     'ReaminTime', 'remark',]
-                //                 const list = self.tableData;
-                //                 const data = this.formatJson(filterVal, list);
-                //                 export_json_to_excel(tHeader, data, '代理商' + (Utils.formatYearDate(self.tableData[0].signTime) ? Utils.formatYearDate(self.tableData[0].signTime)  + '' : '') +'年度目标完成进度');
-                //             })
-                // }else{
-                //     self.$message({
-                //         message: '订单暂无明细',
-                //         type: 'error'
-                //     })
-                // }
-    
                 this.getData({
                     url: 'shop/ShopManage/search.jhtml',
                     data: {

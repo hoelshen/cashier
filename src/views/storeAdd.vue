@@ -56,7 +56,7 @@
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-input v-model="addForm.annualExtendPerformance"  placeholder="">
+                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  :value="(areaClassFlag && addForm.annualExtendPerformance) || item.num"  @change="areaClassNum" > 
                             <template slot="prepend">店铺拓展：
                                 
                             </template>
@@ -101,9 +101,8 @@
                 </el-col>
                 <el-col :span="4"  v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                            <!-- <el-input  v-model="addForm.areaClass"  style="width:50px"></el-input> -->
-                            <el-select v-model="addForm.areaClass" placeholder="类别"   clearable>
-                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option>
+                            <el-select v-model="addForm.areaClass" placeholder="类别"  @visible-change="areaClassFlag = false"  clearable>
+                                <el-option v-for="item in areaClassArray" :key="item.index" :label="item.name" :value="item.value"></el-option> 
                             </el-select>
                     </el-form-item>
                 </el-col>       
@@ -227,19 +226,23 @@ export default {
             levelArray: [], //代理商等级数组
             areaClassArray: [{   //类别等级数组
                 value: 'S',
-                name: 'S'
+                name: 'S',
+                num:8
             },
             {
                 value:'A',
-                name: 'A'
+                name: 'A',
+                num:6
             },
             {
                 value: 'B',
-                name: 'B'
+                name: 'B',
+                num:4
             },
             {
                 value: 'C',
-                name: 'C'
+                name: 'C',
+                num:4
             }
             ],
             phoneLength: 11,
@@ -248,6 +251,7 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
+            areaClassFlag:true
         }
     },
     components: {
@@ -602,6 +606,12 @@ export default {
                 self.loading = false;
             });
         },
+        //类别店铺数
+        areaClassNum(val){
+            console.log(val);
+            this.editForm.annualExtendPerformance = val;
+        },
+        //重置新增表单
         resetAddForm() {
             const self = this;
             self.$refs.addAddress.reset();
