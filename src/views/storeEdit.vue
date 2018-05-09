@@ -71,7 +71,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">       
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && editForm.annualExtendPerformance) || item.num"  @change="areaClassNum" >                              
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="(areaClassFlag && String(editForm.annualExtendPerformance) ) || item.num"  @change="areaClassNum" >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
@@ -132,13 +132,13 @@
                 <h2>账户信息</h2>
             </el-row>
             <el-row>
-                <el-col :span="8"  v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
                             <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品</el-radio>
                             <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商</el-radio>                            
                     </el-form-item>
                 </el-col>
-                <el-col :span="8"  v-if="editForm.shopType!='SELF.SUPPORT'&& (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
+                <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
@@ -146,7 +146,7 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"   v-if="editForm.shopType!='SELF.SUPPORT'&& (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
+                <el-col :span="4"   v-if="editForm.shopType!='SELF_SUPPORT'&& (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="editForm.superAgentGradeId"  disabled></el-input>   
                     </el-form-item>
@@ -765,7 +765,7 @@ export default {
             }
             
             //直营
-            if(data.shopType=='SELF.SUPPORT'){
+            if(data.shopType=='SELF_SUPPORT'){
                 
                 datas={
                         'shop.id': data.id,
@@ -1017,7 +1017,7 @@ export default {
             self.loading = false;
             self.editForm = response.data.result;
             // console.log(self.areaClassFlag);
-            if(self.areaClassFlag){
+            if(self.flage){
                 self.editForm.areaClass = response.data.result.areaClass;
                 console.log(self.editForm.areaClass) 
             }else{
@@ -1027,10 +1027,11 @@ export default {
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
             
             if(self.flage){
-                self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
-                // console.log(self.editForm.annualExtendPerformance)
-            }
 
+                // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
+                console.log(self.editForm.annualExtendPerformance)
+            }
+            console.log(Number(self.editForm.annualExtendPerformance))
             // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
