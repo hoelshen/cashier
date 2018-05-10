@@ -18,9 +18,9 @@
             <el-row>
                <!--第二行-->
                 <el-col :span="8">
-                    <el-form-item label="店铺类型：">
-                        <el-radio v-model="editForm.shopType" label="AGENT">代理商</el-radio>
-                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="deleteSelfSupport">直营店铺</el-radio>
+                    <el-form-item label="店铺类型：" >
+                        <el-radio v-model="editForm.shopType" label="AGENT"  disabled>代理商</el-radio>
+                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="deleteSelfSupport"  disabled>直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -513,16 +513,16 @@ export default {
             //检验上级代理商的状态  
             // console.log(data.state)
             // console.log(data.extendSuperType)
-            if( (data.agentGradeId==31 || data.agentGradeId==266) && data.extendSuperType!='ZUIPIN'){
-                   if(data.state!=0){
-                        self.loading = false;
-                        self.$message({
-                            message: '代理商的上级为禁用状态',
-                            type: 'error'
-                        })
-                        return false     
-                    }
-            }  
+            // if( (data.agentGradeId==31 || data.agentGradeId==266) && data.extendSuperType!='ZUIPIN'){
+            //        if(data.state!=0){
+            //             self.loading = false;
+            //             self.$message({
+            //                 message: '代理商的上级为禁用状态',
+            //                 type: 'error'
+            //             })
+            //             return false     
+            //         }
+            // }  
 
             //拓展上级姓名必填
             // console.log(data.extendSuperNo);
@@ -652,7 +652,7 @@ export default {
 
             // console.log(editBelongAddress);
             // this.editForm.annualExtendPerformance 
-            console.log(data.annualExtendPerformance)
+            // console.log(data.annualExtendPerformance)
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
