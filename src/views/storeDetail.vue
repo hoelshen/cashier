@@ -40,7 +40,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:20px;" >
-                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span><span v-if="detailForm.state==1"> <div class="icon-red"></div></span> <span class="font-color">{{ detailForm.state	=== 1 ? '禁用' : '启用' }}</span>
+                        代理商状态：<span v-if="detailForm.state!=1" style="position:  relative;"> <div class="icon-green"></div></span><span v-if="detailForm.state==1" style="position:  relative;"> <div class="icon-red"></div></span> <span class="font-color" style="padding-left:10px;">{{ detailForm.state	=== 1 ? '禁用' : '启用' }}</span>
                     </el-col>
              
                 </el-row>
@@ -941,6 +941,8 @@ export default {
     border-radius: 6px;
     display: inline-block;
     margin-right: 5px;
+    position: absolute;
+    top: 7px;
 }
 .icon-red{
     width: 6px;
@@ -949,6 +951,8 @@ export default {
     border-radius: 6px;
     display: inline-block;
     margin-right: 5px;
+    position: absolute;
+    top: 7px;
 }
 .line-middle{
     position: relative;
