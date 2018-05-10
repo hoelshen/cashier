@@ -147,14 +147,20 @@
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' " style="position:absolute;top:10px;left:123px; "  class="annualExtendPerformanceCss" >
                                     <div style="position:absolute;top: 0;left:0; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
                                 </div>
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) && detailForm.annualExtendPerformance " >
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
                                      <div style="position:absolute;top: 0;left: 0;width:144px;height:10px;border-radius: 10px;background-color:#368ee0" ></div>
                                 </div>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance"  style="left: 275px;position: absolute">
+                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) && detailForm.annualExtendPerformance && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
+                                     <div style="position:absolute;top: 0;left: 0;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
+                                </div>
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "  style="left: 275px;position: absolute">
                                     {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 "   style="left: 275px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 "   style="left: 313px;position: absolute">
                                    0%
+                                </span>
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 313px;position: absolute">
+                                   100%
                                 </span>
                            </div>
                     </el-col>
@@ -219,8 +225,7 @@
                     </el-col>
                 </el-row>        
                 <el-row :gutter="5">
-                    <el-col :span="24">
-                     
+                    <el-col :span="24">  
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>     
@@ -700,13 +705,15 @@ export default {
        self.detailForm.activeColor1 = 'ff6600';
        //蓝色
        self.detailForm.activeColor2 = '20a0ff'; 
-       //橙色
+       //淡橙色
        self.detailForm.activeColor3 = 'ffd199';
+
+
        self.annualOwnAreadyPurchasePerformanceRateObject.width  =   self.detailForm.annualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
        
        //    console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
         
-       self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor2
+       self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
 
        
         // console.log(response.data.result.annualPurchasePerformance)
