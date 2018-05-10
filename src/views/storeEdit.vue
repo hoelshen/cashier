@@ -13,19 +13,7 @@
                         <el-input v-model="editForm.shopName" placeholder="店铺名称"></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="8">
-                    <el-form-item label="代理商姓名：">
-                        <el-input v-model="editForm.name" placeholder="代理商姓名"></el-input>
-                    </el-form-item>
-                </el-col>
-                <el-col :span="8">
-                    <el-form-item label="代理商手机：">
-                        <el-input v-model="editForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
-                        <div class="mark">
-                            代理商登录系统使用的账号
-                        </div>
-                    </el-form-item>
-                </el-col>
+               
             </el-row>
             <el-row>
                <!--第二行-->
@@ -46,13 +34,17 @@
                     </el-form-item>
                 </el-col>
 
-                <el-col :span="8">
-                    <el-form-item label="代理商状态：" disabled>
-                        <el-col :span="12">
-                            {{ editForm.state	=== 1 ? '禁用' : '启用' }}
-                        </el-col>
+                
+                
+            </el-row>
+            <el-row>
+                 <el-col :span="8">
+                    <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
+                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable >
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
+                        </el-select>
                     </el-form-item>
-                </el-col>
+                </el-col> 
             </el-row>
             <el-row>
                  <!--第三行-->
@@ -84,22 +76,35 @@
             </el-row>         
             <el-row>
                 <!--第四行-->
-                <el-col :span="8">
-                    <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable >
-                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
-                        </el-select>
+                 <el-col :span="8">
+                    <el-form-item label="代理商姓名：">
+                        <el-input v-model="editForm.name" placeholder="代理商姓名"></el-input>
                     </el-form-item>
-                </el-col> 
+                </el-col>
+                <el-col :span="8">
+                    <el-form-item label="代理商手机：">
+                        <el-input v-model="editForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                        <div class="mark">
+                            代理商登录系统使用的账号
+                        </div>
+                    </el-form-item>
+                </el-col>
+               <el-col :span="8">
+                    <el-form-item label="代理商状态：" disabled>
+                        <el-col :span="12">
+                            {{ editForm.state	=== 1 ? '禁用' : '启用' }}
+                        </el-col>
+                    </el-form-item>
+                </el-col>
             </el-row>
             <el-row>
                 <!--第五行-->
-                <el-col :span="16" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="24" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
                         <addressComponent ref='editBelongAddress' :provinceCode="editForm.belongProvince" :cityCode="editForm.belongCity " :areaCode="editForm.belongCountry"  :isDetail="false" />   
                     </el-form-item>
                 </el-col>
-                <el-col :span="16" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="18" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item label="代理区域：">
                         <addressComponent  :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty"  ref='editAgentAddress' v-on:getAreaName="getAreaName" :isDetail="false"  @click.native="changeAnnualExtendPerformance"/>   
                     </el-form-item>
@@ -114,7 +119,7 @@
                 </el-col>
             </el-row>
             <el-row>
-              <el-col :span="16">
+              <el-col :span="24">
                     <el-form-item label="收件地址：">
                         <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
                     </el-form-item>
@@ -171,7 +176,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top:20px;margin-left:119px;">
                 <el-button type="primary" @click="editAgent">保存</el-button>
                 <el-button @click="goBack">取消</el-button>
             </el-row>
@@ -1124,5 +1129,13 @@ export default {
         z-index: 1000;
     }
 }
-
+.mark{
+    font-family: 'MicrosoftYaHei';
+    font-size: 14px;
+    font-weight: normal;
+    font-stretch: normal;
+    line-height: 30px;
+    letter-spacing: 0px;
+    color: #999999;
+}
 </style>

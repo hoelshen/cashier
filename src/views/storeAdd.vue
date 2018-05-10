@@ -165,7 +165,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top:20px;margin-left:120px;">
                 <el-button type="primary" @click="addAgent" class="button-save">保存</el-button>
                 <el-button @click="goBack" class="button-cancel">取消</el-button>
             </el-row>
