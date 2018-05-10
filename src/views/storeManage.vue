@@ -66,8 +66,8 @@
                     <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
-                        <el-table-column  type="selection" width="50" :reserve-selection="true">
-                        </el-table-column>
+                        <!-- <el-table-column  type="selection" width="50" :reserve-selection="true">
+                        </el-table-column> -->
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>

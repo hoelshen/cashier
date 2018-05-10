@@ -72,7 +72,7 @@
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">  
                              
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass " v-model="editForm.annualExtendPerformance"   >                              
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass"  v-model="editForm.annualExtendPerformance"   >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
@@ -107,7 +107,7 @@
                 </el-col>
                 <el-col :span="4"  v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="2" label="类别：" >
-                        <el-select v-model="editForm.areaClass" placeholder="类别"   clearable @visible-change="areaClassFlag = false">
+                        <el-select v-model="editForm.areaClass" placeholder="类别"   clearable  @visible-change="areaClassFlag = false">
                             <el-option v-for="item in areaClassArray" :key="item.value" :label="item.name" :value="item.value"></el-option>
                         </el-select>                    
                     </el-form-item>
@@ -1065,7 +1065,15 @@ export default {
         });
    
     },
- 
+    watch:{
+        'editForm.areaClass'(){
+            for(let item of this.areaClassArray){
+                if(item.value == this.editForm.areaClass){
+                    this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
+                }
+            }
+        }
+    }
 }
 </script>
 <style lang='less' scoped>

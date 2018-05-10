@@ -6,6 +6,7 @@
         </el-row>
 
         <div class="info">
+            <!--左边-->
             <div class="orderInfo">
                 <el-row :gutter="10">
                     <el-col :span="24">
@@ -53,11 +54,10 @@
 
 
                 <el-row :gutter="10" v-if="detailForm.shopType =='AGENT'">
-                    <el-col :span="124" v-if="detailForm.agentGradeId === 265">
+                    <el-col :span="24" v-if="detailForm.agentGradeId === 265">
                         店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
-                        24
                     </el-col>
-                    <el-col :span="124" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
+                    <el-col :span="24" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
                         店铺所属区域：{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}
                     </el-col>
                 </el-row>
@@ -69,103 +69,105 @@
                     </el-col>
                 </el-row>
             </div>
-
-
-
-            <div class="orderInfo orderInfo1" v-if="detailForm.RuleId">
+            
+            <!--中间-->
+            <div class="orderInfo" v-if="detailForm.RuleId">
                 <el-row :gutter="10">
                     <el-col :span="24">
                         合同签约日期：{{ detailForm.signedTime}}
                     </el-col>
                 </el-row>
-                <el-row :gutter="10">
-                
+                <el-row :gutter="10">      
                     <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
                         <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
-                       
                     </el-col>
                 </el-row>
-                <el-row :gutter="10">
-                 
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                        <span>年度目标进货业绩：</span>
-                        <span v-if=" detailForm.annualPurchasePerformance !== 0 " style="color:#ff6600">
+                <el-row :gutter="10"> 
+                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'" style="position:relative">
+                        <div>
+                            <span>年度目标进货业绩：</span>
+                            <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
                             ￥{{ detailForm.annualPurchasePerformance }}
-                        </span>
-                         <!-- <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
-                            ￥{{ detailForm.annualPurchasePerformance }}
-                        </span> -->
+                            </span>
+                            <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
+                                ￥{{ detailForm.annualPurchasePerformance }}
+                            </span>
+                        </div>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-               
-                    <el-col :span="24" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' ">
-                        <span  style="float:left" >
-                            进货业绩达成率：
-                        </span> 
-                          <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 " class="annualPurchasePerformanceCss" style="position:absoult;left:121px;top:31px;"> 
-                                <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
-                                <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
-                          </div> 
-                          <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss">
-                                <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
-                               
-                          </div>                     
-                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
-                              <span v-if="detailForm.purchaseAchievementRate">
-                                   {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
-                              </span>
-                              
-                          </span>
-                          <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">
-                               
-                          </span>
+                    <el-col :span="24" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' " style="position:relative">
+                        <div >
+                            <span  style="float:left" >
+                                进货业绩达成率：
+                            </span> 
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 " class="annualPurchasePerformanceCss" style="position:absoult;left:121px;top:31px;"> 
+                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
+                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;"></div>
+                            </div> 
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss">
+                                    <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
+                            </div>                     
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
+                                <span v-if="detailForm.purchaseAchievementRate">
+                                    {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                                </span>
+                            </span>
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">  
+                            </span>
+                        </div>
+              
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-               
                     <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
-                        已达成店铺拓展：
+                        已完成店铺拓展：
                         <span style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
                         </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-          
                     <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
                         年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}家
                     </el-col>
                 </el-row>
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-
-                
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)" >
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
+                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  style="position:relative">
+                           <div >
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
-                            </span> 
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' " style="position:absolute;top:53px;left:123px; "  class="annualExtendPerformanceCss" >
-                                <div style="position:absolute;top:53px;left:123px; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
-                            </div>
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) " >
-                                <div style="position:absolute;top:53px;left:123px;border-radius: 10px;background:#368ee0" ></div>
-                            </div>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'"  style="right: 240px;position: absolute">
-                                {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
-                            </span>
+                                </span> 
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' " style="position:absolute;top:10px;left:123px; "  class="annualExtendPerformanceCss" >
+                                    <div style="position:absolute;top:10px;left:123px; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
+                                </div>
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) " >
+                                    <div style="position:absolute;top:10px;left:123px;border-radius: 10px;background:#368ee0" ></div>
+                                </div>
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT'"  style="left: 275px;position: absolute">
+                                    {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
+                                </span>
+                           </div>
                     </el-col>
 
                 </el-row>
 
-                 <div class="calendar">
+
+
+
+            </div>
+            <!--右边-->
+            <div class="orderInfo ">
+                <div class="calendar">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
                     <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
-                </div>
+                </div> 
             </div>
 
+           
 
            
         </div>
@@ -770,7 +772,8 @@ export default {
     float:right;
     border-radius:10px;
     position: absolute;
-    top: 9px;left: 610px;
+    top: 10px;
+    left: 125px;
 }
 
 
@@ -789,8 +792,8 @@ export default {
         float:right;
         border-radius:10px;
         position: absolute;
-        top: 9px;
-        left: 610px;
+        top: 0px;
+        left: 140px;
 }
 
 .router-link-active { 
@@ -830,12 +833,10 @@ export default {
 }
 #detailStore .info .orderInfo:nth-child(2){
     border-left: none;
+    border-right: none;
 }
-.orderInfo1 {
-    position: relative;
+#detailStore .info .orderInfo:nth-child(3){
+    border-left: none;
 }
-#detailStore .orderInfo1 .calendar {
-    top:100px;
-    right: 160px;
-}
+
 </style>

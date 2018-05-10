@@ -56,7 +56,7 @@
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  :value="(areaClassFlag && addForm.annualExtendPerformance) || item.num"  @change="areaClassNum" > 
+                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
                             <template slot="prepend">店铺拓展：
                                 
                             </template>
@@ -273,6 +273,13 @@ export default {
                 if (response.data.success == 1) {
                     self.addForm.areaClass = response.data.result.areaClass
                     self.addForm.annualExtendPerformance =   response.data.result.shopNum
+
+                    for(let item of self.areaClassArray){
+                        if(item.value == self.addForm.areaClass){
+                            self.addForm.annualExtendPerformance=( self.areaClassFlag && String(self.addForm.annualExtendPerformance)  ) || item.num
+                        }
+                    }
+                    
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -606,11 +613,6 @@ export default {
                 self.loading = false;
             });
         },
-        //类别店铺数
-        areaClassNum(val){
-            console.log(val);
-            this.editForm.annualExtendPerformance = val;
-        },
         //重置新增表单
         resetAddForm() {
             const self = this;
@@ -866,6 +868,15 @@ export default {
         }).catch(function (err) {
             console.log(err);
         });
+    },
+    watch:{
+        'addForm.areaClass'(){
+            for(let item of this.areaClassArray){
+                if(item.value == this.addForm.areaClass){
+                    this.addForm.annualExtendPerformance=( this.areaClassFlag && String(this.addForm.annualExtendPerformance)  ) || item.num
+                }
+            }
+        }
     }
 }
 </script>
