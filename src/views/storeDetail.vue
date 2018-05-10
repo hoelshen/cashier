@@ -111,7 +111,7 @@
                             </div> 
 
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width: 144px;height: 10px;"></div>
+                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 144px;height: 10px;"></div>
                             </div>
 
                             <!-- <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.annualOwnAreadyPurchasePerformance > detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
