@@ -828,7 +828,7 @@ export default {
         deleteSalesMan(){
             this.addForm.salesMan='';    
         },
-        deleteExtendSuperType(){
+        deleteExtendSuperType(val){
             
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
