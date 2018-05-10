@@ -16,7 +16,7 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
-                        <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
+                        <el-radio v-model="addForm.shopType" label="AGENT" @click.native="addZuipin">代理商</el-radio>
                         <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteSelfSupport">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
@@ -535,7 +535,7 @@ export default {
                     'shop.name': data.name,
                     'shop.phone': data.phone,
                     'shop.signedTime': Utils.formatDayDate(data.signedTime),
-                    'shop.agentGradeId': data.agentGradeId,
+                    'shop.agentGradeId': data.extendSuperType == 265 ?  '' : ( data.agentGradeId)  ,
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
@@ -552,7 +552,7 @@ export default {
                     'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     
-                    'shop.extendSuperNo':data.extendSuperNo || '',
+                    'shop.extendSuperNo': data.extendSuperType == 265 ?  '' : (data.extendSuperNo || '')  ,
                     'shop.areaClass':(data.shopType ==='SELF_SUPPORT') ? '' : (data.areaClass || '') ,
 
                     'shop.belongProvince':addBelongAddress  ? addBelongAddress.provinceCode : "",
@@ -846,7 +846,9 @@ export default {
             this.addForm.superNo = '';
             this.addForm.areaClass  = '';
         },
-
+        addZuipin(){
+            this.addForm.extendSuperType = 'ZUIPIN';
+        }
     },
     created(){
         const self = this;
