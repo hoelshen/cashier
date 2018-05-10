@@ -9,37 +9,37 @@
             <!--左边-->
             <div class="orderInfo">
                 <el-row :gutter="10">
-                    <el-col :span="24">
+                    <el-col :span="24" :push="2">
                         店铺名称：{{ detailForm.shopName }}
                     </el-col>
                   
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24">
+                    <el-col :span="24" :push="2">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
                  
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24">
-                        显示选项:{{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
+                    <el-col :span="24" :push="2">
+                        显示选项:   {{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
                     </el-col>
             
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24">
+                    <el-col :span="24" :push="1">
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
                 
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24">
+                    <el-col :span="24" :push="1">
                         代理商手机：{{ detailForm.phone }}
                     </el-col>
               
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" >
+                    <el-col :span="24" :push="1">
                         代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
              
@@ -47,7 +47,7 @@
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
 
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'">
+                    <el-col :span="24" :push="1" v-if="detailForm.shopType!='SELF_SUPPORT'">
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
                 </el-row>
@@ -64,7 +64,7 @@
 
 
                 <el-row :gutter="10" style="margin-top: 65px;">
-                    <el-col :span="24">
+                    <el-col :span="24" :push="2">
                         收件地址：{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}
                     </el-col>
                 </el-row>
@@ -73,12 +73,12 @@
             <!--中间-->
             <div class="orderInfo" v-if="detailForm.isParticipateRebate==1">
                 <el-row :gutter="10">
-                    <el-col :span="24">
+                    <el-col :span="24" style="padding-left:35px;">
                         合同签约日期：{{ detailForm.signedTime}}
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">      
-                    <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
+                    <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
                         <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
                     </el-col>
@@ -97,7 +97,7 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' " style="position:relative">
+                    <el-col :span="24" style="padding-left:20px;position:relative" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' " >
                         <div >
                             <span  style="float:left" >
                                 进货业绩达成率：
@@ -109,7 +109,7 @@
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
                                     <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
                             </div>                     
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="     position: absolute;left: 275px;">
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="position: absolute;left: 275px;">
                                 <span v-if="detailForm.purchaseAchievementRate">
                                     {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
                                 </span>
@@ -125,7 +125,7 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
+                    <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
                         已完成店铺拓展：
                         <span style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
@@ -139,7 +139,7 @@
                 </el-row>
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  style="position:relative">
+                    <el-col :span="24" style="padding-left:20px;position:relative" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  >
                            <div >
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
@@ -166,7 +166,7 @@
 
             </div>
             <!--右边-->
-            <div class="orderInfo "  v-if="detailForm.isParticipateRebate==1">
+            <div class="orderInfo "  v-if="detailForm.isParticipateRebate==1" style="float: right;">
                 <div class="calendar">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
@@ -192,7 +192,7 @@
         <div class="count">
             <div class="orderCount">
                 <el-row :gutter="5">
-                    <el-col :span="24">
+                    <el-col :span="24" style="padding-left: 30px;">
                         预存款详情：
                         <span  class="router-link-active" >
                              <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>
@@ -201,26 +201,25 @@
                 </el-row>
                 <div v-if="detailForm.shopType!='SELF_SUPPORT'">
                     <el-row :gutter="5">
-                    <el-col :span="24">
+                    <el-col :span="24"  style="padding-left: 30px;">
                         代理商关系：
                           <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>            
                     </el-col>
                 </el-row>    
-                <el-row :gutter="5">
-                    <el-col :span="24">
+                <el-row :gutter="5"  >
+                    <el-col :span="24" >
                        代理商年度业绩： 
                         <span  class="router-link-active" type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
                 </el-row>
                 </div>
                 <el-row :gutter="5"> 
-                    <el-col :span="24">
+                    <el-col :span="24"  style="padding-left: 45px;">
                         运营人员：{{ detailForm.operator }}
                     </el-col>
                 </el-row>        
                 <el-row :gutter="5">
-                    <el-col :span="24">
-                     
+                    <el-col :span="24"  style="padding-left: 45px;">
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>     
