@@ -88,7 +88,7 @@
                         <div>
                             <span>年度目标进货业绩：</span>
                             <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
-                            ￥{{ detailForm.annualPurchasePerformance }}
+                                ￥{{ detailForm.annualPurchasePerformance }}
                             </span>
                             <span v-if=" detailForm.hasReachedPurchasePerformance == 0 " style="color:#ff6600">
                                 ￥{{ detailForm.annualPurchasePerformance }}
@@ -109,13 +109,13 @@
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss">
                                     <div  style="float:left;border-radius: 10px;background:#e3e5e6"></div>
                             </div>                     
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="     position: absolute;left: 275px;">
                                 <span v-if="detailForm.purchaseAchievementRate">
                                     {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
                                 </span>
                             </span>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;"> 
-                                {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" position: absolute;left: 275px;"> 
+                                0%
                             </span>
                         </div>
               
@@ -210,12 +210,13 @@
                 
                 <el-row :gutter="5"> 
                     <el-col :span="24">
-                        业务人员：{{ detailForm.operator }}
+                        运营人员：{{ detailForm.operator }}
                     </el-col>
                 </el-row>        
                 <el-row :gutter="5">
                     <el-col :span="24">
-                        运营人员：{{ detailForm.salesMan }}
+                     
+                        业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>     
             </div>
