@@ -88,10 +88,10 @@
                         <div>
                             <span>年度目标进货业绩：</span>
                             <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
-                                ￥{{ detailForm.annualPurchasePerformance }}
+                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
                             </span>
                             <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
-                                ￥{{ detailForm.annualPurchasePerformance }}
+                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)}}
                             </span>
                         </div>
                     </el-col>
@@ -111,8 +111,13 @@
                             </div> 
 
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width: 144px;height: 10px;"></div>
+                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 144px;height: 10px;"></div>
                             </div>
+
+                            <!-- <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.annualOwnAreadyPurchasePerformance > detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
+                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 120px;height: 10px;"></div>
+                                    <div  style="float:left;border-radius: 10px;background-color:#ffd199;width: 24px;height: 10px;"></div>
+                            </div> -->
 
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="position: absolute;left: 275px;">
                                 <span v-if="detailForm.purchaseAchievementRate">
@@ -696,7 +701,7 @@ export default {
         self.detailForm = response.data.result;
                
         self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
-        self.detailForm.hasReachedPurchasePerformance   = Utils.addCommas( Number(self.detailForm.annualOwnAreadyPurchasePerformance)  + Number(self.detailForm.annualLowerAreadyPurchasePerformance) )   
+        self.detailForm.hasReachedPurchasePerformance   = Utils.addCommas( (Number(self.detailForm.annualOwnAreadyPurchasePerformance)  + Number(self.detailForm.annualLowerAreadyPurchasePerformance)).toFixed(2) )   
         console.log(String(self.detailForm.hasReachedPurchasePerformance)  );
         
         self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');

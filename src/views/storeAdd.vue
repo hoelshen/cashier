@@ -35,7 +35,7 @@
                     <!--第四行-->
             <el-col :span="8">
                 <el-form-item label="代理商等级：" v-if="addForm.shopType!='SELF_SUPPORT'">
-                    <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"   clearable>
+                    <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"    clearable>
                         <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                     </el-select>
                 </el-form-item>
@@ -55,14 +55,12 @@
                   
                 </el-col>
                 <el-col :span="6">
-                      <el-form-item  v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
                         <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
-                            <template slot="prepend">店铺拓展：
-                                
+                            <template slot="prepend">店铺拓展：  
                             </template>
                                 <template slot="append"> 家
                             </template>      
-
                         </el-input>
                     </el-form-item>
                 </el-col>
@@ -831,6 +829,7 @@ export default {
             this.addForm.salesMan='';    
         },
         deleteExtendSuperType(){
+            
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
             
