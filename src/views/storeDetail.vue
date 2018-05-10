@@ -203,7 +203,7 @@
                     <el-row :gutter="5">
                     <el-col :span="24">
                         代理商关系：
-                          <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>                        
+                          <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>            
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5">
@@ -213,7 +213,6 @@
                     </el-col>
                 </el-row>
                 </div>
-                
                 <el-row :gutter="5"> 
                     <el-col :span="24">
                         运营人员：{{ detailForm.operator }}

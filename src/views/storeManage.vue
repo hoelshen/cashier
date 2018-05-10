@@ -109,7 +109,11 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remainDay" label="剩余天数" width="150" sortable="custom" >
+                        <el-table-column   prop="remainDay" label="剩余天数" width="150" sortable="custom" >
+                            <template slot-scope="scope">
+                                    <span v-if="scope.row.isParticipateRebate" >{{scope.row.remainDay}}</span>
+                                    <span v-if="!scope.row.isParticipateRebate" >-</span>
+                            </template>
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
@@ -326,10 +330,10 @@ export default {
             self.loading = false;
             // console.log(response.data)
             self.myData = response.data.rows;
-           
-            // console.log(response.data.rows);
-            // console.log(self.myData)
 
+            // console.log(response.data.rows[1].isParticipateRebate);
+            // console.log(self.myData)
+            
             for (var value of self.myData) {
                 if(!value.areaClass){
                     value.areaClass ==''  
@@ -959,7 +963,7 @@ export default {
                                  return v[j] =     ( v[j] == 0 ?  "达标" : ( v[j] == 1 ? "未达标" : "无上年度业绩")  )  ;
                             }
                             if(j === 'annualExtendPerformance'){
-                                 return v[j] =     ( v[j] == undefined ?  "0" : ( v[j])  )  ;
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
                             }
                             if(j === 'annualAreadyExtendPerformance'){
                                  return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
