@@ -70,13 +70,15 @@
                   
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">       
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass "  :value="( areaClassFlag && String(editForm.annualExtendPerformance)  ) || item.num"  @change="areaClassNum" >                              
+                    <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">  
+                             
+                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass " v-model="editForm.annualExtendPerformance"   >                              
                                 <template slot="prepend">店铺拓展：  
                                 </template>
                                     <template slot="append"> 家
                                 </template> 
-                            </el-input>
+                            </el-input> 
+                        
                     </el-form-item>
                 </el-col>
             </el-row>         
@@ -84,7 +86,7 @@
                 <!--第四行-->
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable>
+                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable >
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
@@ -267,7 +269,6 @@ export default {
                         const data = response.data.result
                     if(!self.flage){
                          self.editForm.areaClass = data.areaClass 
-                         console.log('yu'+ self.editForm.areaClass)
                     }
 
                     // console.log(self.editForm.annualExtendPerformance)
@@ -277,6 +278,11 @@ export default {
 
                     // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
                     // console.log(self.editForm.areaClass)
+                    for(let item of self.areaClassArray){
+                        if(item.value == self.editForm.areaClass){
+                            self.editForm.annualExtendPerformance=( self.areaClassFlag && String(self.editForm.annualExtendPerformance)  ) || item.num
+                        }
+                    }
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -640,8 +646,9 @@ export default {
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress);
-            
-            // console.log(String(data.annualExtendPerformance))
+            // this.editForm.annualExtendPerformance 
+            console.log(data.annualExtendPerformance)
+
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
             let datas;
@@ -939,7 +946,6 @@ export default {
             // this.editForm.extendSuperNo = '';
             // this.editForm.superAgentGradeId = '';
 
-            asd
             this.editForm.areaClass = '';
         },
 
@@ -950,7 +956,18 @@ export default {
         },
         areaClassNum(val){
             // console.log(val);
+            // console.log('ok');
+
             this.editForm.annualExtendPerformance = val;
+            // console.log(this.editForm.annualExtendPerformance)
+
+
+            // this.$nextTick(() => {
+            //     console.log(val);
+            //     this.editForm.annualExtendPerformance = val;
+            //     console.log(this.editForm.annualExtendPerformance)
+            // })
+            
         },
         //重置直营店铺不要的项
         deleteSelfSupport(){
@@ -983,6 +1000,7 @@ export default {
         }
     
     },
+  
     created() {
         // console.log(item.num)
         if (!this.checkSession()) return;
@@ -1021,7 +1039,7 @@ export default {
             // console.log(self.areaClassFlag);
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
-                console.log(self.editForm.areaClass) ;
+                // console.log(self.editForm.areaClass) ;
 
             }else{
                 self.editForm.areaClass = self.editForm.agentCityName        
@@ -1032,9 +1050,9 @@ export default {
             if(self.flage){
 
                 // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
-                console.log(self.editForm.annualExtendPerformance)
+                // console.log(self.editForm.annualExtendPerformance)
             }
-            console.log(Number(self.editForm.annualExtendPerformance))
+            // console.log(Number(self.editForm.annualExtendPerformance))
             // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
@@ -1047,6 +1065,7 @@ export default {
         });
    
     },
+ 
 }
 </script>
 <style lang='less' scoped>
