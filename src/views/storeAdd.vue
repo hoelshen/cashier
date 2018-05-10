@@ -917,6 +917,10 @@ export default {
         left:164px;
         z-index: 1000;
     }
+    .content_title h2 {
+    line-height: 38px;
+    margin-bottom: 30px;
+}
 
 }
 
