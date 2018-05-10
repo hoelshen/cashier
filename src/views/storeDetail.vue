@@ -160,16 +160,16 @@
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                         && detailForm.annualExtendPerformance &&
                                          (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
-                                     <div style="position:absolute;top: 10px;left: 142px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
+                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
                                 </div>
 
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "  style="left: 275px;position: absolute">
                                     {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 "   style="left: 313px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 "   style="left: 280px;position: absolute">
                                    0%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 313px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 280px;position: absolute">
                                    100%
                                 </span>
                            </div>
@@ -809,7 +809,7 @@ export default {
     border-radius:10px;
     position: absolute;
     top: 10px;
-    left: 125px;
+    left: 130px;
 }
 
 
@@ -829,7 +829,7 @@ export default {
         border-radius:10px;
         position: absolute;
         top: 0px;
-        left: 140px;
+        left: 10px;
 }
 
 .router-link-active { 
