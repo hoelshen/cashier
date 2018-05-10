@@ -1,7 +1,7 @@
 <template>
     <div id="detailStore">
         <el-row class="content_title_top">
-            <h2>基本信息({{detailForm.shopNo}})</h2>
+            <h2><span class="detail-title">基本信息</span><span class="detail-shopno"> ({{detailForm.shopNo}})</span></h2>
             <div class="content_closeBtn" @click="goBack">X</div>
         </el-row>
 
@@ -9,45 +9,45 @@
             <!--左边-->
             <div class="orderInfo">
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="2">
+                    <el-col :span="24"  style="padding-left:35px;">
                         店铺名称：{{ detailForm.shopName }}
                     </el-col>
                   
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="2">
+                    <el-col :span="24"  style="padding-left:35px;">
                         店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
                     </el-col>
                  
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="2">
-                        显示选项:   {{ detailForm.isShow === 1 ? '显示' : '不显示' }}到醉品线下M2O体验店
+                    <el-col :span="24" style="padding-left:35px;" >
+                        显示选项: <span style="padding-left:5px;">  {{ detailForm.isShow === 1 ? ' 显示' : ' 不显示' }}到醉品线下M2O体验店</span>
                     </el-col>
             
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="1">
+                    <el-col :span="24"  style="padding-left:20px;">
                         代理商姓名：{{ detailForm.name }}
                     </el-col>
                 
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="1">
-                        代理商手机：{{  detailForm.phone }}
+                    <el-col :span="24"  style="padding-left:20px;">
+                        代理商手机：{{ detailForm.phone }}
                     </el-col>
               
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" :push="1">
-                        代理商状态：{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
+                    <el-col :span="24" style="padding-left:20px;" >
+                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span>{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
                     </el-col>
              
                 </el-row>
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
 
-                    <el-col :span="24" :push="1" v-if="detailForm.shopType!='SELF_SUPPORT'">
+                    <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT'">
                         代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
                     </el-col>
                 </el-row>
@@ -64,14 +64,14 @@
 
 
                 <el-row :gutter="10" style="margin-top: 65px;">
-                    <el-col :span="24" :push="2">
+                    <el-col :span="24" style="padding-left:34px;">
                         收件地址：{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}
                     </el-col>
                 </el-row>
             </div>
             
             <!--中间-->
-            <div class="orderInfo" v-if="detailForm.isParticipateRebate==1">
+            <div class="orderInfo line-middle" v-if="detailForm.isParticipateRebate==1">
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
                         合同签约日期：{{ detailForm.signedTime}}
@@ -182,7 +182,7 @@
 
             </div>
             <!--右边-->
-            <div class="orderInfo "  v-if="detailForm.isParticipateRebate==1" style="float: right;">
+            <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
                 <div class="calendar">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
@@ -201,7 +201,7 @@
 
 
         <div class="content_title_bottom">
-              <h2 >账户信息</h2>    
+              <h2><span class="detail-title">账户信息</span></h2>    
         </div>
           
 
@@ -864,15 +864,48 @@ export default {
     margin-top: -10px;
     
 }
-#detailStore .info .orderInfo:nth-child(1){
-    border-right: none;
+.detail-title{
+    font-family: MicrosoftYaHei-Bold;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 38px;
+	letter-spacing: 0px;
+	color: #333333;
 }
-#detailStore .info .orderInfo:nth-child(2){
-    border-left: none;
-    border-right: none;
+.detail-shopno{
+    font-family: MicrosoftYaHei;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	line-height: 38px;
+	letter-spacing: 0px;
+	color: #999999;
 }
-#detailStore .info .orderInfo:nth-child(3){
-    border-left: none;
+#detailStore .count .orderCount{
+    border: none;
 }
-
+.icon-green{
+    width: 6px;
+	height: 6px;
+    background-color: #13c21c;
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 5px;
+}
+.line-middle{
+    position: relative;
+}
+.line-middle:before{
+    content:"";
+    width: 1px;
+	height: 331px;
+	background-image: linear-gradient(180deg, 
+		#fff 0%, 
+		#e6e6e6 83%, 
+        #fff 100%);
+        position: absolute;
+        left: 0;
+        top: 0;
+}
 </style>
