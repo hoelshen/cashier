@@ -2,7 +2,7 @@
     <div id="detailStore">
         <el-row class="content_title_top">
             <h2><span class="detail-title">基本信息</span><span class="detail-shopno"> ({{detailForm.shopNo}})</span></h2>
-            <div class="content_closeBtn" @click="goBack">X</div>
+            <div class="content_closeBtn" style="margin-top:10px;" @click="goBack">X</div>
         </el-row>
 
         <div class="info">
@@ -10,37 +10,37 @@
             <div class="orderInfo">
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:35px;">
-                        店铺名称：{{ detailForm.shopName }}
+                        店铺名称：<span class="font-color">{{ detailForm.shopName }}</span>
                     </el-col>
                   
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:35px;">
-                        店铺类型：{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}
+                        店铺类型：<span class="font-color">{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}</span>
                     </el-col>
                  
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" style="padding-left:35px;" >
-                        显示选项: <span style="padding-left:5px;">  {{ detailForm.isShow === 1 ? ' 显示' : ' 不显示' }}到醉品线下M2O体验店</span>
+                    <el-col :span="24" style="padding-left:36px;" >
+                        显示选项: <span class="font-color"  style="padding-left:5px;">  {{ detailForm.isShow === 1 ? ' 显示' : ' 不显示' }} <span  class="font-color">到醉品线下M2O体验店</span> </span>
                     </el-col>
             
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:20px;">
-                        代理商姓名：{{ detailForm.name }}
+                        代理商姓名：<span class="font-color">{{ detailForm.name }}</span>
                     </el-col>
                 
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:20px;">
-                        代理商手机：{{ detailForm.phone }}
+                        代理商手机：<span class="font-color">{{ detailForm.phone }}</span>
                     </el-col>
               
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:20px;" >
-                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span>{{ detailForm.state	=== 1 ? '禁用' : '启用' }}
+                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span><span v-if="detailForm.state==1"> <div class="icon-red"></div></span> <span class="font-color">{{ detailForm.state	=== 1 ? '禁用' : '启用' }}</span>
                     </el-col>
              
                 </el-row>
@@ -48,24 +48,27 @@
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
 
                     <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                        代理商等级：{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}
+                        代理商等级：<span class="font-color">{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}</span>
                     </el-col>
                 </el-row>
 
 
                 <el-row :gutter="10" v-if="detailForm.shopType =='AGENT'">
                     <el-col :span="24" v-if="detailForm.agentGradeId === 265">
-                        店铺代理区域：{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}
+                        店铺代理区域：<span class="font-color">{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}</span>
                     </el-col>
                     <el-col :span="24" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
-                        店铺所属区域：{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}
+                        店铺所属区域：<span class="font-color">{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}</span>
                     </el-col>
                 </el-row>
 
 
                 <el-row :gutter="10" style="margin-top: 65px;">
                     <el-col :span="24" style="padding-left:34px;">
-                        收件地址：{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}
+                        <div style="overflow: hidden;">
+                            <span style="display: inline-block;float: left;" >收件地址：</span><span class="font-color" style="display: inline-block;float: left;width:200px;" >{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}</span>
+                        </div>
+                        
                     </el-col>
                 </el-row>
             </div>
@@ -74,13 +77,13 @@
             <div class="orderInfo line-middle" v-if="detailForm.isParticipateRebate==1">
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
-                        合同签约日期：{{ detailForm.signedTime}}
+                        合同签约日期：<span class="font-color">{{ detailForm.signedTime}}</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
-                        <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
+                        <span class="font-color" style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10"> 
@@ -132,14 +135,14 @@
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
                         已完成店铺拓展：
-                        <span style="color:#20a0ff ">
+                        <span class="font-color" style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
                         </span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
-                        年度目标店铺拓展：{{ detailForm.annualExtendPerformance }}家
+                        年度目标店铺拓展：<span class="font-color" style="padding-left:5px;">{{ detailForm.annualExtendPerformance }}家</span>
                     </el-col>
                 </el-row>
           
@@ -208,7 +211,7 @@
         <div class="count">
             <div class="orderCount">
                 <el-row :gutter="5">
-                    <el-col :span="24" style="padding-left: 30px;">
+                    <el-col :span="24" style="padding-left:7px;">
                         预存款详情：
                         <span  class="router-link-active" >
                              <router-link  class="router-link-active" :to="{ name: 'prepaidManage', params: { shopNo:detailForm.shopNo,name:detailForm.name}}">点击查看</router-link>
@@ -217,25 +220,25 @@
                 </el-row>
                 <div v-if="detailForm.shopType!='SELF_SUPPORT'">
                     <el-row :gutter="5">
-                    <el-col :span="24"  style="padding-left: 30px;">
+                    <el-col :span="24"  style="padding-left: 7px;">
                         代理商关系：
                           <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>            
                     </el-col>
                 </el-row>    
                 <el-row :gutter="5"  >
-                    <el-col :span="24" >
+                    <el-col :span="24" style="margin-left:-23px;">
                        代理商年度业绩： 
                         <span  class="router-link-active" type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
                 </el-row>
                 </div>
                 <el-row :gutter="5"> 
-                    <el-col :span="24"  style="padding-left: 45px;">
+                    <el-col :span="24"  style="padding-left: 22px;">
                         运营人员：{{ detailForm.operator }}
                     </el-col>
                 </el-row>        
                 <el-row :gutter="5">
-                    <el-col :span="24"  style="padding-left: 45px;">
+                    <el-col :span="24"  style="padding-left: 22px;">
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>     
@@ -871,7 +874,8 @@ export default {
 	font-stretch: normal;
 	line-height: 38px;
 	letter-spacing: 0px;
-	color: #333333;
+    color: #333333;
+    font-weight: bold;
 }
 .detail-shopno{
     font-family: MicrosoftYaHei;
@@ -893,6 +897,14 @@ export default {
     display: inline-block;
     margin-right: 5px;
 }
+.icon-red{
+    width: 6px;
+	height: 6px;
+    background-color: #FA2424;
+    border-radius: 6px;
+    display: inline-block;
+    margin-right: 5px;
+}
 .line-middle{
     position: relative;
 }
@@ -907,5 +919,24 @@ export default {
         position: absolute;
         left: 0;
         top: 0;
+}
+.info{
+    font-family: MicrosoftYaHei;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 0px;
+	color: #666666;
+}
+.orderInfo{
+    font-family: MicrosoftYaHei;
+	font-size: 14px;
+	font-weight: normal;
+	font-stretch: normal;
+	letter-spacing: 0px;
+	color: #666666;
+}
+.font-color{
+    color: #333333;
 }
 </style>
