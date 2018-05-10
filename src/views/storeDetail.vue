@@ -225,11 +225,7 @@
                     </el-col>
                 </el-row>        
                 <el-row :gutter="5">
-<<<<<<< HEAD
-                    <el-col :span="24">  
-=======
                     <el-col :span="24"  style="padding-left: 45px;">
->>>>>>> 30f43ae4ad80d61fb2041d872a5002dc025d8f01
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>     
