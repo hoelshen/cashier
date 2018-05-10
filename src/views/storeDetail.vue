@@ -114,7 +114,8 @@
                                     {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
                                 </span>
                             </span>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">  
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;"> 
+                                {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
                             </span>
                         </div>
               
@@ -675,7 +676,9 @@ export default {
         self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
         self.detailForm.hasReachedPurchasePerformance   = Utils.addCommas( Number(self.detailForm.annualOwnAreadyPurchasePerformance)  + Number(self.detailForm.annualLowerAreadyPurchasePerformance)  )  
        
-       self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
+        self.detailForm.purchaseAchievementRate = (response.data.result.annualOwnAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance)/response.data.result.annualPurchasePerformance
+        console.log();
+        console.log(self.detailForm.purchaseAchievementRate)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
         //年度下级协助所完成的业绩率   ////年度下级协助所完成的业绩   //年度目标进货业绩
