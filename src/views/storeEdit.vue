@@ -1052,6 +1052,12 @@ export default {
                 // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
                 // console.log(self.editForm.annualExtendPerformance)
             }
+
+            if(self.editForm.shopType=='SELF_SUPPORT'){
+               
+                    self.areaClassFlag = false;
+                
+            }
             // console.log(Number(self.editForm.annualExtendPerformance))
             // console.log(self.editForm.superAgentGradeId)
             if(self.editForm.superAgentGradeId){
