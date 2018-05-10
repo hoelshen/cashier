@@ -94,7 +94,6 @@
                                 <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
                                 <!-- <span v-if="!myData[scope.$index].areaClass ">-</span> -->
                             </template>
-                     
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
                         </el-table-column>
@@ -118,14 +117,14 @@
                                      -
                                 </span>
                                 <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 ) && scope.row.annualPurchasePerformance)">
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                     {{  (scope.row.goalCompletion * 100).toFixed(2) }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
                                              (scope.row.annualPurchasePerformance!=0 || 
                                              scope.row.annualExtendPerformance!=0 )
                                             )"> 
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                     {{ (scope.row.goalCompletion * 100).toFixed(2) }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
