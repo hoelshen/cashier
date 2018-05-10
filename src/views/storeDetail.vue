@@ -166,7 +166,7 @@
 
             </div>
             <!--右边-->
-            <div class="orderInfo ">
+            <div class="orderInfo "  v-if="detailForm.isParticipateRebate==1">
                 <div class="calendar">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
