@@ -300,7 +300,7 @@
                           <el-table-column prop="finishRatio" label="年度业绩" width="177" align="right">
                             <template slot-scope="scope">
                                 <span>{{((scope.row.finishRatio*100).toFixed(2))}}{{'%'}}</span>
-                                <div v-if="(scope.row.finishRatio.toFixed(2))*10 >= 100" style="display:inline">
+                                <div v-if="(scope.row.finishRatio.toFixed(2))*100 >= 100" style="display:inline">
                                     <img src="../assets/images/Standard.png" alt="">
                                 </div> 
                                 <div v-else  style="display:inline">
