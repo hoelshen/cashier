@@ -72,7 +72,7 @@
 
 
 
-            <div class="orderInfo" v-if="detailForm.RuleId">
+            <div class="orderInfo orderInfo1" v-if="detailForm.RuleId">
                 <el-row :gutter="10">
                     <el-col :span="24">
                         合同签约日期：{{ detailForm.signedTime}}
@@ -81,7 +81,7 @@
                 <el-row :gutter="10">
                 
                     <el-col :span="24"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
-                        已达成进货业绩：
+                        已完成进货业绩：
                         <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance}}</span>
                        
                     </el-col>
@@ -113,10 +113,13 @@
                                
                           </div>                     
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style=" float:left;margin-left: 168px;">
-                               {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                              <span v-if="detailForm.purchaseAchievementRate">
+                                   {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                              </span>
+                              
                           </span>
                           <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 "  style=" float:left;margin-left: 168px;">
-                               0%
+                               
                           </span>
                     </el-col>
                 </el-row>
@@ -155,14 +158,16 @@
                     </el-col>
 
                 </el-row>
+
+                 <div class="calendar">
+                    <p class="calendarMessage_top">{{message}}</p><br>
+                    <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
+                    <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
+                </div>
             </div>
 
 
-            <div class="calendar">
-                 <p class="calendarMessage_top">{{message}}</p><br>
-                 <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
-                <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
-            </div>
+           
         </div>
 
 
@@ -523,7 +528,8 @@ export default {
                  data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchRegistTimeAnnual)
+                    'searchAnnualPerformanceOrderVo.annualCycle': Utils.formatYearDate(self.searchRegistTimeAnnual),
+                    'searchAnnualPerformanceOrderVo.shopNo':shopNo
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -818,5 +824,18 @@ export default {
 .search-time-wrap .picker-time{
     margin-top: -10px;
     
+}
+#detailStore .info .orderInfo:nth-child(1){
+    border-right: none;
+}
+#detailStore .info .orderInfo:nth-child(2){
+    border-left: none;
+}
+.orderInfo1 {
+    position: relative;
+}
+#detailStore .orderInfo1 .calendar {
+    top:100px;
+    right: 160px;
 }
 </style>
