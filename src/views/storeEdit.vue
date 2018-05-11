@@ -62,7 +62,7 @@
                   
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">  
+                    <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'">  
                              
                             <el-input  v-model="editForm.annualExtendPerformance"   >                              
                                 <template slot="prepend">店铺拓展：  
