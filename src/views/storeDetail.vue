@@ -173,9 +173,9 @@
                                     店铺拓展达成率：
                                     </span>
                                     <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                                && detailForm.annualExtendPerformance!=0 " 
+                                                " 
                                                 class="annualPurchasePerformanceCss" >
-                                        <div v-bind:style="SjhExtendPerformanceObject" style="border-bottom-left-radius: 10px; border-top-left-radius: 10px;"></div>
+                                        <div v-bind:style="SjhExtendPerformanceObject" style="border-radius: 10px; "></div>
                                     </div>                              
                                     <!--灰色-->
                                     <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance!=0  "  
@@ -776,6 +776,8 @@ export default {
         self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
         // console.log(self. SjhExtendPerformance )
        //  2.未完成
+
+
         self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         // console.log(self.SjhExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
