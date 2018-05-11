@@ -699,7 +699,7 @@ export default {
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
-                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
+                        'shop.annualPurchasePerformance': String(data.annualPurchasePerformance) || '',
                         'shop.annualExtendPerformance': '' , 
                         'shop.areaClass':data.areaClass  || '',
                         'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
@@ -726,7 +726,7 @@ export default {
                         'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
 
 
-                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
+                        'shop.annualPurchasePerformance': String(data.annualPurchasePerformance) || '',
                         'shop.annualExtendPerformance': data.annualExtendPerformance  || '', 
                         'shop.areaClass':data.areaClass  || '',
 
@@ -778,7 +778,7 @@ export default {
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
 
-                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
+                        'shop.annualPurchasePerformance': String(data.annualPurchasePerformance) || '',
                         'shop.annualExtendPerformance': '', 
                         'shop.areaClass':data.areaClass  || '',
                         'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
