@@ -731,7 +731,7 @@ export default {
         // console.log(self.detailForm.annualPerformanceRatio)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
-        console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
         // console.log(response.data.result.annualOwnAreadyPurchasePerformance)
         // console.log(response.data.result.finishPerformanceSum)
 
@@ -753,13 +753,13 @@ export default {
         self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
         // console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
+        // console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
         // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
-        console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
+        // console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
         //未完成的长度
         // self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
         // self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
@@ -776,18 +776,9 @@ export default {
         self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
         // console.log(self. SjhExtendPerformance )
        //  2.未完成
-        // self. SjhNotExtendPerformance =  response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) 
-            // console.log(self. SjhNotExtendPerformance)
-        
         self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         // console.log(self.SjhExtendPerformanceObject.width)
-        // self.SjhNotExtendPerformanceObject.width = ( response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) ) *144 + 'px'
-        // console.log(self.SjhNotExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
-        
-        // self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor4
-
-
         self.detailForm.endTime = response.data.result.remainDay;
       })
       .catch(function(err) {
