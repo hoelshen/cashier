@@ -118,20 +118,21 @@
                                 1.目标不为零得情况 
                              -->
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                        && detailForm.annualPurchasePerformance != 0  
-                                        " 
+                                        && detailForm.annualPurchasePerformance != 0" 
                                         class="annualPurchasePerformanceCss" > 
-                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualNotAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
+                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" 
+                                    style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
+                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" 
+                                    style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
+                                    <div v-bind:style="annualNotAreadyPurchasePerformanceRateObject" 
+                                    style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                             </div> 
                              <!--
                                 1.目标为零得情况
-
                              -->
                             <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                         && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width:144px;height:10px"></div>
+                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width:144px;height:10px;"></div>
                             </div> 
                             
                             <!--比率 -->
@@ -139,7 +140,7 @@
                                         && detailForm.annualPurchasePerformance != 0 
                                         && ( (detailForm.finishPerformanceSum!=1))"  
                                         style="position: absolute;left: 275px;">
-                                <span v-if="detailForm.annualPerformanceRatio">
+                                <span v-if="detailForm.annualPerformanceRatio!=undefined">
                                     {{Number(detailForm.annualPerformanceRatio*100).toFixed(2)}}%
                                 </span>
                                 <span v-if="detailForm.annualPerformanceRatio==0">
@@ -749,13 +750,14 @@ export default {
       self.detailForm.activeColor4 = 'e3e5e6';
 
 
-        //完成
-        response.data.result.annualOwnAreadyPurchasePerformance 
+      
+        
+       
+        // console.log( self.detailForm.annualPurchasePerformance)
         //未完成
         
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
-
-        // console.log(self.detailForm.annualPerformanceRatio)
+        console.log(self.detailForm.annualPerformanceRatio)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
 
@@ -808,9 +810,9 @@ export default {
         // console.log(self.SjhExtendPerformanceObject.width)
         self.SjhNotExtendPerformanceObject.width = ( response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) ) *144 + 'px'
         // console.log(self.SjhNotExtendPerformanceObject.width)
-        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor1
+        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
         
-        self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
+        self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor4
 
 
         self.detailForm.endTime = response.data.result.remainDay;
