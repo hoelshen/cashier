@@ -726,8 +726,8 @@ export default {
                         'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
 
 
-                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
-                        'shop.annualExtendPerformance': String(data.annualExtendPerformance) , 
+                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
+                        'shop.annualExtendPerformance': data.annualExtendPerformance  || '', 
                         'shop.areaClass':data.areaClass  || '',
 
                         'shop.address': data.address,
