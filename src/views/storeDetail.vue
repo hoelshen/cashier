@@ -452,13 +452,16 @@ export default {
           height:10 +'px',
           width:'',
           backgroundColor:'',
-          borderRradiusRight:'',
+          borderBottomRightRadius:'',
+          borderTopRightRadius:'',
       },
       annualLowerAreadyPurchasePerformanceRateObject:{
           height:10  +'px',
           width:'',
           backgroundColor:'',
-          borderRradiusLeft:'',
+          borderBottomLeftRadius:'',
+          borderTopLeftRadius:'',
+          
       },
 
       SjhExtendPerformanceObject:{
@@ -760,12 +763,16 @@ export default {
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
         
         //上级为零,下级不为零    
-        if(self.annualOwnAreadyPurchasePerformanceRateObject.width ==0){
-            self.annualLowerAreadyPurchasePerformanceRate.borderRradiusLeft =  10 +'px';
+        if(self.annualOwnAreadyPurchasePerformanceRateObject.width =='0px'){
+            self.annualLowerAreadyPurchasePerformanceRateObject.borderBottomLeftRadius =  10 + 'px';
+            self.annualLowerAreadyPurchasePerformanceRateObject.borderTopLeftRadius =  10 + 'px';
+
         }
         //下级为零，上级不为零        
-        if(self.annualLowerAreadyPurchasePerformanceRateObject.width ==0){
-          self.annualOwnAreadyPurchasePerformanceRateObject.borderRradiusRright =  10 +'px';
+        if(self.annualLowerAreadyPurchasePerformanceRateObject.width =='0px'){
+          self.annualOwnAreadyPurchasePerformanceRateObject.borderBottomRightRadius = 10 + 'px';
+          self.annualOwnAreadyPurchasePerformanceRateObject.borderTopRightRadius =  10 +'px';
+          
             
         }
 
