@@ -163,7 +163,7 @@ export function export_json_to_excel(th, jsonData, filterVal, defaultTitle) {
         //     list[i].annualPerformanceOrderDetailVos[j].ratio =  list[i].annualPerformanceOrderDetailVos[j].ratio+"%"
         // }
         data.unshift(th);
-        var ws_name = list[i].shopNo + "_" + list[i].annualCycle + "("+i+ ")"+ "_"+ "年度业绩明细";
+        var ws_name = list[i].shopNo + "_" + list[i].annualCycle + "_"+ "年度业绩明细";
         var ws = sheet_from_array_of_arrays(data);
 
         /* add worksheet to workbook */

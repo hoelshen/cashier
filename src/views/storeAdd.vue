@@ -16,7 +16,7 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="店铺类型：">
-                        <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
+                        <el-radio v-model="addForm.shopType" label="AGENT" @click.native="addZuipin">代理商</el-radio>
                         <el-radio v-model="addForm.shopType" label="SELF_SUPPORT"  @click.native="deleteSelfSupport">直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
@@ -35,7 +35,7 @@
                     <!--第四行-->
             <el-col :span="8">
                 <el-form-item label="代理商等级：" v-if="addForm.shopType!='SELF_SUPPORT'">
-                    <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"   clearable>
+                    <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"    clearable>
                         <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                     </el-select>
                 </el-form-item>
@@ -55,17 +55,25 @@
                   
                 </el-col>
                 <el-col :span="6">
-                      <el-form-item  v-if="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
-                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  :value="(areaClassFlag && addForm.annualExtendPerformance) || item.num"  @change="areaClassNum" > 
-                            <template slot="prepend">店铺拓展：
-                                
+                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
+                        <el-input  v-model="addForm.annualExtendPerformance"   > 
+                            <template slot="prepend">店铺拓展：  
                             </template>
                                 <template slot="append"> 家
                             </template>      
-
                         </el-input>
                     </el-form-item>
                 </el-col>
+                <!-- <el-col :span="6">
+                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
+                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
+                            <template slot="prepend">店铺拓展：  
+                            </template>
+                                <template slot="append"> 家
+                            </template>      
+                        </el-input>
+                    </el-form-item>
+                </el-col> -->
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -131,7 +139,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN'">
+                <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
                     
@@ -140,7 +148,7 @@
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
-                <el-col :span="4"  v-if="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN'">
+                <el-col :span="4"  v-if="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
@@ -165,7 +173,7 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <el-row style="margin-top:20px;">
+            <el-row style="margin-top:20px;margin-left:120px;">
                 <el-button type="primary" @click="addAgent" class="button-save">保存</el-button>
                 <el-button @click="goBack" class="button-cancel">取消</el-button>
             </el-row>
@@ -273,6 +281,13 @@ export default {
                 if (response.data.success == 1) {
                     self.addForm.areaClass = response.data.result.areaClass
                     self.addForm.annualExtendPerformance =   response.data.result.shopNum
+
+                    for(let item of self.areaClassArray){
+                        if(item.value == self.addForm.areaClass){
+                            self.addForm.annualExtendPerformance=( self.areaClassFlag && String(self.addForm.annualExtendPerformance)  ) || item.num
+                        }
+                    }
+                    
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -528,7 +543,7 @@ export default {
                     'shop.name': data.name,
                     'shop.phone': data.phone,
                     'shop.signedTime': Utils.formatDayDate(data.signedTime),
-                    'shop.agentGradeId': data.agentGradeId,
+                    'shop.agentGradeId': data.extendSuperType == 265 ?  '' : ( data.agentGradeId)  ,
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
                     'shop.countyCode': addAddress.areaCode,
@@ -545,7 +560,7 @@ export default {
                     'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                     'shop.annualExtendPerformance':data.annualExtendPerformance || '', 
                     
-                    'shop.extendSuperNo':data.extendSuperNo || '',
+                    'shop.extendSuperNo': data.extendSuperType == 265 ?  '' : (data.extendSuperNo || '')  ,
                     'shop.areaClass':(data.shopType ==='SELF_SUPPORT') ? '' : (data.areaClass || '') ,
 
                     'shop.belongProvince':addBelongAddress  ? addBelongAddress.provinceCode : "",
@@ -605,11 +620,6 @@ export default {
             }).catch(function (err) {
                 self.loading = false;
             });
-        },
-        //类别店铺数
-        areaClassNum(val){
-            console.log(val);
-            this.editForm.annualExtendPerformance = val;
         },
         //重置新增表单
         resetAddForm() {
@@ -828,7 +838,8 @@ export default {
         deleteSalesMan(){
             this.addForm.salesMan='';    
         },
-        deleteExtendSuperType(){
+        deleteExtendSuperType(val){
+            
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
             
@@ -844,7 +855,9 @@ export default {
             this.addForm.superNo = '';
             this.addForm.areaClass  = '';
         },
-
+        addZuipin(){
+            this.addForm.extendSuperType = 'ZUIPIN';
+        }
     },
     created(){
         const self = this;
@@ -866,6 +879,15 @@ export default {
         }).catch(function (err) {
             console.log(err);
         });
+    },
+    watch:{
+        'addForm.areaClass'(){
+            for(let item of this.areaClassArray){
+                if(item.value == this.addForm.areaClass){
+                    this.addForm.annualExtendPerformance=( this.areaClassFlag && String(this.addForm.annualExtendPerformance)  ) || item.num
+                }
+            }
+        }
     }
 }
 </script>
@@ -904,6 +926,13 @@ export default {
         left:164px;
         z-index: 1000;
     }
+    .content_title h2 {
+    line-height: 38px;
+    margin-bottom: 30px;
+}
+.button-cancel{
+    color: #167edf;
+}
 
 }
 

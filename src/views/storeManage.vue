@@ -66,8 +66,8 @@
                     <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
-                        <el-table-column  type="selection" width="50" :reserve-selection="true">
-                        </el-table-column>
+                        <!-- <el-table-column  type="selection" width="50" :reserve-selection="true">
+                        </el-table-column> -->
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
@@ -94,7 +94,6 @@
                                 <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
                                 <!-- <span v-if="!myData[scope.$index].areaClass ">-</span> -->
                             </template>
-                     
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
                         </el-table-column>
@@ -110,28 +109,33 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="remainDay" label="剩余天数" width="150" sortable="custom" >
+                        <el-table-column   prop="remainDay" label="剩余天数" width="150" sortable="custom" >
+                            <template slot-scope="scope">
+                                    <span v-if="scope.row.isParticipateRebate" >{{scope.row.remainDay}}</span>
+                                    <span v-if="!scope.row.isParticipateRebate" >-</span>
+                            </template>
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
                             <template slot-scope="scope" >
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==266 && scope.row.annualPurchasePerformance!=0)">
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 )  && !scope.row.annualPurchasePerformance)">
+                                     -
                                 </span>
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( scope.row.agentGradeId==31 && scope.row.annualPurchasePerformance!=0)">
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 ) && scope.row.annualPurchasePerformance)">
+                                     {{  (scope.row.goalCompletion * 100).toFixed(2) }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance!=0 || 
-                                             scope.row.annualExtendPerformance!=0 
+                                             (scope.row.annualPurchasePerformance!=0 || 
+                                             scope.row.annualExtendPerformance!=0 )
                                             )"> 
-                                     {{ scope.row.goalCompletion * 100 }}%
+                                     {{ (scope.row.goalCompletion * 100).toFixed(2) }}%
                                 </span>
                                 <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
                                             (scope.row.agentGradeId ==265 &&
-                                             scope.row.annualPurchasePerformance==0 && 
-                                             scope.row.annualExtendPerformance==0 
-                                            )">-</span>
+                                             (scope.row.annualPurchasePerformance==0 && 
+                                             scope.row.annualExtendPerformance==0 )
+                                            )">-
+                                </span>
                                 <span v-if="scope.row.shopType!='AGENT'">-</span>
                             </template>
                         </el-table-column>
@@ -326,10 +330,10 @@ export default {
             self.loading = false;
             // console.log(response.data)
             self.myData = response.data.rows;
-           
-            // console.log(response.data.rows);
-            // console.log(self.myData)
 
+            // console.log(response.data.rows[1].isParticipateRebate);
+            // console.log(self.myData)
+            
             for (var value of self.myData) {
                 if(!value.areaClass){
                     value.areaClass ==''  
@@ -510,7 +514,12 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.myData = response.data.rows;
-                console.log(self.myData)
+                // console.log(self.myData)
+
+                console.log(self.myData.annualPurchasePerformance)
+                if(self.myData.annualPurchasePerformance){
+                    console.log('1')
+                }
                 self.totalSize = response.data.total;
                 // console.log(response);
             }).catch(function (err) {
@@ -946,11 +955,38 @@ export default {
                 return jsonData.map(v => {
             // 	   console.log(v)
                     return filterVal.map(j => {
-                //       console.log(j,v[j])
-                        return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+                      console.log(j,v[j])
+                            if(j === "agentGradeId" ){
+                                 return v[j] =     ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  )  ;
+                            }
+                            if(j === 'remark'){
+                                 return v[j] =     ( v[j] == 0 ?  "达标" : ( v[j] == 1 ? "未达标" : "无上年度业绩")  )  ;
+                            }
+                            if(j === 'annualExtendPerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualAreadyExtendPerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualExtendPerformanceSchedule'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualPurchasePerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'annualAreadyPurchasePerformance'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+                            if(j === 'aannualPurchasePerformanceSchedule'){
+                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
+                            }
+
+                           return  v[j]  = v[j];
                     // }
                     })			
                 })	
+
+                
         },
         // 导出明细
 		outputExcel() {
@@ -1006,7 +1042,7 @@ export default {
                             }else{
                                     self.tableData =  (response.data.total == this.myData.length)  ? response.data.rows : this.myData ;
                             }
-                            console.log(response.data.total)
+                            // console.log(self.tableData)
                             // console.log( (response.data.total == this.myData.length)  )
                                
 
@@ -1019,7 +1055,7 @@ export default {
                                                                  '剩余时间','备注', ]
                                                 const filterVal =['shopNo', 'agentGradeId', 'shopName', 'annualExtendPerformance', 
                                                                     'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'annualPurchasePerformance', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
-                                                                    'ReaminTime', 'remark',]
+                                                                    'remainDay', 'remark',]
                                                 const list = self.tableData;
                                                 const data = this.formatJson(filterVal, list);
                                                 export_json_to_excel(tHeader, data, '代理商' + (Utils.formatYearDate(self.tableData[0].signTime) ? Utils.formatYearDate(self.tableData[0].signTime)  + '' : '') +'年度目标完成进度');

@@ -114,7 +114,7 @@ let Utils = {
             // 小数部分（传的值有小数情况之下） 
             var iFlootPart = aIntNum.length > 1 ? '.' + aIntNum[1] : ''; var rgx = /(\d+)(\d{3})/; 
             // 如果整数部分位数大于或等于5 
-            if (iIntPart.length >= 5) { 
+            if (iIntPart.length >= 4) { 
             // 根据正则要求，将整数部分用逗号每三位分隔 
                 while (rgx.test(iIntPart)) { 
                     iIntPart = iIntPart.replace(rgx, '$1' + ',' + '$2'); 
