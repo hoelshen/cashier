@@ -16,13 +16,13 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:35px;">
-                        店铺类型：<span class="font-color">{{ detailForm.shopType === "AGENT" ?  "代理商"  : "直营"}}</span>
+                        店铺类型：<span class="font-color">{{ detailForm.shopType == "AGENT" ?  "代理商"  : "直营"}}</span>
                     </el-col>
                  
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:36px;" >
-                        显示选项: <span class="font-color"  style="padding-left:5px;">  {{ detailForm.isShow === 1 ? ' 显示' : ' 不显示' }} <span  class="font-color">到醉品线下M2O体验店</span> </span>
+                        显示选项： <span class="font-color"  style="padding-left:5px;">  {{ detailForm.isShow == 1 ? ' 显示' : ' 不显示' }} <span  class="font-color">到醉品线下M2O体验店</span> </span>
                     </el-col>
             
                 </el-row>
@@ -40,7 +40,7 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:20px;" >
-                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span><span v-if="detailForm.state==1"> <div class="icon-red"></div></span> <span class="font-color">{{ detailForm.state	=== 1 ? '禁用' : '启用' }}</span>
+                        代理商状态：<span v-if="detailForm.state!=1"> <div class="icon-green"></div></span><span v-if="detailForm.state==1"> <div class="icon-red"></div></span> <span class="font-color">{{ detailForm.state	== 1 ? '禁用' : '启用' }}</span>
                     </el-col>
              
                 </el-row>
@@ -48,16 +48,16 @@
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
 
                     <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                        代理商等级：<span class="font-color">{{   detailForm.agentGradeId === 265 ? "区域代理" :  detailForm.agentGradeId === 266   ? '微店代理' : '单店代理'     }}</span>
+                        代理商等级：<span class="font-color">{{   detailForm.agentGradeId == 265 ? "区域代理" :  detailForm.agentGradeId == 266   ? '微店代理' : '单店代理'     }}</span>
                     </el-col>
                 </el-row>
 
 
                 <el-row :gutter="10" v-if="detailForm.shopType =='AGENT'">
-                    <el-col :span="24" v-if="detailForm.agentGradeId === 265">
+                    <el-col :span="24" v-if="detailForm.agentGradeId == 265">
                         店铺代理区域：<span class="font-color">{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}</span>
                     </el-col>
-                    <el-col :span="24" v-if="detailForm.agentGradeId === 266 || detailForm.agentGradeId ===31">
+                    <el-col :span="24" v-if="detailForm.agentGradeId == 266 || detailForm.agentGradeId ==31">
                         店铺所属区域：<span class="font-color">{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}</span>
                     </el-col>
                 </el-row>
@@ -83,14 +83,14 @@
                 <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
-                        <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance.replace(',','')}}</span>
+                        <span style="color:#ff6600"> ￥{{detailForm.finishPerformanceSum}}</span>
                     </el-col>
                 </el-row>
                 <el-row :gutter="10"> 
                     <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'" style="position:relative">
                         <div>
                             <span>年度目标进货业绩：</span>
-                            <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
+                            <span v-if=" detailForm.annualPurchasePerformance!=0 " style="color:#ff6600">
                                 ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
                             </span>
                             <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
@@ -105,32 +105,50 @@
                             <span  style="float:left" >
                                 进货业绩达成率：
                             </span> 
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && !(detailForm.hasReachedPurchasePerformance.replace(',','')>Number(detailForm.annualPurchasePerformance) )" class="annualPurchasePerformanceCss" > 
+                            <!--颜色
+                                //橙色  
+                                'ff6600';  
+                                //蓝色 
+                                '20a0ff'; 
+                                //淡橙色
+                                 'ffd199';
+                            3.
+                             -->
+                            <!--
+                                1.目标不为零得情况 
+                             -->
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                        && detailForm.annualPurchasePerformance != 0  
+                                        " 
+                                        class="annualPurchasePerformanceCss" > 
                                     <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
                                     <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
                             </div> 
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
+                             <!--
+                                1.目标为零得情况
+
+                             -->
+                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                        && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
                                     <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width:144px;height:10px"></div>
                             </div> 
-
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 144px;height: 10px;"></div>
-                            </div>
-
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.annualOwnAreadyPurchasePerformance > detailForm.annualPurchasePerformance)" class="BeyondAnnualPurchasePerformanceCss" >
-                                    <div  v-bind:style="BeyondAnnualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
-                                    <div  v-bind:style="BeyondAnnualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
-                            </div>
+                            
                             <!--比率 -->
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="position: absolute;left: 275px;">
-                                <span v-if="detailForm.purchaseAchievementRate">
-                                    {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                            <span  v-if="detailForm.shopType!='SELF_SUPPORT'
+                                        && detailForm.annualPurchasePerformance != 0 
+                                        && ( (detailForm.finishPerformanceSum!=1))"  
+                                        style="position: absolute;left: 275px;">
+                                <span v-if="detailForm.annualPerformanceRatio">
+                                    {{Number(detailForm.annualPerformanceRatio*100).toFixed(2)}}%
                                 </span>
-                                <span v-if="detailForm.purchaseAchievementRate==0">
-                                   0%
+                                <span v-if="detailForm.annualPerformanceRatio==0">
+                                   
                                 </span>
                             </span>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)"  style=" position: absolute;left: 275px;"> 
+                             <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                    && detailForm.annualPurchasePerformance != 0 
+                                    && detailForm.annualPerformanceRatio>1"  
+                                    style=" position: absolute;left: 275px;"> 
                                 100%
                             </span>
                         </div>
@@ -138,7 +156,7 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
+                    <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId == 265">
                         已完成店铺拓展：
                         <span class="font-color" style="color:#20a0ff ">
                             {{ detailForm.annualAreadyExtendPerformance}}家
@@ -146,39 +164,53 @@
                     </el-col>
                 </el-row>
                 <el-row :gutter="10">
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
+                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId == 265">
                         年度目标店铺拓展：<span class="font-color" style="padding-left:5px;">{{ detailForm.annualExtendPerformance }}家</span>
                     </el-col>
                 </el-row>
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                    <el-col :span="24" style="padding-left:20px;position:relative" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  >
+                    <el-col :span="24" style="padding-left:20px;position:relative" v-if="detailForm.shopType!='SELF_SUPPORT' 
+                            && (detailForm.agentGradeId == 265)"  >
                            <div >
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                 店铺拓展达成率：
-                                </span> 
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" style="position:absolute;top:10px;left:123px; "  class="annualExtendPerformanceCss" >
-                                    <div style="position:absolute;top: 0;left:0; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
-                                </div>
+                                </span>
 
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) 
-                                            && detailForm.annualExtendPerformance "  >
-                                     <div style="position:absolute;top: 0;left: 0;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6" ></div>
-                                </div>
+                                            && detailForm.annualExtendPerformance!=0 "  >
+
+                                       <div v-bind:style="SjhExtendPerformanceObject" style="position:relative;border-radius: 10px;float: left;"></div>
+                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-radius: 10px;float: left;"></div>      
+                                     
+                                </div>                              
+                                <!--灰色-->
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                            && detailForm.annualExtendPerformance==0 "  >
+                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff  " ></div>
+                                </div>
+                                <!--蓝色-->
+                                <!-- <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                         && detailForm.annualExtendPerformance!=undefined  &&
-                                         (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
-                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
-                                </div>
+                                        annualExtendPerformance==0 " >
+                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6" ></div>
+                                </div> -->
 
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "  style="left: 275px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance 
+                                            && !(detailForm.annualAreadyExtendPerformance>=detailForm.annualExtendPerformance) "  
+                                            style="left: 275px;position: absolute">
                                     {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)"   style="left: 280px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                        && detailForm.annualExtendPerformance==0 &&
+                                         !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)"   
+                                         style="left: 280px;position: absolute">
                                    0%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 280px;position: absolute">
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                        && detailForm.annualExtendPerformance!=undefined 
+                                        && (detailForm.annualAreadyExtendPerformance>=detailForm.annualExtendPerformance) "  
+                                         style="left: 280px;position: absolute">
                                    100%
                                 </span>
                            </div>
@@ -203,10 +235,6 @@
 
            
         </div>
-
-
-
-
 
 
         <div class="content_title_bottom">
@@ -441,8 +469,8 @@ export default {
         annualAreadyExtendPerformance:'',   //已达成店铺拓展
         storeExpansionRate:'',     //年度店铺扩展达成率  
         
-        purchaseAchievementRate:'',  //进货业绩达成率
-        hasReachedPurchasePerformance:'' ,   // 已达成进货业绩：
+        annualPerformanceRatio:'',  //进货业绩达成率
+        finishPerformanceSum:'' ,   // 已达成进货业绩：
         annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
         annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
         annualPurchasePerformance:'' ,  //年度目标进货业绩        
@@ -464,25 +492,22 @@ export default {
           width:'',
           backgroundColor:'',
       },
-      BeyondAnnualOwnAreadyPurchasePerformanceRateObject:{
-          height:10 +'px',
-          width:'',
-          backgroundColor:'',
-      },
-      BeyondAnnualLowerAreadyPurchasePerformanceRateObject:{
-          height:10 +'px',
-          width:'',
-          backgroundColor:'',
-      },
       annualLowerAreadyPurchasePerformanceRateObject:{
           height:10  +'px',
           width:'',
           backgroundColor:'',
       },
-      annualExtendPerformanceObject:{
+      SjhExtendPerformanceObject:{
           height:10  +'px',
           width:'',
-          backgroundColor:''
+          backgroundColor:'',
+          top: 10 +'px',
+      },
+      SjhNotExtendPerformanceObject:{
+          height:10  +'px',
+          width:'',
+          backgroundColor:'',
+           top: 10 +'px',
       },
       agencyRelationsanceDialogVisible:false,
       annualAgentsDialogVisible:false,
@@ -540,7 +565,7 @@ export default {
                 }
           }).then(function (response) {
                self.loading = false;
-             if (response.data.success === 1) {
+             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
                     // console.log(response.data.result)
                     self.totalSizeAgency = response.data.result.total;
@@ -588,7 +613,7 @@ export default {
             }).then(function (response) {
                 // console.log(response)
                 self.loading = false;
-             if (response.data.success === 1) {
+             if (response.data.success == 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
                     // console.log(response.data.result)
@@ -713,48 +738,66 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = response.data.result;
-        console.log(response.data.result.annualOwnAreadyPurchasePerformance);    
-        self.detailForm.annualOwnAreadyPurchasePerformance =  Utils.addCommas(response.data.result.annualOwnAreadyPurchasePerformance);
-        self.detailForm.hasReachedPurchasePerformance   = Utils.addCommas( (Number((response.data.result.annualOwnAreadyPurchasePerformance).replace(',',''))  + Number(response.data.result.annualLowerAreadyPurchasePerformance)).toFixed(2) )   
-        // console.log(String(self.detailForm.hasReachedPurchasePerformance)  );
-        console.log(self.detailForm.annualOwnAreadyPurchasePerformance.replace(',',''));
-        console.log(((response.data.result.annualOwnAreadyPurchasePerformance) ))
-        console.log((response.data.result.annualLowerAreadyPurchasePerformance))
-        // console.log(self.detailForm.hasReachedPurchasePerformance  )
-        // console.log(Number(response.data.result.annualOwnAreadyPurchasePerformance));
-        self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
 
-        // console.log(String(self.detailForm.annualPurchasePerformance)  );
-        //自己
-        // console.log(self.detailForm.annualAreadyExtendPerformance);
 
-        // console.log(self.detailForm.annualAreadyExtendPerformance>self.detailForm.annualExtendPerformance)
+        self.detailForm.finishPerformanceSum =  response.data.result.finishPerformanceSum;  
+
+
+        // self.detailForm.finishPerformanceSum = response.data.result
+        // //自己完成
+        // console.log('自己业绩'+(response.data.result.annualOwnAreadyPurchasePerformance))
+        // //下级完成
+        // console.log('下级业绩'+(response.data.result.annualLowerAreadyPurchasePerformance))
+        // //已完成率
+        // console.log('已完成率'+response.data.result.finishPerformanceSum  )       
+        // self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
+        // //业绩
+        //   1.自己
+        //   2.下级
+        //   2.未完成
+        // annualExtendPerformance:"",  //年度目标店铺拓展
+        // annualAreadyExtendPerformance:'',   //已达成店铺拓展
+        // storeExpansionRate:'',     //年度店铺扩展达成率  
         
-        self.detailForm.purchaseAchievementRate = (self.detailForm.hasReachedPurchasePerformance).replace(',','')/response.data.result.annualPurchasePerformance
+        // annualPerformanceRatio:'',  //进货业绩达成率
+        // finishPerformanceSum:'' ,   // 已达成进货业绩：
+        // annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
+        // annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
+        // annualPurchasePerformance:'' ,  //年度目标进货业绩        
+        // annualOwnAreadyPurchasePerformanceRate:'',   //年度自己所完成的业绩率
+        // annualLowerAreadyPurchasePerformanceRate:'',  //年度下级协助所完成的业绩率
+        // notFinishPerformance	Double	未完成进货业绩
+        // notFinishShopNums	int	未完成店铺数
+    
+        
+        //完成
+        response.data.result.annualOwnAreadyPurchasePerformance 
+        //未完成
+        
+        self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
 
-        // console.log(self.detailForm.purchaseAchievementRate)
+        // console.log(self.detailForm.annualPerformanceRatio)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
-        self.detailForm.annualOwnAreadyPurchasePerformanceRate  = response.data.result.annualOwnAreadyPurchasePerformance / response.data.result.annualPurchasePerformance
-        //年度下级协助所完成的业绩率   ////年度下级协助所完成的业绩   //年度目标进货业绩
-        self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  /  response.data.result.annualPurchasePerformance
-        
-        //年度超出自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
-        self.detailForm.BeyondAnnualOwnAreadyPurchasePerformanceRate  = (response.data.result.annualOwnAreadyPurchasePerformance ) /   (response.data.result.annualLowerAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance  )
-        // self.detailForm.BeyondAnnualOwnAreadyPurchasePerformanceRate  = 0.5714 
-        
-        //年度超出下级协助所完成的业绩率   ////年度下级协助所完成的业绩   //年度目标进货业绩
-        self.detailForm.BeyondAnnualLowerAreadyPurchasePerformanceRate = (response.data.result.annualLowerAreadyPurchasePerformance) /  (response.data.result.annualLowerAreadyPurchasePerformance+response.data.result.annualLowerAreadyPurchasePerformance  )
-        // self.detailForm.BeyondAnnualLowerAreadyPurchasePerformanceRate = 0.428
-        
+        self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
 
         
+        //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
+        self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
         //年度店铺扩展达成率    //已达成店铺拓展   //年度目标店铺拓展
         self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
-        // console.log(self.detailForm.shopType)
-        // console.log(self.detailForm.shopType!='SELF_SUPPORT');
-        // console.log(self.detailForm.agentGradeId)
         
-        // console.log( (self.detailForm.annualOwnAreadyPurchasePerformanceRate *144).toFixed(2) + 'px')
+        //自己的长度
+        self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate  *144 + 'px'
+        self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
+        console.log( self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        
+        //年度目标
+        console.log(self.detailForm.annualPurchasePerformance)
+        //下级的长度
+
+        self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
+        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor2
+        // console.log( self.detailForm.annualLowerAreadyPurchasePerformanceRate)
        //橙色 
        self.detailForm.activeColor1 = 'ff6600';
        //蓝色
@@ -763,38 +806,30 @@ export default {
        self.detailForm.activeColor3 = 'ffd199';
 
 
-       self.annualOwnAreadyPurchasePerformanceRateObject.width  =   self.detailForm.annualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
-       
-       //年度下级协助所完成的业绩率 
-       self.annualLowerAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate*144 + 'px'
-
-       self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
-       //    console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
-        
-       self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
-
-       self.BeyondAnnualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.BeyondAnnualOwnAreadyPurchasePerformanceRate.toFixed(2) *144 + 'px'
-
-       self.BeyondAnnualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.BeyondAnnualLowerAreadyPurchasePerformanceRate*144 + 'px'
-
-       self.BeyondAnnualOwnAreadyPurchasePerformanceRateObject.backgroundColor = '#'+ self.detailForm.activeColor1
-
-       self.BeyondAnnualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
-
-
-        // console.log(response.data.result.annualPurchasePerformance)
-
-        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        // console.log(self.detailForm.shopType)
-        // console.log(self.detailForm.shopType!='SELF_SUPPORT' && self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-
        //年度目标店铺拓展
-       self.annualExtendPerformanceObject.width = self.detailForm.storeExpansionRate *144 +'px' ,
+   
+       
 
-       self.annualExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
 
-       self.detailForm.endTime = response.data.result.remainDay;
+       //店铺长度
+       //  1.已完成
+        // console.log(response.data.result.annualAreadyExtendPerformance)
+        self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
+        // console.log(self. SjhExtendPerformance )
+       //  2.未完成
+        self. SjhNotExtendPerformance =  response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) 
+            // console.log(self. SjhNotExtendPerformance)
+        
+        self.SjhExtendPerformanceObject.width =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) )  *144 + 'px'
+        // console.log(self.SjhExtendPerformanceObject.width)
+        self.SjhNotExtendPerformanceObject.width = ( response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) ) *144 + 'px'
+        // console.log(self.SjhNotExtendPerformanceObject.width)
+        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor1
+        
+        self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
+
+
+        self.detailForm.endTime = response.data.result.remainDay;
       })
       .catch(function(err) {
         self.loading = false;
