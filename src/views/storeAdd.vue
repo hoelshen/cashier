@@ -56,7 +56,7 @@
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
-                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
+                        <el-input  v-model="addForm.annualExtendPerformance"   > 
                             <template slot="prepend">店铺拓展：  
                             </template>
                                 <template slot="append"> 家
@@ -64,6 +64,16 @@
                         </el-input>
                     </el-form-item>
                 </el-col>
+                <!-- <el-col :span="6">
+                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
+                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
+                            <template slot="prepend">店铺拓展：  
+                            </template>
+                                <template slot="append"> 家
+                            </template>      
+                        </el-input>
+                    </el-form-item>
+                </el-col> -->
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -919,6 +929,9 @@ export default {
     .content_title h2 {
     line-height: 38px;
     margin-bottom: 30px;
+}
+.button-cancel{
+    color: #167edf;
 }
 
 }
