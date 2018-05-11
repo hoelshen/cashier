@@ -699,7 +699,7 @@ export default {
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
-                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
+                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                         'shop.annualExtendPerformance': '' , 
                         'shop.areaClass':data.areaClass  || '',
                         'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
@@ -778,7 +778,7 @@ export default {
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
 
-                        'shop.annualPurchasePerformance':String(data.annualPurchasePerformance) || '',
+                        'shop.annualPurchasePerformance':data.annualPurchasePerformance || '',
                         'shop.annualExtendPerformance': '', 
                         'shop.areaClass':data.areaClass  || '',
                         'shop.extendSuperType': data.agentGradeId == 265 ? '' : (data.extendSuperType || ''),
