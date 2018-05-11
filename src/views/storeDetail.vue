@@ -187,7 +187,7 @@
                                 <!--灰色-->
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                             && detailForm.annualExtendPerformance==0 "  >
-                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff  " ></div>
+                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6  " ></div>
                                 </div>
                                 <!--蓝色-->
                                 <!-- <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
@@ -497,6 +497,11 @@ export default {
           width:'',
           backgroundColor:'',
       },
+      annualNotAreadyPurchasePerformanceRateObject:{
+          height:10  +'px',
+          width:'',
+          backgroundColor:'',
+      },
       SjhExtendPerformanceObject:{
           height:10  +'px',
           width:'',
@@ -740,36 +745,18 @@ export default {
         self.detailForm = response.data.result;
 
 
-        self.detailForm.finishPerformanceSum =  response.data.result.finishPerformanceSum;  
+        self.detailForm.finishPerformanceSum =  response.data.result.finishPerformanceSum;          
+
+       //橙色 
+       self.detailForm.activeColor1 = 'ff6600';
+       //蓝色
+       self.detailForm.activeColor2 = '20a0ff'; 
+       //淡橙色
+       self.detailForm.activeColor3 = 'ffd199';
+      // 灰色
+      self.detailForm.activeColor4 = 'e3e5e6';
 
 
-        // self.detailForm.finishPerformanceSum = response.data.result
-        // //自己完成
-        // console.log('自己业绩'+(response.data.result.annualOwnAreadyPurchasePerformance))
-        // //下级完成
-        // console.log('下级业绩'+(response.data.result.annualLowerAreadyPurchasePerformance))
-        // //已完成率
-        // console.log('已完成率'+response.data.result.finishPerformanceSum  )       
-        // self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
-        // //业绩
-        //   1.自己
-        //   2.下级
-        //   2.未完成
-        // annualExtendPerformance:"",  //年度目标店铺拓展
-        // annualAreadyExtendPerformance:'',   //已达成店铺拓展
-        // storeExpansionRate:'',     //年度店铺扩展达成率  
-        
-        // annualPerformanceRatio:'',  //进货业绩达成率
-        // finishPerformanceSum:'' ,   // 已达成进货业绩：
-        // annualOwnAreadyPurchasePerformance:'', //年度自己所完成的业绩
-        // annualLowerAreadyPurchasePerformance:'', //年度下级协助所完成的业绩
-        // annualPurchasePerformance:'' ,  //年度目标进货业绩        
-        // annualOwnAreadyPurchasePerformanceRate:'',   //年度自己所完成的业绩率
-        // annualLowerAreadyPurchasePerformanceRate:'',  //年度下级协助所完成的业绩率
-        // notFinishPerformance	Double	未完成进货业绩
-        // notFinishShopNums	int	未完成店铺数
-    
-        
         //完成
         response.data.result.annualOwnAreadyPurchasePerformance 
         //未完成
@@ -783,29 +770,34 @@ export default {
         
         //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
+        
+        
+        //未完成协助所完成的业绩率 
+         self.detailForm.annualNotAreadyPurchasePerformanceRate = response.data.result.notFinishPerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
+
         //年度店铺扩展达成率    //已达成店铺拓展   //年度目标店铺拓展
         self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
         
+
+        //年度目标
+        console.log('mubiao'+self.detailForm.annualPurchasePerformance)
+
         //自己的长度
         self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
-        console.log( self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        
-        //年度目标
-        console.log(self.detailForm.annualPurchasePerformance)
+        console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+           
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor2
-        // console.log( self.detailForm.annualLowerAreadyPurchasePerformanceRate)
-       //橙色 
-       self.detailForm.activeColor1 = 'ff6600';
-       //蓝色
-       self.detailForm.activeColor2 = '20a0ff'; 
-       //淡橙色
-       self.detailForm.activeColor3 = 'ffd199';
+         console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
 
-
+        //未完成的长度
+        self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
+        self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
+        console.log('not'+ self.detailForm.annualNotAreadyPurchasePerformanceRate)
+ 
        //年度目标店铺拓展
    
        
