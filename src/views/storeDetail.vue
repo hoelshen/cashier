@@ -192,7 +192,7 @@
             </div>
             <!--右边-->
             <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
-                <div class="calendar">
+                <div class="calendar" style="top:7%">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
                     <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->

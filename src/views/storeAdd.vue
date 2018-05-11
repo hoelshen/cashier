@@ -920,6 +920,9 @@ export default {
     line-height: 38px;
     margin-bottom: 30px;
 }
+.button-cancel{
+    color: #167edf;
+}
 
 }
 
