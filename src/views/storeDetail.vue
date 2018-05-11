@@ -74,117 +74,122 @@
             </div>
             
             <!--中间-->
-            <div class="orderInfo line-middle" v-if="detailForm.isParticipateRebate==1">
-                <el-row :gutter="10">
+            <div class="orderInfo line-middle" >
+                <div>
+                    <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
                         合同签约日期：<span class="font-color">{{ detailForm.signedTime}}</span>
                     </el-col>
                 </el-row>
-                <el-row :gutter="10">      
-                    <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
-                        已完成进货业绩：
-                        <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance.replace(',','')}}</span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="10"> 
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'" style="position:relative">
-                        <div>
-                            <span>年度目标进货业绩：</span>
-                            <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
-                            </span>
-                            <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)}}
-                            </span>
-                        </div>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24" style="padding-left:20px;position:relative" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' " >
-                        <div >
-                            <span  style="float:left" >
-                                进货业绩达成率：
-                            </span> 
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && !(detailForm.hasReachedPurchasePerformance.replace(',','')>Number(detailForm.annualPurchasePerformance) )" class="annualPurchasePerformanceCss" > 
-                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                            </div> 
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width:144px;height:10px"></div>
-                            </div> 
-
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
-                                    <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 144px;height: 10px;"></div>
-                            </div>
-
-                            <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.annualOwnAreadyPurchasePerformance > detailForm.annualPurchasePerformance)" class="BeyondAnnualPurchasePerformanceCss" >
-                                    <div  v-bind:style="BeyondAnnualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
-                                    <div  v-bind:style="BeyondAnnualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
-                            </div>
-                            <!--比率 -->
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="position: absolute;left: 275px;">
-                                <span v-if="detailForm.purchaseAchievementRate">
-                                    {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                </div>
+                <div v-if="detailForm.isParticipateRebate==1">
+                    <el-row :gutter="10">      
+                        <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
+                            已完成进货业绩：
+                            <span style="color:#ff6600"> ￥{{detailForm.hasReachedPurchasePerformance.replace(',','')}}</span>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="10"> 
+                        <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'" style="position:relative">
+                            <div>
+                                <span>年度目标进货业绩：</span>
+                                <span v-if=" detailForm.annualPurchasePerformance!==0 " style="color:#ff6600">
+                                    ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
                                 </span>
-                                <span v-if="detailForm.purchaseAchievementRate==0">
-                                   0%
+                                <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
+                                    ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)}}
                                 </span>
-                            </span>
-                            <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)"  style=" position: absolute;left: 275px;"> 
-                                100%
-                            </span>
-                        </div>
-              
-                    </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
-                        已完成店铺拓展：
-                        <span class="font-color" style="color:#20a0ff ">
-                            {{ detailForm.annualAreadyExtendPerformance}}家
-                        </span>
-                    </el-col>
-                </el-row>
-                <el-row :gutter="10">
-                    <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
-                        年度目标店铺拓展：<span class="font-color" style="padding-left:5px;">{{ detailForm.annualExtendPerformance }}家</span>
-                    </el-col>
-                </el-row>
-          
-                <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-                    <el-col :span="24" style="padding-left:20px;position:relative" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  >
-                           <div >
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
-                                店铺拓展达成率：
+                            </div>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="10">
+                        <el-col :span="24" style="padding-left:20px;position:relative" width=100px;  v-if="detailForm.shopType!='SELF_SUPPORT' " >
+                            <div >
+                                <span  style="float:left" >
+                                    进货业绩达成率：
                                 </span> 
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" style="position:absolute;top:10px;left:123px; "  class="annualExtendPerformanceCss" >
-                                    <div style="position:absolute;top: 0;left:0; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && !(detailForm.hasReachedPurchasePerformance.replace(',','')>Number(detailForm.annualPurchasePerformance) )" class="annualPurchasePerformanceCss" > 
+                                        <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
+                                        <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
+                                </div> 
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
+                                        <div  style="float:left;border-radius: 10px;background-color:#20a0ff;width:144px;height:10px"></div>
+                                </div> 
+
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)" class="annualPurchasePerformanceCss" >
+                                        <div  style="float:left;border-radius: 10px;background-color:#ff6600;width: 144px;height: 10px;"></div>
                                 </div>
 
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) 
-                                            && detailForm.annualExtendPerformance "  >
-                                     <div style="position:absolute;top: 0;left: 0;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6" ></div>
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0  && (detailForm.annualOwnAreadyPurchasePerformance > detailForm.annualPurchasePerformance)" class="BeyondAnnualPurchasePerformanceCss" >
+                                        <div  v-bind:style="BeyondAnnualOwnAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
+                                        <div  v-bind:style="BeyondAnnualLowerAreadyPurchasePerformanceRateObject" style="float:left;border-radius: 10px;position:relative;"></div>
                                 </div>
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                        && detailForm.annualExtendPerformance!=undefined  &&
-                                         (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
-                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
-                                </div>
+                                <!--比率 -->
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 "  style="position: absolute;left: 275px;">
+                                    <span v-if="detailForm.purchaseAchievementRate">
+                                        {{Number(detailForm.purchaseAchievementRate*100).toFixed(2)}}%
+                                    </span>
+                                    <span v-if="detailForm.purchaseAchievementRate==0">
+                                    0%
+                                    </span>
+                                </span>
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualPurchasePerformance !== 0 && (detailForm.hasReachedPurchasePerformance.replace(',','')>detailForm.annualPurchasePerformance)"  style=" position: absolute;left: 275px;"> 
+                                    100%
+                                </span>
+                            </div>
+                
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="10">
+                        <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.agentGradeId === 265">
+                            已完成店铺拓展：
+                            <span class="font-color" style="color:#20a0ff ">
+                                {{ detailForm.annualAreadyExtendPerformance}}家
+                            </span>
+                        </el-col>
+                    </el-row>
+                    <el-row :gutter="10">
+                        <el-col :span="24" v-if="detailForm.shopType!='SELF_SUPPORT'  && detailForm.agentGradeId === 265">
+                            年度目标店铺拓展：<span class="font-color" style="padding-left:5px;">{{ detailForm.annualExtendPerformance }}家</span>
+                        </el-col>
+                    </el-row>
+            
+                    <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
+                        <el-col :span="24" style="padding-left:20px;position:relative" v-if="detailForm.shopType!='SELF_SUPPORT' && (detailForm.agentGradeId === 265)"  >
+                            <div >
+                                    <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
+                                    店铺拓展达成率：
+                                    </span> 
+                                    <div  v-if="detailForm.shopType!='SELF_SUPPORT' && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" style="position:absolute;top:10px;left:123px; "  class="annualExtendPerformanceCss" >
+                                        <div style="position:absolute;top: 0;left:0; border-radius: 10px;" v-bind:style="annualExtendPerformanceObject"></div>
+                                    </div>
 
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "  style="left: 275px;position: absolute">
-                                    {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
-                                </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)"   style="left: 280px;position: absolute">
-                                   0%
-                                </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 280px;position: absolute">
-                                   100%
-                                </span>
-                           </div>
-                    </el-col>
+                                    <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                                &&  (detailForm.annualExtendPerformance == detailForm.annualAreadyExtendPerformance ) 
+                                                && detailForm.annualExtendPerformance "  >
+                                        <div style="position:absolute;top: 0;left: 0;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6" ></div>
+                                    </div>
+                                    <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
+                                            && detailForm.annualExtendPerformance!=undefined  &&
+                                            (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)" >
+                                        <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#20a0ff" ></div>
+                                    </div>
 
-                </el-row>
+                                    <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "  style="left: 275px;position: absolute">
+                                        {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
+                                    </span>
+                                    <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)"   style="left: 280px;position: absolute">
+                                    0%
+                                    </span>
+                                    <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance==0 && (detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance) "   style="left: 280px;position: absolute">
+                                    100%
+                                    </span>
+                            </div>
+                        </el-col>
+
+                    </el-row>
+                </div>
+                
 
 
 
@@ -192,7 +197,7 @@
             </div>
             <!--右边-->
             <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
-                <div class="calendar">
+                <div class="calendar" style="top: 7%;">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
                     <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
