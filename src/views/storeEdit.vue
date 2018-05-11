@@ -297,7 +297,8 @@ export default {
                     // console.log(self.editForm.areaClass)
                     for(let item of self.areaClassArray){
                         if(item.value == self.editForm.areaClass){
-                            self.editForm.annualExtendPerformance=( self.areaClassFlag && String(self.editForm.annualExtendPerformance)  ) || item.num
+                            // 判断店铺数传值是否为null 是的话为0
+                            self.editForm.annualExtendPerformance= self.editForm.annualExtendPerformance=='null'?"0":(( self.areaClassFlag && String(self.editForm.annualExtendPerformance)  ) || item.num)
                         }
                     }
                 } else {
