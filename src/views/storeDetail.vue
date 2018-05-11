@@ -121,20 +121,14 @@
                                     1.目标不为零得情况 
                                 -->
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            && detailForm.annualPurchasePerformance != 0" 
+                                            " 
                                             class="annualPurchasePerformanceCss" > 
                                         <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" 
                                         style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
                                         <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" 
                                         style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                                 </div> 
-                                <!--
-                                    1.目标为零得情况
-                                -->
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            && detailForm.annualPurchasePerformance == 0 " class="annualPurchasePerformanceCss" >
-                                        <div  style="float:left;border-radius: 10px;background-color:#ff6600;width:144px;height:10px;"></div>
-                                </div> 
+                                
                                 
                                 <!--比率 -->
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT'
