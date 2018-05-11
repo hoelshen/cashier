@@ -22,7 +22,10 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:36px;" >
-                        显示选项： <span class="font-color"  style="padding-left:5px;">  {{ detailForm.isShow == 1 ? ' 显示' : ' 不显示' }} <span  class="font-color">到醉品线下M2O体验店</span> </span>
+                        显示选项： <span class="font-color" >
+                                    <span style="position: absolute;left: 104px;" v-if="detailForm.isShow == 0" class="font-color">不显示到醉品线下M2O体验店</span>                               
+                                    <span  v-else  class="font-color" >显示到醉品线下M2O体验店</span>
+                                   </span>
                     </el-col>
             
                 </el-row>
@@ -715,8 +718,8 @@ export default {
       self.detailForm.activeColor4 = 'e3e5e6';
 
 
-      console.log(self.detailForm.isParticipateRebate)
-        
+    //   console.log(self.detailForm.isParticipateRebate)
+        self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
        
         // console.log( self.detailForm.annualPurchasePerformance)
         //未完成
@@ -731,7 +734,7 @@ export default {
 
         //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
-        console.log(self.detailForm.annualLowerAreadyPurchasePerformanceRate)
+        // console.log(self.detailForm.annualLowerAreadyPurchasePerformanceRate)
         
         //未完成协助所完成的业绩率 
          self.detailForm.annualNotAreadyPurchasePerformanceRate = response.data.result.notFinishPerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
