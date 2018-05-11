@@ -74,13 +74,17 @@
             </div>
             
             <!--中间-->
-            <div class="orderInfo line-middle" v-if="detailForm.isParticipateRebate==1">
-                <el-row :gutter="10">
+            <div class="orderInfo line-middle" >
+                <div v-if="detailForm.isParticipateRebate==1">
+                    <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
                         合同签约日期：<span class="font-color">{{ detailForm.signedTime}}</span>
                     </el-col>
                 </el-row>
-                <el-row :gutter="10">      
+                </div>
+
+                <div>
+                    <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
                         <span style="color:#ff6600"> ￥{{detailForm.finishPerformanceSum}}</span>
@@ -91,10 +95,10 @@
                         <div>
                             <span>年度目标进货业绩：</span>
                             <span v-if=" detailForm.annualPurchasePerformance!=0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
+                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) || (detailForm.annualPurchasePerformance).toFixed(2)}}
                             </span>
                             <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)}}
+                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)||(detailForm.annualPurchasePerformance).toFixed(2)}}
                             </span>
                         </div>
                     </el-col>
@@ -112,7 +116,6 @@
                                 '20a0ff'; 
                                 //淡橙色
                                  'ffd199';
-                            3.
                              -->
                             <!--
                                 1.目标不为零得情况 
@@ -123,8 +126,6 @@
                                     <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" 
                                     style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
                                     <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" 
-                                    style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualNotAreadyPurchasePerformanceRateObject" 
                                     style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                             </div> 
                              <!--
@@ -138,20 +139,13 @@
                             <!--比率 -->
                             <span  v-if="detailForm.shopType!='SELF_SUPPORT'
                                         && detailForm.annualPurchasePerformance != 0 
-                                        && ( (detailForm.finishPerformanceSum!=1))"  
+                                        "  
                                         style="position: absolute;left: 275px;">
-                                <span v-if="detailForm.annualPerformanceRatio!=undefined">
+                                <span v-if=" detailForm.annualPurchasePerformance != 0 ">
                                     {{Number(detailForm.annualPerformanceRatio*100).toFixed(2)}}%
                                 </span>
-                                <span v-if="detailForm.annualPerformanceRatio==0">
-                                   
+                                <span v-if="detailForm.annualPurchasePerformance==0">
                                 </span>
-                            </span>
-                             <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                    && detailForm.annualPurchasePerformance != 0 
-                                    && detailForm.annualPerformanceRatio>1"  
-                                    style=" position: absolute;left: 275px;"> 
-                                100%
                             </span>
                         </div>
               
@@ -180,37 +174,28 @@
                                 </span>
 
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            && detailForm.annualExtendPerformance!=0 "  >
-                                       <div v-bind:style="SjhExtendPerformanceObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
-                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>           
+                                            && detailForm.annualExtendPerformance!=0 " 
+                                             class="annualPurchasePerformanceCss" >
+                                       <div v-bind:style="SjhExtendPerformanceObject" style="border-bottom-left-radius: 10px; border-top-left-radius: 10px;"></div>
                                 </div>                              
                                 <!--灰色-->
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            && detailForm.annualExtendPerformance==0 "  >
-                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6  " ></div>
-                                </div>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance 
-                                            && !(detailForm.annualAreadyExtendPerformance>=detailForm.annualExtendPerformance) "  
+
+
+
+                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance!=0  "  
                                             style="left: 275px;position: absolute">
                                     {{Number(detailForm.storeExpansionRate).toFixed(2)*100}}%
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                        && detailForm.annualExtendPerformance==0 &&
-                                         !(detailForm.annualAreadyExtendPerformance>detailForm.annualExtendPerformance)"   
-                                         style="left: 280px;position: absolute">
-                                   0%
+                                <span v-if="detailForm.annualPurchasePerformance">
                                 </span>
-                                <span  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                        && detailForm.annualExtendPerformance!=undefined 
-                                        && (detailForm.annualAreadyExtendPerformance>=detailForm.annualExtendPerformance) "  
-                                         style="left: 280px;position: absolute">
-                                   100%
-                                </span>
+
                            </div>
                     </el-col>
 
                 </el-row>
 
+                </div>
+                
 
 
 
@@ -757,14 +742,16 @@ export default {
         //未完成
         
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
-        console.log(self.detailForm.annualPerformanceRatio)
+        // console.log(self.detailForm.annualPerformanceRatio)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
+        console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log(response.data.result.annualOwnAreadyPurchasePerformance)
+        // console.log(response.data.result.finishPerformanceSum)
 
-        
         //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
-        
+        console.log(self.detailForm.annualLowerAreadyPurchasePerformanceRate)
         
         //未完成协助所完成的业绩率 
          self.detailForm.annualNotAreadyPurchasePerformanceRate = response.data.result.notFinishPerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
@@ -777,19 +764,19 @@ export default {
         // console.log('mubiao'+self.detailForm.annualPurchasePerformance)
 
         //自己的长度
-        self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate  *144 + 'px'
+        self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
         // console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-           
+        console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
-        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor2
+        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
         // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
-
+        console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
         //未完成的长度
-        self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
-        self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
+        // self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
+        // self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
         // console.log('not'+ self.detailForm.annualNotAreadyPurchasePerformanceRate)
  
        //年度目标店铺拓展
@@ -803,16 +790,16 @@ export default {
         self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
         // console.log(self. SjhExtendPerformance )
        //  2.未完成
-        self. SjhNotExtendPerformance =  response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) 
+        // self. SjhNotExtendPerformance =  response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) 
             // console.log(self. SjhNotExtendPerformance)
         
-        self.SjhExtendPerformanceObject.width =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) )  *144 + 'px'
+        self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         // console.log(self.SjhExtendPerformanceObject.width)
-        self.SjhNotExtendPerformanceObject.width = ( response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) ) *144 + 'px'
+        // self.SjhNotExtendPerformanceObject.width = ( response.data.result.notFinishShopNums/(response.data.result.notFinishShopNums+ response.data.result.annualAreadyExtendPerformance) ) *144 + 'px'
         // console.log(self.SjhNotExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
         
-        self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor4
+        // self.SjhNotExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor4
 
 
         self.detailForm.endTime = response.data.result.remainDay;
