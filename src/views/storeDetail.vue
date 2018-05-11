@@ -75,7 +75,7 @@
             
             <!--中间-->
             <div class="orderInfo line-middle" >
-                <div v-if="detailForm.isParticipateRebate==1">
+                <div >
                     <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
                         合同签约日期：<span class="font-color">{{ detailForm.signedTime}}</span>
@@ -83,7 +83,7 @@
                 </el-row>
                 </div>
 
-                <div>
+                <div v-if="detailForm.isParticipateRebate==1">
                     <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
@@ -95,10 +95,10 @@
                         <div>
                             <span>年度目标进货业绩：</span>
                             <span v-if=" detailForm.annualPurchasePerformance!=0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) || (detailForm.annualPurchasePerformance).toFixed(2)}}
+                                ￥{{ (detailForm.annualPurchasePerformance).toFixed(2) }}
                             </span>
                             <span v-if=" detailForm.annualPurchasePerformance == 0 " style="color:#ff6600">
-                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)||(detailForm.annualPurchasePerformance).toFixed(2)}}
+                                ￥{{ (detailForm.annualPurchasePerformance ).toFixed(2)}}
                             </span>
                         </div>
                     </el-col>
@@ -191,14 +191,9 @@
 
                            </div>
                     </el-col>
-
                 </el-row>
-
-                </div>
+            </div>
                 
-
-
-
             </div>
             <!--右边-->
             <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
@@ -208,10 +203,6 @@
                     <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
                 </div> 
             </div>
-
-           
-
-           
         </div>
 
 
@@ -735,7 +726,7 @@ export default {
       self.detailForm.activeColor4 = 'e3e5e6';
 
 
-      
+      console.log(self.detailForm.isParticipateRebate)
         
        
         // console.log( self.detailForm.annualPurchasePerformance)
