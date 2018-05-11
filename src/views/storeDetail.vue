@@ -121,10 +121,8 @@
                                         && detailForm.annualPurchasePerformance != 0  
                                         " 
                                         class="annualPurchasePerformanceCss" > 
-                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                                    <div v-bind:style="annualNotAreadyPurchasePerformanceRateObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                                    
+                                    <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
+                                    <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                             </div> 
                              <!--
                                 1.目标为零得情况
@@ -182,8 +180,8 @@
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                             && detailForm.annualExtendPerformance!=0 "  >
 
-                                       <div v-bind:style="SjhExtendPerformanceObject" style="position:relative;border-radius: 10px;float: left;"></div>
-                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-radius: 10px;float: left;"></div>      
+                                       <div v-bind:style="SjhExtendPerformanceObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
+                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>      
                                      
                                 </div>                              
                                 <!--灰色-->
