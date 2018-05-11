@@ -90,7 +90,7 @@
                     <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
                         已完成进货业绩：
-                        <span style="color:#ff6600"> ￥{{detailForm.finishPerformanceSum}}</span>
+                        <span style="color:#ff6600"> ￥{{(detailForm.finishPerformanceSum).toFixed(2)}}</span>
                     </el-col>
                     </el-row>
                     <el-row :gutter="10"> 
@@ -274,8 +274,8 @@
                       </el-table-column>
                   </el-table>
                 </div>
-                <div class="plPage clearfix">
-                    <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
+                <div class="plPage clearfix"    >
+                    <el-pagination style="margin-top: 10px;float: right;"  @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
                     </el-pagination>
                 </div>
                 <div slot="footer"   class="dialog-footer" @click="changeCancle()">
@@ -333,7 +333,7 @@
                       </el-table>
                     </div>
                     <div class="plPage clearfix">
-                        <el-pagination @current-change="AnnualAgentsHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+                        <el-pagination  style="margin-top: 10px;float: right;"   @current-change="AnnualAgentsHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
                         </el-pagination>
                     </div>
                     <div slot="footer" class="dialog-footer" @click="changeCancle()">
@@ -716,13 +716,17 @@ export default {
        self.detailForm.activeColor3 = 'ffd199';
       // 灰色
       self.detailForm.activeColor4 = 'e3e5e6';
+    //   console.log(response.data.result.annualAreadyExtendPerformance)
+    //   console.log(!response.data.result.annualAreadyExtendPerformance)
+      self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
+      
+      self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
+      
+    //   console.log(self.detailForm.annualAreadyExtendPerformance )
 
-
-    //   console.log(self.detailForm.isParticipateRebate)
-        self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
-       
+        //  console.log(self.detailForm.isParticipateRebate)
+        self.detailForm.phone  = Utils.iphoneSymbol(response.data.result.phone );
         // console.log( self.detailForm.annualPurchasePerformance)
-        //未完成
         
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
         // console.log(self.detailForm.annualPerformanceRatio)
@@ -749,12 +753,22 @@ export default {
         //自己的长度
         self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
+       
         // console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
         // console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
+        if(self.annualLowerAreadyPurchasePerformanceRateObject.width ==0){
+         self.annualOwnAreadyPurchasePerformanceRateObject.borderRradiusRright =  10 +'px';
+            
+        }
+        
+        if(self.detailForm.notFinishPerformance){
+            self.annualLowerAreadyPurchasePerformanceRateObject.borderRradiusRright = 10 +'px';
+            
+        }
         // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
         // console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
         //未完成的长度
