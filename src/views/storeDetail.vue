@@ -274,8 +274,8 @@
                       </el-table-column>
                   </el-table>
                 </div>
-                <div class="plPage clearfix">
-                    <el-pagination @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
+                <div class="plPage clearfix"    >
+                    <el-pagination style="margin-top: 10px;float: right;"  @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
                     </el-pagination>
                 </div>
                 <div slot="footer"   class="dialog-footer" @click="changeCancle()">
@@ -333,7 +333,7 @@
                       </el-table>
                     </div>
                     <div class="plPage clearfix">
-                        <el-pagination @current-change="AnnualAgentsHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+                        <el-pagination  style="margin-top: 10px;float: right;"   @current-change="AnnualAgentsHandleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
                         </el-pagination>
                     </div>
                     <div slot="footer" class="dialog-footer" @click="changeCancle()">
@@ -718,11 +718,9 @@ export default {
       self.detailForm.activeColor4 = 'e3e5e6';
 
 
-    //   console.log(self.detailForm.isParticipateRebate)
-        self.detailForm.phone  = ! response.data.result.phone || response.data.result.phone.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
-       
+        //  console.log(self.detailForm.isParticipateRebate)
+        self.detailForm.phone  = Utils.iphoneSymbol(response.data.result.phone );
         // console.log( self.detailForm.annualPurchasePerformance)
-        //未完成
         
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
         // console.log(self.detailForm.annualPerformanceRatio)

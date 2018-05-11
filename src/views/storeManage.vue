@@ -289,7 +289,7 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                isFirstBatchMoney:'0',
+                isFirstBatchMoney:'1',
             },
             editFormTitle: '',
             isDisable: false,

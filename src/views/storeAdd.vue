@@ -444,16 +444,7 @@ export default {
                 }
             
             }
-            //业务人员判断
-            if(!data.salesMan){
-                // console.log(data.salesMan)
-                self.loading = false;
-                self.$message({
-                    message:'业务人员为必填项',
-                    type:'error'
-                })
-                return false;
-            }
+
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
@@ -506,18 +497,40 @@ export default {
             }
 
             //检验上级代理商的状态
-            console.log(data.state)
             if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
-                   if(data.state!=0){
+                   if(!data.extendSuperNo){
                         self.loading = false;
                         self.$message({
-                            message: '代理商的上级为禁用状态',
+                            message: '代理商的上级编号/姓名',
                             type: 'error'
                         })
                         return false    
                     }
             }
 
+            //检验上级代理商的状态
+            // console.log(data.state)
+            if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
+                if(data.state!=0){
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商的上级为禁用状态',
+                        type: 'error'
+                    })
+                    return false    
+                }
+            }
+
+            //业务人员判断
+            if(!data.salesMan){
+                // console.log(data.salesMan)
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
             return true
         },
         //清除代理商编号、类别
