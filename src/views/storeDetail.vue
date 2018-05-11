@@ -123,6 +123,7 @@
                                         class="annualPurchasePerformanceCss" > 
                                     <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
                                     <div v-bind:style="annualLowerAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
+                                    <div v-bind:style="annualNotAreadyPurchasePerformanceRateObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                             </div> 
                              <!--
                                 1.目标为零得情况
@@ -179,23 +180,14 @@
 
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                             && detailForm.annualExtendPerformance!=0 "  >
-
                                        <div v-bind:style="SjhExtendPerformanceObject" style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
-                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>      
-                                     
+                                       <div v-bind:style="SjhNotExtendPerformanceObject" style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>           
                                 </div>                              
                                 <!--灰色-->
                                 <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
                                             && detailForm.annualExtendPerformance==0 "  >
                                      <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6  " ></div>
                                 </div>
-                                <!--蓝色-->
-                                <!-- <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                        && detailForm.annualExtendPerformance!=undefined  &&
-                                        annualExtendPerformance==0 " >
-                                     <div style="position:absolute;top: 10px;left: 131px;width:144px;height:10px;border-radius: 10px;background-color:#e3e5e6" ></div>
-                                </div> -->
-
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance 
                                             && !(detailForm.annualAreadyExtendPerformance>=detailForm.annualExtendPerformance) "  
                                             style="left: 275px;position: absolute">
@@ -780,23 +772,23 @@ export default {
         
 
         //年度目标
-        console.log('mubiao'+self.detailForm.annualPurchasePerformance)
+        // console.log('mubiao'+self.detailForm.annualPurchasePerformance)
 
         //自己的长度
         self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualLowerAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
-        console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
+        // console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
            
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor2
-         console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
+        // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
 
         //未完成的长度
         self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
         self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
-        console.log('not'+ self.detailForm.annualNotAreadyPurchasePerformanceRate)
+        // console.log('not'+ self.detailForm.annualNotAreadyPurchasePerformanceRate)
  
        //年度目标店铺拓展
    
