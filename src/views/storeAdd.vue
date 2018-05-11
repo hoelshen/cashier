@@ -501,7 +501,7 @@ export default {
                    if(!data.extendSuperNo){
                         self.loading = false;
                         self.$message({
-                            message: '代理商的上级编号/姓名',
+                            message: '代理商的上级编号/姓名必填',
                             type: 'error'
                         })
                         return false    

@@ -177,7 +177,7 @@
                     <el-row>
                         <el-col :span="22">
                             <el-form-item label="变动类型：" label-width="100px">
-                                <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;">
+                                <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;" @click.native="selectIsFirstBatchMoney">
                                     <el-option label="充值" value="TOP_UP"></el-option>
                                     <el-option label="扣款" value="DEDUCTIONS"></el-option>
                                 </el-select>
@@ -289,7 +289,7 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                isFirstBatchMoney:'1',
+                isFirstBatchMoney:'0',
             },
             editFormTitle: '',
             isDisable: false,
@@ -477,13 +477,14 @@ export default {
             this.changeForm.changeShopId = id;
             this.changeForm.changeShopName = shopName;
             this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-            this.dialogFormVisible = true;
+            this.dialogFormVisible = true;    
         },
         changeCancle() {
             this.dialogFormVisible = false;
             this.changeForm.changeType = '';
             this.changeForm.alterMoney = '';
             this.changeForm.remark = '';
+            this.changeForm.isFirstBatchMoney = '0';
         },
         //查询
         onSubmit: function () {
@@ -799,6 +800,9 @@ export default {
                 self.loading = false;
                 console.log(err);
             });
+        },
+        selectIsFirstBatchMoney(){
+            this.isFirstBatchMoney='0';
         },
         //修改代理商状态
         updateAgentState(data) {
