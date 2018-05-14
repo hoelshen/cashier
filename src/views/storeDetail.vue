@@ -452,17 +452,18 @@ export default {
           height:10 +'px',
           width:'',
           backgroundColor:'',
+          borderBottomRightRadius:'',
+          borderTopRightRadius:'',
       },
       annualLowerAreadyPurchasePerformanceRateObject:{
           height:10  +'px',
           width:'',
           backgroundColor:'',
+          borderBottomLeftRadius:'',
+          borderTopLeftRadius:'',
+          
       },
-      annualNotAreadyPurchasePerformanceRateObject:{
-          height:10  +'px',
-          width:'',
-          backgroundColor:'',
-      },
+
       SjhExtendPerformanceObject:{
           height:10  +'px',
           width:'',
@@ -760,15 +761,22 @@ export default {
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
         self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
-        if(self.annualLowerAreadyPurchasePerformanceRateObject.width ==0){
-         self.annualOwnAreadyPurchasePerformanceRateObject.borderRradiusRright =  10 +'px';
-            
-        }
         
-        if(self.detailForm.notFinishPerformance){
-            self.annualLowerAreadyPurchasePerformanceRateObject.borderRradiusRright = 10 +'px';
+        //上级为零,下级不为零    
+        if(self.annualOwnAreadyPurchasePerformanceRateObject.width =='0px'){
+            self.annualLowerAreadyPurchasePerformanceRateObject.borderBottomLeftRadius =  10 + 'px';
+            self.annualLowerAreadyPurchasePerformanceRateObject.borderTopLeftRadius =  10 + 'px';
+
+        }
+        //下级为零，上级不为零        
+        if(self.annualLowerAreadyPurchasePerformanceRateObject.width =='0px'){
+          self.annualOwnAreadyPurchasePerformanceRateObject.borderBottomRightRadius = 10 + 'px';
+          self.annualOwnAreadyPurchasePerformanceRateObject.borderTopRightRadius =  10 +'px';
+          
             
         }
+
+     
         // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
         // console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
         //未完成的长度
