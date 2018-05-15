@@ -33,9 +33,9 @@ const config = [{
                 path: "prepaidManage",
                 name: 'prepaidManage',
                 component: resolve => require(['./views/prepaidManage.vue'], resolve),
-                children:[{
-                    path:':shopNo/:name',
-                    name:'prepaidManage',
+                children: [{
+                    path: ':shopNo/:name',
+                    name: 'prepaidManage',
                     component: resolve => require(['./views/prepaidManage.vue'], resolve),
                 }]
             },
@@ -125,30 +125,44 @@ const config = [{
             },
             {
                 //业务返利
-                path:'businessExpansion',
-                name:'businessExpansion',
-                component:resolve =>  require(['./views/businessExpansion.vue'], resolve),
+                path: 'businessExpansion',
+                name: 'businessExpansion',
+                component: resolve => require(['./views/businessExpansion.vue'], resolve),
             },
             {
                 // 达标返利
-                path:'annualPerformance',
-                name:'annualPerformance',
-                component:resolve =>  require(['./views/annualPerformance.vue'], resolve),
-                
+                path: 'annualPerformance',
+                name: 'annualPerformance',
+                component: resolve => require(['./views/annualPerformance.vue'], resolve),
+
             },
             {
                 // 业务拓展返利
-                path:'rebate',
-                name:'rebate',
-                component:resolve =>  require(['./views/rebate.vue'], resolve),
-                
+                path: 'rebate',
+                name: 'rebate',
+                component: resolve => require(['./views/rebate.vue'], resolve),
+
             },
             {
-                // 业务拓展返利
-                path:'rebateDetail',
-                name:'rebateDetail',
-                component:resolve =>  require(['./views/rebateDetail.vue'], resolve),
-                
+                // 业务拓展返利详情
+                path: 'rebateDetail',
+                name: 'rebateDetail',
+                component: resolve => require(['./views/rebateDetail.vue'], resolve),
+
+            },
+            {
+                // 业务拓展返利新增
+                path: 'rebateAdd',
+                name: 'rebateAdd',
+                component: resolve => require(['./views/rebateAdd.vue'], resolve),
+
+            },
+            {
+                // 业务拓展返利列表
+                path: 'rebateList',
+                name: 'rebateList',
+                component: resolve => require(['./views/rebateList.vue'], resolve),
+
             }
         ]
     }

@@ -739,8 +739,6 @@ export default {
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
                     }
-
-                        
                 }
                 //微店
                 if(data.agentGradeId ==266){
