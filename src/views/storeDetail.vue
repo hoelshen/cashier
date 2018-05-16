@@ -700,35 +700,32 @@ export default {
       .get("/api/http/shop/searchShop.jhtml", {
         params: {
           shopId: src[5]
-        }
+        },
       })
       .then(function(response) {
         self.loading = false;
-        self.detailForm = response.data.result;
 
+        self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
 
-        self.detailForm.finishPerformanceSum =  response.data.result.finishPerformanceSum;          
+        //橙色 
+        self.detailForm.activeColor1 = 'ff6600';
+        //蓝色
+        self.detailForm.activeColor2 = '20a0ff'; 
+        //淡橙色
+        self.detailForm.activeColor3 = 'ffd199';
+        // 灰色
+        self.detailForm.activeColor4 = 'e3e5e6';
 
-       //橙色 
-       self.detailForm.activeColor1 = 'ff6600';
-       //蓝色
-       self.detailForm.activeColor2 = '20a0ff'; 
-       //淡橙色
-       self.detailForm.activeColor3 = 'ffd199';
-      // 灰色
-      self.detailForm.activeColor4 = 'e3e5e6';
-    //   console.log(response.data.result.annualAreadyExtendPerformance)
-    //   console.log(!response.data.result.annualAreadyExtendPerformance)
-      self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
+        self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
+        
+        self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
       
-      self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
-      
-    //   console.log(self.detailForm.annualAreadyExtendPerformance )
+        //  console.log(self.detailForm.annualAreadyExtendPerformance )
 
         //  console.log(self.detailForm.isParticipateRebate)
-        self.detailForm.phone  = Utils.iphoneSymbol(response.data.result.phone );
-        // console.log( self.detailForm.annualPurchasePerformance)
-        
+       
+        self.detailForm.phone  = Utils.iphoneSymbol(self.detailForm.phone);
+
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
         // console.log(self.detailForm.annualPerformanceRatio)
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
@@ -775,28 +772,12 @@ export default {
           
             
         }
-
-     
-        // console.log('xia'+ self.detailForm.annualLowerAreadyPurchasePerformanceRate)
-        // console.log(self.annualLowerAreadyPurchasePerformanceRateObject.width )
-        //未完成的长度
-        // self.annualNotAreadyPurchasePerformanceRateObject.width = self.detailForm.annualNotAreadyPurchasePerformanceRate *144 + 'px'
-        // self.annualNotAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor4
-        // console.log('not'+ self.detailForm.annualNotAreadyPurchasePerformanceRate)
- 
        //年度目标店铺拓展
-   
-       
-
-
-       //店铺长度
-       //  1.已完成
+        //  1.已完成
         // console.log(response.data.result.annualAreadyExtendPerformance)
         self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
         // console.log(self. SjhExtendPerformance )
-       //  2.未完成
-
-
+        //  2.未完成
         self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         // console.log(self.SjhExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2

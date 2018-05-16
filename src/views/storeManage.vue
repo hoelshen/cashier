@@ -4,19 +4,19 @@
         <div class="searchwrap">
             <el-form ref="form" label-width="100px" :model="searchData">
                 <el-row :gutter="5" class="searchbar">
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="注册店铺名：">
                             <el-input v-model="searchData.shopName" @keyup.enter.native="onSubmit" placeholder="注册店铺名"></el-input>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="代理商姓名："> 
                             <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="状态：">
                             <el-select v-model="searchData.state" placeholder="请选择" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
@@ -24,7 +24,7 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6">
+                    <el-col :span="9">
                         <el-form-item label="代理商等级：" style="padding:0 3px 0 0">
                             <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
                                 <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
@@ -34,27 +34,36 @@
 
                 </el-row>
                 <el-row>
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="运营人员：">
                             <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="业务人员：">
                             <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="注册时间：">
                             <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="6" style="text-align: center;padding-left:10%">
-                        <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
-                    </el-col>
+                    <el-col :span="9">
+                        <el-form-item label="归属区域：" >
+                            <addressComponent  ref='addAddress' :isDetail="false"  />
+                        </el-form-item>
+                    </el-col>                    
+                </el-row>
 
+                <el-row >
+                     <el-col :span="1">
+                         <el-form style="margin: -7px 16px 11px 16px;">
+                            <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                         </el-form>
+                    </el-col>
                 </el-row>
             </el-form>
         </div>
@@ -208,7 +217,7 @@
                     <el-row>
                         <el-col :span="22">
                             <el-form-item label="备注说明：" label-width="100px">
-                                <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
+                                <el-input v-model="changeForm.remark" placeholder=" 代理商首批进货款"></el-input>
                                 <p class="triangle"></p>
                                 <p class="msg">备注修改的原因，不超过50个中文字符</p>
                             </el-form-item>
@@ -256,6 +265,9 @@ export default {
 				Level: [],			//代理商等级替代
 				searchName:'',        //代理商姓名
                 operator:"" ,       //运营人员
+                        //省''
+                        //市
+                        //区
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -513,16 +525,11 @@ export default {
                     'shop.salesMan': self.searchData.salesMan,
                 }
             }).then(function (response) {
+                // console.log(response);                
                 self.loading = false;
                 self.myData = response.data.rows;
                 // console.log(self.myData)
-
-                console.log(self.myData.annualPurchasePerformance)
-                if(self.myData.annualPurchasePerformance){
-                    console.log('1')
-                }
                 self.totalSize = response.data.total;
-                // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
@@ -768,8 +775,7 @@ export default {
             this.editForm.operator  = item.userName;
 
             this.editForm.operator2  = false;
-          
-
+        
             //do something
         },
         handlesalesManSelect(item) {
@@ -778,8 +784,7 @@ export default {
             this.editForm.salesMan =  item.userName;
             
             this.editForm.salesMan2  = false;
-            
-         
+ 
             //do something
         },
         // 获取选中店铺信息
@@ -907,15 +912,6 @@ export default {
 
             });
         },
-        // formatSelect() {
-        //     let myData = this.myData;
-        //     let array = []
-        //     for (let i = 0; i < selectData.length; i++) {
-        //         array.push(selectData[i].id)
-        //     }
-        //     return array.join(',')
-        // },
-
         // 导出全部明细
         allOutputExcel() {
           let self  = this;
@@ -1163,8 +1159,15 @@ export default {
     }
 }
 </script>
+<style lang="css" scoped>
+.address-wrap >>> .address-select{
+        width: 140px
+}
+
+</style>
+
 <style lang="less" scoped>
-@import url("../assets/less/storeManage.less");
+@import url("../assets/less/storeManage.less");  
 .last_time {
     position: fixed;
     top: 72%;
@@ -1241,7 +1244,7 @@ export default {
 }
 .search_left {
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2")
-        no-repeat center;
+    no-repeat center;
     position: absolute;
     width: 20px;
     height: 20px;
@@ -1251,7 +1254,7 @@ export default {
 }
 .search_right {
     background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2")
-        no-repeat center;
+    no-repeat center;
     position: absolute;
     width: 20px;
     height: 20px;
