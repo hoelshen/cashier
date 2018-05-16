@@ -132,12 +132,10 @@ let Utils = {
         },
         //手机号码转化
         iphoneSymbol(val){
-            if(val){
-                // var shuzi = 13665926047;
-                // // (shuzi).match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
-                // console.log(shuzi)
-                val =  val.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
-                return val  
+            var oldVal = val;
+            if(oldVal){
+                var newVal =  oldVal.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
+                return newVal 
             }
         }
     

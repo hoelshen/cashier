@@ -670,6 +670,7 @@ export default {
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
             let datas;
+            //代理商
             if(data.shopType=='AGENT'){
                 //单店
                 if(data.agentGradeId==31){
@@ -843,7 +844,8 @@ export default {
                         type: 'success'
                     })
                     setTimeout(function () {
-                        self.$router.go(-1)
+                        self.$router.push({ name:'storeDetail',params:{shopId:self.editForm.shopId} })
+                        // self.$router.go(-1)
                     }, 1000)
                 }
             }).catch(function (err) {
