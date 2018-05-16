@@ -52,6 +52,13 @@
                             </el-select>
                         </el-form-item>
                     </el-col>
+                    <el-col :span="5">
+                        <el-form-item label="是否达标： ">
+                            <el-select v-model="searchData.agentGradeId" placeholder="是否达标" clearable>
+                                <el-option v-for="item in agencylevel" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
                     
                 </el-row>
             </el-form>
@@ -87,11 +94,24 @@
                         </el-table-column>
                         <el-table-column prop="annualCycle" label="年份" width="150">
                         </el-table-column>
-                        <el-table-column prop="finishShopNums" label="店铺数">
+                        
+                        <el-table-column label="是否达标" width="100">
                         </el-table-column>
-                        <el-table-column prop="finishPerformanceSum" label="货款总金额" width="150" align="right">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
+
+                        <el-table-column label="店铺数">
+                            <template  slot-scope="scope">
+                                <el-tooltip  placement="top" effect="light">
+                                    <div slot="content">{{scope.row.finishShopNums}}</div>
+                                    <span>{{scope.row.finishShopNums}}</span>
+                                </el-tooltip>
+                            </template>
+                        </el-table-column>
+                        <el-table-column prop="finishPerformanceSum" label="年度业绩" width="150" align="right">
+                            <template  slot-scope="scope">
+                                <el-tooltip  placement="top" effect="light">
+                                    <div slot="content">{{scope.row.finishPerformanceSum.toFixed(2)}}</div>
+                                    <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
+                                </el-tooltip>
                             </template>
                         </el-table-column>
                         <el-table-column prop="rebateAmountSum" label="返利金额" width="150" align="right">

@@ -1,13 +1,13 @@
 <template>
     <!-- 详情列表 -->
-      <div class="rebate"  v-if="ifEdit">
+      <div class="rebate">
           
         <el-form ref="form1" >
             <el-row>
                 <el-col>
                     <el-form-item label="规则名称：">
                         <span>茶集政策04.15，2018 - 代理商业务拓展返利</span>
-                        <span>
+                        <span class="defaults-rules">
                             默认规则
                         </span>
                         <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：">
-                        <el-button>查看详情</el-button>
+                        <el-button type="primary" @click="relatedAgenciesData">查看详情</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -89,19 +89,6 @@
                           <td>{{form.zpTimeLimit.zpAreaExtendsTwo | number}}</td>
                           <td>{{form.zpTimeLimit.zpAreaExtendsThree | number}}</td>
                       </tr>
-                      <!-- <tr>
-                        <td>所属单店</td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsOne"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsTwo"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpSingleExtendsThree"></el-input></td>
-                      </tr>
-                      <tr>
-                        <td>所属区域代理</td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsOne"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsTwo"></el-input></td>
-                        <td><el-input placeholder="请输入折扣率" class="pencent-num" v-model="form.zpTimeLimit.zpAreaExtendsThree"></el-input></td>
-                      </tr> -->
-                      
                     </tbody>
                   </table>
                 </el-row>
@@ -192,19 +179,6 @@
                           <td>{{form.dlTimeLimit.dlAreaExtendsTwo | number}}</td>
                           <td>{{form.dlTimeLimit.dlAreaExtendsThree | number}}</td>
                       </tr>
-                        <!-- <tr>
-                          <td>所属单店</td>
-                          <td><el-input placeholder="请输入折扣率" v-model="form.dlTimeLimit.dlSingleExtendsOne"></el-input></td>
-                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlSingleExtendsTwo"></el-input></td>
-                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlSingleExtendsThree"></el-input></td>
-                        </tr>
-                        <tr>
-                          <td>所属区域代理</td>
-                          <td><el-input placeholder="请输入折扣率" v-model="form.dlTimeLimit.dlAreaExtendsOne"></el-input></td>
-                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlAreaExtendsTwo"></el-input></td>
-                          <td><el-input placeholder="请输入折扣率"  v-model="form.dlTimeLimit.dlAreaExtendsThree"></el-input></td>
-                        </tr> -->
-                        
                       </tbody>
                     </table>
                   </el-row>
@@ -236,10 +210,10 @@
               </el-row> -->
           </el-form>
 
-          <!-- 查看代理商关系(编号：xxx) start -->
-            <el-dialog   size="140%">
+          <!-- 查看关联代理商(编号：xxx) start -->
+            <el-dialog :title="relatedAgenciesTitle" :visible.sync="relatedAgencies"  size="140%">
                 <div>
-                    <el-table :data="agencyRelationForm" style="width: 100%">
+                    <el-table :data="relatedAgenciesForm"  style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
                       <el-table-column prop="agentNo" label="代理商编号" width="127">
@@ -265,12 +239,13 @@
                   </el-table>
                 </div>
                 <div class="plPage clearfix"    >
-                    <el-pagination style="margin-top: 10px;float: right;"  @current-change="handleCurrentChange" :current-page="handleSizeChange" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
+                    <el-pagination style="margin-top: 10px;float: right;"  @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
                     </el-pagination>
                 </div>
                 <div slot="footer"   class="dialog-footer">
                 </div>
             </el-dialog>
+            <!-- end -->
       </div>
 </template>
 <script type="text/javascript" src="../router.js"></script>
@@ -280,6 +255,8 @@
 export default {
   data() {
     return {
+        relatedAgencies:false,
+        relatedAgenciesTitle:"",
         currentPage: 1,
         totalSize: 0,
         pageSize: 30,
@@ -312,7 +289,7 @@ export default {
           dldateAfter:"",
         },
       },
-      agencyRelationForm:""
+      relatedAgenciesForm:""
     };
   },
   // components: {
@@ -359,13 +336,52 @@ export default {
     handleCurrentChange(val) {
         let self = this;
         self.currentPage = val;
-        // self.getFormData();
+        self.relatedAgenciesData();
     },
-    handleSizeChange(val) {
-        let self = this;
-        self.pageSize = val;
-        // self.getFormData();
-    },
+    relatedAgenciesData(shopNo){
+        this.relatedAgenciesTitle = "关联代理商（规则编号：" + shopNo + "）"
+        if (!this.checkSession()) return; 
+        const self = this;               
+        self.relatedAgencies = true;
+        self.loading = true;
+        let url = '' 
+        self.$ajax({
+                url: url,
+                 method: 'post',
+                 data: {
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'searchAnnualPerformanceOrderVo.shopNo':shopNo
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                // console.log(response)
+                self.loading = false;
+             if (response.data.success == 1) {
+                    self.relatedAgenciesForm = response.data.result;
+                    self.totalSize = response.data.totalNums;
+                   
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
+    }
   },
     created() {
     if (!this.checkSession()) return;
@@ -397,11 +413,11 @@ export default {
                 this.form.dlTimeLimit.dldateAfter = response.data.result.agentContractDaysAfter;
                 this.form.dlSingleRebate = (response.data.result.agentSingleRebate*100).toFixed(2)+"%";
                 this.form.dlAreaRebate = (response.data.result.agentAreaRebate*100).toFixed(2)+"%";
-                 if(response.data.result.agentSingleRebate||response.data.result.agentSingleRebate=='0'){
-                        this.ifEdit=true;
-                    }else{
-                        this.ifEdit=false;
-                    }
+                //  if(response.data.result.agentSingleRebate||response.data.result.agentSingleRebate=='0'){
+                //         this.ifEdit=true;
+                //     }else{
+                //         this.ifEdit=false;
+                //     }
             },
             fail(response) {
                 this.$message({
@@ -513,9 +529,6 @@ export default {
     right: -50px;
     color: #48576a;
   }
-  .fl-left{
-    // margin-left: -120px;
-  }
   .el-input{
     position: relative;
   }
@@ -537,6 +550,12 @@ export default {
 }
 .rebate .rebate-tabel tr td:first-child{
     width: 133px;
+}
+.defaults-rules{
+    padding: 3px 5px;
+	color: #f60;
+	border: 1px solid #f60;
+	border-radius: 5px;
 }
 </style>
 
