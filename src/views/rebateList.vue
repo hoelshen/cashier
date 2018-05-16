@@ -15,19 +15,22 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
-							<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
+							<el-form-item label-width="250px">
+								<el-button type="primary" style="margin-left:10px" @click="onSumbit">查询</el-button>
+							</el-form-item>
+							
 						</el-col>
 					</el-row>
-                    <el-row>
-                        <el-col :gutter="20">
-                            <el-button type="primary" class="el-icon-plus">
-                                新增规则
-                            </el-button>
-                        </el-col>
-                    </el-row>
 				</el-form>
 			</div>
 			<div class="list">
+				<el-row style="padding-top:20px">
+					<el-col :gutter="20">
+						<el-button type="primary" class="el-icon-plus">
+							新增规则
+						</el-button>
+					</el-col>
+				</el-row>
 				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
 					<el-table-column label="规则编号" prop="rulesNo" >
 					</el-table-column>
@@ -44,7 +47,8 @@
                         <template  slot-scope="scope">
                             <p class="operat">
                                 <span>详情</span>
-                                <span>设为默认规则</span>
+                                <span v-if="true">设为默认规则</span>
+                                <span  v-if="false" class="default-rules">默认规则</span>
                             </p>
                         </template>
 					</el-table-column>
@@ -198,4 +202,11 @@ export default {
 
 <style lang="less" scoped>
 @import url('../assets/less/rebateList.less');
+.operat .default-rules{
+	padding: 3px 5px;
+	color: #f60;
+	border: 1px solid #f60;
+	border-radius: 5px;
+
+}
 </style>
