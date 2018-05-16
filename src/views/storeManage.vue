@@ -262,12 +262,12 @@ export default {
 				searchStatus: '',		//订单状态
 				searchTime: '',			//下单时间
 				searchLevel: [],		//代理商等级
-				Level: [],			//代理商等级替代
+				Level: [],			   //代理商等级替代
 				searchName:'',        //代理商姓名
-                operator:"" ,       //运营人员
-                        //省''
-                        //市
-                        //区
+                operator:"" ,         //运营人员
+                belongProvince:'',    //省
+                belongCity:'',        //市
+                belongCountry:''        //区
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -343,29 +343,16 @@ export default {
             // console.log(response.data)
             self.myData = response.data.rows;
 
-            // console.log(response.data.rows[1].isParticipateRebate);
             // console.log(self.myData)
             
             for (var value of self.myData) {
                 if(!value.areaClass){
                     value.areaClass ==''  
                 }else{
-                    //  console.log((value.areaClass).toLocaleLowerCase())
-                     
+                    //  console.log((value.areaClass).toLocaleLowerCase())       
                      value.areaClass =  value.areaClass
-
-                    //  console.log(value.areaClass)
                 }
-            }
-            // response.data.rows.forEach(data => {
-                // console.log(data.areaClass)
-                //  console.log(data.areaClass.toLocaleLowerCase()) 
-            // });
-            
-    
-
-                                           
-                                            
+            }                                           
             self.totalSize = response.data.total
         }).catch(function (err) {
             self.loading = false;
@@ -374,10 +361,6 @@ export default {
 
     },
     methods: {
-        // Type(val){
-        //     if(val)  {val = {a:val}}
-        //     console.log(String(val), typeof val)
-        // },
         //判断是否超时
         checkSession() {
             const self = this;
@@ -498,6 +481,7 @@ export default {
             this.changeForm.remark = '';
             this.changeForm.isFirstBatchMoney = '0';
         },
+        
         //查询
         onSubmit: function () {
             const self = this;
@@ -507,6 +491,7 @@ export default {
             self.order = '';
             $(".ascending.is-leaf").removeClass("ascending");
             $(".descending.is-leaf").removeClass("descending");
+            let addAddress = self.$refs.addAddress.getData();
             self.loading = true;
             self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
                 params: {
@@ -523,6 +508,10 @@ export default {
                     'shop.order': self.order,
                     'shop.operator': self.searchData.operator,
                     'shop.salesMan': self.searchData.salesMan,
+                    'shop.belongProvince':addAddress.provinceCode , // 省份
+                    'shop.belongCity':addAddress.cityCode, // 城市                    
+                    'shop.belongCountry':addAddress.areaCode,  //区域
+
                 }
             }).then(function (response) {
                 // console.log(response);                
@@ -955,7 +944,7 @@ export default {
                 return jsonData.map(v => {
             // 	   console.log(v)
                     return filterVal.map(j => {
-                      console.log(j,v[j])
+                    //   console.log(j,v[j])
                             if(j === "agentGradeId" ){
                                  return v[j] =     ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  )  ;
                             }
@@ -1037,11 +1026,9 @@ export default {
                     },
                     success(response) {                     
                         if (response.data.code === 1) {
-                            if(this.myData.length==30){
-                                 self.tableData =  response.data.rows
-                            }else{
-                                    self.tableData =  (response.data.total == this.myData.length)  ? response.data.rows : this.myData ;
-                            }
+
+                            self.tableData =  response.data.rows
+                       
                             // console.log(self.tableData)
                             // console.log( (response.data.total == this.myData.length)  )
                                

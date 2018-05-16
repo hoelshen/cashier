@@ -172,30 +172,31 @@
             </el-row>
         </el-form>
         <!-- 新增店铺 end -->
-        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
+        <!--新增弹窗-->
+        <el-dialog :title="addPromptTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetPromptForm">
                 <p></p>
-                <el-form   :model="changeForm">
+                <el-form   :model="addPromptForm">
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;">
-                            店铺类型：<span class="font-color">{{ detailForm.name }}</span>
+                            店铺类型：<span class="font-color"></span>
                         </el-col>
                     
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;">
-                            合同服务期限：<span class="font-color">{{ detailForm.phone }}</span>
+                            合同服务期限：<span class="font-color"></span>
                         </el-col>
                 
                     </el-row>
                     <el-row>
                         <el-col :span="22">
-                           拓展上级：<span class="font-color">{{ detailForm.phone }}</span>
+                           拓展上级：<span class="font-color"></span>
                         </el-col>
                     </el-row>
                 </el-form>
 
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="changeCancle">取 消</el-button>
+                    <el-button @click="changePromptCancle">取 消</el-button>
                     <el-button type="primary" @click="onChange">确 定</el-button>
                 </div>
             </el-dialog>
@@ -281,7 +282,10 @@ export default {
                     return time.getTime() > Date.now();
                 }
             },
-            areaClassFlag:true
+            areaClassFlag:true,
+            addPromptTitle:'',
+            addPromptForm:[],
+            dialogFormVisible: false,
         }
     },
     components: {
@@ -675,6 +679,13 @@ export default {
                 areaCode:'',
             }
         },
+        changePromptCancle() {
+            this.dialogFormVisible = false;
+            this.changeForm.changeType = '';
+            this.changeForm.alterMoney = '';
+            this.changeForm.remark = '';
+            this.changeForm.isFirstBatchMoney = '0';
+        },
         //返回提示符
         goBack() {
             this.$confirm(`你确定要放弃添加吗？`, '提示', {
@@ -862,6 +873,12 @@ export default {
         },
         addZuipin(){
             this.addForm.extendSuperType = 'ZUIPIN';
+        },
+        resetPromptForm(){
+            
+        },
+        onChange(){
+            
         }
     },
     created(){
