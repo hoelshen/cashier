@@ -77,7 +77,7 @@
                     </el-table-column>
                     <el-table-column prop="orderSum" label="金额" sortable="custom">
                         <template slot-scope="scope">
-                            <p>{{ toFixed(scope.row.orderSum) }}</p>
+                            <p>{{ Number(scope.row.orderSum).toFixed(2) }}</p>
                         </template>
                     </el-table-column>
                     <el-table-column prop="operator" label="运营人员">
@@ -155,8 +155,8 @@ export default {
         },
         onSumbit() {
             if (!this.checkSession()) return;
-            console.log(this.searchData);
-            console.log(this.searchData.searchTime[0]);
+            // console.log(this.searchData);
+            // console.log(this.searchData.searchTime[0]);
             var temp = new Date(this.searchData.searchTime[0]);
             if (temp.getFullYear() > 2006) {
                 var time1 = temp.getFullYear();
@@ -170,7 +170,7 @@ export default {
                 } else {
                     time1 = time1 + '-' + temp.getDate();
                 }
-                console.log(time1);
+                // console.log(time1);
                 temp = new Date(this.searchData.searchTime[1]);
                 var time2 = temp.getFullYear();
                 if ((temp.getMonth() + 1) < 10) {
@@ -183,7 +183,7 @@ export default {
                 } else {
                     time2 = time2 + '-' + temp.getDate();
                 }
-                console.log(time2);
+                // console.log(time2);
             } else {
                 var time1 = '';
                 var time2 = '';
@@ -237,12 +237,12 @@ export default {
             });
         },
         handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
+            // console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
             if (!this.checkSession()) return;
-            console.log(this.searchData.searchTime);
-            console.log(this.searchData.searchTime[0]);
+            // console.log(this.searchData.searchTime);
+            // console.log(this.searchData.searchTime[0]);
             var temp = new Date(this.searchData.searchTime[0]);
             if (temp.getFullYear() > 2006) {
                 var time1 = temp.getFullYear();
@@ -256,7 +256,7 @@ export default {
                 } else {
                     time1 = time1 + '-' + temp.getDate();
                 }
-                console.log(time1);
+                // console.log(time1);
                 temp = new Date(this.searchData.searchTime[1]);
                 var time2 = temp.getFullYear();
                 if ((temp.getMonth() + 1) < 10) {
@@ -269,7 +269,7 @@ export default {
                 } else {
                     time2 = time2 + '-' + temp.getDate();
                 }
-                console.log(time2);
+                // console.log(time2);
             } else {
                 var time1 = '';
                 var time2 = '';
@@ -279,7 +279,7 @@ export default {
             } else {
                 this.searchData.level = '';
             }
-            console.log(this.searchData.searchLevel);
+            // console.log(this.searchData.searchLevel);
             const self = this;
             self.$ajax({
                 url: '/api/http/purchaseOrder/queryPurchaseOrderList.jhtml',
@@ -320,7 +320,7 @@ export default {
             }).catch(function(error) {
 
             });
-            console.log(`当前页: ${val}`);
+            // console.log(`当前页: ${val}`);
         },
         store(row, column) {
             if (!this.checkSession()) return;
@@ -332,8 +332,8 @@ export default {
                 this.order = 'desc';
             }
             if (!this.checkSession()) return;
-            console.log(this.searchData.searchTime);
-            console.log(this.searchData.searchTime[0]);
+            // console.log(this.searchData.searchTime);
+            // console.log(this.searchData.searchTime[0]);
             var temp = new Date(this.searchData.searchTime[0]);
             if (temp.getFullYear() > 2006) {
                 var time1 = temp.getFullYear();
@@ -347,7 +347,7 @@ export default {
                 } else {
                     time1 = time1 + '-' + temp.getDate();
                 }
-                console.log(time1);
+                // console.log(time1);
                 temp = new Date(this.searchData.searchTime[1]);
                 var time2 = temp.getFullYear();
                 if ((temp.getMonth() + 1) < 10) {
@@ -360,7 +360,7 @@ export default {
                 } else {
                     time2 = time2 + '-' + temp.getDate();
                 }
-                console.log(time2);
+                // console.log(time2);
             } else {
                 var time1 = '';
                 var time2 = '';
@@ -405,9 +405,11 @@ export default {
                 }
             });
         },
-        toFixed(num) {
-            return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
-        },
+        // toFixed(num) {
+        //     // var num =10;    
+        //     return Number(num).toFixed(6).substring(0, Number(num).toFixed(6).lastIndexOf('.') + 3);
+        // },
+
     },
     created() {
         if (!this.checkSession()) return;

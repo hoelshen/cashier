@@ -198,7 +198,6 @@ export default {
 };
 </script>
 
-
 <style lang="less" scoped>
 .address-wrap {
     .address-select {

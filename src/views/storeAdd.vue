@@ -5,8 +5,8 @@
             <el-row class="content_title">
                 <h2>基本信息</h2>
             </el-row>
-            <el-row>
-                <!--第一行-->
+            <!--第一行-->
+            <el-row>  
                 <el-col :span="8">
                     <el-form-item label="店铺名称：">
                         <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
@@ -31,15 +31,15 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <!--第四行-->                   
             <el-row>
-                    <!--第四行-->
-            <el-col :span="8">
-                <el-form-item label="代理商等级：" v-if="addForm.shopType!='SELF_SUPPORT'">
-                    <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"    clearable>
-                        <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
-                    </el-select>
-                </el-form-item>
-            </el-col> 
+                <el-col :span="8">
+                    <el-form-item label="代理商等级：" v-if="addForm.shopType!='SELF_SUPPORT'">
+                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"    clearable>
+                            <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col> 
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -64,16 +64,7 @@
                         </el-input>
                     </el-form-item>
                 </el-col>
-                <!-- <el-col :span="6">
-                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
-                        <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == addForm.areaClass "  v-model="addForm.annualExtendPerformance"   > 
-                            <template slot="prepend">店铺拓展：  
-                            </template>
-                                <template slot="append"> 家
-                            </template>      
-                        </el-input>
-                    </el-form-item>
-                </el-col> -->
+           
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -95,8 +86,8 @@
                     </el-form-item>
                 </el-col>
             </el-row>
+            <!--第六行 -->
             <el-row>
-               <!--第二行-->
                 <el-col :span="18" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="店铺所属区域：">
                         <addressComponent ref='addBelongAddress' :isDetail="false" />   
@@ -126,7 +117,8 @@
                         <el-input  type="textarea" v-model="addForm.address" placeholder="填写详情地址（为店铺地址，会展示到醉品的线下门店展示平台）" class="address"></el-input>
                     </el-form-item>
                 </el-col>
-            </el-row>      
+            </el-row>
+            <!--账户信息-->      
             <el-row class="content_title">
                 <h2>账户信息</h2>
             </el-row>
@@ -154,6 +146,7 @@
                     </el-form-item>
                  </el-col>
             </el-row>
+            <!--第二行-->
             <el-row >
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
@@ -179,6 +172,34 @@
             </el-row>
         </el-form>
         <!-- 新增店铺 end -->
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
+                <p></p>
+                <el-form   :model="changeForm">
+                    <el-row :gutter="10">
+                        <el-col :span="24"  style="padding-left:20px;">
+                            店铺类型：<span class="font-color">{{ detailForm.name }}</span>
+                        </el-col>
+                    
+                    </el-row>
+                    <el-row :gutter="10">
+                        <el-col :span="24"  style="padding-left:20px;">
+                            合同服务期限：<span class="font-color">{{ detailForm.phone }}</span>
+                        </el-col>
+                
+                    </el-row>
+                    <el-row>
+                        <el-col :span="22">
+                           拓展上级：<span class="font-color">{{ detailForm.phone }}</span>
+                        </el-col>
+                    </el-row>
+                </el-form>
+
+                <div slot="footer" class="dialog-footer">
+                    <el-button @click="changeCancle">取 消</el-button>
+                    <el-button type="primary" @click="onChange">确 定</el-button>
+                </div>
+            </el-dialog>
+        
 
         
     </div>
@@ -227,31 +248,32 @@ export default {
                 superAreaClass:'',
                 extendSuperNo:'',   
                 areaClass:'',     //所属类别
-                belongProvince:'',
-                belongCity:'',
-                belongCountry:'',
+                belongProvince:'', //所属区域
+                belongCity:'',     //所属城市
+                belongCountry:'',  //所属地区
             },
             levelArray: [], //代理商等级数组
-            areaClassArray: [{   //类别等级数组
+            areaClassArray: [ //类别等级数组
+                {   
                 value: 'S',
                 name: 'S',
                 num:8
-            },
-            {
-                value:'A',
-                name: 'A',
-                num:6
-            },
-            {
-                value: 'B',
-                name: 'B',
-                num:4
-            },
-            {
-                value: 'C',
-                name: 'C',
-                num:4
-            }
+                },
+                {
+                    value:'A',
+                    name: 'A',
+                    num:6
+                },
+                {
+                    value: 'B',
+                    name: 'B',
+                    num:4
+                },
+                {
+                    value: 'C',
+                    name: 'C',
+                    num:4
+                }
             ],
             phoneLength: 11,
             pickerOptions: {
@@ -264,9 +286,6 @@ export default {
     },
     components: {
         addressComponent
-    },
-    watch:{
-        
     },
     methods:{
         //获得区域等级等级
@@ -606,20 +625,14 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 console.log(response)
-                if (response.data.result == 1) {
+                if (response.data.result == 1 || 0) {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
                     })
                      setTimeout(function () {
-                        self.$router.go(-1)
-                    }, 1000)
-                } else if(response.data.success == 0){
-                    self.$message({
-                        message: response.data.msg,
-                        type: 'success'
-                    })
-                    setTimeout(function () {
+                        // self.$router.push({ name:'storeDetail',params:{shopId:data.shopId} })
+                         
                         self.$router.go(-1)
                     }, 1000)
                 }else{
@@ -675,13 +688,6 @@ export default {
         },
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            // if(this.addForm.operator == queryString){
-            //     this.addForm.operator2 = false;               
-            // }      
-            // queryString = !this.addForm.operator2 ? '' : queryString;
-            // this.addForm.operator2 = true;
-
-
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
@@ -722,19 +728,11 @@ export default {
         },
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
-            // if(this.addForm.salesMan == queryString){
-            //         this.addForm.salesMan2 = false;
-            // }
-            // queryString = !this.addForm.salesMan2 ? '' : queryString;
-                 
-            // this.addForm.salesMan2 = true;
-
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
             //从后台获取到对象数组
             axios.get(url).then((response) => {
-                console.log()
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
                 for (let i of response.data.result) {
                     i.value = i.userName;  //将CUSTOMER_NAME作为value
@@ -792,7 +790,7 @@ export default {
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-                    // console.log(list)
+                    console.log(list)
                     
                     callback(list);
 
@@ -822,28 +820,24 @@ export default {
 
             this.addForm.operator  = item.userName;
 
-            //do something
         },
         handleSalesManSelect(item) {
             this.addForm.salesManId = item.id;
 
             this.addForm.salesMan =  item.userName;
             
-            //do something
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
                 // console.log(item.superAgentGradeId)
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 // console.log(this.addForm.superAgentGradeId)
-
                 this.addForm.state = item.state;
         },  
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
                 this.addForm.superAgentGradeId = '';
-                this.addForm.state = '';
-                
+                this.addForm.state = '';   
         },
         deleteOperator(){
             this.addForm.operator='';
@@ -851,11 +845,9 @@ export default {
         deleteSalesMan(){
             this.addForm.salesMan='';    
         },
-        deleteExtendSuperType(val){
-            
+        deleteExtendSuperType(val){  
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
-            
         },
         deleteSelfSupport(){
             this.addForm.extendSuperNo= '';
