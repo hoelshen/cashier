@@ -83,12 +83,12 @@ export default [{
                 path: '/area',
             },
             {
-                title:'业务拓展',
-                path:'/businessExpansion'
+                title: '业务拓展',
+                path: '/businessExpansion'
             },
             {
-                title:'年度业绩',
-                path:'/annualPerformance'
+                title: '年度业绩',
+                path: '/annualPerformance'
             }
         ]
     },
@@ -104,7 +104,7 @@ export default [{
         title: '规则管理',
         icon: 'icon-shouyinhoutai_guizeshezhi',
         children: [{
-            title: '业务扩展返利',
+            title: '业务拓展返利',
             path: '/rebate',
         }]
     }
