@@ -1,11 +1,15 @@
 <template>
-    <div class="rebate" v-if="!ifEdit">
+    <div class="rebate">
         
         <el-form ref="form" :model="form" >
             <el-row >
-                <el-col :span="8">
-                    <el-form-item label="规则名称："  label-width="100px">
-                        <el-input placeholder="请输入规则名称，最多25个汉字"></el-input>
+                <el-col :span="12">
+                    <el-form-item label="规则名称："  label-width="100px"
+                     prop="defaultsRules"
+                            :rules="[
+                            { required: true, message: '规则名称不能为空'}
+                            ]" >
+                        <el-input type="defaultsRules" placeholder="请输入规则名称，最多25个汉字" :maxlength="50" v-model="form.defaultsRules"></el-input>
                         
                     </el-form-item>
                 </el-col>
@@ -38,7 +42,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]" >
                             <el-input type="zpSingleRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpSingleRebate"></el-input>
                         </el-form-item>
@@ -51,7 +57,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]">
                             <el-input type="zpAreaRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate"></el-input>
                         </el-form-item>
@@ -91,7 +99,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]" >
                                 <el-input type="zpTimeLimit.zpSingleExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsOne"></el-input>
                             </el-form-item>
@@ -102,7 +112,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]" >
                                 <el-input type="zpTimeLimit.zpSingleExtendsTwo"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsTwo"></el-input >
                             </el-form-item>
@@ -113,7 +125,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]" >
                                 <el-input type="zpTimeLimit.zpSingleExtendsThree"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpSingleExtendsThree"></el-input >
                             </el-form-item>
@@ -127,7 +141,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]" >
                                 <el-input type="zpTimeLimit.zpAreaExtendsOne"  placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsOne"></el-input >
                             </el-form-item >
@@ -138,7 +154,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]">
                                 <el-input type="zpTimeLimit.zpAreaExtendsTwo"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsTwo"></el-input >
                             </el-form-item>
@@ -149,7 +167,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]">
                                 <el-input type="zpTimeLimit.zpAreaExtendsThree"   placeholder="请输入折扣率" class="pencent-num" v-model.number="form.zpTimeLimit.zpAreaExtendsThree"></el-input >
                             </el-form-item >
@@ -179,7 +199,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]">
                             <el-input type="zpSingleRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpSingleRebate1"></el-input>
                         </el-form-item>
@@ -192,7 +214,9 @@
                             :rules="[
                             { required: true, message: '返利点数不能为空'},
                             { type: 'number', message: '返利点数必须为数字值'},
-                            { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                            { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                            { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                            { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                             ]">
                             <el-input type="zpAreaRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.zpAreaRebate1"></el-input>
                         </el-form-item>
@@ -225,7 +249,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                             <el-input type="dlSingleRebate" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate"></el-input>
                         </el-form-item>
@@ -238,7 +264,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                             <el-input type="dlAreaRebate" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate"></el-input>
                         </el-form-item>
@@ -278,7 +306,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                                 <el-input type="dlTimeLimit.dlSingleExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsOne"></el-input>
                             </el-form-item>
@@ -289,7 +319,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]"> 
                                 <el-input type="dlTimeLimit.dlSingleExtendsTwo" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsTwo"></el-input>
                             </el-form-item>
@@ -300,7 +332,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                            
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]"> 
                                 <el-input type="dlTimeLimit.dlSingleExtendsThree" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlSingleExtendsThree"></el-input >
                             </el-form-item >
@@ -314,7 +348,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                                 <el-input type="dlTimeLimit.dlAreaExtendsOne" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsOne"></el-input >
                             </el-form-item>
@@ -325,7 +361,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]"> 
                                 <el-input type="dlTimeLimit.dlAreaExtendsTwo" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsTwo"></el-input >
                             </el-form-item>
@@ -336,7 +374,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]"> 
                                 <el-input type="dlTimeLimit.dlAreaExtendsThree" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlTimeLimit.dlAreaExtendsThree"></el-input >
                             </el-form-item>
@@ -366,7 +406,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                             <el-input type="dlSingleRebate1" placeholder="请输入折扣率"  class="pencent-num" v-model.number="form.dlSingleRebate1"></el-input>
                         </el-form-item>
@@ -379,7 +421,9 @@
                         :rules="[
                         { required: true, message: '返利点数不能为空'},
                         { type: 'number', message: '返利点数必须为数字值'},
-                        { pattern: /^([0-9]\d?(\.\d{1,2})?|100)$/, message: '不允许输入小于0或者小数位多余2' }
+                        { pattern: /^\d+(\.\d+)?$/, message: '不允许小于0'},                             
+                        { pattern: /^100$|^(\d|[1-9]\d)(\.\d+)*$/, message: '不允许大于100'},                             
+                        { pattern: /^\d{0,8}\.{0,1}(\d{1,2})?$/, message: '请保留两位小数'}
                         ]">
                             <el-input type="dlAreaRebate1" placeholder="请输入折扣率" class="pencent-num" v-model.number="form.dlAreaRebate1" ></el-input>
                         </el-form-item>
@@ -400,8 +444,8 @@ export default {
   data() {
     
     return {
-        ifEdit:false,
       form:{
+        defaultsRules:"",
         dlTimeChose:"CONTRACT_TERM",
         zpTimeChose:"CONTRACT_TERM",
         zpSingleRebate:"",
