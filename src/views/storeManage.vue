@@ -46,14 +46,14 @@
                     </el-col>
                     <el-col :span="5">
                         <el-form-item label="注册时间：">
-                            <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
+                            <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" style="width: 92%;">
                             </el-date-picker>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="9">
-                        <el-form-item label="归属区域：" >
-                            <addressComponent  ref='addAddress' :isDetail="false"  />
+                    <el-col :span="9">                       
+                        <el-form-item label="归属区域：" >                                 
+                            <addressComponent  ref='addAddress' :isShow="true" :isDetail="false"  />
                         </el-form-item>
                     </el-col>                    
                 </el-row>
@@ -72,11 +72,9 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
-                    <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
+                    <el-button type="primary"  @click="allOutputExcel()">年度目标目标进度条导出({{totalSize}})</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
-                        <!-- <el-table-column  type="selection" width="50" :reserve-selection="true">
-                        </el-table-column> -->
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
@@ -98,10 +96,7 @@
                                 <p class="textOrange" v-if="myData[scope.$index].areaClass == 'S' ">S类</p>
                                 <p class="textRed" v-if="myData[scope.$index].areaClass == 'A' ">A类</p>
                                 <p class="textGreen" v-if="myData[scope.$index].areaClass  == 'B'">B类</p>
-                                <!-- <p class="textGreen" v-if="Type(myData[scope.$index].areaClass)">B类</p> -->
                                 <p class="textPurple" v-if="myData[scope.$index].areaClass  == 'C' ">C类</p>
-                                <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
-                                <!-- <span v-if="!myData[scope.$index].areaClass ">-</span> -->
                             </template>
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
@@ -166,7 +161,11 @@
                     </el-table>
                 </el-row>
                 <div class="plPage clearfix">
-                    <el-pagination @current-change="handleCurrentChange" :current-page="currentPage" :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="totalSize">
+                    <el-pagination @current-change="handleCurrentChange" 
+                                :current-page="currentPage" 
+                                :page-size="pageSize"
+                                :total="totalSize" 
+                                layout="total, prev, pager, next, jumper" >
                     </el-pagination>
                 </div>
             </el-row>
@@ -206,12 +205,8 @@
                                  <template slot="prepend" v-if="changeForm.changeType === 'DEDUCTIONS'">➖</template>                                     
                                  </el-input>
                                 <p class="yuan">元</p>
-                            </el-form-item>
-                                 
-            
-              
-                        </el-col>
-                   
+                            </el-form-item>              
+                        </el-col>                  
                     </el-row>
 
                     <el-row>
@@ -466,6 +461,10 @@ export default {
 
             });
             self.dialogFormVisible = false;
+        },
+        //
+        closeAddressComponent(){
+            console.log('ok')
         },
         chengPre(id, shopName, shopNo) {
             if (!this.checkSession()) return;
@@ -1148,7 +1147,7 @@ export default {
 </script>
 <style lang="css" scoped>
 .address-wrap >>> .address-select{
-        width: 140px
+        width: 25%
 }
 
 </style>
@@ -1193,62 +1192,15 @@ export default {
 .el-message-box__content {
     padding: 0px 20px 30px;
 }
-.delete_left {
-    background: url("../assets/images/zph_close.png") no-repeat center;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 9px;
-    left: 289px;
-    z-index: 1000;
-}
-.delete_right {
-    background: url("../assets/images/zph_close.png") no-repeat center;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 9px;
-    left: 289px;
-    z-index: 1000;
-}
-.deleteOperatorName_left {
-    background: url("../assets/images/zph_close.png") no-repeat center;
-    position: absolute;
-    width: 2.5%;
-    height: 6%;
-    top: 78%;
-    left: 31.5%;
-    z-index: 999;
-}
-.deleteSalesManName_right {
-    background: url("../assets/images/zph_close.png") no-repeat center;
-    position: absolute;
-    width: 2.5%;
-    height: 6%;
-    top: 78%;
-    left: 81.5%;
-    z-index: 999;
-}
-.search_left {
-    background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2")
-    no-repeat center;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 9px;
-    left: 289px;
-    z-index: 999;
-}
-.search_right {
-    background: url("http://wiki.oteao.com/download/attachments/9831317/image2018-3-1%2021%3A39%3A54.png?version=1&modificationDate=1519887884000&api=v2")
-    no-repeat center;
-    position: absolute;
-    width: 20px;
-    height: 20px;
-    top: 9px;
-    left: 289px;
-    z-index: 999;
-}
+.delete_addressComponent {
+        background: url("../assets/images/zph_close.png") no-repeat center;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 9px;
+        left: 164px;
+        z-index: 1000;
+    }
 .search-yw-wrap {
     position: relative;
 }
