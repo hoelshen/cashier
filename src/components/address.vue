@@ -28,19 +28,23 @@
 <template>
     <div class="address-wrap">
         <div class="address-select">
-            <el-select v-model="select.provinceCode" placeholder="请选择省份" @change="getAllData">
+            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
+            
+            <el-select v-model="select.provinceCode" placeholder="请选择省份" @change="getAllData" >
                 <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
-            <el-select v-model="select.cityCode" placeholder="请选择城市" @change="getAllData">
+            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressCityComponent' ></span> 
+            <el-select v-model="select.cityCode" placeholder="请选择城市" @change="getAllData" >
                 <el-option v-for="item in cityList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
-            <el-select v-model="select.areaCode" placeholder="请选择区域" @change="getAllData">
+            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressAreaComponent' ></span> 
+            <el-select v-model="select.areaCode" placeholder="请选择区域" @change="getAllData" >
                 <el-option v-for="item in areaList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
@@ -75,6 +79,10 @@ export default {
             type: Boolean,
             default: false
         },
+        isShow: {
+            type: Boolean,
+            default: false
+        },
         isDetail: {
             type: Boolean,
             default: true
@@ -88,12 +96,13 @@ export default {
                 cityCode: this.cityCode,
                 areaCode: this.areaCode,
                 detail: this.detail
-            }
+            },
+            CodeFlage:true
         };
     },
     watch: {
         provinceCode(val) {
-            this.select.provinceCode = val;
+            this.select.provinceCode =  val;
         },
         cityCode(val) {
             this.select.cityCode = val;
@@ -116,7 +125,7 @@ export default {
                 );
                 data = data[0].childs === null ? [] : data[0].childs;
                 let isTrue = data.some(
-                    val => val.code === this.select.cityCode
+                    val => val.code === this.CodeFlage ?   this.select.cityCode  : ''
                 );
                 if (!isTrue) {
                     this.select.cityCode = data[0] ? data[0].code : "";
@@ -133,7 +142,7 @@ export default {
                 );
                 data = data[0].childs === null ? [] : data[0].childs;
                 let isTrue = data.some(
-                    val => val.code === this.select.areaCode
+                    val => val.code === this.CodeFlage ?   this.select.areaCode : ''
                 );
                 if (!isTrue) {
                     this.select.areaCode = data[0] ? data[0].code : "";
@@ -145,6 +154,18 @@ export default {
         }
     },
     methods: {
+        closeAddressProvinceComponent(){
+            this.select.areaCode = '';
+            this.select.cityCode = '';
+            this.select.provinceCode = ''; 
+        },
+        closeAddressCityComponent(){
+            this.select.areaCode = '';
+            this.select.cityCode = '';
+        },
+        closeAddressAreaComponent(){
+            this.select.areaCode = '';  
+        },
         getData() {
             let obj = {};
 
@@ -162,6 +183,7 @@ export default {
                 val => obj.areaCode === val.code ? (obj.areaName = val.regionName) : void 0
             );
             obj.address = obj.provinceName + obj.cityName + obj.areaName + obj.detail;
+            console.log(obj)
             return obj;
         },
         getAllData() {
@@ -206,5 +228,17 @@ export default {
     .wrap {
         display: block;
     }
+}
+.delete_addressComponent {
+        background: url("../assets/images/zph_close.png") no-repeat center;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 9px;
+        right: 28px;
+        z-index: 1000;
+}
+.address-select{
+     position:relative
 }
 </style>

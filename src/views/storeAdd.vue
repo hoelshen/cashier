@@ -50,13 +50,24 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
-                        <el-input v-model="addForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
+                        <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩1"></el-input>  
+
+                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        </el-popover>
+                       
+                        <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:popover placeholder="进货业绩2"></el-input>  
                     </el-form-item>
-                  
+                   
+
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
-                        <el-input  v-model="addForm.annualExtendPerformance"   > 
+                        
+                        
+                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        </el-popover>
+                       
+                        <el-input   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
                             <template slot="prepend">店铺拓展：  
                             </template>
                                 <template slot="append"> 家
@@ -133,7 +144,7 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
+                        <!-- <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span> -->
                     
                         <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
@@ -144,7 +155,12 @@
                     <el-form-item :span="4" label="上级代理商等级:">
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
-                 </el-col>
+                </el-col>
+                <el-col>
+                    <el-form-item :span="4" label="匹配规则:">
+                            <el-input v-model="addForm.superAgentGradeId"></el-input>   
+                    </el-form-item>
+                </el-col>
             </el-row>
             <!--第二行-->
             <el-row >
@@ -167,7 +183,7 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top:20px;margin-left:120px;">
-                <el-button type="primary" @click="addAgent" class="button-save">保存</el-button>
+                <el-button type="primary" @click="onChange" class="button-save">保存</el-button>
                 <el-button @click="goBack" class="button-cancel">取消</el-button>
             </el-row>
         </el-form>
@@ -197,7 +213,7 @@
 
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="changePromptCancle">取 消</el-button>
-                    <el-button type="primary" @click="onChange">确 定</el-button>
+                    <el-button type="primary" @click="addAgent">确 定</el-button>
                 </div>
             </el-dialog>
         
@@ -878,7 +894,8 @@ export default {
             
         },
         onChange(){
-            
+            this.dialogFormVisible = true;
+
         }
     },
     created(){

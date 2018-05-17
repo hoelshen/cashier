@@ -1,6 +1,7 @@
 <template>
 	<div class="prepaidManage messageList">
 		<div class="warp">
+			<!--搜索-->
 			<div id="search">
 				<el-form label-width="85px" ref="form" :model="searchData">
 					<el-row :gutter="10">
@@ -38,13 +39,14 @@
 					</el-row>
 				</el-form>
 			</div>
+
+			<!--表格-->
 			<div class="tableInfo">
 				<el-button type="primary" class="el-icon-plus" @click="$router.push('/messageAdd')">发布通知</el-button>
 				<el-table border :data="tableData" style="margin: 10px auto 20px auto;font-size: 14px;">
 					<el-table-column label="序号" width="80" align="center">
 						<template slot-scope="scope">
-							<p class="limit">{{ (currentPage - 1) * pageSize + scope.$index + 1
-								< 10 ? '0' + ((currentPage - 1) * pageSize + scope.$index + 1) : (currentPage - 1) * pageSize + scope.$index + 1 }}</p>
+							<p class="limit">{{ sequence(scope.$index) }}</p>
 						</template>
 					</el-table-column>
 					<el-table-column prop="noticeTitle" label="通知标题" align="center" width="300px">
@@ -53,18 +55,25 @@
 						</template>
 					</el-table-column>
 					<el-table-column prop="noticeType" label="通知类型" align="center">
-						<template slot-scope="scoped">
-							{{ scoped.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
+						<template slot-scope="scope">
+							{{ scope.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
+						</template>
+					</el-table-column>
+					<el-table-column label="发送对象" align="center">
+						<template scope="scope">
+							<span>已读{{scope.row.numberOfReaders}}/{{scope.row.sendTheTotalNumber}}</span>
+							<!-- <span>已读{{tableData[scope.$index].numberOfReaders }}/{{tableData[scope.$index].sendTheTotalNumber}}</span> -->
 						</template>
 					</el-table-column>
 					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width="100px">
 					</el-table-column>
 					<el-table-column prop="status" label="状态" align="center">
-						<template slot-scope="scoped">
-							<span class="greenPoint" :class="{redColor : scoped.row.status === 2}"></span>
-							{{ scoped.row.status === 1 ? '启用' : '禁用' }}
+						<template slot-scope="scope">
+							<span class="greenPoint" :class="{redColor : scope.row.status === 2}"></span>
+							{{ scope.row.status === 1 ? '启用' : '禁用' }}
 						</template>
 					</el-table-column>
+					
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
 					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="120px">
@@ -102,10 +111,15 @@ export default {
 				status: '0',		//状态
 				time: [],		    //时间
 			},
-			tableData: []
+			tableData: [],
 		}
 	},
 	methods: {
+		sequence(val){
+			return (this.currentPage - 1) * this.pageSize + val + 1 < 10 ?  
+									Number('0' + ((this.currentPage - 1) * this.pageSize + val + 1))  : Number((this.currentPage - 1) * this.pageSize + val + 1  ) 
+									
+		},
 		closeTip(e) {
 			e.path[3].style.display = "none";
 		},
@@ -249,6 +263,7 @@ export default {
 			).then(res => {
 				this.tableData = res.data.data.list;
 				this.totalNums = res.data.data.total
+				this.tableData.sendTheTotalNumber = this.tableData .sendTheTotalNumber
 			})
 		}
 	},
