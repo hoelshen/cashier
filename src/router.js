@@ -163,6 +163,13 @@ const config = [{
                 name: 'rebateList',
                 component: resolve => require(['./views/rebateList.vue'], resolve),
 
+            },
+            {
+                // 时间控件
+                path: 'timePick',
+                name: 'timePick',
+                component: resolve => require(['./views/timePick.vue'], resolve),
+
             }
         ]
     }

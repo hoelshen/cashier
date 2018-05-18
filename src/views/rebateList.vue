@@ -47,8 +47,8 @@
                         <template  slot-scope="scope">
                             <p class="operat">
                                 <span>详情</span>
-                                <span v-if="true">设为默认规则</span>
-                                <span  v-if="false" class="default-rules">默认规则</span>
+                                <span v-if="false">设为默认规则</span>
+                                <span  v-if="true" class="default-rules">默认规则</span>
                             </p>
                         </template>
 					</el-table-column>
