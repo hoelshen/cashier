@@ -51,22 +51,15 @@
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩1"></el-input>  
-
                         <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
-                        </el-popover>
-                       
+                        </el-popover>                    
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:popover placeholder="进货业绩2"></el-input>  
                     </el-form-item>
-                   
-
                 </el-col>
                 <el-col :span="6">
                       <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
-                        
-                        
                         <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>
-                       
                         <el-input   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
                             <template slot="prepend">店铺拓展：  
                             </template>
