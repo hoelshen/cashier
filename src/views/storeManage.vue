@@ -3,20 +3,20 @@
         <!-- 搜索 start -->
         <div class="searchwrap">
             <el-form ref="form" label-width="100px" :model="searchData">
-                <el-row :gutter="5" class="searchbar">
-                    <el-col :span="5">
+                <el-row :gutter="10" class="searchbar">
+                    <el-col :span="6">
                         <el-form-item label="注册店铺名：">
                             <el-input v-model="searchData.shopName" @keyup.enter.native="onSubmit" placeholder="注册店铺名"></el-input>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <el-form-item label="代理商姓名："> 
                             <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="5">
+                    <el-col :span="6">
                         <el-form-item label="状态：">
                             <el-select v-model="searchData.state" placeholder="请选择" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
@@ -24,7 +24,23 @@
                         </el-form-item>
                     </el-col>
 
-                    <el-col :span="9">
+
+                  
+                </el-row>
+                <el-row :gutter="10" >
+                    <el-col :span="6">
+                        <el-form-item label="运营人员：">
+                            <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="6">
+                        <el-form-item label="业务人员：">
+                            <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
+                        </el-form-item>
+                    </el-col>
+
+                      <el-col :span="6">
                         <el-form-item label="代理商等级：" style="padding:0 3px 0 0">
                             <el-select v-model="searchData.agentLevelIds" multiple placeholder="代理商等级" clearable>
                                 <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
@@ -33,34 +49,21 @@
                     </el-col>
 
                 </el-row>
-                <el-row>
-                    <el-col :span="5">
-                        <el-form-item label="运营人员：">
-                            <el-input v-model="searchData.operator" @keyup.enter.native="onSubmit" placeholder="运营人员"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="业务人员：">
-                            <el-input v-model="searchData.salesMan" @keyup.enter.native="onSubmit" placeholder="业务人员"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    <el-col :span="5">
-                        <el-form-item label="注册时间：">
-                            <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions" style="width: 92%;">
-                            </el-date-picker>
-                        </el-form-item>
-                    </el-col>
 
-                    <el-col :span="9">                       
+                <el-row :gutter="10" >
+                    <el-col :span="12">                       
                         <el-form-item label="归属区域：" >                                 
                             <addressComponent  ref='addAddress' :isShow="true" :isDetail="false"  />
                         </el-form-item>
+                    </el-col>
+                    <el-col :span="6">
+                        <el-form-item label="注册时间：">
+                            <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
                     </el-col>                    
-                </el-row>
-
-                <el-row >
-                     <el-col :span="1">
-                         <el-form style="margin: -7px 16px 11px 16px;">
+                     <el-col :span="5">
+                         <el-form >
                             <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
                          </el-form>
                     </el-col>
@@ -192,7 +195,7 @@
                             </el-form-item>
                             <el-form-item  v-if="changeForm.changeType==='TOP_UP'" label="首批进货款：">
                                   <el-radio v-model="changeForm.isFirstBatchMoney" label="1" value="1">是</el-radio>
-                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0">否</el-radio>
+                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0" @click.native="changRemark">否</el-radio>
                             </el-form-item>
                         </el-col>
                     </el-row>
@@ -212,7 +215,7 @@
                     <el-row>
                         <el-col :span="22">
                             <el-form-item label="备注说明：" label-width="100px">
-                                <el-input v-model="changeForm.remark" placeholder=" 代理商首批进货款"></el-input>
+                                <el-input v-model="changeForm.remark" ></el-input>
                                 <p class="triangle"></p>
                                 <p class="msg">备注修改的原因，不超过50个中文字符</p>
                             </el-form-item>
@@ -1139,6 +1142,9 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
+        changRemark(){
+           this.changeForm.remark='代理商首批进货款' ;
+        }
     },
     computed:{
         
