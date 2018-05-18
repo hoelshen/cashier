@@ -399,6 +399,11 @@ export default {
 
 					if (response.data.success === 1) {
 							self.tableData = response.data.result;
+							for(var i=0;self.tableData.length>i;i++){
+									if(self.tableData[i].changeType=='充值'||self.tableData[i].changeType=='扣款'){
+									self.tableData[i].purchaseOrderNo=self.tableData[i].remark
+								}
+							}
 							if(self.tableData.length>0){
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
