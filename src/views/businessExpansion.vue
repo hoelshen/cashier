@@ -5,21 +5,29 @@
         <div class="searchwrap">
             <el-form ref="form" label-width="100px" :model="searchData">
                 <el-row :gutter="10" class="searchbar">
-                    <el-col :span="6">
+                    <el-col :span="5">
                         <el-form-item label="代理商手机：">
                             <el-input v-model="searchData.phone" @keyup.enter.native="onSubmit" placeholder="代理商手机"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="代理商姓名：" >
-                            <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                    
+                    <el-col :span="5">
+                        <el-form-item label="选择年份： ">
+                            <el-date-picker value-format="yyyy" v-model="searchData.year" :picker-options="pickerOptions" type="year" placeholder="选择年份">
+                            </el-date-picker>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
+                
+                    <el-col :span="5">
                         <el-form-item label="核销状态：">
-                            <el-select v-model="searchData.status" placeholder="核销状态" clearable>
+                            <el-select v-model="searchData.entryStatus" placeholder="核销状态" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="5">
+                        <el-form-item label="付款单号：">
+                            <el-input v-model="searchData.paymentOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="2" :offset="1">
@@ -28,87 +36,75 @@
                     
                 </el-row>
                 <el-row :gutter="10" class="searchbar">
-                    <el-col :span="6">
+                  
+                      <el-col :span="5">
                         <el-form-item label="代理商编号：">
-                            <el-input v-model="searchData.shopNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
+                            <el-input v-model="searchData.agentNo" @keyup.enter.native="onSubmit" placeholder="代理商编号"></el-input>
                         </el-form-item>
                     </el-col>
-                    <el-col :span="6">
-                        <el-form-item label="选择月份： ">
-                            <el-date-picker value-format="yyyy-MM" v-model="searchData.createMonth" :picker-options="pickerOptions" type="month" placeholder="选择月份">
-                            </el-date-picker>
+                    <el-col :span="5">
+                        <el-form-item label="代理商姓名：" >
+                            <el-input v-model="searchData.agentName" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
-                     <el-col :span="6">
-                        <el-form-item label="付款单号：">
-                            <el-input v-model="searchData.payOrderNo" @keyup.enter.native="onSubmit" placeholder="付款单号"></el-input>
-                        </el-form-item>
-                    </el-col>
-                    
                 </el-row>
             </el-form>
         </div>
         <!-- 搜索 end -->
         <!-- 表格 start -->
+        
         <div class="t-bodywrap">
             <el-row class="t-body">
-                <el-row class="tablebar">
+                
+                <el-row class="tablebar" id="hMyTabel">
                     <div class="inputCover"> </div>
-                    <el-table :data="myData" key="id3" @select-all="checkall" ref="myTabel" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
-                        <el-table-column class="checkAllBox" type="selection" width="50" :reserve-selection="true">
+                    <el-table :data="myData" @select-all="checkall" ref="myTabel1" row-key="id" @selection-change="select" v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%">
+                       
+                        <el-table-column  type="selection" width="50" :reserve-selection="true" >
                         </el-table-column>
-                        <el-table-column prop="shopNo" label="代理商编号" width="200">
+                         <el-table-column prop="agentNo" label="代理商编号" width="200">
                             <template slot-scope="scope">
-                                    <span>{{scope.row.shopNo}}</span>
+                                    <span>{{scope.row.agentNo}}</span>
                                 </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="代理商姓名" width="200">
+                        <el-table-column prop="agentName" label="代理商姓名" width="200">
                             <template slot-scope="scope">
-                                    <span>{{scope.row.name}}</span>
+                                    <span>{{scope.row.agentName}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="phone" label="手机号" width="125">
                         </el-table-column>
-                        <el-table-column prop="createMonth" label="月份" width="100">
+                        <el-table-column prop="year" label="年份" width="100">
                         </el-table-column>
-                        <el-table-column prop="verifiNum" label="订单数">
+                        <el-table-column prop="shopNum" label="店铺数" width="100">
                         </el-table-column>
-                        <el-table-column prop="orderSum" label="订单总金额" width="150" align="right">
+                        <el-table-column prop="purcharseAmount" label="货款总金额" width="150" align="right">
                             <template slot-scope="scope">
-                                <span>{{scope.row.orderSum.toFixed(2)}}</span>
+                                <span>{{scope.row.purcharseAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="freightSum" label="订单运费" width="100" align="right">
+                        <el-table-column prop="rebateAmount" label="返利金额" width="150" align="right">
                             <template slot-scope="scope">
-                                <span>{{scope.row.freightSum.toFixed(2)}}</span>
+                                <span>{{scope.row.rebateAmount.toFixed(2)}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="productTotalAmount" label="商品总金额" width="150" align="right">
+                        <el-table-column prop="entryStatus" label="状态">
                             <template slot-scope="scope">
-                                <span>{{scope.row.productTotalAmount.toFixed(2)}}</span>
+                                <span>{{scope.row.entryStatus=='WAIT_CHECK'?'未核销':'已核销'}}</span>
+                                <!-- <span>{{scope.row.entryStatus=='ALREADY_CLOSED'?'未核销':'已核销'}}</span> -->
                             </template>
                         </el-table-column>
-                        <el-table-column prop="verifiAmount" label="分成金额" width="150" align="right">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.verifiAmount.toFixed(2)}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="status" label="状态">
-                            <template slot-scope="scope">
-                                <span>{{scope.row.status==0?'未核销':'已核销'}}</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="payOrderNo" label="付款单号" width="200">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.payOrderNo">{{scope.row.payOrderNo}}</span>
-                                <span v-if="!scope.row.payOrderNo">{{'-'}}</span>
+                        <el-table-column prop="paymentOrderNo" label="付款单号" width="200">
+                             <template slot-scope="scope">
+                                <span v-if="scope.row.paymentOrderNo">{{scope.row.paymentOrderNo}}</span>
+                                <span v-if="!scope.row.paymentOrderNo">{{'-'}}</span>
                             </template>
                         </el-table-column>
                         <el-table-column prop="name" label="操作" width="150">
                             <template slot-scope="scope">
                                     <p class="operation">
-                                        <span @click="outputExcel(scope.row.id,scope.row.name,scope.row.shopNo,scope.row.createMonth)">导出明细</span>
-                                        <span v-if="scope.row.status==0" @click="confirmVerification(scope.row.id)">核销</span>
+                                        <span @click="outputExcel(scope.row.id,scope.row.agentNo,scope.row.year)">导出明细</span>
+                                        <span v-if="scope.row.entryStatus=='WAIT_CHECK'" @click="confirmVerification(scope.row.id)">核销</span>
                                     </p>
                                 </template>
                         </el-table-column>
@@ -142,20 +138,20 @@ export default {
             totalSize: 0,
             pageSize: 30,
             searchData: {
-                shopNo: '',
+                agentName: '',
                 phone: '',
-                payOrderNo: '',
-                status: 0,
-                createMonth: '',
-                name:'',
+                agentNo: '',
+                entryStatus: 'WAIT_CHECK',
+                year:'',
+                paymentOrderNo:'',
             },
             myData: [],
             stateArray: [{
-                    index: 0,
+                    index: 'WAIT_CHECK',
                     name: '未核销'
                 },
                 {
-                    index: 1,
+                    index: 'ALREADY_CLOSED',
                     name: '已核销'
                 },
             ],
@@ -164,7 +160,7 @@ export default {
                 disabledDate(time) {
                     var date = new Date();
                     // 限制前两个月
-                    return time.getMonth() > date.getMonth() - 2 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
+                    return time.getYear() > date.getYear() - 1 && time.getYear() == date.getYear() || time.getYear() > date.getYear();
                 }
             },
             downData: [], // ----> 导出数据
@@ -175,7 +171,6 @@ export default {
     },
     created() {
         this.getFormData();
-        
     },
      mounted(){
          // 表头的选择框 隐藏
@@ -185,6 +180,12 @@ export default {
         },1000)
     },
     methods: {
+        // 表头添加class
+        getRowClass(row,rowIndex){
+            console.log(row,rowIndex)
+            return
+        },
+        // 点击全选
         isSelectAll(){
             this.checkall();
         },
@@ -197,17 +198,17 @@ export default {
             self.loading = true;
             //获取列表数据
             self.$ajax({
-                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
+                url: '/api/http/BusinessRebateAccount/searchBusinessRebateAccountList.jhtml',
                 method: 'post',
                 data: {
-                    'pager.pageIndex': self.currentPage,
-                    'pager.pageSize': self.pageSize,
-                    'verifiOrderVo.shopNo': self.searchData.shopNo,
-                    'verifiOrderVo.phone': self.searchData.phone,
-                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
-                    'verifiOrderVo.status': self.searchData.status,
-                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,
+                    'pageIndex': self.currentPage,
+                    'pageSize': self.pageSize,
+                    'accountSearchVo.phone': self.searchData.phone,
+                    'accountSearchVo.paymentOrderNo': self.searchData.paymentOrderNo,
+                    'accountSearchVo.entryStatus': self.searchData.entryStatus,
+                    'accountSearchVo.year': Utils.formatYearDate(self.searchData.year),
+                    'accountSearchVo.agentName': self.searchData.agentName,
+                    'accountSearchVo.agentNo': self.searchData.agentNo,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -223,8 +224,8 @@ export default {
                 self.loading = false;
                 console.log(response)
                 if (response.data.success === 1) {
-                    self.myData = response.data.result;
-                    self.totalSize = response.data.totalNums;
+                    self.myData = response.data.result.list;
+                    self.totalSize = response.data.result.total;
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -241,17 +242,17 @@ export default {
             self.loading = true;
             //获取列表数据
             self.$ajax({
-                url: '/api/http/verifiOrder/queryVerifiOrderList.jhtml',
+                 url: '/api/http/BusinessRebateAccount/searchBusinessRebateAccountList.jhtml',
                 method: 'post',
                 data: {
-                    // 'pager.pageIndex': self.currentPage,
-                    // 'pager.pageSize': self.pageSize,
-                    'verifiOrderVo.shopNo': self.searchData.shopNo,
-                    'verifiOrderVo.phone': self.searchData.phone,
-                    'verifiOrderVo.payOrderNo': self.searchData.payOrderNo,
-                    'verifiOrderVo.status': self.searchData.status,
-                    'verifiOrderVo.createMonth': Utils.formatMonthDate(self.searchData.createMonth),
-                    'verifiOrderVo.name': self.searchData.name,
+                    // 'pageIndex': self.currentPage,
+                    // 'pageSize': self.pageSize,
+                    'accountSearchVo.phone': self.searchData.phone,
+                    'accountSearchVo.paymentOrderNo': self.searchData.paymentOrderNo,
+                    'accountSearchVo.entryStatus': self.searchData.entryStatus,
+                    'accountSearchVo.year': Utils.formatYearDate(self.searchData.year),
+                    'accountSearchVo.agentName': self.searchData.agentName,
+                    'accountSearchVo.agentNo': self.searchData.agentNo,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -265,20 +266,21 @@ export default {
                 }
             }).then(function(response) {
                 self.loading = false;
-                console.log(response)
+                console.log(response.data.result.list)
                 if (response.data.success === 1) {
-                    self.myData = response.data.result;
-                    self.totalSize = response.data.totalNums;
+                    self.myData = response.data.result.list;
+                    console.log(response.data.result.list)
+                    self.totalSize = response.data.result.total;
                     // 数据全选与否
                     if(!self.ifCheckAll){
                         self.ifCheckAll = true;
                         for(let i in self.myData){
-                            self.$refs.myTabel.toggleRowSelection(self.myData[i],true)
+                            self.$refs.myTabel1.toggleRowSelection(self.myData[i],true)
                         }
                     }else{
                         self.ifCheckAll = false;
                         for(let i in self.myData){
-                            self.$refs.myTabel.clearSelection()
+                            self.$refs.myTabel1.clearSelection()
                         }
                     }
                     // 再次调用分页
@@ -295,6 +297,8 @@ export default {
         },
         onSubmit() {
             let self = this;
+            // self.getFormData();
+            // 搜索的时候 选中的状态要变为不选中 所以用一下两个
             this.ifCheckAll = true;
             self.getAllId();
         },
@@ -322,6 +326,7 @@ export default {
         // 确认批量核销
         confirmBatchVerification() {
             let self = this;
+
              if(self.selectData.length==0){
                  self.$message({
                         message: '请选择要核销的核销单',
@@ -359,11 +364,10 @@ export default {
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/verifiOrder/doAuditVerifiOrder.jhtml',
+                url: '/api/http/businessRebateAccount/checkBusinessReabate.jhtml',
                 method: 'post',
                 data: {
-                    'verifiOrder.verifiOrderIds': id,
-                    'verifiOrder.auditId': JSON.parse(sessionStorage.user).id,
+                    'checkIds': id
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -400,35 +404,31 @@ export default {
         batchOutputExcel() {
             let self = this;
             let ids = self.formatSelect()
-            if(self.selectData.length==0){
-                 self.$message({
-                    message: '请选择要导出的核销单~',
-                    type: 'error'
-                })
-                return
-            }
             self.outputExcel(ids)
         },
         // 导出全部明细
-        allOutputExcel() {
-            let self = this;
-            self.$ajax.all([self.getAllId()]).then(
-                self.$ajax.spread(function(acct) {
-                    let ids = self.allId;
-                    self.outputExcel(ids);
-                })
-             );
+        // allOutputExcel() {
+        //     let self = this;
+        //     self.$ajax.all([self.getAllId()]).then(
+        //         self.$ajax.spread(function(acct) {
+        //             let ids = self.allId;
+        //             self.outputExcel(ids);
+        //         })
+        //      );
+        // },
+        formatJson(filterVal, jsonData) {
+            return jsonData.map(v => filterVal.map(j => v[j]))
         },
         // 导出明细
-        outputExcel(id, name, shopNo, createMonth) {
-        // console.log(id)
+        outputExcel( id,shopNo,createMonth) {
+        console.log(id)
             let self = this;
             self.loading = true;
             self.$ajax({
-                url: '/api/http/verifiOrder/doExprotVerifiOrderDetail.jhtml',
+                url: '/api/http/businessRebateAccount/exportRebateDetailByAgentNo.jhtml',
                 method: 'post',
                 data: {
-                    'verifiOrder.verifiOrderIds': id,
+                    'checkIds': id
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -442,30 +442,41 @@ export default {
                 },
             }).then(function(response) {
                 self.loading = false;
-                    // console.log(response.data)
-
+                // console.log(response.data)
+                
                     if (response.data.success === 1) {
                         self.downData = response.data.result;
-                    if(self.downData.length>0){
-                        require.ensure([], () => {
-                            const {
-                                export_json_to_excel
-                            } = require('../components/tools/Export2Excel')
-                            const tHeader = ['代理商编号', '代理商姓名', '统计周期', '订单号', '下单时间', '订单商品金额（扣除优惠后）', '订单运费', '订单总金额', '分成金额', '订单状态', '订单完成时间', '收件省', '收件市', '收件区']
-                            const filterVal = ['shopNo', 'name', 'createMonth', 'orderNo', 'createTime', 'productPaySumStr', 'freightSumStr', 'payOrderSumStr', 'incomeStr', 'orderStatus', 'finishTime', 'provinceName',
-                                'cityName', 'countyName'
-                            ]
-                            const list = self.downData;
-                            console.log(list)
-                            export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (name ? name + '_' : '') + (createMonth ? createMonth + '_' : '') + '区域订单明细')
-                        })
-
-                         }else if(self.downData.length==0){
-                            self.$message({
-                                message: '没有数据',
-                                type: 'error'
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].list.length; j++){
+                                self.downData[i].list[j].rebateRate =  (self.downData[i].list[j].rebateRate*100).toFixed(2)+"%"
+                            }
+                        }
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].list.length; j++){
+                                if(self.downData[i].list[j].agentGradeId=='31'){
+                                    self.downData[i].list[j].agentGradeId = '单店代理'
+                                }
+                                if(self.downData[i].list[j].agentGradeId=='265'){
+                                    self.downData[i].list[j].agentGradeId = '区域代理'
+                                }
+                                if(self.downData[i].list[j].agentGradeId=='266'){
+                                    self.downData[i].list[j].agentGradeId = '微店代理'
+                                }
+                                
+                            }
+                        }
+                     if(self.downData.length>0){
+                            require.ensure([], () => {
+                                const {
+                                    export_json_to_excel
+                                } = require('../components/tools/Export2Excelyw')
+                                const tHeader = ['代理商编号','统计周期','代理商姓名','代理商等级','签约时间','付款时间','货款金额','返点比例','分成金额','备注说明']
+                                const filterVal = ['agentNo','period','agentName','agentGradeId','signedTime','paymentTime','purcharseAmount','rebateRate','rebateAmount','remark']
+                                const list = self.downData;
+                                export_json_to_excel(tHeader, list,filterVal, (shopNo ? shopNo + '_' : '') + (createMonth ? createMonth + '_' : '') + '业务拓展返利明细')
                             })
-                    }else{
+                    
+                         }else{
                         self.$message({
                             message: '请选择要导出的核销单~',
                             type: 'error'
@@ -477,7 +488,8 @@ export default {
                             type: 'error'
                         })
                     }
-               
+
+                
             }).catch(function(error) {
 
             });
@@ -485,10 +497,12 @@ export default {
         // 全部选中
         checkall(selection){
             this.getAllId();
+            // this.selectData = selection;
         },
         // 表格选择 表格某行选中
         select(selection) {
             this.selectData = selection;
+            // this.getAllId();
         },
         formatSelect() {
             let selectData = this.selectData;
@@ -501,10 +515,13 @@ export default {
     }
 }
 </script>
-<style lang="less" >
+<style lang="less" scoped >
 @import url('../assets/less/area.less');
 .el-date-editor.el-input{
     width: 100%
+}
+.tablebar{
+    position: relative;
 }
 .inputCover{
     width: 40px;

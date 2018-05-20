@@ -70,6 +70,24 @@ const config = [{
                 component: resolve => require(['./views/storeManage.vue'], resolve)
             },
             {
+                // 店铺新增
+                path: 'storeAdd',
+                name: 'storeAdd',
+                component: resolve => require(['./views/storeAdd.vue'], resolve)
+            },
+            {
+                // 店铺修改
+                path: 'storeEdit/:shopNo',
+                name: 'storeEdit',
+                component: resolve => require(['./views/storeEdit.vue'], resolve)
+            },
+            {
+                // 店铺详情
+                path: 'storeDetail/:shopNo',
+                name: 'storeDetail',
+                component: resolve => require(['./views/storeDetail.vue'], resolve)
+            },
+            {
                 // 订单详情
                 path: 'orderInfo/:purchaseOrderNo/:shopNo',
                 name: 'orderInfo',
@@ -104,6 +122,33 @@ const config = [{
                 path: 'lookMsg',
                 name: 'lookMsg',
                 component: resolve => require(['./views/lookMsg.vue'], resolve),
+            },
+            {
+                //业务返利
+                path:'businessExpansion',
+                name:'businessExpansion',
+                component:resolve =>  require(['./views/businessExpansion.vue'], resolve),
+            },
+            {
+                // 达标返利
+                path:'annualPerformance',
+                name:'annualPerformance',
+                component:resolve =>  require(['./views/annualPerformance.vue'], resolve),
+                
+            },
+            {
+                // 业务拓展返利
+                path:'rebate',
+                name:'rebate',
+                component:resolve =>  require(['./views/rebate.vue'], resolve),
+                
+            },
+            {
+                // 业务拓展返利
+                path:'rebateDetail',
+                name:'rebateDetail',
+                component:resolve =>  require(['./views/rebateDetail.vue'], resolve),
+                
             }
         ]
     }
