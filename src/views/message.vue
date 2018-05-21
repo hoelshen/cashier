@@ -76,7 +76,7 @@
 					
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="120px">
+					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="200px">
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 2" class="table_buleTxt" @click="changeMsg(scope.row,1)">启用</span>
 							<span v-if="scope.row.status === 1" class="table_buleTxt" @click="changeMsg(scope.row,2)">禁用</span>
