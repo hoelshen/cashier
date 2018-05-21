@@ -65,19 +65,18 @@
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:popover placeholder="进货业绩2"></el-input>  
                     </el-form-item>
                 </el-col>
-                <el-col :span="6">
-                      <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'">
+                <el-col :span="3">
+                    <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'" style="margin-left:0px">
                         <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>
-                        <el-input   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
+                        <el-input  style="margin-left: -80px;"   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
                             <template slot="prepend">店铺拓展：  
                             </template>
-                                <template slot="append"> 家
+                            <template slot="append"> 家
                             </template>      
                         </el-input>
                     </el-form-item>
                 </el-col>
-           
             </el-row>
             <el-row>
                 <el-col :span="8">
@@ -138,16 +137,15 @@
             <el-row >
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品</el-radio>
-                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商</el-radio>                          
+                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品自开发</el-radio>
+                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商拓展</el-radio>                          
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <!-- <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span> -->
-                    
+                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
                         <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
@@ -158,13 +156,19 @@
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
                 </el-col>
-                <el-col>
+            </el-row>
+            <!--第三行-->
+            <el-row  :gutter="10">
+                <el-col :span="4">
                     <el-form-item :span="4" label="匹配规则:">
-                            <el-input v-model="addForm.superAgentGradeId"></el-input>   
+                            <el-input placeholder="请选择"></el-input> 
                     </el-form-item>
                 </el-col>
+                <el-col :span="3" >
+                     <el-button type="primary" @click="onRelationshipRulesDialogVisible">选择</el-button>    
+                </el-col>
             </el-row>
-            <!--第二行-->
+            <!--第三行-->
             <el-row >
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
@@ -185,42 +189,64 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top:20px;margin-left:120px;">
-                <el-button type="primary" @click="onChange" class="button-save">保存</el-button>
+                <el-button type="primary" @click="onChangePromptVisible" class="button-save">保存</el-button>
                 <el-button @click="goBack" class="button-cancel">取消</el-button>
             </el-row>
         </el-form>
         <!-- 新增店铺 end -->
-        <!--新增弹窗-->
-        <el-dialog :title="addPromptTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetPromptForm">
-                <p></p>
-                <el-form   :model="addPromptForm">
+        <!--新增确认保存弹窗-->
+        <el-dialog :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
+                <i class="el-icon-warning" style="color:red"></i> 
+                <span>店铺新增成功后一下信息无法修改，请您核对信息</span>
+                <el-form  :model="addPromptForm" style="    position:relative;padding: 27px 0px;">
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;">
-                            店铺类型：<span class="font-color"></span>
+                            店铺类型：<span class="font-color">{{addForm.shopType == 'ZUIPIN' ? '直营店铺':'代理商'}}</span>
                         </el-col>
-                    
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;">
-                            合同服务期限：<span class="font-color"></span>
+                            合同服务期限：<span class="font-color">{{addForm.signedTime}}</span>
                         </el-col>
-                
                     </el-row>
-                    <el-row>
-                        <el-col :span="22">
-                           拓展上级：<span class="font-color"></span>
+                    <el-row :gutter="10">
+                        <el-col :span="24" style="padding-left:20px;">
+                           拓展上级：<span v-if="addForm.extendSuperType =='ZUIPIN'" class="font-color">醉品自开发</span>
+                                    <span v-else>{{addForm.extendSuperName}}{{addForm.superAgentGradeId}}</span>
                         </el-col>
                     </el-row>
                 </el-form>
-
                 <div slot="footer" class="dialog-footer">
                     <el-button @click="changePromptCancle">取 消</el-button>
                     <el-button type="primary" @click="addAgent">确 定</el-button>
                 </div>
-            </el-dialog>
-        
+        </el-dialog>
 
-        
+        <!--新增规则关系弹窗-->
+        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+            <div >
+                <el-table :data="relationshipRulesForm" style="width: 100%;">
+                    <el-table-column type="index" label="序号"  width="80">
+                    </el-table-column>
+                    <el-table-column prop="" label="规则编号" width="127">
+                    </el-table-column>
+                    <el-table-column prop="" label="规则名称" width="127" >
+                    </el-table-column>
+                    <el-table-column prop="" label="规则类型" width="100">
+                    </el-table-column>
+                    <el-table-column prop="" label="创建时间"  width="80"  align="right">
+                    </el-table-column>
+                    <el-table-column prop="" label="操作"  width="80"  align="right">
+                    </el-table-column>             
+                </el-table>
+            </div>
+            <div class="plPage clearfix">
+                <el-pagination  style="margin-top: 10px;float: right;" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+                </el-pagination>
+            </div>
+            <div slot="footer" class="dialog-footer" @click="changeCancle()">
+            </div>
+        </el-dialog>     
     </div>
 </template>
 <script type="text/javascript" src="../router.js"></script>
@@ -265,7 +291,8 @@ export default {
                 annualExtendPerformance:'',   //店铺拓展
                 extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
-                extendSuperNo:'',   
+                extendSuperNo:'',    //上级编号
+                extendSuperName:'',  //上级姓名  
                 areaClass:'',     //所属类别
                 belongProvince:'', //所属区域
                 belongCity:'',     //所属城市
@@ -302,9 +329,12 @@ export default {
                 // }
             },
             areaClassFlag:true,
-            addPromptTitle:'',
+            addPromptTitle:'提示',
             addPromptForm:[],
-            dialogFormVisible: false,
+            changePromptDialogFormVisible: false,
+            relationshipRulesTitle:'',
+            relationshipRulesForm:[],
+            relationshipRulesDialogVisible:false,
         }
     },
     components: {
@@ -313,11 +343,8 @@ export default {
     methods:{
         //获得区域等级等级
         getAreaName(){
-            // console.log(this.$refs.addAgentAddress.getData().cityName)
-            
             const self = this;
             //获取区域等级列表
-
             let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' + self.$refs.addAgentAddress.getData().cityName
             self.$ajax.post(url, {}).then(function (response) {
                 if (response.data.success == 1) {
@@ -588,6 +615,8 @@ export default {
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
             let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.addBelongAddress.getData() : null;
+            let dataSignedTime = Utils.formatDayDate(data.signedTime)
+            
             // console.log(addBelongAddress)
             // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
@@ -597,7 +626,7 @@ export default {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
                     'shop.phone': data.phone,
-                    'shop.signedTime': Utils.formatDayDate(data.signedTime),
+                    'shop.signedTime': dataSignedTime,
                     'shop.agentGradeId': data.extendSuperType == 265 ?  '' : ( data.agentGradeId)  ,
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
@@ -699,11 +728,7 @@ export default {
             }
         },
         changePromptCancle() {
-            this.dialogFormVisible = false;
-            this.changeForm.changeType = '';
-            this.changeForm.alterMoney = '';
-            this.changeForm.remark = '';
-            this.changeForm.isFirstBatchMoney = '0';
+            this.changePromptDialogFormVisible = false;
         },
         //返回提示符
         goBack() {
@@ -812,15 +837,15 @@ export default {
                     i.value = i.name;  //将CUSTOMER_NAME作为value
                 }
 
-                console.log(!queryString)
+                // console.log(!queryString)
 
                 if (!queryString) {
-                    console.log(response.data.result)
+                    // console.log(response.data.result)
 
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-                    console.log(list)
+                    // console.log(list)
                     
                     callback(list);
 
@@ -859,6 +884,8 @@ export default {
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
+                this.addForm.extendSuperName = item.name;
+                console.log(item.name);
                 // console.log(item.superAgentGradeId)
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 // console.log(this.addForm.superAgentGradeId)
@@ -896,9 +923,17 @@ export default {
         resetPromptForm(){
             
         },
-        onChange(){
-            this.dialogFormVisible = true;
-
+        changeCancle(){
+            this.relationshipRulesDialogForm = [];
+            this.relationshipRulesDialogVisible = false; 
+        },
+        //打开保存确认弹窗
+        onChangePromptVisible(){
+            this.changePromptDialogFormVisible = true;
+        },
+        //打开规则关系弹窗
+        onRelationshipRulesDialogVisible(){
+            this.relationshipRulesDialogVisible = true;
         }
     },
     created(){
@@ -933,6 +968,14 @@ export default {
     }
 }
 </script>
+<style lang="css" scoped>
+     .el-dialog__wrapper  >>> .el-dialog__body {
+         position: relative;
+         padding: 25px 100px;
+    }
+
+</style>
+
 <style lang="less"  scoped>
 @import url("../assets/less/storeAdd.less");
 #addStore {
@@ -940,7 +983,7 @@ export default {
     margin: 1%;
     padding: 20px;
     background-color: #ffffff;
-    .content_title {
+ntent_title {
   
         .content_closeBtn {
 

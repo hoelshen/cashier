@@ -29,9 +29,8 @@
     <div class="address-wrap">
         <div class="address-select">
             <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
-            
             <el-select v-model="select.provinceCode" placeholder="请选择省份" @change="getAllData" >
-                <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">
+                <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">              
                 </el-option>
             </el-select>
         </div>
@@ -183,7 +182,7 @@ export default {
                 val => obj.areaCode === val.code ? (obj.areaName = val.regionName) : void 0
             );
             obj.address = obj.provinceName + obj.cityName + obj.areaName + obj.detail;
-            console.log(obj)
+            // console.log(obj)
             return obj;
         },
         getAllData() {
