@@ -47,8 +47,8 @@
                         <template  slot-scope="scope">
                             <p class="operat">
                                 <span>详情</span>
-                                <span v-if="true">设为默认规则</span>
-                                <span  v-if="false" class="default-rules">默认规则</span>
+                                <span v-if="false">设为默认规则</span>
+                                <span  v-if="true" class="default-rules">默认规则</span>
                             </p>
                         </template>
 					</el-table-column>
@@ -206,7 +206,9 @@ export default {
 	padding: 3px 5px;
 	color: #f60;
 	border: 1px solid #f60;
-	border-radius: 5px;
+	border-radius: 3px;
+	background-color: #f60;
+	color: #fff;
 
 }
 </style>

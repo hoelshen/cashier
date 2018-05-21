@@ -654,9 +654,9 @@ export default {
                 message: `保存业务拓展返利规则成功~`,
                 type: "success"
               });
-              location.reload();//强刷
+            //   location.reload();//强刷
               
-              // this.$router.push("/rebate");
+              this.$router.push("/rebateList");
               // this.refreshPage();
               
             } else {
