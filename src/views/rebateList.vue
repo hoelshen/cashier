@@ -206,7 +206,9 @@ export default {
 	padding: 3px 5px;
 	color: #f60;
 	border: 1px solid #f60;
-	border-radius: 5px;
+	border-radius: 3px;
+	background-color: #f60;
+	color: #fff;
 
 }
 </style>
