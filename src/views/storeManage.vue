@@ -51,19 +51,21 @@
                 </el-row>
 
                 <el-row :gutter="10" >
-                    <el-col :span="12">                       
-                        <el-form-item label="归属区域：" >                                 
-                            <addressComponent  ref='addAddress' :isShow="true" :isDetail="false"  />
-                        </el-form-item>
-                    </el-col>
                     <el-col :span="6">
                         <el-form-item label="注册时间：">
                             <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                             </el-date-picker>
                         </el-form-item>
-                    </el-col>                    
-                     <el-col :span="5">
-                         <el-form >
+                    </el-col>                      
+                    <el-col :span="12">                       
+                        <el-form-item label="归属区域：" >                                 
+                            <addressComponent  ref='addAddress' :isShow="true" :isDetail="false"  />
+                        </el-form-item>
+                    </el-col>
+                  
+                     <el-col :span="1">
+                         <el-form style="    position: relative;
+    margin-left: -20px;">
                             <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
                          </el-form>
                     </el-col>
