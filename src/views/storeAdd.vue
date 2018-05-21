@@ -43,8 +43,17 @@
             </el-row>
             <el-row>
                 <el-col :span="8">
-                    <el-form-item label="合同签约日期：">
-                        <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                    <el-form-item label="合同服务期限：">
+                        <!-- <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                        </el-date-picker> -->
+                        <el-date-picker
+                        v-model="addForm.signedTime"
+                        type="daterange"
+                        range-separator="-"
+                        start-placeholder="开始日期"
+                        end-placeholder="结束日期"
+                        :picker-options="pickerOptions"
+                        >
                         </el-date-picker>
                     </el-form-item>
                 </el-col>
@@ -287,9 +296,10 @@ export default {
             ],
             phoneLength: 11,
             pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                }
+                // disabledDate(time) {
+                //     console.log(time.getTime())
+                //     console.log(time.getTime() > Date.now()) 
+                // }
             },
             areaClassFlag:true,
             addPromptTitle:'',
