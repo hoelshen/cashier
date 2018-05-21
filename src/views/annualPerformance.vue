@@ -101,7 +101,7 @@
                         <el-table-column label="店铺数">
                             <template  slot-scope="scope">
                                 <el-tooltip  placement="top" effect="light">
-                                    <div slot="content">{{scope.row.finishShopNums}}</div>
+                                    <div slot="content">目标：{{scope.row.finishShopNums}}</div>
                                     <span>{{scope.row.finishShopNums}}</span>
                                 </el-tooltip>
                             </template>
@@ -109,7 +109,7 @@
                         <el-table-column prop="finishPerformanceSum" label="年度业绩" width="150" align="right">
                             <template  slot-scope="scope">
                                 <el-tooltip  placement="top" effect="light">
-                                    <div slot="content">{{scope.row.finishPerformanceSum.toFixed(2)}}</div>
+                                    <div slot="content">目标：{{scope.row.finishPerformanceSum.toFixed(2)}}</div>
                                     <span>{{scope.row.finishPerformanceSum.toFixed(2)}}</span>
                                 </el-tooltip>
                             </template>

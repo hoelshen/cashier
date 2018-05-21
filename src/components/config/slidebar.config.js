@@ -105,7 +105,7 @@ export default [{
         icon: 'icon-shouyinhoutai_guizeshezhi',
         children: [{
             title: '业务拓展返利',
-            path: '/rebate',
+            path: '/rebateList',
         }]
     }
 
