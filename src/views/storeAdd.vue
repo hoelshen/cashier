@@ -44,15 +44,12 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="合同服务期限：">
-                        <!-- <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
-                        </el-date-picker> -->
                         <el-date-picker
                         v-model="addForm.signedTime"
                         type="daterange"
                         range-separator="-"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
-                        :picker-options="pickerOptions"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -206,13 +203,13 @@
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;">
-                            合同服务期限：<span class="font-color">{{addForm.signedTime}}</span>
+                            合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}}-{{changePromptDialogForm.signedEndTime}}</span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24" style="padding-left:20px;">
                            拓展上级：<span v-if="addForm.extendSuperType =='ZUIPIN'" class="font-color">醉品自开发</span>
-                                    <span v-else>{{addForm.extendSuperName}}{{addForm.superAgentGradeId}}</span>
+                                    <span v-else>{{addForm.extendSuperName}}{{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -270,7 +267,7 @@ export default {
                 shopName: '',
                 name: '',
                 phone: '',
-                signedTime: '',
+                signedTime: '', //注册时间
                 agentGradeId: '',
                 provinceCode: '',
                 province: '',
@@ -332,6 +329,11 @@ export default {
             addPromptTitle:'提示',
             addPromptForm:[],
             changePromptDialogFormVisible: false,
+            changePromptDialogForm:{
+                signedStartTime:'',
+                signedEndTime:'',
+                
+            },
             relationshipRulesTitle:'',
             relationshipRulesForm:[],
             relationshipRulesDialogVisible:false,
@@ -388,7 +390,7 @@ export default {
             }
         },
         //提交字段校验
-        testData(data, Address, AgentAddress) {
+        testData(data, Address, AgentAddress, addBelongAddress) {
             const self = this;
             let isMobile = /^1\d{10}$/
             //店铺名判断
@@ -513,7 +515,26 @@ export default {
                 }
             
             }
-
+            //所属区域判断
+            if(data.agentGradeId!=265 && data.shopType != 'SELF_SUPPORT'){
+                 if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
+                    self.loading = false;
+                    self.$message({
+                        message: '所属区域不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (addBelongAddress.cityCode == 1) {
+                        self.loading = false;
+                        self.$message({
+                            message: '请选择具体代理城市',
+                            type: 'error'
+                        })
+                        return false
+                    }
+                }
+            }
             //代理区域判断
             if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
                 if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
@@ -535,7 +556,7 @@ export default {
                 }
 
             }
-                  //年度业绩目标：
+            //年度业绩目标：
             // console.log(data.annualPurchasePerformance)
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
@@ -615,18 +636,18 @@ export default {
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
             let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.addBelongAddress.getData() : null;
-            let dataSignedTime = Utils.formatDayDate(data.signedTime)
-            
-            // console.log(addBelongAddress)
+            let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);
+            let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);
             // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
-            if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
+            // if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
             // console.log(addAgentAddress)
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
                     'shop.phone': data.phone,
-                    'shop.signedTime': dataSignedTime,
+                    'shop.signedStartTime': dataSignedStartTime,
+                    'shop.signedEndTime':dataSignedEndTime,
                     'shop.agentGradeId': data.extendSuperType == 265 ?  '' : ( data.agentGradeId)  ,
                     'shop.provinceCode': addAddress.provinceCode,
                     'shop.cityCode': addAddress.cityCode,
@@ -929,7 +950,21 @@ export default {
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
+            const self = this;
+            if (!this.checkSession()) return;
+            self.loading = true;
+            const data = self.addForm;
+            let addAddress = self.$refs.addAddress.getData();
+            let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.addBelongAddress.getData() : null;
+            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;                         
+            if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
+            
+            let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);   
+            let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);             
+
             this.changePromptDialogFormVisible = true;
+            this.changePromptDialogForm.signedStartTime = Utils.formatDayDate(this.addForm.signedTime[0])
+            this.changePromptDialogForm.signedEndTime = Utils.formatDayDate(this.addForm.signedTime[1])
         },
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(){

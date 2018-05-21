@@ -21,6 +21,7 @@
                             <el-select v-model="searchData.state" placeholder="请选择" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
+                            
                         </el-form-item>
                     </el-col>  
 
@@ -378,7 +379,7 @@ export default {
                 }
             }
         },
-        //预存款变更
+        //确定预存款变更
         onChange() {
             if (sessionStorage.user) {
                 this.user = JSON.parse(sessionStorage.user);
@@ -465,10 +466,7 @@ export default {
             });
             self.dialogFormVisible = false;
         },
-        //
-        closeAddressComponent(){
-            console.log('ok')
-        },
+        //打开预存款弹窗
         chengPre(id, shopName, shopNo) {
             if (!this.checkSession()) return;
             this.changeForm.changeShopId = id;
@@ -561,7 +559,6 @@ export default {
                 console.log(err);
             });
         },
-
         //排序
         sortAmount(row, column) {
             // console.log(row);
