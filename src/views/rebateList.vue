@@ -26,29 +26,26 @@
 			<div class="list">
 				<el-row style="padding-top:20px">
 					<el-col :gutter="20">
-						<el-button type="primary" class="el-icon-plus">
+						<el-button type="primary" @click="$router.push('/rebateAdd')" class="el-icon-plus">
 							新增规则
 						</el-button>
 					</el-col>
 				</el-row>
-				<el-table border :data="tableData" style="margin: 20px auto;font-size: 14px;">
-					<el-table-column label="规则编号" prop="rulesNo" >
+				<el-table border :data="myData" style="margin: 20px auto;font-size: 14px;">
+					<el-table-column label="规则编号" prop="ruleNo" >
 					</el-table-column>
-					<el-table-column prop="rulesName" label="规则名称">
+					<el-table-column prop="businessExtendsRuleName" label="规则名称">
 					</el-table-column>
-					<el-table-column prop="makeTime" label="创建时间">
+					<el-table-column prop="createTime" label="创建时间">
 					</el-table-column>
-					<el-table-column prop="makePerson" label="创建人">
-						<template slot-scope="scope">
-							<p>{{scope.row.GID}}</p>
-						</template>
+					<el-table-column prop="creator" label="创建人">
 					</el-table-column>
-					<el-table-column  label="操作" width="200">
+					<el-table-column prop="isDefault"  label="操作" width="200">
                         <template  slot-scope="scope">
                             <p class="operat">
-                                <span>详情</span>
-                                <span v-if="false">设为默认规则</span>
-                                <span  v-if="true" class="default-rules">默认规则</span>
+                                <span> <router-link class="router-link-active" :to="{ name: 'rebateDetail', params: { ruleNo: scope.row.ruleNo}}">详情</router-link></span>
+                                <span v-if="scope.row.isDefault==0" @click="confirmsetDefault(scope.row.id)">设为默认规则</span>
+                                <span  v-if="scope.row.isDefault==1" class="default-rules" style="cursor:default;">默认规则</span>
                             </p>
                         </template>
 					</el-table-column>
@@ -72,7 +69,7 @@ export default {
 			pageSize: 30,			//当前页数
 			searchData: {
 				searchName: '',		//姓名
-				searchTime: '',		//注册时间
+				searchTime: '',		//创建时间
 			},
 			tableData: [
 				{
@@ -82,7 +79,9 @@ export default {
 					makePerson: '',		//创建人
 					operat: '',		    //操作
 				}
-			]
+			],
+			myData:[],
+			totalNums:0,
 		}
 	},
 	methods: {
@@ -106,19 +105,45 @@ export default {
 			}
 		},
 		onSumbit() {
+			let self = this;
 			if (!this.checkSession()) return;
-			
-			const self = this;
-			self.$ajax({
-				url: '/api/customerInfo/customerInfo/search.jhtml',
+			var temp = new Date(this.searchData.searchTime[0]);
+			if (temp.getFullYear() > 2006) {
+				var time1 = temp.getFullYear();
+				if ((temp.getMonth() + 1) < 10) {
+					time1 = time1 + '-0' + (temp.getMonth() + 1);
+				} else {
+					time1 = time1 + '-' + (temp.getMonth() + 1);
+				}
+				if (temp.getDate() < 10) {
+					time1 = time1 + '-0' + temp.getDate();
+				} else {
+					time1 = time1 + '-' + temp.getDate();
+				}
+				console.log(time1);
+				temp = new Date(this.searchData.searchTime[1]);
+				var time2 = temp.getFullYear();
+				if ((temp.getMonth() + 1) < 10) {
+					time2 = time2 + '-0' + (temp.getMonth() + 1);
+				} else {
+					time2 = time2 + '-' + (temp.getMonth() + 1);
+				}
+				if (temp.getDate() < 10) {
+					time2 = time2 + '-0' + temp.getDate();
+				} else {
+					time2 = time2 + '-' + temp.getDate();
+				}
+				console.log(time2);
+			} else {
+				var time1 = '';
+				var time2 = '';
+			}
+            self.$ajax({
+				url: '/api/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
 				method: 'post',
 				data: {
-					'page': 1,
-					'rows': this.pageSize,
-					'customerInfo.shop.shopName': this.searchData.searchShop,
-					'customerInfo.phone': this.searchData.searchPhone,
-					'customerInfo.name': this.searchData.searchName,
-					'customerInfo.gid': this.searchData.searchLevel,
+					'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
 					'customerInfo.startTime': time1,
 					'customerInfo.endTime': time2,
 				},
@@ -135,8 +160,8 @@ export default {
 				}
 			}).then(function(response) {
 				if (response.data.code === 1) {
-					self.tableData = response.data.rows;
-					self.totalNums = response.data.total;
+					self.myData = response.data.result;
+                    self.totalNums = response.data.totalNums;
 				} else {
 					self.$message({
 						message: response.data.msg,
@@ -154,48 +179,102 @@ export default {
 			if (!this.checkSession()) return;
 
 			const self = this;
-			self.$ajax({
-				url: '/api/customerInfo/customerInfo/search.jhtml',
-				method: 'post',
-				data: {
-					'page': val,
-					'rows': this.pageSize,
-					'customerInfo.shop.shopName': this.searchData.searchShop,
-					'customerInfo.phone': this.searchData.searchPhone,
-					'customerInfo.name': this.searchData.searchName,
-					'customerInfo.gid': this.searchData.searchLevel,
-					'customerInfo.startTime': time1,
-					'customerInfo.endTime': time2,
-				},
-				transformRequest: [function(data) {
-					// Do whatever you want to transform the data
-					let ret = ''
-					for (let it in data) {
-						ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
-					}
-					return ret;
-				}],
-				headers: {
-					'Content-Type': 'application/x-www-form-urlencoded'
-				}
-			}).then(function(response) {
-				if (response.data.code === 1) {
-					self.tableData = response.data.rows;
-					self.totalNums = response.data.total;
-				} else {
-					self.$message({
-						message: response.data.msg,
-						type: 'error'
-					})
-				}
-			}).catch(function(error) {
-
-			});
+			self.currentPage = val;
+			self.getFormData();
 		},
+		getFormData() {
+            const self = this;
+            self.loading = true;
+            //获取列表数据
+            self.$ajax({
+                url: '/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
+                method: 'post',
+                data: {
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function(response) {
+                self.loading = false;
+                // console.log(response)
+                if (response.data.success === 1) {
+                    self.myData = response.data.result;
+                    self.totalNums = response.data.totalNums;
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function(error) {
+
+            });
+		},
+		// 确认设为默认规则
+        confirmsetDefault(id) {
+            let self = this;
+            self.$confirm('你确定要将当前规则设为默认规则吗？', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            }).then(() => {
+                self.setDefault(id)
+            })
+        },
+		// 设置默认规则
+		setDefault(id){
+			const self = this;
+			self.loading = true;
+            //获取列表数据
+            self.$ajax({
+                url: '/api/http/businessExtendsRule/modifyBusinessExtendsRuleDefault.jhtml',
+                method: 'post',
+                data: {
+                    'id': id,
+                },
+                transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+				}
+				
+				
+			}).then(function(response) {
+                self.loading = false;
+                if (response.data.success === 1) {
+					self.$message({
+						message: `设置“【规则名称】”为默认规则成功~`,
+						type: "success"
+					})
+                   self.getFormData();
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function(error) {
+
+            });
+		}
 	},
 	created() {
 		if (!this.checkSession()) return;
-		
+		this.getFormData();
 	},
 }
 </script>
@@ -210,5 +289,8 @@ export default {
 	background-color: #f60;
 	color: #fff;
 
+}
+.operat a{
+	color: #1990ff;
 }
 </style>
