@@ -222,7 +222,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <el-form-item label="代理商姓名：" label-width="100px" >
-                                    <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                                    <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商编号/姓名"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="2" :offset="1">
