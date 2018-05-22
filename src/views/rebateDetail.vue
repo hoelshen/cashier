@@ -213,6 +213,25 @@
           <!-- 查看关联代理商(编号：xxx) start -->
             <el-dialog :title="relatedAgenciesTitle" :visible.sync="relatedAgencies"  size="140%">
                 <div>
+                    <el-form>
+                        <el-row>
+                            <el-col :span="5"  :offset="8">
+                                <el-form-item>
+                                     <el-checkbox v-model="checked">不显示禁用代理商</el-checkbox>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="8">
+                                <el-form-item label="代理商姓名：" label-width="100px" >
+                                    <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="2" :offset="1">
+                                <el-button type="primary" @click="onSubmit" class="searchBtn">查询</el-button>
+                            </el-col>
+                        </el-row>
+                    </el-form>
+                </div>
+                <div>
                     <el-table :data="relatedAgenciesForm"  style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
@@ -255,6 +274,10 @@
 export default {
   data() {
     return {
+        searchData:{
+             name:"",
+        },
+        checked:"",
         relatedAgencies:false,
         relatedAgenciesTitle:"",
         currentPage: 1,
