@@ -59,13 +59,13 @@
 							{{ scope.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
 						</template>
 					</el-table-column>
-					<el-table-column label="发送对象" align="center">
+					<el-table-column label="发送对象" align="center" width=200>
 						<template scope="scope">
 							<span>已读{{scope.row.numberOfReaders}}/{{scope.row.sendTheTotalNumber}}</span>
 							<!-- <span>已读{{tableData[scope.$index].numberOfReaders }}/{{tableData[scope.$index].sendTheTotalNumber}}</span> -->
 						</template>
 					</el-table-column>
-					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width="100px">
+					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width=200px>
 					</el-table-column>
 					<el-table-column prop="status" label="状态" align="center">
 						<template slot-scope="scope">
@@ -76,7 +76,7 @@
 					
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width="200px">
+					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width=200px>
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 2" class="table_buleTxt" @click="changeMsg(scope.row,1)">启用</span>
 							<span v-if="scope.row.status === 1" class="table_buleTxt" @click="changeMsg(scope.row,2)">禁用</span>
