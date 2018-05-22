@@ -6,7 +6,7 @@
 					<el-row :gutter="10">
 						<el-col :span="8">
 							<el-form-item label="规则名称">
-								<el-input @keyup.enter.native="onSumbit" v-model="searchData.searchName" placeholder="姓名"></el-input>
+								<el-input @keyup.enter.native="onSumbit" v-model="searchData.ruleName"></el-input>
 							</el-form-item>
 						</el-col>
                         <el-col :span="8" style="margin-left:-15px;">
@@ -68,7 +68,7 @@ export default {
 			totalNums: 0,			//数据总数
 			pageSize: 30,			//当前页数
 			searchData: {
-				searchName: '',		//姓名
+				ruleName: '',		//姓名
 				searchTime: '',		//创建时间
 			},
 			tableData: [
@@ -120,7 +120,7 @@ export default {
 				} else {
 					time1 = time1 + '-' + temp.getDate();
 				}
-				console.log(time1);
+				// console.log(time1);
 				temp = new Date(this.searchData.searchTime[1]);
 				var time2 = temp.getFullYear();
 				if ((temp.getMonth() + 1) < 10) {
@@ -133,19 +133,20 @@ export default {
 				} else {
 					time2 = time2 + '-' + temp.getDate();
 				}
-				console.log(time2);
+				// console.log(time2);
 			} else {
 				var time1 = '';
 				var time2 = '';
 			}
             self.$ajax({
-				url: '/api/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
+				url: '/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
 				method: 'post',
 				data: {
 					'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-					'customerInfo.startTime': time1,
-					'customerInfo.endTime': time2,
+					'businessExtendsRuleVo.startTime': time1,
+					'businessExtendsRuleVo.endTime': time2,
+					'businessExtendsRuleVo.ruleName': self.searchData.ruleName,
 				},
 				transformRequest: [function(data) {
 					// Do whatever you want to transform the data
@@ -159,9 +160,9 @@ export default {
 					'Content-Type': 'application/x-www-form-urlencoded'
 				}
 			}).then(function(response) {
-				if (response.data.code === 1) {
+				if (response.data.success === 1) {
 					self.myData = response.data.result;
-                    self.totalNums = response.data.totalNums;
+					self.totalNums = response.data.totalNums;
 				} else {
 					self.$message({
 						message: response.data.msg,
