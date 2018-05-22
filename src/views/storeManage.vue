@@ -472,7 +472,8 @@ export default {
             this.changeForm.changeShopId = id;
             this.changeForm.changeShopName = shopName;
             this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-            this.dialogFormVisible = true;    
+            this.dialogFormVisible = true; 
+            this.changeForm.isFirstBatchMoney = '0';   
         },
         //预存款清空
         changeCancle() {
