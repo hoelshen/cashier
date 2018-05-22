@@ -10,8 +10,8 @@
 							</el-form-item>
 						</el-col>
                         <el-col :span="8" style="margin-left:-15px;">
-							<el-form-item label="选择时间">
-								<el-date-picker width="200" v-model="searchData.searchTime" type="date" placeholder="选择日期范围"></el-date-picker>
+							<el-form-item label="创建时间">
+								<el-date-picker width="200" v-model="searchData.searchTime" type="daterange" placeholder="选择日期范围"></el-date-picker>
 							</el-form-item>
 						</el-col>
 						<el-col :span="8">
