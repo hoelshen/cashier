@@ -668,7 +668,7 @@ export default {
           )
           .then(res => {
             if (res.data.success === 1) {
-                console.log(res)
+                // console.log(res)
               this.$message({
                 message: `保存业务拓展返利规则成功~`,
                 type: "success"
