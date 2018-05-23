@@ -2,12 +2,12 @@
     <!-- 详情列表 -->
       <div class="rebate">
           
-        <el-form ref="form1" >
+        <el-form ref="form" >
             <el-row>
                 <el-col>
                     <el-form-item label="规则名称：">
                         <span>茶集政策04.15，2018 - 代理商业务拓展返利</span>
-                        <span class="defaults-rules">
+                        <span class="defaults-rules" v-if="isDefault==1">
                             默认规则
                         </span>
                         <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：">
-                        <el-button type="primary" @click="relatedAgenciesData">查看详情</el-button>
+                        <el-button type="primary" @click="relatedAgenciesData(urlId)">查看详情</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -222,7 +222,7 @@
                             </el-col>
                             <el-col :span="8">
                                 <el-form-item label="代理商姓名：" label-width="100px" >
-                                    <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商编号/姓名"></el-input>
+                                    <el-input v-model="searchData.nameOrNo" @keyup.enter.native="onSubmit" placeholder="代理商编号/姓名"></el-input>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="2" :offset="1">
@@ -235,9 +235,9 @@
                     <el-table :data="relatedAgenciesForm"  style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
-                      <el-table-column prop="agentNo" label="代理商编号" width="127">
+                      <el-table-column prop="shopNo" label="代理商编号" width="127">
                       </el-table-column>
-                      <el-table-column prop="agentName" label="代理商姓名" width="150">
+                      <el-table-column prop="shopName" label="代理商姓名" width="150">
                       </el-table-column>
                       <el-table-column prop="agentGradeId" label="代理商等级" width="127">
                            <template slot-scope="scope">
@@ -246,7 +246,7 @@
                                 <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
                             </template>
                       </el-table-column>
-                      <el-table-column prop="registTime" label="店铺注册" width="127">
+                      <el-table-column prop="createTime" label="店铺注册" width="127">
                       </el-table-column>
                       <el-table-column prop="relationType" label="关系" width="127">
                             <template slot-scope="scope">
@@ -274,8 +274,10 @@
 export default {
   data() {
     return {
+        isDefault:0,
+        urlId:"",
         searchData:{
-             name:"",
+             nameOrNo:"",
         },
         checked:"",
         relatedAgencies:false,
@@ -312,7 +314,7 @@ export default {
           dldateAfter:"",
         },
       },
-      relatedAgenciesForm:""
+      relatedAgenciesForm:[]
     };
   },
   // components: {
@@ -361,20 +363,21 @@ export default {
         self.currentPage = val;
         self.relatedAgenciesData();
     },
-    relatedAgenciesData(shopNo){
-        this.relatedAgenciesTitle = "关联代理商（规则编号：" + shopNo + "）"
+    relatedAgenciesData(urlId){
+        this.relatedAgenciesTitle = "关联代理商（规则编号：" + urlId + "）"
         if (!this.checkSession()) return; 
         const self = this;               
         self.relatedAgencies = true;
         self.loading = true;
-        let url = '' 
+        let url = '/api/http/businessExtendsRule/getRelatedAgentListAccordingToBusinessExtendsRuleId.jhtml' 
         self.$ajax({
                 url: url,
                  method: 'post',
                  data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'searchAnnualPerformanceOrderVo.shopNo':shopNo
+                    'id':urlId,
+                    'agentNumberOrAgentName':self.searchData.nameOrNo,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -387,7 +390,7 @@ export default {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
             }).then(function (response) {
-                // console.log(response)
+                console.log(response)
                 self.loading = false;
              if (response.data.success == 1) {
                     self.relatedAgenciesForm = response.data.result;
@@ -402,54 +405,75 @@ export default {
             
         }).catch(function (err) {
             self.loading = false;
-            console.log(err);
+            // console.log(err);
         });
-    }
+    },
+    onSubmit(){
+
+    },
+    getUrlId() {
+      this.urlId = this.$route.query.id
+    },
   },
     created() {
     if (!this.checkSession()) return;
-    
-        this.$getData({
-            url: 'http/businessExtendsRule/getBusinessExtendsRuleDetail.jhtml',
-            success(response) {
-                console.log(response.data);
-                this.form.zpTimeChose = response.data.result.zuipinCycleTime;
-                this.form.dlTimeChose = response.data.result.agentCycleTime;
-                this.form.zpTimeLimit.zpdateBefore = response.data.result.zuipinContractDaysInner;
-                this.form.zpTimeLimit.zpSingleExtendsOne = response.data.result.zuipinSingleExtendsOne*100;
-                this.form.zpTimeLimit.zpSingleExtendsTwo = response.data.result.zuipinSingleExtendsTwo*100;
-                this.form.zpTimeLimit.zpSingleExtendsThree = response.data.result.zuipinSingleExtendsThree*100;
-                this.form.zpTimeLimit.zpAreaExtendsOne = response.data.result.zuipinAreaExtendsOne*100;
-                this.form.zpTimeLimit.zpAreaExtendsTwo = response.data.result.zuipinAreaExtendsTwo*100;
-                this.form.zpTimeLimit.zpAreaExtendsThree = response.data.result.zuipinAreaExtendsThree*100;
-                this.form.zpTimeLimit.zpdateAfter = response.data.result.zuipinContractDaysAfter;
-                this.form.zpSingleRebate = (response.data.result.zuipinSingleRebate*100).toFixed(2)+"%";
-                this.form.zpAreaRebate = (response.data.result.zuipinAreaRebate*100).toFixed(2)+"%";
+   
+        const self = this;
+        self.getUrlId();
+        self.$ajax({
+				url: '/api/http/businessExtendsRule/getBusinessExtendsRuleDetail.jhtml',
+                method:"post",
+                data:{
+                    "id":self.urlId
+                },
+				transformRequest: [function(data) {
+					// Do whatever you want to transform the data
+					let ret = ''
+					for (let it in data) {
+						ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+					}
+					return ret;
+				}],
+				headers: {
+					'Content-Type': 'application/x-www-form-urlencoded'
+				}
+            })
+            .then(function(response) { 
+				if (response.data.success === 1) {
+					// console.log(response.data);
+                    self.isDefault = response.data.result.isDefault;
+                    self.form.zpTimeChose = response.data.result.zuipinCycleTime;
+                    self.form.dlTimeChose = response.data.result.agentCycleTime;
+                    self.form.zpTimeLimit.zpdateBefore = response.data.result.zuipinContractDaysInner;
+                    self.form.zpTimeLimit.zpSingleExtendsOne = response.data.result.zuipinSingleExtendsOne*100;
+                    self.form.zpTimeLimit.zpSingleExtendsTwo = response.data.result.zuipinSingleExtendsTwo*100;
+                    self.form.zpTimeLimit.zpSingleExtendsThree = response.data.result.zuipinSingleExtendsThree*100;
+                    self.form.zpTimeLimit.zpAreaExtendsOne = response.data.result.zuipinAreaExtendsOne*100;
+                    self.form.zpTimeLimit.zpAreaExtendsTwo = response.data.result.zuipinAreaExtendsTwo*100;
+                    self.form.zpTimeLimit.zpAreaExtendsThree = response.data.result.zuipinAreaExtendsThree*100;
+                    self.form.zpTimeLimit.zpdateAfter = response.data.result.zuipinContractDaysAfter;
+                    self.form.zpSingleRebate = (response.data.result.zuipinSingleRebate*100).toFixed(2)+"%";
+                    self.form.zpAreaRebate = (response.data.result.zuipinAreaRebate*100).toFixed(2)+"%";
 
-                this.form.dlTimeLimit.dldateBefore = response.data.result.agentContractDaysInner;
-                this.form.dlTimeLimit.dlSingleExtendsOne = response.data.result.agentSingleExtendsOne*100;
-                this.form.dlTimeLimit.dlSingleExtendsTwo = response.data.result.agentSingleExtendsTwo*100;
-                this.form.dlTimeLimit.dlSingleExtendsThree = response.data.result.agentSingleExtendsThree*100;
-                this.form.dlTimeLimit.dlAreaExtendsOne = response.data.result.agentAreaExtendsOne*100;
-                this.form.dlTimeLimit.dlAreaExtendsTwo = response.data.result.agentAreaExtendsTwo*100;
-                this.form.dlTimeLimit.dlAreaExtendsThree = response.data.result.agentAreaExtendsThree*100;
-                this.form.dlTimeLimit.dldateAfter = response.data.result.agentContractDaysAfter;
-                this.form.dlSingleRebate = (response.data.result.agentSingleRebate*100).toFixed(2)+"%";
-                this.form.dlAreaRebate = (response.data.result.agentAreaRebate*100).toFixed(2)+"%";
-                //  if(response.data.result.agentSingleRebate||response.data.result.agentSingleRebate=='0'){
-                //         this.ifEdit=true;
-                //     }else{
-                //         this.ifEdit=false;
-                //     }
-            },
-            fail(response) {
-                this.$message({
-                    message: response.data.msg,
-                    type: 'error'
-                })
-            },
-           
-        });
+                    self.form.dlTimeLimit.dldateBefore = response.data.result.agentContractDaysInner;
+                    self.form.dlTimeLimit.dlSingleExtendsOne = response.data.result.agentSingleExtendsOne*100;
+                    self.form.dlTimeLimit.dlSingleExtendsTwo = response.data.result.agentSingleExtendsTwo*100;
+                    self.form.dlTimeLimit.dlSingleExtendsThree = response.data.result.agentSingleExtendsThree*100;
+                    self.form.dlTimeLimit.dlAreaExtendsOne = response.data.result.agentAreaExtendsOne*100;
+                    self.form.dlTimeLimit.dlAreaExtendsTwo = response.data.result.agentAreaExtendsTwo*100;
+                    self.form.dlTimeLimit.dlAreaExtendsThree = response.data.result.agentAreaExtendsThree*100;
+                    self.form.dlTimeLimit.dldateAfter = response.data.result.agentContractDaysAfter;
+                    self.form.dlSingleRebate = (response.data.result.agentSingleRebate*100).toFixed(2)+"%";
+                    self.form.dlAreaRebate = (response.data.result.agentAreaRebate*100).toFixed(2)+"%";
+				} else {
+					self.$message({
+						message: response.data.msg,
+						type: 'error'
+					})
+				}
+			}).catch(function(error) {
+
+			});
   }
 };
 </script>

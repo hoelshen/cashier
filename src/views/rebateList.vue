@@ -31,10 +31,10 @@
 						</el-button>
 					</el-col>
 				</el-row>
-				<el-table border :data="myData" style="margin: 20px auto;font-size: 14px;">
+				<el-table border :data="myData" style="margin: 20px auto;font-size: 14px;" tooltip-effect="light">
 					<el-table-column label="规则编号" prop="ruleNo" >
 					</el-table-column>
-					<el-table-column prop="businessExtendsRuleName" label="规则名称">
+					<el-table-column prop="businessExtendsRuleName" :show-overflow-tooltip="true"  label="规则名称">
 					</el-table-column>
 					<el-table-column prop="createTime" label="创建时间">
 					</el-table-column>
@@ -43,8 +43,8 @@
 					<el-table-column prop="isDefault"  label="操作" width="200">
                         <template  slot-scope="scope">
                             <p class="operat">
-                                <span> <router-link class="router-link-active" :to="{ name: 'rebateDetail', params: { ruleNo: scope.row.ruleNo}}">详情</router-link></span>
-                                <span v-if="scope.row.isDefault==0" @click="confirmsetDefault(scope.row.id)">设为默认规则</span>
+                                <span> <router-link class="router-link-active" :to="{ name: 'rebateDetail', query: { id: scope.row.id}}">详情</router-link></span>
+                                <span v-if="scope.row.isDefault==0" @click="confirmsetDefault(scope.row.id,scope.row.businessExtendsRuleName)">设为默认规则</span>
                                 <span  v-if="scope.row.isDefault==1" class="default-rules" style="cursor:default;">默认规则</span>
                             </p>
                         </template>
@@ -108,7 +108,10 @@ export default {
 			let self = this;
 			if (!this.checkSession()) return;
 			var temp = new Date(this.searchData.searchTime[0]);
-			if (temp.getFullYear() > 2006) {
+			if (temp.getFullYear() > 2006) {debugger
+
+				
+
 				var time1 = temp.getFullYear();
 				if ((temp.getMonth() + 1) < 10) {
 					time1 = time1 + '-0' + (temp.getMonth() + 1);
@@ -120,20 +123,31 @@ export default {
 				} else {
 					time1 = time1 + '-' + temp.getDate();
 				}
-				// console.log(time1);
-				temp = new Date(this.searchData.searchTime[1]);
-				var time2 = temp.getFullYear();
-				if ((temp.getMonth() + 1) < 10) {
-					time2 = time2 + '-0' + (temp.getMonth() + 1);
+				console.log(time1);
+				var temp1 = new Date(this.searchData.searchTime[1]);
+				var time2 = temp1.getFullYear();
+				if ((temp1.getMonth() + 1) < 10) {
+					time2 = time2 + '-0' + (temp1.getMonth() + 1);
 				} else {
-					time2 = time2 + '-' + (temp.getMonth() + 1);
+					time2 = time2 + '-' + (temp1.getMonth() + 1);
 				}
-				if (temp.getDate() < 10) {
-					time2 = time2 + '-0' + temp.getDate();
-				} else {
-					time2 = time2 + '-' + temp.getDate();
+				if(temp.getDate()==temp1.getDate()){
+					if (temp1.getDate() < 10) {
+						var timer = temp1.getDate()+1
+						time2 = time2 + '-0' + timer;
+					} else {
+						var timer = temp1.getDate()+1
+						time2 = time2 + '-' + timer;
+					}
+				}else{
+					if (temp1.getDate() < 10) {
+						time2 = time2 + '-0' + temp1.getDate();
+					} else {
+						time2 = time2 + '-' + temp1.getDate();
+					}
 				}
-				// console.log(time2);
+				
+				console.log(time2);
 			} else {
 				var time1 = '';
 				var time2 = '';
@@ -206,6 +220,7 @@ export default {
                 }
             }).then(function(response) {
                 self.loading = false;
+				console.log(response.data.result)
                 // console.log(response)
                 if (response.data.success === 1) {
                     self.myData = response.data.result;
@@ -221,18 +236,18 @@ export default {
             });
 		},
 		// 确认设为默认规则
-        confirmsetDefault(id) {
+        confirmsetDefault(id,name) {
             let self = this;
             self.$confirm('你确定要将当前规则设为默认规则吗？', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                self.setDefault(id)
+                self.setDefault(id,name)
             })
         },
 		// 设置默认规则
-		setDefault(id){
+		setDefault(id,name){
 			const self = this;
 			self.loading = true;
             //获取列表数据
@@ -258,7 +273,7 @@ export default {
                 self.loading = false;
                 if (response.data.success === 1) {
 					self.$message({
-						message: `设置“【规则名称】”为默认规则成功~`,
+						message: "设置“"+name+"”为默认规则成功~",
 						type: "success"
 					})
                    self.getFormData();
@@ -271,7 +286,8 @@ export default {
             }).catch(function(error) {
 
             });
-		}
+		},
+
 	},
 	created() {
 		if (!this.checkSession()) return;
