@@ -32,10 +32,7 @@
                             是否展示到醉品线下M2O体验店
                         </div>
                     </el-form-item>
-                </el-col>
-
-                
-                
+                </el-col>                
             </el-row>
             <el-row>
                  <el-col :span="8">
@@ -48,43 +45,28 @@
             </el-row>
             <el-row>
                  <!--第三行-->
-         
                 <el-col :span="8">
-                    <el-form-item label="合同签约日期：">
-                        <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions"  disabled>
-                        </el-date-picker>
+                    <el-form-item label="合同服务期限："  >
+                        <!-- <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions"  disabled>
+                        </el-date-picker> -->
+                        <span >  {{editForm.signedTime}}~{{editForm.signedTime}}</span>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="年度业绩目标：" v-show="editForm.shopType!='SELF_SUPPORT'">
                         <el-input v-model="editForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
                     </el-form-item>
-                  
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'">  
-                             
-                            <el-input  v-model="editForm.annualExtendPerformance"   >                              
-                                <template slot="prepend">店铺拓展：  
-                                </template>
-                                    <template slot="append"> 家
-                                </template> 
-                            </el-input> 
-                        
+                    <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'" >  
+                        <el-input  v-model="editForm.annualExtendPerformance"   >                              
+                            <template slot="prepend">店铺拓展：  
+                            </template>
+                                <template slot="append"> 家
+                            </template> 
+                        </el-input> 
                     </el-form-item>
                 </el-col>
-                <!-- <el-col :span="6">
-                    <el-form-item  v-show="editForm.agentGradeId==265&&editForm.shopType!='SELF_SUPPORT '">  
-                             
-                            <el-input  v-for="item of areaClassArray" :key="item.value"  v-if="item.value == editForm.areaClass"  v-model="editForm.annualExtendPerformance"   >                              
-                                <template slot="prepend">店铺拓展：  
-                                </template>
-                                    <template slot="append"> 家
-                                </template> 
-                            </el-input> 
-                        
-                    </el-form-item>
-                </el-col> -->
             </el-row>         
             <el-row>
                 <!--第四行-->
@@ -153,8 +135,8 @@
             <el-row>
                 <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商</el-radio>                            
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品自开发</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                            
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
@@ -171,7 +153,16 @@
                     </el-form-item>
                  </el-col>
             </el-row>
-
+            <el-row  :gutter="10">
+                <el-col :span="4">
+                    <el-form-item :span="4" label="匹配规则:">
+                            <el-input placeholder="请选择"></el-input> 
+                    </el-form-item>
+                </el-col>
+                <el-col :span="3" >
+                     <el-button type="primary" @click="onRelationshipRulesDialogVisible">选择</el-button>    
+                </el-col>
+            </el-row>    
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
@@ -193,6 +184,32 @@
                 <el-button @click="goBack">取消</el-button>
             </el-row>
         </el-form>
+
+        <!--新增规则关系弹窗-->
+        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+            <div >
+                <el-table :data="relationshipRulesForm" style="width: 100%;">
+                    <el-table-column type="index" label="序号"  width="80">
+                    </el-table-column>
+                    <el-table-column prop="" label="规则编号" width="127">
+                    </el-table-column>
+                    <el-table-column prop="" label="规则名称" width="127" >
+                    </el-table-column>
+                    <el-table-column prop="" label="规则类型" width="100">
+                    </el-table-column>
+                    <el-table-column prop="" label="创建时间"  width="80"  align="right">
+                    </el-table-column>
+                    <el-table-column prop="" label="操作"  width="80"  align="right">
+                    </el-table-column>             
+                </el-table>
+            </div>
+            <div class="plPage clearfix">
+                <el-pagination  style="margin-top: 10px;float: right;" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+                </el-pagination>
+            </div>
+            <div slot="footer" class="dialog-footer" @click="changeCancle()">
+            </div>
+        </el-dialog> 
   </div>
 </template>
 <script type="text/javascript" src="../router.js"></script>
@@ -205,6 +222,9 @@ import $ from 'jquery';
 export default {
     data(){
         return{
+            currentPage: 1,
+            totalSize: 0,
+            pageSize: 30,
             editForm: {
                     shopName: '',
                     name: '',
@@ -265,13 +285,17 @@ export default {
                 },
             },
             flage:true,
-            areaClassFlag: true,            
+            areaClassFlag: true,
+            relationshipRulesDialogVisible:false,
+            relationshipRulesForm:[],
+            relationshipRulesTitle:'',
+            descInputValue:'',            
         }
     },
     components: {
         addressComponent
     },
-    methods:{
+    methods:{         
         //获得区域等级等级
         getAreaName(){
             // console.log(this.$refs.editAgentAddress.getData().cityName)
@@ -287,14 +311,6 @@ export default {
                     if(!self.flage){
                          self.editForm.areaClass = data.areaClass 
                     }
-
-                    // console.log(self.editForm.annualExtendPerformance)
-                    // if(self.editForm.annualExtendPerformance){
-                    //         console.log('ok')
-                    // }
-
-                    // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance  
-                    // console.log(self.editForm.areaClass)
                     for(let item of self.areaClassArray){
                         if(item.value == self.editForm.areaClass){
                             // 判断店铺数传值是否为null 是的话为0
@@ -990,19 +1006,6 @@ export default {
         //重置直营店铺不要的项
         deleteSelfSupport(){
             const self = this;
-            // console.log('okj')
-            // self.editForm = {
-            //     // agentProvince:'',
-            //     // agentCity:'',
-            //     // agentCounty:'',
-            //     // belongProvince:'',
-            //     // belongCity:'',
-            //     // belongCountry:'',
-            //     // extendSuperNo:'',
-            //     // superAgentGradeId:'',
-            //     annualPurchasePerformance:'',
-            // }
-
             self.editForm.annualPurchasePerformance =  '';
             self.editForm.agentProvince  = '' ;
             self.editForm.agentCity = '' ;
@@ -1014,9 +1017,16 @@ export default {
             self.editForm.superAgentGradeId = '' 
             self.editForm.areaClass  = ''
 
-            // console.log(self.editForm)
-        }
-    
+        },
+        //打开规则关系弹窗
+        onRelationshipRulesDialogVisible(){
+            this.relationshipRulesDialogVisible = true;
+        }, 
+        changeCancle(){
+            this.relationshipRulesDialogForm = [];
+            this.relationshipRulesDialogVisible = false; 
+        },
+
     },
   
     created() {

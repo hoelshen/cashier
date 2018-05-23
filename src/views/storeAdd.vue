@@ -62,11 +62,11 @@
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:popover placeholder="进货业绩2"></el-input>  
                     </el-form-item>
                 </el-col>
-                <el-col :span="3">
-                    <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'" style="margin-left:0px">
-                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                <el-col :span="5">
+                    <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
+                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
-                        <el-input  style="margin-left: -80px;"   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
+                        <el-input  v-popover:popover v-model="addForm.annualExtendPerformance"  > 
                             <template slot="prepend">店铺拓展：  
                             </template>
                             <template slot="append"> 家
@@ -97,7 +97,7 @@
             </el-row>
             <!--第六行 -->
             <el-row>
-                <el-col :span="18" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="18" v-if="(addForm.agentGradeId=='266'||addForm.agentGradeId=='31')||addForm.shopType=='SELF_SUPPORT'">
                     <el-form-item label="店铺所属区域：">
                         <addressComponent ref='addBelongAddress' :isDetail="false" />   
                     </el-form-item>
@@ -122,7 +122,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="18">
-                    <el-form-item >
+                    <el-form-item  style="width: 444px;">
                         <el-input  type="textarea" v-model="addForm.address" placeholder="填写详情地址（为店铺地址，会展示到醉品的线下门店展示平台）" class="address"></el-input>
                     </el-form-item>
                 </el-col>
@@ -156,9 +156,9 @@
             </el-row>
             <!--第三行-->
             <el-row  :gutter="10">
-                <el-col :span="4">
-                    <el-form-item :span="4" label="匹配规则:">
-                            <el-input placeholder="请选择"></el-input> 
+                <el-col :span="6">
+                    <el-form-item label="匹配规则:" >
+                            <el-input placeholder="请选择" ></el-input> 
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" >
@@ -166,7 +166,7 @@
                 </el-col>
             </el-row>
             <!--第三行-->
-            <el-row >
+            <el-row :gutter="10">
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
                         <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
@@ -231,7 +231,7 @@
                     </el-table-column>
                     <el-table-column prop="" label="规则类型" width="100">
                     </el-table-column>
-                    <el-table-column prop="" label="创建时间"  width="80"  align="right">
+                    <el-table-column prop="" label="创建时间"  width="200"  align="right">
                     </el-table-column>
                     <el-table-column prop="" label="操作"  width="80"  align="right">
                     </el-table-column>             
