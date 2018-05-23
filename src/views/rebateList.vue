@@ -243,7 +243,8 @@ export default {
                 cancelButtonText: '取消',
                 type: 'warning'
             }).then(() => {
-                self.setDefault(id,name)
+				self.setDefault(id,name)
+				 
             })
         },
 		// 设置默认规则
@@ -276,7 +277,7 @@ export default {
 						message: "设置“"+name+"”为默认规则成功~",
 						type: "success"
 					})
-                   self.getFormData();
+                   self.$router.push("/rebateDetail?id="+id);
                 } else {
                     self.$message({
                         message: response.data.msg,
