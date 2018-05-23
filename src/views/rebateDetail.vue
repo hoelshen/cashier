@@ -215,13 +215,13 @@
                 <div>
                     <el-form>
                         <el-row>
-                            <el-col :span="5"  :offset="8">
+                            <el-col :span="5"  :offset="10">
                                 <el-form-item>
-                                     <el-checkbox v-model="checked">不显示禁用代理商</el-checkbox>
+                                     <el-checkbox v-model="searchData.checked" checked true-label="1" false-label="">不显示禁用代理商</el-checkbox>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="8">
-                                <el-form-item label="代理商姓名：" label-width="100px" >
+                            <el-col :span="6">
+                                <el-form-item  >
                                     <el-input v-model="searchData.nameOrNo" @keyup.enter.native="onSubmit" placeholder="代理商编号/姓名"></el-input>
                                 </el-form-item>
                             </el-col>
@@ -237,7 +237,13 @@
                       </el-table-column>
                       <el-table-column prop="shopNo" label="代理商编号" width="127">
                       </el-table-column>
-                      <el-table-column prop="shopName" label="代理商姓名" width="150">
+                      <el-table-column prop="name" label="代理商姓名" width="150">
+                      </el-table-column>
+                      <el-table-column prop="state" label="状态" width="80">
+                          <template slot-scope="scope">
+                                <span class="state-wrap" v-if="scope.row.state  == '0'"> <i class="icon-green"></i> 启用</span>
+                                <span class="state-wrap" v-if="scope.row.state  == '1'"> <i class="icon-red"></i>禁用</span>
+                            </template>
                       </el-table-column>
                       <el-table-column prop="agentGradeId" label="代理商等级" width="127">
                            <template slot-scope="scope">
@@ -246,13 +252,11 @@
                                 <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
                             </template>
                       </el-table-column>
-                      <el-table-column prop="createTime" label="店铺注册" width="127">
-                      </el-table-column>
-                      <el-table-column prop="relationType" label="关系" width="127">
-                            <template slot-scope="scope">
-                                <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品开发</span>
-                                <span v-if="scope.row.relationType  == 'BUSINESS_EXTEND'">业务拓展</span>
-                                <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
+                      <el-table-column  label="合同服务期限" width="200" align="right">
+                           <template slot-scope="scope">
+                                <span>{{scope.row.contractBeginTime}}</span>-
+                                <span>{{scope.row.contractEndTime}}</span>
+                               
                             </template>
                       </el-table-column>
                   </el-table>
@@ -278,13 +282,13 @@ export default {
         urlId:"",
         searchData:{
              nameOrNo:"",
+             checked:1,
         },
-        checked:"",
         relatedAgencies:false,
         relatedAgenciesTitle:"",
         currentPage: 1,
         totalSize: 0,
-        pageSize: 30,
+        pageSize: 10,
         ifEdit:false,
       form:{
         dlTimeChose:"CONTRACT_TERM",
@@ -361,7 +365,7 @@ export default {
     handleCurrentChange(val) {
         let self = this;
         self.currentPage = val;
-        self.relatedAgenciesData();
+        self.relatedAgenciesData(this.urlId)
     },
     relatedAgenciesData(urlId){
         this.relatedAgenciesTitle = "关联代理商（规则编号：" + urlId + "）"
@@ -376,8 +380,9 @@ export default {
                  data: {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'id':urlId,
-                    'agentNumberOrAgentName':self.searchData.nameOrNo,
+                    'adaptingAgentSearchVo.ruleId':urlId,
+                    'adaptingAgentSearchVo.agentNumberOrAgentName':self.searchData.nameOrNo,
+                    'adaptingAgentSearchVo.isDisabled':self.searchData.checked,
                 },
                 transformRequest: [function(data) {
                     let ret = ''
@@ -409,7 +414,7 @@ export default {
         });
     },
     onSubmit(){
-
+        this.relatedAgenciesData(this.urlId)
     },
     getUrlId() {
       this.urlId = this.$route.query.id
@@ -605,6 +610,29 @@ export default {
 	border-radius: 3px;
 	background-color: #f60;
 	color: #fff;
+}
+.state-wrap{
+    position: relative;
+}
+.icon-green{
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: #2eba07;
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: -10px;
+}
+.icon-red{
+    width: 5px;
+    height: 5px;
+    border-radius: 5px;
+    background-color: #FF0033;
+    display: inline-block;
+    position: absolute;
+    top: 7px;
+    left: -10px;
 }
 </style>
 
