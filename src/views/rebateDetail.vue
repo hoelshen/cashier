@@ -6,7 +6,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="规则名称：">
-                        <span>茶集政策04.15，2018 - 代理商业务拓展返利</span>
+                        <span>{{businessExtendsRuleName}}</span>
                         <span class="defaults-rules" v-if="isDefault==1">
                             默认规则
                         </span>
@@ -278,6 +278,7 @@
 export default {
   data() {
     return {
+        businessExtendsRuleName:"",
         isDefault:0,
         urlId:"",
         searchData:{
@@ -447,6 +448,7 @@ export default {
 				if (response.data.success === 1) {
 					// console.log(response.data);
                     self.isDefault = response.data.result.isDefault;
+                    self.businessExtendsRuleName = response.data.result.businessExtendsRuleName;
                     self.form.zpTimeChose = response.data.result.zuipinCycleTime;
                     self.form.dlTimeChose = response.data.result.agentCycleTime;
                     self.form.zpTimeLimit.zpdateBefore = response.data.result.zuipinContractDaysInner;
