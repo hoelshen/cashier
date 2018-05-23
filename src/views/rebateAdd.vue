@@ -633,7 +633,7 @@ export default {
           .post(
             "/api/http/businessExtendsRule/saveOrUpdateBusinessExtendsRule.jhtml",
             qs.stringify({
-            //   "businessExtendsRule.creator":this.creator,
+              "businessExtendsRule.creator":this.creator,
               "businessExtendsRule.businessExtendsRuleName":this.form.businessExtendsRuleName,
               "businessExtendsRule.zuipinCycleTime":this.form.zpTimeChose,
               "businessExtendsRule.zuipinContractDaysInner":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpdateBefore:"",
