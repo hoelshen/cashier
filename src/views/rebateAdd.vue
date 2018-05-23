@@ -454,6 +454,7 @@ export default {
     };
     
     return {
+        creator:"",
         rules:{
              businessExtendsRuleName: [
                 { validator: validateRuleName, trigger: 'blur' }
@@ -632,6 +633,7 @@ export default {
           .post(
             "/api/http/businessExtendsRule/saveOrUpdateBusinessExtendsRule.jhtml",
             qs.stringify({
+            //   "businessExtendsRule.creator":this.creator,
               "businessExtendsRule.businessExtendsRuleName":this.form.businessExtendsRuleName,
               "businessExtendsRule.zuipinCycleTime":this.form.zpTimeChose,
               "businessExtendsRule.zuipinContractDaysInner":this.form.zpTimeChose == 'TIME_RANGE'?this.form.zpTimeLimit.zpdateBefore:"",
@@ -656,7 +658,6 @@ export default {
               "businessExtendsRule.agentSingleRebate":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlSingleRebate1/100:this.form.dlSingleRebate/100,
               "businessExtendsRule.agentAreaRebate":this.form.dlTimeChose == 'TIME_RANGE' ? this.form.dlAreaRebate1/100:this.form.dlAreaRebate/100,
               "businessExtendsRule.agentPaymentDifinition":this.form.agentPaymentDifinition,
-              // "noticeInfo.noticeTitle": this.contentData.title,
               
             }),
             {
@@ -667,13 +668,14 @@ export default {
           )
           .then(res => {
             if (res.data.success === 1) {
+                console.log(res)
               this.$message({
                 message: `保存业务拓展返利规则成功~`,
                 type: "success"
               });
             //   location.reload();//强刷
               
-              this.$router.push("/rebateDetail");
+              this.$router.push("/rebateDetail?id="+res.data.result.id);
               
             } else {
               this.$message({
@@ -686,6 +688,11 @@ export default {
     },
   },
   created() {
+      if (!this.checkSession()) return;
+       if (sessionStorage.user) {
+            var user = JSON.parse(sessionStorage.getItem('user'));
+            this.creator = user.userName;
+        }
   }
 };
 </script>
