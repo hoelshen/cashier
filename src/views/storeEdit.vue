@@ -47,9 +47,8 @@
                  <!--第三行-->
                 <el-col :span="8">
                     <el-form-item label="合同服务期限："  >
-                        <!-- <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions"  disabled>
-                        </el-date-picker> -->
-                        <span >  {{editForm.signedTime}}~{{editForm.signedTime}}</span>
+
+                        <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -156,7 +155,7 @@
             <el-row  :gutter="10">
                 <el-col :span="4">
                     <el-form-item :span="4" label="匹配规则:">
-                            <el-input placeholder="请选择"></el-input> 
+                            <el-input placeholder="请选择"  v-model="editForm.ruleId"></el-input> 
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" >
@@ -184,32 +183,48 @@
                 <el-button @click="goBack">取消</el-button>
             </el-row>
         </el-form>
-
         <!--新增规则关系弹窗-->
-        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+        <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+           <div style="width: 250px;position: relative;float: right;">
+                <div style="width:180px;float:left;;padding: 10px;padding-bottom:15px;">
+                <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
+                </div>
+                <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
+                    <el-button type="primary" @click="selectrelationshipRulesMethod">查询</el-button>
+                </div>
+           </div>
             <div >
                 <el-table :data="relationshipRulesForm" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.$index + (currentPage - 1 ) * 30 + 1 }}</span>
+                        </template>  
                     </el-table-column>
-                    <el-table-column prop="" label="规则编号" width="127">
+                    <el-table-column prop="ruleNo" label="规则编号" width="127">
                     </el-table-column>
-                    <el-table-column prop="" label="规则名称" width="127" >
+                    <el-table-column prop="businessExtendsRuleName" label="规则名称" :show-overflow-tooltip="true"  width="200" >
                     </el-table-column>
-                    <el-table-column prop="" label="规则类型" width="100">
+                    <el-table-column prop="agentPaymentDifinition" label="规则类型" width="100">
+                        <template scope="scope">
+                            {{scope.row.agentPaymentDifinition=='ZUIPIN_EXTEND' ? '醉品拓展' :'业务拓展'}}
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="" label="创建时间"  width="80"  align="right">
+                    <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
                     </el-table-column>
-                    <el-table-column prop="" label="操作"  width="80"  align="right">
+                    <el-table-column prop="" label="操作"  width="120"  align="right">
+                        <template>
+                            <span>
+
+                            </span>
+                        </template>
                     </el-table-column>             
                 </el-table>
             </div>
-            <div class="plPage clearfix">
-                <el-pagination  style="margin-top: 10px;float: right;" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+            <div class="plPage clearfix"    >
+                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onRelationshipRulesDialogChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
                 </el-pagination>
             </div>
-            <div slot="footer" class="dialog-footer" @click="changeCancle()">
-            </div>
-        </el-dialog> 
+        </el-dialog>   
   </div>
 </template>
 <script type="text/javascript" src="../router.js"></script>
@@ -253,7 +268,8 @@ export default {
                     extendSuperNo:'',
                     areaClass:'',
                     superAgentGradeId:'',
-                    state:''
+                    state:'',
+                    ruleId:'',
             },
             isDisable:false,
             levelArray: [], //代理商等级数组,
@@ -289,7 +305,8 @@ export default {
             relationshipRulesDialogVisible:false,
             relationshipRulesForm:[],
             relationshipRulesTitle:'',
-            descInputValue:'',            
+            descInputValue:'', 
+            selectrelationshipRulesValue:'', //查询规则关系的值           
         }
     },
     components: {
@@ -1019,9 +1036,56 @@ export default {
 
         },
         //打开规则关系弹窗
-        onRelationshipRulesDialogVisible(){
+        onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
-        }, 
+            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.ruleId +"）" 
+            const self = this;
+    
+            self.loading = true;
+            self.$ajax({
+                url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
+                method: 'post',
+                data:{
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
+                },
+                transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                self.loading = false;
+                if (response.data.success == 1) {
+                        self.relationshipRulesForm = response.data.result;
+                        self.totalSize = response.data.totalNums;
+                    } else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'error'
+                        })
+                    }
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
+        },
+        //查询关系
+        selectrelationshipRulesMethod(){
+            console.log(this.selectrelationshipRulesValue)
+            this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
+        },
+        //改变规则关系页码
+        onRelationshipRulesDialogChange(val){
+            this.currentPage = val;
+            this.onRelationshipRulesDialogVisible();
+        },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 

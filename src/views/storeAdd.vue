@@ -192,7 +192,7 @@
         </el-form>
         <!-- 新增店铺 end -->
         <!--新增确认保存弹窗-->
-        <el-dialog class="addPromptTitleStyle"  :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
+        <el-dialog class="addPromptTitleStyle"  width= 40% :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
                 <i class="el-icon-warning" style="color:red"></i> 
                 <span>店铺新增成功后以下信息无法修改，请您核对信息</span>
                 <el-form  :model="addPromptForm" style="    position:relative;padding: 27px 0px;">
@@ -220,18 +220,25 @@
         </el-dialog>
 
         <!--新增规则关系弹窗-->
-        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
-            <div>
-                <el-input></el-input>
-                <el-button type="primary">查询</el-button>
-            </div>
+        <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+           <div style="width: 250px;position: relative;float: right;">
+                <div style="width:180px;float:left;;padding: 10px;padding-bottom:15px;">
+                <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
+                </div>
+                <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
+                    <el-button type="primary" @click="selectrelationshipRules">查询</el-button>
+                </div>
+           </div>
             <div >
                 <el-table :data="relationshipRulesForm" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.$index + (currentPage - 1 ) * 30 + 1 }}</span>
+                        </template>  
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="规则编号" width="127">
                     </el-table-column>
-                    <el-table-column prop="businessExtendsRuleName" label="规则名称" width="200" >
+                    <el-table-column prop="businessExtendsRuleName" label="规则名称" :show-overflow-tooltip="true"  width="200" >
                     </el-table-column>
                     <el-table-column prop="agentPaymentDifinition" label="规则类型" width="100">
                         <template scope="scope">
@@ -241,14 +248,17 @@
                     <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
                     </el-table-column>
                     <el-table-column prop="" label="操作"  width="120"  align="right">
+                        <template>
+                            <span>
+
+                            </span>
+                        </template>
                     </el-table-column>             
                 </el-table>
             </div>
-            <div class="plPage clearfix">
-                <el-pagination  style="margin-top: 10px;float: right;" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize">
+            <div class="plPage clearfix"    >
+                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onRelationshipRulesDialogChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
                 </el-pagination>
-            </div>
-            <div slot="footer" class="dialog-footer" @click="changeCancle()">
             </div>
         </el-dialog>     
     </div>
@@ -343,9 +353,10 @@ export default {
                 signedEndTime:'',
                 
             },
-            relationshipRulesTitle:'',
+            relationshipRulesTitle:'规则选择',
             relationshipRulesForm:[],
             relationshipRulesDialogVisible:false,
+            selectrelationshipRulesValue:'',
         }
     },
     components: {
@@ -637,24 +648,33 @@ export default {
             this.addForm.extendSuperNo = '';
             this.addForm.superAgentGradeId = '';
         },
+        //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            console.log(self.addForm.annualExtendPerformance)
-            if(self.addForm.annualExtendPerformance == 0){
+            console.log(self.addForm)
+
+            if( !Number(self.addForm.annualExtendPerformance)+Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
                 },2000)
             }
         },
+        //气泡提示
         annualPurchasePerformanceTitple(){
             let self = this
-            if( (self.addForm.annualExtendPerformance + self.addForm.annualExtendPerformance) == 0)
-            self.$refs.annualPurchasePerformance.showPopper=true
-            setTimeout(function(){
-                 self.$refs.annualPurchasePerformance.showPopper=false
-            },2000)
+            
+            if(!Number(self.addForm.annualPurchasePerformance) ){
+
+                    self.$refs.annualPurchasePerformance.showPopper=true
+                    setTimeout(function(){
+                        self.$refs.annualPurchasePerformance.showPopper=false
+                    },2000)
+                console.log('ok')
+            }
+
         },
+        //气泡提示
         ruleTitleTitple(){
             let self = this
             self.$refs.rule.showPopper=true
@@ -999,7 +1019,7 @@ export default {
             this.changePromptDialogForm.signedEndTime = Utils.formatDayDate(this.addForm.signedTime[1])
         },
         //打开规则关系弹窗
-        onRelationshipRulesDialogVisible(){
+        onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
 
             const self = this;
@@ -1008,25 +1028,26 @@ export default {
             self.$ajax({
                 url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
                 method: 'post',
+                data:{
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
+                },
                 transformRequest: [function(data) {
                         let ret = ''
                         for (let it in data) {
                             ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
                         }
                         return ret;
-                    }],
-                    headers: {
-                        'Content-Type': 'application/x-www-form-urlencoded'
-                    }
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
             }).then(function (response) {
                 self.loading = false;
                 if (response.data.success == 1) {
                         self.relationshipRulesForm = response.data.result;
-                        console.log(response.data.result)
-                        self.totalSize = response.data.result.totalNums;
-                        console.log(response.data);
-                        // self.annualAgentsTitle = response.data;
-                        // self.handleCurrentChange(self.currentPage)
+                        self.totalSize = response.data.totalNums;
                     } else {
                         self.$message({
                             message: response.data.msg,
@@ -1037,6 +1058,16 @@ export default {
                 self.loading = false;
                 console.log(err);
             });
+        },
+        //改变规则关系页码
+        onRelationshipRulesDialogChange(val){
+            this.currentPage = val;
+            this.onRelationshipRulesDialogVisible();
+        },
+        //查询关系
+        selectrelationshipRules(){
+            console.log(this.selectrelationshipRulesValue)
+            this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
         }
     },
     created(){
@@ -1068,6 +1099,7 @@ export default {
         }).catch(function (err) {
             console.log(err);
         });
+
     },
     watch:{
         'addForm.areaClass'(){
