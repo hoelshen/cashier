@@ -57,16 +57,16 @@
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩1"></el-input>  
-                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
-                        <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:popover placeholder="进货业绩2"></el-input>  
+                        <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩2"></el-input>  
                     </el-form-item>
                 </el-col>
-                <el-col :span="3">
-                    <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'" style="margin-left:0px">
-                        <el-popover  placement="right" ref="popover"  width="200" trigger="focus" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                <el-col :span="5">
+                    <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
+                        <el-popover  placement="right" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
-                        <el-input  style="margin-left: -80px;"   v-popover:popover v-model="addForm.annualExtendPerformance"   > 
+                        <el-input  v-popover:annualExtendPerformance v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
                             </template>
                             <template slot="append"> 家
@@ -97,7 +97,7 @@
             </el-row>
             <!--第六行 -->
             <el-row>
-                <el-col :span="18" v-if="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="18" v-if="(addForm.agentGradeId=='266'||addForm.agentGradeId=='31')||addForm.shopType=='SELF_SUPPORT'">
                     <el-form-item label="店铺所属区域：">
                         <addressComponent ref='addBelongAddress' :isDetail="false" />   
                     </el-form-item>
@@ -122,7 +122,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="18">
-                    <el-form-item >
+                    <el-form-item  style="width: 444px;">
                         <el-input  type="textarea" v-model="addForm.address" placeholder="填写详情地址（为店铺地址，会展示到醉品的线下门店展示平台）" class="address"></el-input>
                     </el-form-item>
                 </el-col>
@@ -156,9 +156,11 @@
             </el-row>
             <!--第三行-->
             <el-row  :gutter="10">
-                <el-col :span="4">
-                    <el-form-item :span="4" label="匹配规则:">
-                            <el-input placeholder="请选择"></el-input> 
+                <el-col :span="6">
+                    <el-form-item label="匹配规则:" >
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  content="保存成功，该规则将立即生效~"  >     
+                            </el-popover> 
+                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" v-bind="addForm.ruleId" ></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" >
@@ -166,11 +168,10 @@
                 </el-col>
             </el-row>
             <!--第三行-->
-            <el-row >
+            <el-row :gutter="10">
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
                         <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
-                        
                         <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">
                             <span class="search_left"></span>
                         </el-autocomplete>
@@ -179,7 +180,6 @@
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
                          <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-                        
                         <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
@@ -192,22 +192,22 @@
         </el-form>
         <!-- 新增店铺 end -->
         <!--新增确认保存弹窗-->
-        <el-dialog :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
+        <el-dialog class="addPromptTitleStyle"  :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
                 <i class="el-icon-warning" style="color:red"></i> 
-                <span>店铺新增成功后一下信息无法修改，请您核对信息</span>
+                <span>店铺新增成功后以下信息无法修改，请您核对信息</span>
                 <el-form  :model="addPromptForm" style="    position:relative;padding: 27px 0px;">
                     <el-row :gutter="10">
-                        <el-col :span="24"  style="padding-left:20px;">
+                        <el-col :span="24"  style="padding-left:20px;" class="circle">
                             店铺类型：<span class="font-color">{{addForm.shopType == 'ZUIPIN' ? '直营店铺':'代理商'}}</span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="24"  style="padding-left:20px;">
+                        <el-col :span="24"  style="padding-left:20px;" class="circle">
                             合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}}-{{changePromptDialogForm.signedEndTime}}</span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="24" style="padding-left:20px;">
+                        <el-col :span="24" style="padding-left:20px;" class="circle">
                            拓展上级：<span v-if="addForm.extendSuperType =='ZUIPIN'" class="font-color">醉品自开发</span>
                                     <span v-else>{{addForm.extendSuperName}}{{addForm.extendSuperNo}}</span>
                         </el-col>
@@ -221,19 +221,26 @@
 
         <!--新增规则关系弹窗-->
         <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+            <div>
+                <el-input></el-input>
+                <el-button type="primary">查询</el-button>
+            </div>
             <div >
                 <el-table :data="relationshipRulesForm" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
                     </el-table-column>
-                    <el-table-column prop="" label="规则编号" width="127">
+                    <el-table-column prop="ruleNo" label="规则编号" width="127">
                     </el-table-column>
-                    <el-table-column prop="" label="规则名称" width="127" >
+                    <el-table-column prop="businessExtendsRuleName" label="规则名称" width="200" >
                     </el-table-column>
-                    <el-table-column prop="" label="规则类型" width="100">
+                    <el-table-column prop="agentPaymentDifinition" label="规则类型" width="100">
+                        <template scope="scope">
+                            {{scope.row.agentPaymentDifinition=='ZUIPIN_EXTEND' ? '醉品拓展' :'业务拓展'}}
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="" label="创建时间"  width="80"  align="right">
+                    <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
                     </el-table-column>
-                    <el-table-column prop="" label="操作"  width="80"  align="right">
+                    <el-table-column prop="" label="操作"  width="120"  align="right">
                     </el-table-column>             
                 </el-table>
             </div>
@@ -294,6 +301,8 @@ export default {
                 belongProvince:'', //所属区域
                 belongCity:'',     //所属城市
                 belongCountry:'',  //所属地区
+                ruleId:'',  //规则ID
+                ruleTitle:'', // 规则
             },
             levelArray: [], //代理商等级数组
             areaClassArray: [ //类别等级数组
@@ -516,7 +525,7 @@ export default {
             
             }
             //所属区域判断
-            if(data.agentGradeId!=265 && data.shopType != 'SELF_SUPPORT'){
+            if(data.agentGradeId!=265){
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -628,6 +637,31 @@ export default {
             this.addForm.extendSuperNo = '';
             this.addForm.superAgentGradeId = '';
         },
+        annualExtendPerformanceTitple(){
+            let self = this
+            console.log(self.addForm.annualExtendPerformance)
+            if(self.addForm.annualExtendPerformance == 0){
+                self.$refs.annualExtendPerformance.showPopper=true
+                setTimeout(function(){
+                    self.$refs.annualExtendPerformance.showPopper=false
+                },2000)
+            }
+        },
+        annualPurchasePerformanceTitple(){
+            let self = this
+            if( (self.addForm.annualExtendPerformance + self.addForm.annualExtendPerformance) == 0)
+            self.$refs.annualPurchasePerformance.showPopper=true
+            setTimeout(function(){
+                 self.$refs.annualPurchasePerformance.showPopper=false
+            },2000)
+        },
+        ruleTitleTitple(){
+            let self = this
+            self.$refs.rule.showPopper=true
+            setTimeout(function(){
+                self.$refs.rule.showPopper=false
+            },2000)
+        },
         // 新增店铺
         addAgent() {
             const self = this;
@@ -697,16 +731,14 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                console.log(response)
-                if (response.data.result == 1 || 0) {
+                if (response.data.success == 1 || 0) {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
                     })
                      setTimeout(function () {
-                        // self.$router.push({ name:'storeDetail',params:{shopId:data.shopId} })
-                         
-                        self.$router.go(-1)
+                         console.log(response.data.result.id)
+                        self.$router.push({ name:'storeDetail',params:{shopNo:response.data.result.id} })
                     }, 1000)
                 }else{
                     self.loading = false;
@@ -969,6 +1001,42 @@ export default {
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(){
             this.relationshipRulesDialogVisible = true;
+
+            const self = this;
+    
+            self.loading = true;
+            self.$ajax({
+                url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
+                method: 'post',
+                transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
+                    }
+            }).then(function (response) {
+                self.loading = false;
+                if (response.data.success == 1) {
+                        self.relationshipRulesForm = response.data.result;
+                        console.log(response.data.result)
+                        self.totalSize = response.data.result.totalNums;
+                        console.log(response.data);
+                        // self.annualAgentsTitle = response.data;
+                        // self.handleCurrentChange(self.currentPage)
+                    } else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'error'
+                        })
+                    }
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
         }
     },
     created(){
@@ -991,6 +1059,15 @@ export default {
         }).catch(function (err) {
             console.log(err);
         });
+
+        //获取默认规则
+        self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
+        }).then(function (response) {
+          self.addForm.ruleTitle= response.data.result.ruleNo + response.data.result.businessExtendsRuleName  
+           console.log(self.addForm.ruleTitle )  
+        }).catch(function (err) {
+            console.log(err);
+        });
     },
     watch:{
         'addForm.areaClass'(){
@@ -1004,7 +1081,7 @@ export default {
 }
 </script>
 <style lang="css" scoped>
-     .el-dialog__wrapper  >>> .el-dialog__body {
+     .addPromptTitleStyle  >>> .el-dialog__body {
          position: relative;
          padding: 25px 100px;
     }
@@ -1018,10 +1095,8 @@ export default {
     margin: 1%;
     padding: 20px;
     background-color: #ffffff;
-ntent_title {
-  
+    .content_title {
         .content_closeBtn {
-
             font-size: 19px;
             float: right;
             color: #0000ff9e;
@@ -1049,11 +1124,14 @@ ntent_title {
     .content_title h2 {
     line-height: 38px;
     margin-bottom: 30px;
-}
-.button-cancel{
-    color: #167edf;
-}
-
+    }
+    .button-cancel{
+        color: #167edf;
+    }
+    .circle::before{
+        content: url(../assets/images/circle.png);
+        display: inline-block;
+    }
 }
 
 </style>

@@ -506,7 +506,7 @@ export default {
       openAgencyRelationsance(shopNo) {
 
           this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
-        // console.log(shopNo)
+          // console.log(shopNo)
           if (!this.checkSession()) return;
           const self = this;
           self.agencyRelationsanceDialogVisible = true;
