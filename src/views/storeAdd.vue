@@ -731,16 +731,14 @@ export default {
                 }
             }).then(function (response) {
                 self.loading = false;
-                console.log(response)
-                if (response.data.result == 1 || 0) {
+                if (response.data.success == 1 || 0) {
                     self.$message({
                         message: response.data.msg,
                         type: 'success'
                     })
                      setTimeout(function () {
-                        // self.$router.push({ name:'storeDetail',params:{shopId:data.shopId} })
-                         
-                        self.$router.go(-1)
+                         console.log(response.data.result.id)
+                        self.$router.push({ name:'storeDetail',params:{shopNo:response.data.result.id} })
                     }, 1000)
                 }else{
                     self.loading = false;
