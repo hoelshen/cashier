@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：">
-                        <el-button type="primary" @click="relatedAgenciesData(ruleNo)">查看详情</el-button>
+                        <el-button type="primary" @click="relatedAgenciesData(ruleNo,urlId)">查看详情</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -233,7 +233,10 @@
                 </div>
                 <div>
                     <el-table :data="relatedAgenciesForm" :height="440" style="width: 100%">
-                      <el-table-column type="index" label="序列"  width="80">
+                      <el-table-column  label="序列" type="index"  width="80">
+                          <template slot-scope="scope">
+                             <span> {{scope.$index + (currentPage - 1) * 30 + 1}}</span>
+                          </template>
                       </el-table-column>
                       <el-table-column prop="shopNo" label="代理商编号" width="127">
                       </el-table-column>
@@ -367,10 +370,10 @@ export default {
     handleCurrentChange(val) {
         let self = this;
         self.currentPage = val;
-        self.relatedAgenciesData(this.ruleNo)
+        self.relatedAgenciesData(this.ruleNo,this.urlId)
     },
-    relatedAgenciesData(urlId){
-        this.relatedAgenciesTitle = "关联代理商（规则编号：" + urlId + "）"
+    relatedAgenciesData(ruleNo,urlId){
+        this.relatedAgenciesTitle = "关联代理商（规则编号：" + ruleNo + "）"
         if (!this.checkSession()) return; 
         const self = this;               
         self.relatedAgencies = true;
@@ -416,7 +419,8 @@ export default {
         });
     },
     onSubmit(){
-        this.relatedAgenciesData(this.ruleNo)
+        this.relatedAgenciesData(this.ruleNo,this.urlId);
+        this.handleCurrentChange(1)
     },
     getUrlId() {
       this.urlId = this.$route.query.id
