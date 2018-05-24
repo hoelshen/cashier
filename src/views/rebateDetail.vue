@@ -232,7 +232,7 @@
                     </el-form>
                 </div>
                 <div>
-                    <el-table :data="relatedAgenciesForm"  style="width: 100%">
+                    <el-table :data="relatedAgenciesForm" :height="440" style="width: 100%">
                       <el-table-column type="index" label="序列"  width="80">
                       </el-table-column>
                       <el-table-column prop="shopNo" label="代理商编号" width="127">
@@ -254,8 +254,8 @@
                       </el-table-column>
                       <el-table-column  label="合同服务期限" width="200" align="right">
                            <template slot-scope="scope">
-                                <span>{{scope.row.contractBeginTime}}</span>-
-                                <span>{{scope.row.contractEndTime}}</span>
+                                <span>{{scope.row.signedStartTime}}</span>-
+                                <span>{{scope.row.signedEndTime}}</span>
                                
                             </template>
                       </el-table-column>
@@ -289,7 +289,7 @@ export default {
         relatedAgenciesTitle:"",
         currentPage: 1,
         totalSize: 0,
-        pageSize: 10,
+        pageSize: 30,
         ifEdit:false,
       form:{
         dlTimeChose:"CONTRACT_TERM",
