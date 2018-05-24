@@ -254,8 +254,8 @@
                       </el-table-column>
                       <el-table-column  label="合同服务期限" width="200" align="right">
                            <template slot-scope="scope">
-                                <span>{{scope.row.contractBeginTime}}</span>-
-                                <span>{{scope.row.contractEndTime}}</span>
+                                <span>{{scope.row.signedStartTime}}</span>-
+                                <span>{{scope.row.signedEndTime}}</span>
                                
                             </template>
                       </el-table-column>
