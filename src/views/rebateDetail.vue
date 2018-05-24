@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：">
-                        <el-button type="primary" @click="relatedAgenciesData(urlId)">查看详情</el-button>
+                        <el-button type="primary" @click="relatedAgenciesData(ruleNo)">查看详情</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -280,6 +280,7 @@ export default {
     return {
         businessExtendsRuleName:"",
         isDefault:0,
+        ruleNo:"",
         urlId:"",
         searchData:{
              nameOrNo:"",
@@ -366,7 +367,7 @@ export default {
     handleCurrentChange(val) {
         let self = this;
         self.currentPage = val;
-        self.relatedAgenciesData(this.urlId)
+        self.relatedAgenciesData(this.ruleNo)
     },
     relatedAgenciesData(urlId){
         this.relatedAgenciesTitle = "关联代理商（规则编号：" + urlId + "）"
@@ -415,7 +416,7 @@ export default {
         });
     },
     onSubmit(){
-        this.relatedAgenciesData(this.urlId)
+        this.relatedAgenciesData(this.ruleNo)
     },
     getUrlId() {
       this.urlId = this.$route.query.id
@@ -448,6 +449,7 @@ export default {
 				if (response.data.success === 1) {
 					// console.log(response.data);
                     self.isDefault = response.data.result.isDefault;
+                    self.ruleNo = response.data.result.ruleNo;
                     self.businessExtendsRuleName = response.data.result.businessExtendsRuleName;
                     self.form.zpTimeChose = response.data.result.zuipinCycleTime;
                     self.form.dlTimeChose = response.data.result.agentCycleTime;
