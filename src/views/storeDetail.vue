@@ -249,8 +249,11 @@
                 </el-date-picker>
             </div>
             <div>
-                <el-table :data="agencyRelationsanceForm" style="width: 100%">
+                <el-table :data="agencyRelationsanceForm"  style="width: 100%">
                     <el-table-column type="index" label="序列"  width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.$index + (currentPageAgency -1 ) * 30 + 1 }}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="agentNo" label="代理商编号" width="127">
                     </el-table-column>
@@ -296,7 +299,11 @@
             </div>
             <div >
                 <el-table :data="annualAgentsForm" style="width: 100%;">
-                    <el-table-column type="index" label="序列"  width="80"></el-table-column>
+                    <el-table-column type="index" label="序列"  width="80">
+                        <template slot-scope="scope">
+                            <span>{{scope.$index + (currentPage -1 ) * 30 + 1 }}</span>
+                        </template>
+                    </el-table-column>
                     <el-table-column prop="agentGradeName" label="代理商等级" width="127">
                     </el-table-column>
                     <el-table-column prop="annualCycle" label="年份" width="127" >
@@ -534,11 +541,8 @@ export default {
                self.loading = false;
              if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
-                    // console.log(response.data.result)
                     self.totalSizeAgency = response.data.result.total;
-                    // console.log(response.data);
-                    // self.annualAgentsTitle = response.data;
-                    // self.handleCurrentChange(self.currentPage)
+                    console.log(self.currentPageAgency)
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -583,12 +587,6 @@ export default {
              if (response.data.success == 1) {
                     self.annualAgentsForm = response.data.result;
                     self.totalSize = response.data.totalNums;
-                    // console.log(response.data.result)
-                    // console.log(response.data.result[0].annualCycle);
-                    // console.log(self.annualAgentsForm.annualCycle)
-                    // console.log(response.data);
-                    // self.annualAgentsTitle = response.data;
-                    // self.handleCurrentChange(self.currentPage)
                 } else {
                     self.$message({
                         message: response.data.msg,

@@ -20,7 +20,7 @@
 							</el-form-item>
 						</el-col>
 						<el-col :span="5">
-							<el-form-item label="通知状态">
+							<el-form-item label="通知状态" >
 								<el-select v-model="searchData.status" placeholder="请选择">
 									<el-option value="0" label="全部"></el-option>
 									<el-option value="1" label="启用"></el-option>
@@ -67,7 +67,7 @@
 					</el-table-column>
 					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width=200px>
 					</el-table-column>
-					<el-table-column prop="status" label="状态" align="center">
+					<el-table-column prop="status" label="状态" align="center" width=120>
 						<template slot-scope="scope">
 							<span class="greenPoint" :class="{redColor : scope.row.status === 2}"></span>
 							{{ scope.row.status === 1 ? '启用' : '禁用' }}
@@ -76,7 +76,7 @@
 					
 					<el-table-column prop="publisher" label="发布人" align="center">
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width=200px>
+					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width=300px>
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 2" class="table_buleTxt" @click="changeMsg(scope.row,1)">启用</span>
 							<span v-if="scope.row.status === 1" class="table_buleTxt" @click="changeMsg(scope.row,2)">禁用</span>
