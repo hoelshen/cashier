@@ -155,7 +155,7 @@
             <el-row  :gutter="10">
                 <el-col :span="4">
                     <el-form-item :span="4" label="匹配规则:">
-                            <el-input placeholder="请选择" v-bind:value="editForm.ruleTitle" v-bind="editForm.ruleId"></el-input> 
+                            <el-input placeholder="请选择"  v-model="editForm.ruleId"></el-input> 
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" >
@@ -190,7 +190,7 @@
                 <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
-                    <el-button type="primary" @click="selectrelationshipRules">查询</el-button>
+                    <el-button type="primary" @click="selectrelationshipRulesMethod">查询</el-button>
                 </div>
            </div>
             <div >
@@ -268,7 +268,8 @@ export default {
                     extendSuperNo:'',
                     areaClass:'',
                     superAgentGradeId:'',
-                    state:''
+                    state:'',
+                    ruleId:'',
             },
             isDisable:false,
             levelArray: [], //代理商等级数组,
@@ -1035,11 +1036,48 @@ export default {
 
         },
         //打开规则关系弹窗
-        onRelationshipRulesDialogVisible(){
+        onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
+            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.ruleId +"）" 
+            const self = this;
+    
+            self.loading = true;
+            self.$ajax({
+                url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
+                method: 'post',
+                data:{
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
+                },
+                transformRequest: [function(data) {
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                self.loading = false;
+                if (response.data.success == 1) {
+                        self.relationshipRulesForm = response.data.result;
+                        self.totalSize = response.data.totalNums;
+                    } else {
+                        self.$message({
+                            message: response.data.msg,
+                            type: 'error'
+                        })
+                    }
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
         },
         //查询关系
-        selectrelationshipRules(){
+        selectrelationshipRulesMethod(){
             console.log(this.selectrelationshipRulesValue)
             this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
         },
