@@ -48,7 +48,7 @@
                 <el-col :span="8">
                     <el-form-item label="合同服务期限：">
                         <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
-                        <el-tooltip placement="right-start" effect="light">
+                        <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="editForm.nextSignedStartTime" >续</span>    
                         <span slot="content" >{{editForm.nextSignedEndTime}}-{{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
@@ -124,7 +124,7 @@
             <el-row>
                 <el-col :span="24">
                     <el-form-item label="详细地址：">
-                        <el-input v-model="editForm.address" placeholder="详细地址"></el-input>
+                        <el-input  type="textarea" v-model="editForm.address" placeholder="填写详情地址（为店铺地址，会展示到醉品的线下门店展示平台）" class="address"></el-input>
                         <div class="mark">
                             地址为店铺地址，会展示到醉品的线下门店展示平台
                         </div>
@@ -156,14 +156,24 @@
                  </el-col>
             </el-row>
             <el-row  :gutter="10">
-                <el-col :span="4">
+                <!-- <el-col :span="4">
                     <el-form-item :span="4" label="匹配规则:">
                             <el-input placeholder="请选择"  v-model="editForm.ruleId"></el-input> 
                     </el-form-item>
                 </el-col>
                 <el-col :span="3" >
                      <el-button type="primary" @click="onRelationshipRulesDialogVisible">选择</el-button>    
+                </el-col> -->
+
+                <el-col :span="10">
+                    <el-form-item label="匹配规则:"  style="width: 1024px;">
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
+                            </el-popover> 
+                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
+                    </el-form-item>
                 </el-col>
+
             </el-row>    
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
@@ -188,8 +198,8 @@
         </el-form>
         <!--新增规则关系弹窗-->
         <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
-           <div style="width: 250px;position: relative;float: right;">
-                <div style="width:180px;float:left;;padding: 10px;padding-bottom:15px;">
+           <div style="width: 253px;position: relative;float: right;">
+                <div style="width:183px;float:left;;padding: 10px;padding-bottom:15px;">
                 <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
@@ -216,7 +226,7 @@
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.ruleNo == addForm.ruleId">  
+                            <span v-if="scope.row.ruleNo == editForm.ruleId">  
                                <el-button disabled="disabled"> 已选</el-button>
                             </span> 
                             <span v-else>
@@ -561,27 +571,6 @@ export default {
                     return false  
                 }
             }
-
-            //检验上级代理商的状态  
-            // console.log(data.state)
-            // console.log(data.extendSuperType)
-            // if( (data.agentGradeId==31 || data.agentGradeId==266) && data.extendSuperType!='ZUIPIN'){
-            //        if(data.state!=0){
-            //             self.loading = false;
-            //             self.$message({
-            //                 message: '代理商的上级为禁用状态',
-            //                 type: 'error'
-            //             })
-            //             return false     
-            //         }
-            // }  
-
-            //拓展上级姓名必填
-            // console.log(data.extendSuperNo);
-            // console.log(data.superAgentGradeId);
-            // console.log(!data.extendSuperNo && !data.superAgentGradeId)
-            // console.log(!data.extendSuperNo)
-            // console.log(!data.superAgentGradeId)
             if(data.extendSuperType =='AGENT'&&data.agentGradeId!='265'){
                 if(!data.extendSuperNo && !data.superAgentGradeId){
                     self.loading = false;
@@ -871,7 +860,7 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 // console.log(response)
-                if (response.data.result!=1) {
+                if (response.data.success!=1) {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
@@ -1041,6 +1030,13 @@ export default {
             self.editForm.areaClass  = ''
 
         },
+        ruleTitleTitple(){
+            let self = this
+            self.$refs.rule.showPopper=true
+            setTimeout(function(){
+                self.$refs.rule.showPopper=false
+            },2000)
+        },
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
@@ -1069,6 +1065,7 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 if (response.data.success == 1) {
+                        console.log(self.relationshipRulesDialogForm)
                         self.relationshipRulesForm = response.data.result;
                         self.totalSize = response.data.totalNums;
                     } else {
@@ -1173,6 +1170,8 @@ export default {
             self.loading = false;
             console.log(err);
         });
+
+        
    
     },
     watch:{
@@ -1187,7 +1186,7 @@ export default {
 }
 </script>
 <style lang='less' scoped>
-@import url("../assets/less/storeAdd.less");
+@import url("../assets/less/storeEdit.less");
 
 #editStore {
     width: 98%;
