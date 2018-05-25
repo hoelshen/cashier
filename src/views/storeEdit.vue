@@ -211,13 +211,16 @@
                     </el-table-column>
                     <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
                     </el-table-column>
-                    <el-table-column prop="" label="操作"  width="120"  align="right">
-                        <template>
-                            <span>
-
+                    <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.ruleNo == addForm.ruleId">  
+                               <el-button disabled="disabled"> 已选</el-button>
+                            </span> 
+                            <span v-else>
+                                <el-button type="primary" @click="selectRuleNo(scope.row.ruleNo,scope.row.businessExtendsRuleName)">选择</el-button>
                             </span>
                         </template>
-                    </el-table-column>             
+                    </el-table-column>           
                 </el-table>
             </div>
             <div class="plPage clearfix"    >
@@ -1085,6 +1088,12 @@ export default {
         onRelationshipRulesDialogChange(val){
             this.currentPage = val;
             this.onRelationshipRulesDialogVisible();
+        },
+        //选择关系
+        selectRuleNo(ruleNo,businessExtendsRuleName){
+            this.relationshipRulesDialogVisible = false;
+            this.editForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.editForm.ruleId = ruleNo
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];

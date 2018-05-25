@@ -156,15 +156,15 @@
             </el-row>
             <!--第三行-->
             <el-row  :gutter="10">
-                <el-col :span="6">
+                <el-col :span="6" style="width: 444px;">
                     <el-form-item label="匹配规则:" >
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  content="保存成功，该规则将立即生效~"  >     
                             </el-popover> 
-                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" v-bind="addForm.ruleId" ></el-input>
+                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle"  ></el-input>
                     </el-form-item>
                 </el-col>
-                <el-col :span="3" >
-                     <el-button type="primary" @click="onRelationshipRulesDialogVisible">选择</el-button>    
+                <el-col :span="3" style="margin-left: 150px;">
+                     <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                 </el-col>
             </el-row>
             <!--第三行-->
@@ -192,7 +192,7 @@
         </el-form>
         <!-- 新增店铺 end -->
         <!--新增确认保存弹窗-->
-        <el-dialog class="addPromptTitleStyle"  width= 40% :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
+        <el-dialog class="addPromptTitleStyle"  :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="tiny" @close="resetPromptForm" >
                 <i class="el-icon-warning" style="color:red"></i> 
                 <span>店铺新增成功后以下信息无法修改，请您核对信息</span>
                 <el-form  :model="addPromptForm" style="    position:relative;padding: 27px 0px;">
@@ -214,23 +214,23 @@
                     </el-row>
                 </el-form>
                 <div slot="footer" class="dialog-footer">
-                    <el-button @click="changePromptCancle">取 消</el-button>
+                    <el-button @click="changePromptCancle">修 改</el-button>
                     <el-button type="primary" @click="addAgent">确 定</el-button>
                 </div>
         </el-dialog>
 
         <!--新增规则关系弹窗-->
-        <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
-           <div style="width: 250px;position: relative;float: right;">
-                <div style="width:180px;float:left;;padding: 10px;padding-bottom:15px;">
-                <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
+        <el-dialog :title="relationshipRulesTitle"   :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+           <div style="width: 253px;position: relative;float: right;width: 444px;">
+                <div style="width:183px;float:left;;padding: 10px;padding-bottom:15px;">
+                <el-input placeholder="请输入规则编号或规则名称" v-model="isSearchRuleNo"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
                     <el-button type="primary" @click="selectrelationshipRules">查询</el-button>
                 </div>
            </div>
             <div >
-                <el-table :data="relationshipRulesForm" style="width: 100%;">
+                <el-table :data="relationshipRulesForm" :height="440" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
                             <span>{{scope.$index + (currentPage - 1 ) * 30 + 1 }}</span>
@@ -246,11 +246,17 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
+                        <template  scope="scope">
+                            <span>{{ formatDayDate(scope.row.createTime)}}</span>
+                        </template>
                     </el-table-column>
-                    <el-table-column prop="" label="操作"  width="120"  align="right">
-                        <template>
-                            <span>
-
+                    <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.ruleNo == addForm.ruleId">  
+                               <el-button disabled="disabled"> 已选</el-button>
+                            </span> 
+                            <span v-else>
+                                <el-button type="primary" @click="selectRuleNo(scope.row.ruleNo,scope.row.businessExtendsRuleName)">选择</el-button>
                             </span>
                         </template>
                     </el-table-column>             
@@ -338,12 +344,6 @@ export default {
                 }
             ],
             phoneLength: 11,
-            pickerOptions: {
-                // disabledDate(time) {
-                //     console.log(time.getTime())
-                //     console.log(time.getTime() > Date.now()) 
-                // }
-            },
             areaClassFlag:true,
             addPromptTitle:'提示',
             addPromptForm:[],
@@ -356,13 +356,16 @@ export default {
             relationshipRulesTitle:'规则选择',
             relationshipRulesForm:[],
             relationshipRulesDialogVisible:false,
-            selectrelationshipRulesValue:'',
+            isSearchRuleNo:'',   //查询规则编号
         }
     },
     components: {
         addressComponent
     },
     methods:{
+        formatDayDate(date){
+            return Utils.formatDayDate(date)
+        },
         //获得区域等级等级
         getAreaName(){
             const self = this;
@@ -725,6 +728,7 @@ export default {
                     'shop.belongProvince':addBelongAddress  ? addBelongAddress.provinceCode : "",
                     'shop.belongCity':addBelongAddress  ? addBelongAddress.cityCode : "",
                     'shop.belongCountry':addBelongAddress ? addBelongAddress.areaCode : "",
+                    'shop.ruleId':data.ruleId,
 
                 }
                 let data2 = {
@@ -945,20 +949,16 @@ export default {
         //点击选中
         handleOperatorSelect(item) {
             this.addForm.operatorId = item.id;
-
             this.addForm.operator  = item.userName;
-
         },
         handleSalesManSelect(item) {
             this.addForm.salesManId = item.id;
-
             this.addForm.salesMan =  item.userName;
-            
         },
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
                 this.addForm.extendSuperName = item.name;
-                console.log(item.name);
+                // console.log(item.name);
                 // console.log(item.superAgentGradeId)
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 // console.log(this.addForm.superAgentGradeId)
@@ -1016,14 +1016,14 @@ export default {
 
             this.changePromptDialogFormVisible = true;
             this.changePromptDialogForm.signedStartTime = Utils.formatDayDate(this.addForm.signedTime[0])
+            this.changePromptDialogForm.signedStartTime = this.changePromptDialogForm.signedStartTime.replace('-','.')
             this.changePromptDialogForm.signedEndTime = Utils.formatDayDate(this.addForm.signedTime[1])
+            this.changePromptDialogForm.signedEndTime = this.changePromptDialogForm.signedEndTime.replace('-','.')
         },
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
-
-            const self = this;
-    
+            const self = this;    
             self.loading = true;
             self.$ajax({
                 url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
@@ -1031,7 +1031,8 @@ export default {
                 data:{
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
-                    'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
+                    'businessExtendsRuleVo.ruleName':self.isSearchRuleNo || '',
+                    'businessExtendsRuleVo.isSearchRuleNo' : 1
                 },
                 transformRequest: [function(data) {
                         let ret = ''
@@ -1066,8 +1067,13 @@ export default {
         },
         //查询关系
         selectrelationshipRules(){
-            console.log(this.selectrelationshipRulesValue)
-            this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
+            this.onRelationshipRulesDialogVisible(this.isSearchRuleNo);
+        },
+        //选择关系
+        selectRuleNo(ruleNo,businessExtendsRuleName){
+            this.relationshipRulesDialogVisible = false;
+            this.addForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.addForm.ruleId = ruleNo
         }
     },
     created(){
@@ -1094,11 +1100,15 @@ export default {
         //获取默认规则
         self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
         }).then(function (response) {
-          self.addForm.ruleTitle= response.data.result.ruleNo + response.data.result.businessExtendsRuleName  
-           console.log(self.addForm.ruleTitle )  
+          self.addForm.ruleTitle= response.data.result.ruleNo + response.data.result.businessExtendsRuleName
+          self.addForm.ruleId = response.data.result.ruleNo
+        //    console.log(self.addForm.ruleTitle )
+        //    console.log(self.addForm.ruleId)  
         }).catch(function (err) {
             console.log(err);
         });
+
+
 
     },
     watch:{
@@ -1110,6 +1120,7 @@ export default {
             }
         }
     }
+
 }
 </script>
 <style lang="css" scoped>
@@ -1163,6 +1174,9 @@ export default {
     .circle::before{
         content: url(../assets/images/circle.png);
         display: inline-block;
+    }
+    .el-dialog--tiny{
+        width: 48%
     }
 }
 
