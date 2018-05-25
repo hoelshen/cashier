@@ -178,7 +178,7 @@ export default {
                 phone: '',
                 payOrderNo: '',
                 status: 0,
-                isNotFinsh: 0,
+                isNotFinsh: "",
                 name:'',
                 aglevel:"",
                 annualCycle:'',
