@@ -55,13 +55,18 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="年度业绩目标：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                        <el-input v-model="editForm.annualPurchasePerformance"  placeholder="进货业绩"></el-input>
-                    </el-form-item>
+                    <el-form-item v-show="editForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
+                        <el-input v-show="editForm.agentGradeId ==265" v-model="editForm.annualPurchasePerformance" placeholder="进货业绩"></el-input>  
+                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        </el-popover>                    
+                        <el-input v-show="editForm.agentGradeId !=265 " v-model="editForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
+                    </el-form-item>                    
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'" >  
-                        <el-input  v-model="editForm.annualExtendPerformance"   >                              
+                        <el-popover  placement="right" ref="annualExtendPerformance"  width="200" trigger="manual"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        </el-popover>                        
+                        <el-input   v-popover:annualExtendPerformance v-model="editForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple"  >                              
                             <template slot="prepend">店铺拓展：  
                             </template>
                                 <template slot="append"> 家
@@ -95,7 +100,7 @@
             </el-row>
             <el-row>
                 <!--第五行-->
-                <el-col :span="24" v-show="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
+                <el-col :span="24" v-show="(editForm.agentGradeId=='266'||editForm.agentGradeId=='31' || editForm.shopType =='SELF_SUPPORT')">
                     <el-form-item label="所属区域：">
                         <addressComponent ref='editBelongAddress' :provinceCode="editForm.belongProvince" :cityCode="editForm.belongCity " :areaCode="editForm.belongCountry"  :isDetail="false" />   
                     </el-form-item>
@@ -363,7 +368,6 @@ export default {
         //改变店铺拓展数
         changeAnnualExtendPerformance(){
             this.flage = false;
-            console.log('ok')
         },
         //提交字段校验
         testData(data, Address, AgentAddress, BelongAddress ) {
@@ -688,7 +692,7 @@ export default {
 
             // console.log(editAgentAddress);
 
-            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) ?  self.$refs.editBelongAddress.getData() : null;
+            let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
             // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
 
             // console.log(editBelongAddress);
@@ -716,7 +720,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                    
+                        'shop.ruleId': data.ruleId,                    
                         
                         'shop.agentGradeId': data.agentGradeId,                    
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -758,6 +762,7 @@ export default {
                         'shop.annualPurchasePerformance': String(data.annualPurchasePerformance) || '',
                         'shop.annualExtendPerformance': data.annualExtendPerformance  || '', 
                         'shop.areaClass':data.areaClass  || '',
+                        'shop.ruleId': data.ruleId,
 
                         'shop.address': data.address,
                         'shop.city': data.city,
@@ -777,7 +782,6 @@ export default {
                         'shop.name': data.name,
                         'shop.phone': data.phone,
                         'shop.signedTime': data.signedTime,
-
 
                         'shop.provinceCode': editAddress.provinceCode,
                         'shop.cityCode': editAddress.cityCode,
@@ -804,6 +808,7 @@ export default {
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
+                        'shop.ruleId': data.ruleId,
 
                         'shop.annualPurchasePerformance': String(data.annualPurchasePerformance) || '',
                         'shop.annualExtendPerformance': '', 
@@ -839,6 +844,10 @@ export default {
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
+                        'shop.ruleId': data.ruleId,
+                        'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
+                        'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
+                        'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
                     }
 
             }
@@ -873,7 +882,6 @@ export default {
                     })
                     setTimeout(function () {
                         self.$router.push({ name:'storeDetail',params:{shopId:self.editForm.shopId} })
-                        // self.$router.go(-1)
                     }, 1000)
                 }
             }).catch(function (err) {
@@ -982,6 +990,27 @@ export default {
         },
         deleteSalesMan(){
             this.editForm.salesMan='';     
+        },
+        //气泡提示
+        annualExtendPerformanceTitple(){
+            let self = this
+            if( !Number(self.editForm.annualExtendPerformance)+Number(self.editForm.annualPurchasePerformance)){
+                self.$refs.annualExtendPerformance.showPopper=true
+                setTimeout(function(){
+                    self.$refs.annualExtendPerformance.showPopper=false
+                },6000)
+            }
+        },
+        //气泡提示
+        annualPurchasePerformanceTitple(){
+            let self = this
+            if(!Number(self.editForm.annualPurchasePerformance) ){
+                    self.$refs.annualPurchasePerformance.showPopper=true
+                    setTimeout(function(){
+                        self.$refs.annualPurchasePerformance.showPopper=false
+                    },6000)
+            }
+
         },
         //清除代理商编号、类别
         deleteExtendSuperNo(){
