@@ -36,6 +36,21 @@ let Utils = {
             day = day < 10 ? '0' + day : day;
             return `${year}/${month}/${day}`
         },
+        //格式化日份(年月日)
+        formatDayDate(data) {
+            if (data) {
+                let date = new Date(data)
+                let year = date.getFullYear();
+                let month = date.getMonth() + 1;
+                let day = date.getDate();
+                month = month < 10 ? '0' + month : month;
+                day = day < 10 ? '0' + day : day;
+                return year + '-' + month + '-' +day
+            } else {
+                return ''
+            }
+
+        },
         //格式化月份(年月)
         formatMonthDate(data) {
             if (data) {
