@@ -36,8 +36,8 @@
             </el-row>
             <el-row>
                  <el-col :span="8">
-                    <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable >
+                    <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'" >
+                        <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" @visible-change="areaClassFlag = false"  clearable style="width: 100%;">
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"  @click.native="deleteExtendSuperNo"></el-option>
                         </el-select>
                     </el-form-item>
@@ -50,7 +50,7 @@
                         <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="editForm.nextSignedStartTime" >续</span>    
-                        <span slot="content" >{{editForm.nextSignedEndTime}}-{{editForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{editForm.nextSignedStartTime}}-{{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
                     </el-form-item>
                 </el-col>
@@ -160,20 +160,13 @@
                     </el-form-item>
                  </el-col>
             </el-row>
+            <!-- 第三行-->
             <el-row  :gutter="10">
-                <!-- <el-col :span="4">
-                    <el-form-item :span="4" label="匹配规则:">
-                            <el-input placeholder="请选择"  v-model="editForm.ruleId"></el-input> 
-                    </el-form-item>
-                </el-col>
-                <el-col :span="3" >
-                     <el-button type="primary" @click="onRelationshipRulesDialogVisible">选择</el-button>    
-                </el-col> -->
-
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
-                            </el-popover> 
+                            </el-popover>
+                            <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span>  
                             <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
@@ -203,8 +196,8 @@
         </el-form>
         <!--新增规则关系弹窗-->
         <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
-           <div style="width: 253px;position: relative;float: right;">
-                <div style="width:183px;float:left;;padding: 10px;padding-bottom:15px;">
+           <div style="width: 287px;position: relative;float: right;">
+                <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
                 <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
@@ -231,11 +224,11 @@
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.ruleNo == editForm.ruleId">  
-                               <el-button disabled="disabled"> 已选</el-button>
+                            <span v-if="scope.row.id == editForm.ruleId">  
+                               <span style="color:#909399" disabled="disabled"> 已选</span>
                             </span> 
                             <span v-else>
-                                <el-button type="primary" @click="selectRuleNo(scope.row.ruleNo,scope.row.businessExtendsRuleName)">选择</el-button>
+                                <span style="color:#409EFF" @click="selectRuleNo(scope.row.ruleNo,scope.row.businessExtendsRuleName,scope.row.id)">选择</span>
                             </span>
                         </template>
                     </el-table-column>           
@@ -316,11 +309,11 @@ export default {
                 }
             ],
             phoneLength: 11,
-            pickerOptions: {
-                disabledDate(time) {
-                    return time.getTime() > Date.now();
-                },
-            },
+            // pickerOptions: {
+            //     disabledDate(time) {
+            //         return time.getTime() > Date.now();
+            //     },
+            // },
             flage:true,
             areaClassFlag: true,
             relationshipRulesDialogVisible:false,
@@ -686,18 +679,11 @@ export default {
             const data = self.editForm;
 
             let editAddress = self.$refs.editAddress.getData();
-
-            // console.log(editAddress);
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
             // console.log(editAgentAddress);
 
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
-            // console.log((data.agentGradeId ==31 || data.agentGradeId ==266 ) )
-
-            // console.log(editBelongAddress);
-            // this.editForm.annualExtendPerformance 
-            // console.log(data.annualExtendPerformance)
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
 
@@ -720,7 +706,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                        'shop.ruleId': data.ruleId,                    
+                        'shop.ruleId': data.id,                    
                         
                         'shop.agentGradeId': data.agentGradeId,                    
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -994,7 +980,7 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            if( !Number(self.editForm.annualExtendPerformance)+Number(self.editForm.annualPurchasePerformance)){
+            if( !Number(self.editForm.annualExtendPerformance)|| !Number(self.editForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
@@ -1110,7 +1096,6 @@ export default {
         },
         //查询关系
         selectrelationshipRulesMethod(){
-            console.log(this.selectrelationshipRulesValue)
             this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
         },
         //改变规则关系页码
@@ -1119,27 +1104,39 @@ export default {
             this.onRelationshipRulesDialogVisible();
         },
         //选择关系
-        selectRuleNo(ruleNo,businessExtendsRuleName){
-            this.relationshipRulesDialogVisible = false;
+        selectRuleNo(ruleNo,businessExtendsRuleName,id){
             this.editForm.ruleTitle = ruleNo +  businessExtendsRuleName
-            this.editForm.ruleId = ruleNo
+            this.editForm.ruleId = id
+        },
+        //删除规则
+        deleteRuleTitle(){
+            this.editForm.ruleTitle = '';
+            this.editForm.ruleId = '';
+
+            console.log(this.editForm.ruleTitle)
+            console.log(this.editForm.ruleId )
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
+
+                        let self = this
+                        if(self.editForm.ruleTitle){
+                            self.$refs.rule.showPopper=true
+                            setTimeout(function(){
+                                self.$refs.rule.showPopper=false
+                            },6000)                
+                        }
         },
 
     },
   
     created() {
-        // console.log(item.num)
         if (!this.checkSession()) return;
         this.uri = this.getUri();
         //获取id
         var src = window.location.href.split("/");
         this.id = src[5];
-        // console.log(src)
-        // console.log(src[5])
         const self = this; 
 
         self.loading = true;
@@ -1166,35 +1163,23 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
-            // console.log(self.areaClassFlag);
+            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
-                // console.log(self.editForm.areaClass) ;
 
             }else{
                 self.editForm.areaClass = self.editForm.agentCityName        
             }
-
             self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-            
-            if(self.flage){
-
-                // self.editForm.annualExtendPerformance = response.data.result.annualExtendPerformance ;
-                // console.log(self.editForm.annualExtendPerformance)
-            }
 
             if(self.editForm.shopType=='SELF_SUPPORT'){
-               
                     self.areaClassFlag = false;
-                
             }
-            // console.log(Number(self.editForm.annualExtendPerformance))
-            // console.log(self.editForm.superAgentGradeId)
+
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-            // console.log(self.editForm.superAgentGradeId)
-            
+
         }).catch(function (err) {
             self.loading = false;
             console.log(err);

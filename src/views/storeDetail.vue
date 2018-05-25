@@ -1,5 +1,8 @@
 <template>
     <div id="detailStore">
+        <div class="renewal" style="padding: 0px 0 20px 0;">
+            <el-button type="primary" @click="openRenewal">续签</el-button>
+        </div>
         <el-row class="content_title_top">
             <h2><span class="detail-title">基本信息</span><span class="detail-shopno"> ({{detailForm.shopNo}})</span></h2>
             <div class="content_closeBtn" style="margin-top:10px;" @click="goBack">X</div>
@@ -81,7 +84,11 @@
                 <div >
                     <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
-                        合同签约日期：<span class="font-color">{{ detailForm.signedTime}}</span>
+                        合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}}至{{detailForm.signedEndTime}}</span>                   
+                        <el-tooltip placement="right" effect="light">
+                        <span class="textBlue"  v-show="detailForm.nextSignedStartTime" ></span>    
+                        <span slot="content" >{{detailForm.nextSignedStartTime}}-{{detailForm.nextSignedEndTime}}</span>
+                        </el-tooltip>
                     </el-col>
                 </el-row>
                 </div>
@@ -225,7 +232,14 @@
                        代理商年度业绩： 
                         <span  class="router-link-active" type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
+              
                 </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="24"  style="padding-left: 22px;">
+                        匹配规则：{{ detailForm.businessExtendsRule.ruleNo }} {{ detailForm.businessExtendsRule.businessExtendsRuleName }}
+                    </el-col>
+                </el-row>
+                     
                 </div>
                 <el-row :gutter="5"> 
                     <el-col :span="24"  style="padding-left: 22px;">
@@ -236,7 +250,13 @@
                     <el-col :span="24"  style="padding-left: 22px;">
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
-                </el-row>     
+                </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="24"  style="padding-left: 22px;">
+                        合同签约信息：
+                        <span  class="router-link-active" type="primary" @click='openContractInformation(detailForm.id,detailForm.shopNo)'>点击查看</span>
+                    </el-col>
+                </el-row>                     
             </div>
         </div>
 
@@ -244,8 +264,28 @@
     
         <!-- 查看代理商关系(编号：xxx) start -->
         <el-dialog :title="agencyRelationsanceTitle" :visible.sync="agencyRelationsanceDialogVisible" :before-close="changeCancle" size="140%">
-            <div>
-                    <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" v-model="searchRegistTime" type="year" placeholder="选择年度" >
+            <div  style="width:50%; float:left">
+                <el-row :gutter="5">
+                    <el-col :span="24"  style="padding-left: 22px;">
+                            代理商拓展上级：
+                            <!-- <span >{{agencyRelationsanceForm.selfShop.name}}</span> -->
+                            <span v-show="agencyRelationsanceForm.extendSuperShop == null">醉品</span>
+                            <span v-show="agencyRelationsanceForm.extendSuperShop">代理商拓展上级：{{agencyRelationsanceForm.extendSuperShop }}</span>
+                            <br>
+
+                    </el-col>  
+                </el-row>
+                <el-row :gutter="5">
+                    <el-col :span="24"  style="padding-left: 22px;">
+                        代理商归属上级：
+                            <span v-show="agencyRelationsanceForm.superShop == null" >醉品</span>
+                            <span v-show="agencyRelationsanceForm.superShop">{{agencyRelationsanceForm.superShop}}</span>   
+                    </el-col>  
+                </el-row>               
+            </div>
+            <div style="width:50%;float:left">
+                <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" 
+                v-model="searchRegistTime" type="year" placeholder="选择年度" >
                 </el-date-picker>
             </div>
             <div>
@@ -346,8 +386,32 @@
             <div slot="footer" class="dialog-footer" @click="changeCancle()">
             </div>
         </el-dialog>
-    
         <!-- 查看代理商年度业绩(编号：xxx) end -->  
+
+        <!--续签弹窗-->
+        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
+            <div >
+                <el-table :data="renewalForm" :height="440" style="width: 100%;">
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                </el-table>
+            </div>
+        </el-dialog>  
+
+        <!--合约信息弹窗-->
+        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
+            <div >
+                <el-table :data="contractInformationForm" :height="440" style="width: 100%;">
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                    <span>{{}}</span>
+                </el-table>
+            </div>
+        </el-dialog> 
+
 
     </div>
     
@@ -384,6 +448,9 @@ export default {
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
       annualAgentsFormSignTime: [],
+      contractInformationTitle:'', //签约时间
+      contractInformationForm:[],  //签约时间
+      renewalForm:[],  //续签
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -413,7 +480,10 @@ export default {
         shopName: "",
         name: "",
         phone: "",
-        signedTime: "",
+        nextSignedStartTime:'', //下个续签时间
+        nextSignedEndTime:'', 
+        signedStartTime:'',
+        signedEndTime:'',       
         agentGradeId: "",
         province: "",
         city: "",
@@ -453,7 +523,11 @@ export default {
         activeColor2:"ffd199",     //红色
         activeColor3:'',
         endTime: '',        
-        height:10,   
+        height:10,
+        businessExtendsRule:{
+            businessExtendsRuleName:'', //规则名字 
+            ruleNo:'', //规则编号
+        }   
       },
       annualOwnAreadyPurchasePerformanceRateObject:{
           height:10 +'px',
@@ -483,15 +557,18 @@ export default {
           backgroundColor:'',
            top: 10 +'px',
       },
-      agencyRelationsanceDialogVisible:false,
-      annualAgentsDialogVisible:false,
+      agencyRelationsanceDialogVisible:false,  //代理商关系
+      annualAgentsDialogVisible:false,  //年度业绩 
+      renewalDialogVisible:false, //续签弹窗
+      contractInformationVisible:false, // 合约信息
       detailFormTitle: "",
       isDisable: false,
       order: "", //预存款排序
       phoneLength: 11,
       message: "剩余天数",
       searchRegistTime:"",
-      searchRegistTimeAnnual:""
+      searchRegistTimeAnnual:"",
+      renewalTitle:'',
     };
   },
   components: {
@@ -553,6 +630,43 @@ export default {
               self.loading = false;
               console.log(err);
           });
+
+          self.$ajax({
+              url:'/api/shop/shopManage/getShopExtendInfoByShopNo.jhtml',
+              method: 'post',
+              data: {
+                    'shopNo': shopNo,
+              },
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {
+               self.loading = false;
+             if (response.data.success == 1) {
+                 console.log(response.data.result)
+                 self.agencyRelationsanceForm.selfShop = response.data.result.selfShop;
+                 self.agencyRelationsanceForm.extendSuperShop =  response.data.result.extendSuperShop;
+                 self.agencyRelationsanceForm.superShop = response.data.result.superShop;
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });
+
+
+          
       },
     //查看代理商年度业绩
     openAnnualAgents(shopId,shopNo) {
@@ -665,6 +779,26 @@ export default {
              let self = this;
             self.currentPageAgency = val;
             self.openAgencyRelationsance(this.detailForm.shopNo);
+    },
+    //打开续签弹窗
+    openRenewal(){
+        this.renewalDialogVisible = true;
+        
+    },
+    //关闭续签弹窗
+    changeRenewal(){
+        this.renewalDialogVisible = false;
+    },
+    onrenewalChange(){
+
+    },
+    //打开签约信息弹窗
+    openContractInformation(){
+        this.contractInformationVisible = true;
+    },
+    //关闭签约信息弹窗 
+    changeContractInformation(){
+        this.contractInformationVisible = false;
     }
   },
   created() {

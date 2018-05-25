@@ -35,7 +35,7 @@
             <el-row>
                 <el-col :span="8">
                     <el-form-item label="代理商等级：" v-if="addForm.shopType!='SELF_SUPPORT'">
-                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级"    clearable>
+                        <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" style="width: 100%;"   clearable>
                             <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index" @click.native="deleteExtendSuperType"></el-option>
                         </el-select>
                     </el-form-item>
@@ -158,10 +158,11 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
-                            </el-popover> 
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"    content="保存成功，该规则将立即生效~"  >     
+                            </el-popover>
+                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
                             <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
+                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button> 
                     </el-form-item>
                 </el-col>
 
@@ -220,8 +221,8 @@
 
         <!--新增规则关系弹窗-->
         <el-dialog :title="relationshipRulesTitle"   :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
-           <div style="width: 253px;position: relative;float: right;width: 257px;">
-                <div style="width:183px;float:left;;padding: 10px;padding-bottom:15px;">
+           <div style="width: 287px;position: relative;float: right;">
+                <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
                 <el-input placeholder="请输入规则编号或规则名称" v-model="isSearchRuleNo"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
@@ -252,10 +253,10 @@
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
                             <span v-if="scope.row.id == addForm.ruleId">  
-                               <el-button disabled="disabled"> 已选</el-button>
+                               <span style="color:#909399" disabled="disabled"> 已选</span>
                             </span> 
                             <span v-else>
-                                <el-button type="primary" @click="selectRuleNo(scope.row.ruleNo, scope.row.businessExtendsRuleName, scope.row.id)">选择</el-button>
+                                <span  style="color:#409EFF"  @click="selectRuleNo(scope.row.ruleNo, scope.row.businessExtendsRuleName, scope.row.id)">选择</span>
                             </span>
                         </template>
                     </el-table-column>             
@@ -653,7 +654,7 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            if( !Number(self.addForm.annualExtendPerformance)+Number(self.addForm.annualPurchasePerformance)){
+            if( !Number(self.addForm.annualExtendPerformance)||!Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
@@ -669,15 +670,17 @@ export default {
                         self.$refs.annualPurchasePerformance.showPopper=false
                     },6000)
             }
-
         },
         //气泡提示
         ruleTitleTitple(){
             let self = this
-            self.$refs.rule.showPopper=true
-            setTimeout(function(){
-                self.$refs.rule.showPopper=false
-            },6000)
+            if(self.addForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+                setTimeout(function(){
+                    self.$refs.rule.showPopper=false
+                },6000)                
+            }
+
         },
         // 新增店铺
         addAgent() {
@@ -723,7 +726,6 @@ export default {
                     'shop.belongCity':addBelongAddress  ? addBelongAddress.cityCode : "",
                     'shop.belongCountry':addBelongAddress ? addBelongAddress.areaCode : "",
                     'shop.ruleId':data.ruleId,
-
                 }
                 let data2 = {
                     'shop.extendSuperType':data.extendSuperType || '',
@@ -990,7 +992,16 @@ export default {
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
-            this.isSearchRuleNo = '';            
+            this.isSearchRuleNo = '';  
+            
+            
+            let self = this
+            if(self.addForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+                setTimeout(function(){
+                    self.$refs.rule.showPopper=false
+                },6000)                
+            }
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
@@ -1067,9 +1078,12 @@ export default {
         selectrelationshipRules(){
             this.onRelationshipRulesDialogVisible(this.isSearchRuleNo);
         },
+        deleteRuleTitle(){
+            this.addForm.ruleTitle = '';
+            this.addForm.ruleId = '';
+        },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
-            this.relationshipRulesDialogVisible = false;
             this.addForm.ruleTitle = ruleNo +  businessExtendsRuleName
             this.addForm.ruleId = id
         }
