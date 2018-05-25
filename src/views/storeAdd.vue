@@ -657,7 +657,7 @@ export default {
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
-                },2000)
+                },6000)
             }
         },
         //气泡提示
@@ -667,7 +667,7 @@ export default {
                     self.$refs.annualPurchasePerformance.showPopper=true
                     setTimeout(function(){
                         self.$refs.annualPurchasePerformance.showPopper=false
-                    },2000)
+                    },6000)
             }
 
         },
@@ -677,7 +677,7 @@ export default {
             self.$refs.rule.showPopper=true
             setTimeout(function(){
                 self.$refs.rule.showPopper=false
-            },2000)
+            },6000)
         },
         // 新增店铺
         addAgent() {
