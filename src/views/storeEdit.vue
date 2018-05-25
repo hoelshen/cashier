@@ -46,9 +46,12 @@
             <el-row>
                  <!--第三行-->
                 <el-col :span="8">
-                    <el-form-item label="合同服务期限："  >
-
-                        <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>
+                    <el-form-item label="合同服务期限：">
+                        <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
+                        <el-tooltip placement="right-start" effect="light">
+                        <span class="textBlue"  v-show="editForm.nextSignedStartTime" >续</span>    
+                        <span slot="content" >{{editForm.nextSignedEndTime}}-{{editForm.nextSignedEndTime}}</span>
+                        </el-tooltip> 
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -1233,5 +1236,16 @@ export default {
     line-height: 30px;
     letter-spacing: 0px;
     color: #999999;
+}
+.textBlue {
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    color: white;
+    background-color: #409EFF;
+    border-radius: 3px;
+    margin-left: 5px;
+    font-size: 12px;
+    padding: 0 3px;
 }
 </style>
