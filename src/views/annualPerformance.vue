@@ -102,7 +102,7 @@
                             </template>
                         </el-table-column>
 
-                        <el-table-column label="店铺数">
+                        <el-table-column label="拓展店铺">
                             <template  slot-scope="scope">
                                 <el-tooltip  placement="top" effect="light">
                                     <div slot="content">目标：{{scope.row.shopNums}}</div>
