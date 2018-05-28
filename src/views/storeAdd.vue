@@ -439,6 +439,10 @@ export default {
                     return false
                 }
             }
+            // 如果是直营直接转成区域代理
+            if (data.shopType == 'SELF_SUPPORT') {
+                data.agentGradeId = 265;
+            }            
             //代理商等级判断
             if (!data.agentGradeId) {
                 self.loading = false;
@@ -457,10 +461,7 @@ export default {
                 })
                 return false
             }
-            // 如果是直营直接转成区域代理
-            if (data.shopType == 'SELF_SUPPORT') {
-                data.agentGradeId = 265;
-            }
+
             //代理商姓名判断
             if (!data.name) {
                     self.loading = false;
