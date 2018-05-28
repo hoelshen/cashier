@@ -45,14 +45,20 @@
                 <el-col :span="8">
                     <el-form-item label="合同服务期限：" >
                         <el-date-picker
-                        v-model="addForm.signedTime"
-                        type="daterange"
-                        range-separator="-"
-                        start-placeholder="开始日期"
-                        end-placeholder="结束日期"
-                        style="width: 100%;"
+                        v-model="addForm.signedStartTime"
+                        type="date"
+                        placeholder="开始日期"  
+                        style="width: 50%;float:left"
+                        :picker-options="selectionStartTime"
                         >
                         </el-date-picker>
+                        <el-date-picker
+                        v-model="addForm.signedEndTime"
+                        type="date"
+                        placeholder="结束日期"
+                        style="width: 50%;"                        
+                        :picker-options="selectionEndTime">
+                    </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
@@ -290,7 +296,8 @@ export default {
                 shopName: '',
                 name: '',
                 phone: '',
-                signedTime: '', //注册时间
+                signedStartTime: '', //注册开始时间
+                signedEndTime:'',  //注册结束时间
                 agentGradeId: '',
                 provinceCode: '',
                 province: '',
@@ -358,6 +365,17 @@ export default {
             relationshipRulesDialogVisible:false,
             isSearchRuleNo:'',   //查询规则编号
             addressFlage:false,  //地址
+            //时间选择器
+            selectionStartTime: {
+               disabledDate(time) {
+                    return time.getTime() > Date.now();
+                }
+            },
+            selectionEndTime:{
+                  disabledDate(time) {
+                    return time.getTime() < Date.now();
+                }
+            }
         }
     },
     components: {
@@ -453,7 +471,7 @@ export default {
                 return false
             }            
             //合同签约日期判断
-            if (!data.signedTime) {
+            if (!data.signedStartTime && !data.signedEndTime) {
                 self.loading = false;
                 self.$message({
                     message: '合同服务期限不得为空',
@@ -677,9 +695,10 @@ export default {
             let addAddress = self.$refs.addAddress.getData();
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;              
             let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )|| data.shopType == 'SELF_SUPPORT'?  self.$refs.addBelongAddress.getData() : null;
-            let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);
-            let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);
-
+            let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);
+            let dataSignedEndTime  = Utils.formatDayDate(data.signedEndTime);
+            console.log(dataSignedStartTime);
+            console.log(dataSignedEndTime);
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
@@ -1003,8 +1022,8 @@ export default {
 
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
-            let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);   
-            let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);             
+            let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);   
+            let dataSignedEndTime  = Utils.formatDayDate(data.signedEndTime);             
 
             this.changePromptDialogFormVisible = true;
             this.changePromptDialogForm.signedStartTime = dataSignedStartTime
