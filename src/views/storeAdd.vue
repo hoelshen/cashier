@@ -510,7 +510,6 @@ export default {
             console.log(!addAddress.provinceCode)
             console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
 
-            console.log('ok2')
             //详细地址判断
             if (!data.address) {
                 self.loading = false;
@@ -530,7 +529,12 @@ export default {
                 }      
             }
             //所属区域判断
+            console.log(data.agentGradeId!=265)
+            console.log(data.shopType == 'SELF_SUPPORT')
+            
             if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
+                console.log('keyi')
+                console.log(addBelongAddress.provinceCode)
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -538,20 +542,14 @@ export default {
                         type: 'error'
                     })
                     return false
-                } else {
-                    if (addBelongAddress.cityCode == 1) {
-                        self.loading = false;
-                        self.$message({
-                            message: '请选择具体代理城市',
-                            type: 'error'
-                        })
-                        return false
-                    }
                 }
             }
             //代理区域判断
-            if (data.agentGradeId == 265 ||  data.shopType != 'SELF_SUPPORT') {
-                console.log('ok')
+            // console.log('dailikeyi')
+            // console.log(data.agentGradeId == 265)
+            // console.log(data.shopType != 'SELF_SUPPORT')
+            if (data.agentGradeId == 265 &&  data.shopType != 'SELF_SUPPORT') {
+                // console.log('ok')
                 if (!addAgentAddress.provinceCode || !addAgentAddress.cityCode || !addAgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -571,6 +569,8 @@ export default {
                 }
 
             }
+
+            console.log('ok2')            
             //年度业绩目标
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
@@ -995,6 +995,8 @@ export default {
             const data = self.addForm;
             console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
+            console.log(data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT')
+            console.log(self.$refs.addBelongAddress.getData())
             let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
