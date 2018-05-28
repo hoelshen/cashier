@@ -401,7 +401,7 @@
                             </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div>
                         <el-row>
                             <el-col :span="10">
-                                <el-form-item label="续签期限">
+                                <el-form-item label="续签期限：">
                                     <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
@@ -908,19 +908,19 @@ export default {
     //保存续约
     saveRenewal(){
         var self = this;
-        self.renewalDialogVisible = false
+       
         if (!this.checkSession()) return;
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
-        this.renewalDialogVisible = true;
+         self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
               method: 'post',
               data: {
                     'contractCycle.shopId': self.detailForm.id,
-                    'contractCycle.beginTime': self.renewalForm.timerValueStar,
-                    'contractCycle.endTime':  self.renewalForm.timerValueEnd,
+                    'contractCycle.beginTime':  Utils.formatDayDate(self.renewalForm.timerValueStar),
+                    'contractCycle.endTime':   Utils.formatDayDate(self.renewalForm.timerValueEnd),
                     'contractCycle.createId':  self.createId,
               },
               transformRequest: [function(data) {
@@ -936,7 +936,11 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result)
+                 self.$message({
+                        message: "代理商续签成功~",
+                        type: 'success'
+                    });
+                 this.$router.push("/storeDetail/"+self.detailForm.id);
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1014,7 +1018,7 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    return time.getTime() > self.thistime
+                    // return time.getTime() > self.thistime
                 }
             }
     },
@@ -1023,7 +1027,7 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    return time.getTime() < self.thistime
+                    // return time.getTime() < self.thistime
                 }
             }
     },
