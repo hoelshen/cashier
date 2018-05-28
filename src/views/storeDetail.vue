@@ -407,7 +407,7 @@
             </div>
             
             <div >
-                <el-table :data="contractInformationForm" :height="440" class="contractInformation">
+                <el-table :data="contractInformationForm" :height="440" >
                     <el-table-column prop="contractType" label="签约类型" width="127" >
                         <template slot-scope="scope" >
                             <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
@@ -429,7 +429,7 @@
                 <div slot="footer"   class="dialog-footer" @click="changeContractInformation()">
                 </div>
 
-                
+
             </div>
         </el-dialog>
     </div>  
@@ -1021,6 +1021,20 @@ export default {
   }
 };
 </script>
+
+<style lang='css' scoped>
+    .el-table  >>> .el-table__header-wrapper >>> .el-table__header{
+         width: 100%;
+    }
+    .el-table  >>> .el-table__header-wrapper{
+         width: 100%;
+    }
+    .el-table__header-wrapper >>> .el-table__header{
+         width: 100%
+    }
+</style>
+
+
 <style lang='less' scoped>
 @import url("../assets/less/storeDetail.less");
 .el-message-box {
@@ -1198,7 +1212,5 @@ export default {
 .font-color{
     color: #333333;
 }
-.contractInformation{
-    width: 100%
-}
+
 </style>
