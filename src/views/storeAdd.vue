@@ -117,8 +117,8 @@
             </el-row>
             <el-row>
               <el-col :span="18">
-                    <el-form-item label="收件地址：">
-                        <addressComponent ref='addAddress' :isDetail="false" />
+                    <el-form-item label="收件地址：" >
+                        <addressComponent ref='addAddress' :isDetail="false"  v-on:addAddressFlage="addAddressFlage" />
                     </el-form-item>
                 </el-col>
                 <el-col :span="18">
@@ -203,12 +203,12 @@
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;" class="circle">
-                            合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}}-{{changePromptDialogForm.signedEndTime}}</span>
+                            合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}}~{{changePromptDialogForm.signedEndTime}}</span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24" style="padding-left:20px;" class="circle">
-                           拓展上级：<span v-if="addForm.shopType =='SELF_SUPPORT'" class="font-color">醉品自开发</span>
+                           拓展上级：<span v-if="addForm.shopType =='SELF_SUPPORT ' || addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
                                     <span v-else>{{addForm.extendSuperName}}{{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
@@ -357,17 +357,22 @@ export default {
             relationshipRulesForm:[],
             relationshipRulesDialogVisible:false,
             isSearchRuleNo:'',   //查询规则编号
+            addressFlage:false,  //地址
         }
     },
     components: {
         addressComponent
     },
     methods:{
+        addAddressFlage(){
+            this.addressFlage=  true;
+        },
         formatDayDate(date){
             return Utils.formatDayDate(date)
         },
         //获得区域等级等级
         getAreaName(){
+            console.log('ok')
             const self = this;
             //获取区域等级列表
             let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' + self.$refs.addAgentAddress.getData().cityName
@@ -413,18 +418,18 @@ export default {
             }
         },
         //提交字段校验
-        testData(data, Address, AgentAddress, addBelongAddress) {
+        testData(data, addAddress, addAgentAddress, addBelongAddress) {
             const self = this;
             let isMobile = /^1\d{10}$/
             //店铺名判断
             if (!data.shopName) {
-                self.loading = false;
-                self.$message({
-                    message: '店铺名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
+                    self.loading = false;
+                    self.$message({
+                        message: '店铺名不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
                 if (data.shopName.length > 50) {
                     self.loading = false;
                     self.$message({
@@ -434,55 +439,6 @@ export default {
                     return false
                 }
             }
-            //代理商姓名判断
-            if (!data.name) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商姓名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (data.name.length > 10) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商姓名长度不得大于10',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //代理商手机判断
-            if (!data.phone) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商手机不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (!isMobile.test(data.phone)) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商手机格式有误',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //合同签约日期判断
-            if (!data.signedTime) {
-                self.loading = false;
-                self.$message({
-                    message: '合同签约日期不得为空',
-                    type: 'error'
-                })
-                return false
-            }
-            // 如果是直营直接转成区域代理
-            if (data.shopType == 'SELF_SUPPORT') {
-                data.agentGradeId = 265;
-            }
             //代理商等级判断
             if (!data.agentGradeId) {
                 self.loading = false;
@@ -491,33 +447,70 @@ export default {
                     type: 'error'
                 })
                 return false
+            }            
+            //合同签约日期判断
+            if (!data.signedTime) {
+                self.loading = false;
+                self.$message({
+                    message: '合同服务期限不得为空',
+                    type: 'error'
+                })
+                return false
+            }
+            // 如果是直营直接转成区域代理
+            // if (data.shopType == 'SELF_SUPPORT') {
+            //     data.agentGradeId = 265;
+            // }
+            //代理商姓名判断
+            if (!data.name) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商姓名不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (data.name.length > 10) {
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商姓名长度不得大于10',
+                            type: 'error'
+                        })
+                        return false
+                    }
+            }
+            //代理商手机判断
+            if (!data.phone) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商手机不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (!isMobile.test(data.phone)) {
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商手机格式有误',
+                            type: 'error'
+                        })
+                        return false
+                    }
             }
             //收件地址判断
-            if (!Address.provinceCode || !Address.cityCode || !Address.areaCode) {
-                self.loading = false;
+            console.log(this.addressFlage)
+            if(!this.addressFlage){
+                self.loading = false;                
                 self.$message({
                     message: '收件地址不得为空',
                     type: 'error'
                 })
                 return false
-            } else {
-                if (Address.cityCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件城市',
-                        type: 'error'
-                    })
-                    return false
-                }
-                if (Address.areaCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件地区',
-                        type: 'error'
-                    })
-                    return false
-                }
             }
+            console.log(!addAddress.provinceCode)
+            console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
+
+            console.log('ok2')
             //详细地址判断
             if (!data.address) {
                 self.loading = false;
@@ -526,20 +519,18 @@ export default {
                     type: 'error'
                 })
                 return false
-            } else {
+            }else {
                 if (data.address.length > 100) {
                     self.loading = false;
                     self.$message({
                         message: '详细地址长度不得大于100个字符',
                         type: 'error'
                     })
-
                     return false
-                }
-            
+                }      
             }
             //所属区域判断
-            if(data.agentGradeId!=265){
+            if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -559,8 +550,9 @@ export default {
                 }
             }
             //代理区域判断
-            if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
-                if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
+            if (data.agentGradeId == 265 ||  data.shopType != 'SELF_SUPPORT') {
+                console.log('ok')
+                if (!addAgentAddress.provinceCode || !addAgentAddress.cityCode || !addAgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
                         message: '代理区域不得为空',
@@ -568,7 +560,7 @@ export default {
                     })
                     return false
                 } else {
-                    if (AgentAddress.cityCode == 1) {
+                    if (addAgentAddress.cityCode == 1) {
                         self.loading = false;
                         self.$message({
                             message: '请选择具体代理城市',
@@ -579,25 +571,19 @@ export default {
                 }
 
             }
-            //年度业绩目标：
-            // console.log(data.annualPurchasePerformance)
+            //年度业绩目标
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
                     self.loading = false;
                     self.$message({
                         message: '年度业绩不得为空',
                         type: 'error'
-                    })                  
-                    
+                    })                                      
                     return false;
-                
                 }
             }
        
             // 年度店铺拓展
-            // console.log(data.annualExtendPerformance)
-            // console.log(data.agentGradeId)
-            // console.log(data.shopType)
             if( (data.agentGradeId ==265) && data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualExtendPerformance){
                     self.loading = false;
@@ -622,7 +608,6 @@ export default {
             }
 
             //检验上级代理商的状态
-            // console.log(data.state)
             if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
                 if(data.state!=0){
                     self.loading = false;
@@ -689,13 +674,11 @@ export default {
             self.loading = true;
             const data = self.addForm;
             let addAddress = self.$refs.addAddress.getData();
+            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;              
             let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )|| data.shopType == 'SELF_SUPPORT'?  self.$refs.addBelongAddress.getData() : null;
             let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);
             let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);
-            // let addAgentAddress =  data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
-            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;  
-            // if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
-            // console.log(addAgentAddress)
+
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
@@ -1005,28 +988,32 @@ export default {
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
-
-
             const self = this;
             if (!this.checkSession()) return;
             self.loading = true;
             
             const data = self.addForm;
             
-            console.log(data)
-            let addAddress = self.$refs.addAddress.getData();
-            console.log(self.$refs.addBelongAddress.getData())
-            let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 ) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
-            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null;                         
+            let addAddress =  self.$refs.addAddress.getData();
+            let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
+            let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
+
+            console.log(addAddress)
+            console.log(addBelongAddress)
+            console.log(addAgentAddress)
+
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
             
+   
+
+
             let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);   
             let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);             
 
             this.changePromptDialogFormVisible = true;
-            this.changePromptDialogForm.signedStartTime = Utils.formatDayDate(this.addForm.signedTime[0])
+            this.changePromptDialogForm.signedStartTime = dataSignedStartTime
             this.changePromptDialogForm.signedStartTime = this.changePromptDialogForm.signedStartTime.replace('-','.')
-            this.changePromptDialogForm.signedEndTime = Utils.formatDayDate(this.addForm.signedTime[1])
+            this.changePromptDialogForm.signedEndTime = dataSignedEndTime
             this.changePromptDialogForm.signedEndTime = this.changePromptDialogForm.signedEndTime.replace('-','.')
         },
         //打开规则关系弹窗

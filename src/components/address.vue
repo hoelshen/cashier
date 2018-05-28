@@ -189,6 +189,7 @@ export default {
             this.$nextTick(() => {
                 this.$emit("getAllData", this.getData());
                 this.$emit("getAreaName");
+                this.$emit('addAddressFlage');
             });
         },
         getAddress() {

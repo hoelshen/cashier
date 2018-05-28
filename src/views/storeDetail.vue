@@ -389,7 +389,7 @@
         <!-- 查看代理商年度业绩(编号：xxx) end -->  
 
         <!--续签弹窗-->
-        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
+        <!-- <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
             <div >
                 <el-table :data="renewalForm" :height="440" style="width: 100%;">
                     <span>{{}}</span>
@@ -398,23 +398,33 @@
                     <span>{{}}</span>
                 </el-table>
             </div>
-        </el-dialog>  
+        </el-dialog>   -->
 
         <!--合约信息弹窗-->
         <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
             <div >
-                <el-table :data="contractInformationForm" :height="440" style="width: 100%;">
-                    <span>{{}}</span>
-                    <span>{{}}</span>
-                    <span>{{}}</span>
-                    <span>{{}}</span>
+                <el-table :data="contractInformationForm" :height="440" >
+                    <el-table-column prop="contractType" label="签约类型" width="127">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
+                            <span v-if="scope.row.RENEWAL">续签</span>
+                        </template>
+
+                    </el-table-column>
+
+                    <el-table-column prop="registTime" label="合同服务期限" width="127">
+                    </el-table-column>
                 </el-table>
+
+                <div class="plPage clearfix"    >
+                    <el-pagination style="margin-top: 10px;float: right;"  @current-change="contractInformationChange" :current-page="currentPageContractInformation" :page-size="pageSizeContractInformation" layout=" prev, pager, next, jumper" :total="totalSizeContractInformation" >
+                    </el-pagination>
+                </div>
+                <div slot="footer"   class="dialog-footer" @click="changeContractInformation()">
+                </div>
             </div>
-        </el-dialog> 
-
-
-    </div>
-    
+        </el-dialog>
+    </div>  
 </template>
 
 <script type="text/javascript" src="../router.js"></script>
@@ -437,6 +447,9 @@ export default {
       pageSizeAgency: 30,
       totalNums:'',
       totalSizeAgency:0,
+      currentPageContractInformation: 1,
+      pageSizeContractInformation:30,
+      totalSizeContractInformation:0,
       user: "",
       tableData:{
           agent:'',
@@ -783,22 +796,92 @@ export default {
     //打开续签弹窗
     openRenewal(){
         this.renewalDialogVisible = true;
-        
+        self.$ajax({
+              url:'/http/contractCycle/doRenewal.jhtml',
+              method: 'post',
+              data: {
+                    'contractCycle.shopId': shopId,
+              },
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {
+               self.loading = false;
+             if (response.data.success == 1) {
+                 console.log(response.data.result)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });        
     },
     //关闭续签弹窗
     changeRenewal(){
         this.renewalDialogVisible = false;
     },
-    onrenewalChange(){
-
-    },
     //打开签约信息弹窗
     openContractInformation(){
         this.contractInformationVisible = true;
+        let id = this.detailForm.shopNo;
+        var time = new Date();
+        var today = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate();
+        console.log( today   )
+
+        const self = this;
+        self.$ajax({
+              url:'/http/contractCycle/findCurrentContractCycle.jhtml',
+              method: 'post',
+              data: {
+                    'contractCycle.shopId': 798,
+                    'contractCycle.currentTime':today,
+              },
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {
+               self.loading = false;
+             if (response.data.success == 1) {
+                 console.log(response.data.result)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });        
     },
     //关闭签约信息弹窗 
     changeContractInformation(){
         this.contractInformationVisible = false;
+
+
+
+    },
+    //改变签约信息当前页
+    contractInformationChange(){
+
     }
   },
   created() {
