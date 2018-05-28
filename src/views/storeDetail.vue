@@ -268,11 +268,9 @@
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                             代理商拓展上级：
-                            <!-- <span >{{agencyRelationsanceForm.selfShop.name}}</span> -->
                             <span v-show="agencyRelationsanceForm.extendSuperShop == null">醉品</span>
                             <span v-show="agencyRelationsanceForm.extendSuperShop">代理商拓展上级：{{agencyRelationsanceForm.extendSuperShop }}</span>
                             <br>
-
                     </el-col>  
                 </el-row>
                 <el-row :gutter="5">
@@ -402,6 +400,12 @@
 
         <!--合约信息弹窗-->
         <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
+            <div style="width:50%;float: right;">
+                <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" 
+                v-model="searchContractInformationTime" type="year" placeholder="选择年度" >
+                </el-date-picker>
+            </div>
+            
             <div >
                 <el-table :data="contractInformationForm" :height="440" >
                     <el-table-column prop="contractType" label="签约类型" width="127">
@@ -409,13 +413,11 @@
                             <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
                             <span v-if="scope.row.RENEWAL">续签</span>
                         </template>
-
                     </el-table-column>
 
                     <el-table-column prop="registTime" label="合同服务期限" width="127">
                     </el-table-column>
                 </el-table>
-
                 <div class="plPage clearfix"    >
                     <el-pagination style="margin-top: 10px;float: right;"  @current-change="contractInformationChange" :current-page="currentPageContractInformation" :page-size="pageSizeContractInformation" layout=" prev, pager, next, jumper" :total="totalSizeContractInformation" >
                     </el-pagination>
@@ -579,8 +581,9 @@ export default {
       order: "", //预存款排序
       phoneLength: 11,
       message: "剩余天数",
-      searchRegistTime:"",
-      searchRegistTimeAnnual:"",
+      searchRegistTime:"",       //搜索关系
+      searchRegistTimeAnnual:"",   //搜索年度业绩
+      searchContractInformationTime:'',  //搜索合同签约信息
       renewalTitle:'',
     };
   },
@@ -834,18 +837,19 @@ export default {
     //打开签约信息弹窗
     openContractInformation(){
         this.contractInformationVisible = true;
-        let id = this.detailForm.shopNo;
-        var time = new Date();
-        var today = time.getFullYear()+"-"+(time.getMonth()+1)+"-"+time.getDate();
-        console.log( today   )
+        let id = this.detailForm.id;
+        let nowTime = this.searchContractInformationTime
+        this.contractInformationTitle = "合同签约信息（编号： " +this.detailForm.shopNo+  "）"
 
         const self = this;
         self.$ajax({
-              url:'/http/contractCycle/findCurrentContractCycle.jhtml',
+              url:'/api/http/contractCycle/queryContractCycleList.jhtml',
               method: 'post',
               data: {
-                    'contractCycle.shopId': 798,
-                    'contractCycle.currentTime':today,
+                    'contractCycle.shopId': id,
+                    'contractCycle.beginTime':nowTime,
+                    'pager.pageIndex':1,
+                    'pager.pageSize':10,   
               },
               transformRequest: [function(data) {
                     let ret = ''
