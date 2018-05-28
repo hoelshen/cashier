@@ -49,7 +49,7 @@
                     <el-form-item label="合同服务期限：">
                         <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
-                        <span class="textBlue"  v-show="editForm.nextSignedStartTime" >续</span>    
+                        <span class="textBlue"  v-show="editForm.nextSignedStartTime" ></span>    
                         <span slot="content" >{{editForm.nextSignedStartTime}}-{{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
                     </el-form-item>
@@ -140,16 +140,16 @@
                 <h2>账户信息</h2>
             </el-row>
             <el-row>
-                <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品自开发</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                            
+                <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')" >
+                    <el-form-item label="括展上级：" >
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" disabled>醉品自开发</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT" disabled>代理商拓展</el-radio>                            
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span>
-                        <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -167,8 +167,8 @@
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span>  
-                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
+                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary"  v-popover:rule  @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
                 </el-col>
 
@@ -195,7 +195,7 @@
             </el-row>
         </el-form>
         <!--新增规则关系弹窗-->
-        <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
            <div style="width: 287px;position: relative;float: right;">
                 <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
                 <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
@@ -205,7 +205,7 @@
                 </div>
            </div>
             <div >
-                <el-table :data="relationshipRulesForm" style="width: 100%;">
+                <el-table :data="relationshipRulesForm" :height="440" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
                             <span>{{scope.$index + (currentPage - 1 ) * 30 + 1 }}</span>
@@ -283,7 +283,8 @@ export default {
                     areaClass:'',
                     superAgentGradeId:'',
                     state:'',
-                    ruleId:'',
+                    ruleId:'',    //规则
+                    ruleTitle:'',                    
             },
             isDisable:false,
             levelArray: [], //代理商等级数组,
@@ -677,6 +678,7 @@ export default {
             if (!self.checkSession()) return;
             self.loading = true;
             const data = self.editForm;
+            console.log(self.editForm.ruleId)
 
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
@@ -686,7 +688,7 @@ export default {
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-
+            debugger
             let datas;
             //代理商
             if(data.shopType=='AGENT'){
@@ -706,7 +708,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                        'shop.ruleId': data.id,                    
+                        'shop.ruleId': data.ruleId,                    
                         
                         'shop.agentGradeId': data.agentGradeId,                    
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -1055,7 +1057,7 @@ export default {
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
-            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.ruleId +"）" 
+            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
             const self = this;
     
             self.loading = true;
@@ -1105,28 +1107,34 @@ export default {
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
-            this.editForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.editForm.ruleTitle = ruleNo + ' ' +  businessExtendsRuleName
             this.editForm.ruleId = id
         },
         //删除规则
         deleteRuleTitle(){
-            this.editForm.ruleTitle = '';
-            this.editForm.ruleId = '';
-
-            console.log(this.editForm.ruleTitle)
-            console.log(this.editForm.ruleId )
+            // var editForm = this.editForm
+            // console.log(self.editForm.ruleTitle)
+            
+            // editForm.ruleTitle = ''
+            // this.$set(this.editForm,'ruleTitle','')
+            this.editForm.ruleTitle = ''
+            this.editForm = Object.assign({},this.editForm)
+            // console.log(self.editForm.ruleTitle)
+            // console.log(self.editForm.ruleId )
+            // console.log(self.editForm.ruleTitle)
+            // console.log(self.editForm.ruleId )
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
 
-                        let self = this
-                        if(self.editForm.ruleTitle){
-                            self.$refs.rule.showPopper=true
-                            setTimeout(function(){
-                                self.$refs.rule.showPopper=false
-                            },6000)                
-                        }
+                let self = this
+                if(self.editForm.ruleTitle){
+                    self.$refs.rule.showPopper=true
+                    setTimeout(function(){
+                        self.$refs.rule.showPopper=false
+                    },6000)                
+                }
         },
 
     },
@@ -1143,7 +1151,6 @@ export default {
 
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
-            // console.log(response);
             if (response.data.success == 1) {
                 self.levelArray = response.data.result
             } else {
@@ -1163,7 +1170,7 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
-            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + response.data.result.businessExtendsRule.businessExtendsRuleName;
+            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
 
@@ -1195,7 +1202,7 @@ export default {
                     this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
                 }
             }
-        }
+        },         
     }
 }
 </script>
@@ -1250,15 +1257,5 @@ export default {
     letter-spacing: 0px;
     color: #999999;
 }
-.textBlue {
-    display: inline-block;
-    height: 18px;
-    line-height: 18px;
-    color: white;
-    background-color: #409EFF;
-    border-radius: 3px;
-    margin-left: 5px;
-    font-size: 12px;
-    padding: 0 3px;
-}
+
 </style>

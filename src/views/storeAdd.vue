@@ -43,13 +43,14 @@
             </el-row>
             <el-row>
                 <el-col :span="8">
-                    <el-form-item label="合同服务期限：">
+                    <el-form-item label="合同服务期限：" >
                         <el-date-picker
                         v-model="addForm.signedTime"
                         type="daterange"
                         range-separator="-"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
+                        style="width: 100%;"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -161,11 +162,10 @@
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
-                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button> 
+                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary"  v-popover:rule   @click="onRelationshipRulesDialogVisible" >选择</el-button> 
                     </el-form-item>
                 </el-col>
-
             </el-row>
             <!--第三行-->
             <el-row :gutter="10">
@@ -209,7 +209,7 @@
                     <el-row :gutter="10">
                         <el-col :span="24" style="padding-left:20px;" class="circle">
                            拓展上级：<span v-if="addForm.shopType =='SELF_SUPPORT ' || addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
-                                    <span v-else>{{addForm.extendSuperName}}{{addForm.extendSuperNo}}</span>
+                                    <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -439,6 +439,10 @@ export default {
                     return false
                 }
             }
+            // 如果是直营直接转成区域代理
+            if (data.shopType == 'SELF_SUPPORT') {
+                data.agentGradeId = 265;
+            }            
             //代理商等级判断
             if (!data.agentGradeId) {
                 self.loading = false;
@@ -457,10 +461,7 @@ export default {
                 })
                 return false
             }
-            // 如果是直营直接转成区域代理
-            // if (data.shopType == 'SELF_SUPPORT') {
-            //     data.agentGradeId = 265;
-            // }
+
             //代理商姓名判断
             if (!data.name) {
                     self.loading = false;
@@ -498,7 +499,7 @@ export default {
                     }
             }
             //收件地址判断
-            console.log(this.addressFlage)
+            // console.log(this.addressFlage)
             if(!this.addressFlage){
                 self.loading = false;                
                 self.$message({
@@ -507,10 +508,9 @@ export default {
                 })
                 return false
             }
-            console.log(!addAddress.provinceCode)
-            console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
+            // console.log(!addAddress.provinceCode)
+            // console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
 
-            console.log('ok2')
             //详细地址判断
             if (!data.address) {
                 self.loading = false;
@@ -530,7 +530,12 @@ export default {
                 }      
             }
             //所属区域判断
+            // console.log(data.agentGradeId!=265)
+            // console.log(data.shopType == 'SELF_SUPPORT')
+            
             if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
+                // console.log('keyi')
+                // console.log(addBelongAddress.provinceCode)
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -538,20 +543,14 @@ export default {
                         type: 'error'
                     })
                     return false
-                } else {
-                    if (addBelongAddress.cityCode == 1) {
-                        self.loading = false;
-                        self.$message({
-                            message: '请选择具体代理城市',
-                            type: 'error'
-                        })
-                        return false
-                    }
                 }
             }
             //代理区域判断
-            if (data.agentGradeId == 265 ||  data.shopType != 'SELF_SUPPORT') {
-                console.log('ok')
+            // console.log('dailikeyi')
+            // console.log(data.agentGradeId == 265)
+            // console.log(data.shopType != 'SELF_SUPPORT')
+            if (data.agentGradeId == 265 &&  data.shopType != 'SELF_SUPPORT') {
+                // console.log('ok')
                 if (!addAgentAddress.provinceCode || !addAgentAddress.cityCode || !addAgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -571,6 +570,8 @@ export default {
                 }
 
             }
+
+            // console.log('ok2')            
             //年度业绩目标
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
@@ -993,8 +994,10 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            console.log(data)
+            // console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
+            // console.log(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT')
+            // console.log(self.$refs.addBelongAddress.getData())
             let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
@@ -1064,7 +1067,7 @@ export default {
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
-            this.addForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.addForm.ruleTitle = ruleNo +' '+  businessExtendsRuleName
             this.addForm.ruleId = id
         }
     },
@@ -1092,7 +1095,7 @@ export default {
         //获取默认规则
         self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
         }).then(function (response) {
-          self.addForm.ruleTitle= response.data.result.ruleNo + response.data.result.businessExtendsRuleName
+          self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
           self.addForm.ruleId = response.data.result.id
         }).catch(function (err) {
             console.log(err);

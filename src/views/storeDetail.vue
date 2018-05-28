@@ -80,14 +80,14 @@
             </div>
             
             <!--中间-->
-            <div class="orderInfo line-middle" >
+            <div class="orderInfo line-middle" style="width:38%">
                 <div >
                     <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
                         合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}}至{{detailForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="detailForm.nextSignedStartTime" ></span>    
-                        <span slot="content" >{{detailForm.nextSignedStartTime}}-{{detailForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{detailForm.nextSignedStartTime}}~{{detailForm.nextSignedEndTime}}</span>
                         </el-tooltip>
                     </el-col>
                 </el-row>
@@ -195,7 +195,7 @@
             </div>      
             </div>
             <!--右边-->
-            <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
+            <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;width:28%">
                 <div class="calendar" style="top:7%">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
@@ -268,16 +268,16 @@
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                             代理商拓展上级：
-                            <span v-show="agencyRelationsanceForm.extendSuperShop == null">醉品</span>
-                            <span v-show="agencyRelationsanceForm.extendSuperShop">代理商拓展上级：{{agencyRelationsanceForm.extendSuperShop }}</span>
+                            <span v-if="agencyRelationsanceFormExtendSuper == null">醉品</span>
+                            <span v-show="agencyRelationsanceFormExtendSuperShopNo">{{agencyRelationsanceFormExtendSuperShopNo }} {{agencyRelationsanceFormExtendSuperName}}</span>
                             <br>
                     </el-col>  
                 </el-row>
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                         代理商归属上级：
-                            <span v-show="agencyRelationsanceForm.superShop == null" >醉品</span>
-                            <span v-show="agencyRelationsanceForm.superShop">{{agencyRelationsanceForm.superShop}}</span>   
+                            <span v-if="agencyRelationsanceFormSuperShop == null" >醉品</span>
+                            <span v-show="agencyRelationsanceFormSuperShopShopNo">{{agencyRelationsanceFormSuperShopShopNo}} {{agencyRelationsanceFormSuperShopName}}</span>   
                     </el-col>  
                 </el-row>               
             </div>
@@ -427,7 +427,7 @@
         </el-dialog>  
 
         <!--合约信息弹窗-->
-        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
+        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation" size="140%">
             <div style="width:50%;float: right;">
                 <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" 
                 v-model="searchContractInformationTime" type="year" placeholder="选择年度" >
@@ -435,23 +435,31 @@
             </div>
             
             <div >
-                <el-table :data="contractInformationForm" :height="440" >
-                    <el-table-column prop="contractType" label="签约类型" width="127">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
-                            <span v-if="scope.row.RENEWAL">续签</span>
+                <el-table :data="contractInformationForm" :height="440"  style="width: 100%">
+                    <el-table-column prop="contractType" label="签约类型" width="280" >
+                        <template slot-scope="scope" >
+                            <span >{{ scope.row.contractType == 'INITIAL_SIGNATURE' ? '首签' : '续签'}}</span>
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="registTime" label="合同服务期限" width="127">
+                    <el-table-column prop="registTime" label="合同服务期限" width="280">
+                         <template  scope="scope">
+                            <span>{{ (scope.row.beginTime)}}~{{ (scope.row.endTime)}}</span>
+                        </template>
                     </el-table-column>
                 </el-table>
+
+
                 <div class="plPage clearfix"    >
                     <el-pagination style="margin-top: 10px;float: right;"  @current-change="contractInformationChange" :current-page="currentPageContractInformation" :page-size="pageSizeContractInformation" layout=" prev, pager, next, jumper" :total="totalSizeContractInformation" >
                     </el-pagination>
                 </div>
+
+
                 <div slot="footer"   class="dialog-footer" @click="changeContractInformation()">
                 </div>
+
+
             </div>
         </el-dialog>
     </div>  
@@ -475,7 +483,7 @@ export default {
       pageSize: 30,
       currentPageAgency: 1,
       pageSizeAgency: 30,
-      totalNums:'',
+      totalNums:0,
       totalSizeAgency:0,
       currentPageContractInformation: 1,
       pageSizeContractInformation:30,
@@ -490,6 +498,12 @@ export default {
       annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
+      agencyRelationsanceFormExtendSuperShopNo:'',
+      agencyRelationsanceFormExtendSuper:'',
+      agencyRelationsanceFormSuperShop:'',
+      agencyRelationsanceFormExtendSuperName:'',
+      agencyRelationsanceFormSuperShopShopNo:'',
+      agencyRelationsanceFormSuperShopName:'',
       annualAgentsFormSignTime: [],
       contractInformationTitle:'', //签约时间
       contractInformationForm:[],  //签约时间
@@ -636,35 +650,34 @@ export default {
     timeComponent
   },
   methods: {
-      //取消按钮
-      changeCancle() {
+    //取消按钮
+    changeCancle() {
         
             this.agencyRelationsanceDialogVisible = false;
             this.agencyRelationsanceForm = [];
-    
+
             this.annualAgentsForm = [];
             this.annualAgentsDialogVisible = false;
 
         },
-     //查看代理商关系
-      openAgencyRelationsance(shopNo) {
-
-          this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
-          // console.log(shopNo)
-          if (!this.checkSession()) return;
-          const self = this;
-          self.agencyRelationsanceDialogVisible = true;
-          self.loading = true;
-          self.$ajax({
-              url:'/api/shop/shopManage/getAgentRelationList.jhtml',
-              method: 'post',
-              data: {
+    //查看代理商关系
+    openAgencyRelationsance(shopNo) {
+        this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
+        // console.log(shopNo)
+        if (!this.checkSession()) return;
+        const self = this;
+        self.agencyRelationsanceDialogVisible = true;
+        self.loading = true;
+        self.$ajax({
+            url:'/api/shop/shopManage/getAgentRelationList.jhtml',
+            method: 'post',
+            data: {
                     'shopNo': shopNo,
                     'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
                     'registTime': Utils.formatYearDate(self.searchRegistTime),
-              },
-              transformRequest: [function(data) {
+            },
+            transformRequest: [function(data) {
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -674,30 +687,30 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-          }).then(function (response) {
-               self.loading = false;
-             if (response.data.success == 1) {
+        }).then(function (response) {
+            self.loading = false;
+            if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
                     self.totalSizeAgency = response.data.result.total;
-                    console.log(self.currentPageAgency)
+                    // console.log(self.currentPageAgency)
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-          }).catch(function (err) {
-              self.loading = false;
-              console.log(err);
-          });
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
 
-          self.$ajax({
-              url:'/api/shop/shopManage/getShopExtendInfoByShopNo.jhtml',
-              method: 'post',
-              data: {
+        self.$ajax({
+            url:'/api/shop/shopManage/getShopExtendInfoByShopNo.jhtml',
+            method: 'post',
+            data: {
                     'shopNo': shopNo,
-              },
-              transformRequest: [function(data) {
+            },
+            transformRequest: [function(data) {
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -707,27 +720,39 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-          }).then(function (response) {
-               self.loading = false;
-             if (response.data.success == 1) {
-                 console.log(response.data.result)
-                 self.agencyRelationsanceForm.selfShop = response.data.result.selfShop;
-                 self.agencyRelationsanceForm.extendSuperShop =  response.data.result.extendSuperShop;
-                 self.agencyRelationsanceForm.superShop = response.data.result.superShop;
+        }).then(function (response) {
+            self.loading = false;
+            if (response.data.success == 1) {
+                console.log(response.data.result)
+
+                self.agencyRelationsanceFormExtendSuper = response.data.result.extendSuperShop
+                if(self.agencyRelationsanceFormExtendSuper){
+                    self.agencyRelationsanceFormExtendSuperShopNo = response.data.result.extendSuperShop.shopNo;
+                    self.agencyRelationsanceFormExtendSuperName=  response.data.result.extendSuperShop.name;
+                }
+
+                self.agencyRelationsanceFormSuperShop =  response.data.result.superShop
+                if(self.agencyRelationsanceFormSuperShop){
+                        self.agencyRelationsanceFormSuperShopName =  response.data.result.superShop.name;
+                        self.agencyRelationsanceFormSuperShopShopNo = response.data.result.superShop.shopNo;
+                }
+
+
+
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-          }).catch(function (err) {
-              self.loading = false;
-              console.log(err);
-          });
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
 
 
-          
-      },
+        
+    },
     //查看代理商年度业绩
     openAnnualAgents(shopId,shopNo) {
         this.annualAgentsTitle = "查看代理商年度业绩（编号：" + shopNo + "）"
@@ -931,7 +956,8 @@ export default {
     openContractInformation(){
         this.contractInformationVisible = true;
         let id = this.detailForm.id;
-        let nowTime = this.searchContractInformationTime
+        let nowTime = Utils.formatYearDate( this.searchContractInformationTime);
+        
         this.contractInformationTitle = "合同签约信息（编号： " +this.detailForm.shopNo+  "）"
 
         const self = this;
@@ -940,9 +966,9 @@ export default {
               method: 'post',
               data: {
                     'contractCycle.shopId': id,
-                    'contractCycle.beginTime':nowTime,
-                    'pager.pageIndex':1,
-                    'pager.pageSize':10,   
+                    'contractCycle.beginTime':  nowTime,
+                    'pager.pageIndex':this.currentPageContractInformation,
+                    'pager.pageSize': this.pageSizeContractInformation,   
               },
               transformRequest: [function(data) {
                     let ret = ''
@@ -957,7 +983,11 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result)
+                //  console.log(response.data.result)
+
+                self.contractInformationForm = response.data.result
+                self.totalSizeContractInformation = response.data.totalNums
+                console.log(self.totalSizeContractInformation)
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -972,15 +1002,14 @@ export default {
     //关闭签约信息弹窗 
     changeContractInformation(){
         this.contractInformationVisible = false;
-
-
-
     },
     //改变签约信息当前页
     contractInformationChange(){
-
+         let self = this;
+         self.currentPageContractInformation = val;
+         self.openAgencyRelationsance(this.detailForm.shopNo);
     },
-    // 合同续签开始时间控制
+        // 合同续签开始时间控制
     starTime(){
         var self = this;
             return  {
@@ -1129,10 +1158,16 @@ export default {
       },
       searchRegistTime(){
           this.openAgencyRelationsance(this.detailForm.shopNo)
+      },
+      searchContractInformationTime(){
+          this.openContractInformation()
       }
+
   }
 };
 </script>
+
+
 <style lang='less' scoped>
 @import url("../assets/less/storeDetail.less");
 .el-message-box {
