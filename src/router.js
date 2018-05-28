@@ -163,6 +163,13 @@ const config = [{
                 name: 'rebateList',
                 component: resolve => require(['./views/rebateList.vue'], resolve),
 
+            },
+            {
+                // 业务拓展返利列表
+                path: 'timerpick',
+                name: 'timerpick',
+                component: resolve => require(['./views/timerpick.vue'], resolve),
+
             }
         ]
     }

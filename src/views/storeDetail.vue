@@ -387,16 +387,44 @@
         <!-- 查看代理商年度业绩(编号：xxx) end -->  
 
         <!--续签弹窗-->
-        <!-- <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
-            <div >
-                <el-table :data="renewalForm" :height="440" style="width: 100%;">
-                    <span>{{}}</span>
-                    <span>{{}}</span>
-                    <span>{{}}</span>
-                    <span>{{}}</span>
-                </el-table>
-            </div>
-        </el-dialog>   -->
+        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
+                <!-- <div style="position: relative;padding-bottom:50px;"> -->
+                    <el-form>
+                        <div class="resign_wrap name-tel">
+                            <span class=resign-name>{{renewalForm.resignName}}</span>
+                            <span >{{renewalForm.resignPhone}}</span>
+                        </div >
+                        <div  class="resign_wrap"> <span class="store-icon-wrap">
+                            <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
+                            <span v-if="renewalForm.resignAgentGradeId  == '265'">区域代理</span>
+                            <span v-if="renewalForm.resignAgentGradeId  == '31'">单店代理</span>
+                            </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div>
+                        <el-row>
+                            <el-col :span="10">
+                                <el-form-item label="续签期限">
+                                    <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                            <el-col :span="10">
+                                <el-form-item label="至">
+                                    <el-date-picker  width="200" v-model="renewalForm.timerValueEnd" :picker-options="endpPickerOptions" type="date" placeholder="结束日期"></el-date-picker>
+                                </el-form-item>
+                            </el-col>
+                        </el-row>
+                         <!-- <el-row>
+                            <el-col :span="18" >
+                                <el-form-item >
+                                    <span style="padding-left:348px;">选择续签时长 <span v-if="renewalForm.timerValueEnd">{{(renewalForm.timerValueEnd-renewalForm.timerValueStar)/(1000 * 60 * 60 * 24) }}</span> <span v-else>0</span> 天</span>
+                                </el-form-item>
+                            </el-col>
+                        </el-row> -->
+                    </el-form>
+                    <div slot="footer" >
+                        <el-button @click="renewalDialogVisible = false">取 消</el-button>
+                        <el-button type="primary" @click="saveRenewal">确 定</el-button>
+                    </div>
+                <!-- </div> -->
+        </el-dialog>  
 
         <!--合约信息弹窗-->
         <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
@@ -465,7 +493,7 @@ export default {
       annualAgentsFormSignTime: [],
       contractInformationTitle:'', //签约时间
       contractInformationForm:[],  //签约时间
-      renewalForm:[],  //续签
+      
       myData: [],
       levelArray: [], //代理商等级数组
       stateArray: [
@@ -585,6 +613,22 @@ export default {
       searchRegistTimeAnnual:"",   //搜索年度业绩
       searchContractInformationTime:'',  //搜索合同签约信息
       renewalTitle:'',
+
+
+    renewalForm:{
+        resignAgentGradeId:"",// 代理商等级
+        resignName:"",//代理商姓名
+        resignPhone:"",//代理商手机号
+        timerValueStar:"",
+        timerValueEnd:"",
+    },  //续签
+      createId:"",//创建人ID
+
+        //开始日期
+        starPickerOptions: this.starTime(),
+        //结束日期
+        endpPickerOptions: this.endTime(),
+        thistime:new Date(),
     };
   },
   components: {
@@ -798,12 +842,61 @@ export default {
     },
     //打开续签弹窗
     openRenewal(){
+        var self = this;
+        if (!this.checkSession()) return;
+        if (sessionStorage.user) {
+            self.createId = JSON.parse(sessionStorage.getItem('user')).id;
+        }
         this.renewalDialogVisible = true;
         self.$ajax({
-              url:'/http/contractCycle/doRenewal.jhtml',
+              url:'/api/http/contractCycle/findCurrentContractCycle.jhtml',
               method: 'post',
               data: {
-                    'contractCycle.shopId': shopId,
+                    'contractCycle.shopId': self.detailForm.id,
+                    'contractCycle.currentTime': Utils.formatDayDate(new Date()),//日期格式转换
+              },
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {
+               self.loading = false;
+             if (response.data.success == 1) {
+                 console.log(response.data.result)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });        
+    },
+    //保存续约
+    saveRenewal(){
+        var self = this;
+        self.renewalDialogVisible = false
+        if (!this.checkSession()) return;
+        if (sessionStorage.user) {
+            self.createId = JSON.parse(sessionStorage.getItem('user')).id;
+        }
+        this.renewalDialogVisible = true;
+        self.$ajax({
+              url:'/api/http/contractCycle/doRenewal.jhtml',
+              method: 'post',
+              data: {
+                    'contractCycle.shopId': self.detailForm.id,
+                    'contractCycle.beginTime': self.renewalForm.timerValueStar,
+                    'contractCycle.endTime':  self.renewalForm.timerValueEnd,
+                    'contractCycle.createId':  self.createId,
               },
               transformRequest: [function(data) {
                     let ret = ''
@@ -886,7 +979,25 @@ export default {
     //改变签约信息当前页
     contractInformationChange(){
 
-    }
+    },
+    // 合同续签开始时间控制
+    starTime(){
+        var self = this;
+            return  {
+                disabledDate(time){
+                    return time.getTime() > self.thistime
+                }
+            }
+    },
+    //  合同续签结束时间控制
+    endTime(){
+        var self = this;
+            return  {
+                disabledDate(time){
+                    return time.getTime() < self.thistime
+                }
+            }
+    },
   },
   created() {
     if (!this.checkSession()) return;
@@ -999,6 +1110,13 @@ export default {
         // console.log(self.SjhExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
         self.detailForm.endTime = response.data.result.remainDay;
+
+
+        // 代理商的店铺名字/手机号码/店铺类型
+        self.renewalForm.resignAgentGradeId = response.data.result.agentGradeId;
+        self.renewalForm.resignName = response.data.result.name;
+        self.renewalForm.resignPhone = response.data.result.phone;
+        
       })
       .catch(function(err) {
         self.loading = false;
@@ -1191,5 +1309,28 @@ export default {
 }
 .font-color{
     color: #333333;
+}
+.resign_wrap{
+    padding-bottom:20px
+}
+.name-tel{
+    font-weight: bold;
+}
+.resign-name{
+    padding-right: 30px;
+}
+.store-icon-wrap{
+    display: inline-block;
+    height: 18px;
+    line-height: 18px;
+    color: white;
+    background-color: #1699fd;
+    border-radius:3px;
+    margin-left: 5px;
+    font-size: 12px;
+    padding: 0 3px;
+}
+.resign-color{
+    color: #FA2424;
 }
 </style>
