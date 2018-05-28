@@ -399,7 +399,7 @@
         </el-dialog>   -->
 
         <!--合约信息弹窗-->
-        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation">
+        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation" size="140%">
             <div style="width:50%;float: right;">
                 <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" 
                 v-model="searchContractInformationTime" type="year" placeholder="选择年度" >
@@ -407,15 +407,18 @@
             </div>
             
             <div >
-                <el-table :data="contractInformationForm" :height="440" >
-                    <el-table-column prop="contractType" label="签约类型" width="127" >
+                <el-table :data="contractInformationForm" :height="440"  style="width: 100%">
+                    <el-table-column prop="contractType" label="签约类型" width="280" >
                         <template slot-scope="scope" >
                             <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
                             <span v-if="scope.row.RENEWAL">续签</span>
                         </template>
                     </el-table-column>
 
-                    <el-table-column prop="registTime" label="合同服务期限" width="127">
+                    <el-table-column prop="registTime" label="合同服务期限" width="280">
+                         <template  scope="scope">
+                            <span>{{ (scope.row.beginTime)}}~{{ (scope.row.endTime)}}</span>
+                        </template>
                     </el-table-column>
                 </el-table>
 
@@ -598,35 +601,34 @@ export default {
     timeComponent
   },
   methods: {
-      //取消按钮
-      changeCancle() {
+    //取消按钮
+    changeCancle() {
         
             this.agencyRelationsanceDialogVisible = false;
             this.agencyRelationsanceForm = [];
-    
+
             this.annualAgentsForm = [];
             this.annualAgentsDialogVisible = false;
 
         },
-     //查看代理商关系
-      openAgencyRelationsance(shopNo) {
-
-          this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
-          // console.log(shopNo)
-          if (!this.checkSession()) return;
-          const self = this;
-          self.agencyRelationsanceDialogVisible = true;
-          self.loading = true;
-          self.$ajax({
-              url:'/api/shop/shopManage/getAgentRelationList.jhtml',
-              method: 'post',
-              data: {
+    //查看代理商关系
+    openAgencyRelationsance(shopNo) {
+        this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
+        // console.log(shopNo)
+        if (!this.checkSession()) return;
+        const self = this;
+        self.agencyRelationsanceDialogVisible = true;
+        self.loading = true;
+        self.$ajax({
+            url:'/api/shop/shopManage/getAgentRelationList.jhtml',
+            method: 'post',
+            data: {
                     'shopNo': shopNo,
                     'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
                     'registTime': Utils.formatYearDate(self.searchRegistTime),
-              },
-              transformRequest: [function(data) {
+            },
+            transformRequest: [function(data) {
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -636,30 +638,30 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-          }).then(function (response) {
-               self.loading = false;
-             if (response.data.success == 1) {
+        }).then(function (response) {
+            self.loading = false;
+            if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
                     self.totalSizeAgency = response.data.result.total;
-                    console.log(self.currentPageAgency)
+                    // console.log(self.currentPageAgency)
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-          }).catch(function (err) {
-              self.loading = false;
-              console.log(err);
-          });
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
 
-          self.$ajax({
-              url:'/api/shop/shopManage/getShopExtendInfoByShopNo.jhtml',
-              method: 'post',
-              data: {
+        self.$ajax({
+            url:'/api/shop/shopManage/getShopExtendInfoByShopNo.jhtml',
+            method: 'post',
+            data: {
                     'shopNo': shopNo,
-              },
-              transformRequest: [function(data) {
+            },
+            transformRequest: [function(data) {
                     let ret = ''
                     for (let it in data) {
                         ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
@@ -669,27 +671,27 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-          }).then(function (response) {
-               self.loading = false;
-             if (response.data.success == 1) {
-                 console.log(response.data.result)
-                 self.agencyRelationsanceForm.selfShop = response.data.result.selfShop;
-                 self.agencyRelationsanceForm.extendSuperShop =  response.data.result.extendSuperShop;
-                 self.agencyRelationsanceForm.superShop = response.data.result.superShop;
+        }).then(function (response) {
+            self.loading = false;
+            if (response.data.success == 1) {
+                console.log(response.data.result)
+                self.agencyRelationsanceForm.selfShop = response.data.result.selfShop;
+                self.agencyRelationsanceForm.extendSuperShop =  response.data.result.extendSuperShop;
+                self.agencyRelationsanceForm.superShop = response.data.result.superShop;
                 } else {
                     self.$message({
                         message: response.data.msg,
                         type: 'error'
                     })
                 }
-          }).catch(function (err) {
-              self.loading = false;
-              console.log(err);
-          });
+        }).catch(function (err) {
+            self.loading = false;
+            console.log(err);
+        });
 
 
-          
-      },
+        
+    },
     //查看代理商年度业绩
     openAnnualAgents(shopId,shopNo) {
         this.annualAgentsTitle = "查看代理商年度业绩（编号：" + shopNo + "）"
@@ -844,7 +846,8 @@ export default {
     openContractInformation(){
         this.contractInformationVisible = true;
         let id = this.detailForm.id;
-        let nowTime = this.searchContractInformationTime
+        let nowTime = Utils.formatYearDate( this.searchContractInformationTime);
+        
         this.contractInformationTitle = "合同签约信息（编号： " +this.detailForm.shopNo+  "）"
 
         const self = this;
@@ -853,9 +856,9 @@ export default {
               method: 'post',
               data: {
                     'contractCycle.shopId': id,
-                    'contractCycle.beginTime':nowTime,
-                    'pager.pageIndex':1,
-                    'pager.pageSize':10,   
+                    'contractCycle.beginTime':  nowTime,
+                    'pager.pageIndex':this.currentPageContractInformation,
+                    'pager.pageSize': this.pageSizeContractInformation,   
               },
               transformRequest: [function(data) {
                     let ret = ''
@@ -871,6 +874,8 @@ export default {
                self.loading = false;
              if (response.data.success == 1) {
                  console.log(response.data.result)
+
+                 self.contractInformationForm = response.data.result
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -885,13 +890,12 @@ export default {
     //关闭签约信息弹窗 
     changeContractInformation(){
         this.contractInformationVisible = false;
-
-
-
     },
     //改变签约信息当前页
     contractInformationChange(){
-
+         let self = this;
+         self.currentPageContractInformation = val;
+         self.openAgencyRelationsance(this.detailForm.shopNo);
     }
   },
   created() {
@@ -1017,22 +1021,14 @@ export default {
       },
       searchRegistTime(){
           this.openAgencyRelationsance(this.detailForm.shopNo)
+      },
+      searchContractInformationTime(){
+          this.openContractInformation()
       }
+
   }
 };
 </script>
-
-<style lang='css' scoped>
-    .el-table  >>> .el-table__header-wrapper >>> .el-table__header{
-         width: 100%;
-    }
-    .el-table  >>> .el-table__header-wrapper{
-         width: 100%;
-    }
-    .el-table__header-wrapper >>> .el-table__header{
-         width: 100%
-    }
-</style>
 
 
 <style lang='less' scoped>
