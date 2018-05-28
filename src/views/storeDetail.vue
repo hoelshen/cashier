@@ -460,7 +460,7 @@ export default {
       totalSizeAgency:0,
       currentPageContractInformation: 1,
       pageSizeContractInformation:30,
-      totalSizeContractInformation:0,
+      totalSizeContractInformation:'',
       user: "",
       tableData:{
           agent:'',
@@ -873,9 +873,11 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result)
+                //  console.log(response.data.result)
 
-                 self.contractInformationForm = response.data.result
+                self.contractInformationForm = response.data.result
+                self.totalSizeContractInformation = response.data.totalNums
+
                 } else {
                     self.$message({
                         message: response.data.msg,
