@@ -407,9 +407,9 @@
             </div>
             
             <div >
-                <el-table :data="contractInformationForm" :height="440" >
-                    <el-table-column prop="contractType" label="签约类型" width="127">
-                        <template slot-scope="scope">
+                <el-table :data="contractInformationForm" :height="440" class="contractInformation">
+                    <el-table-column prop="contractType" label="签约类型" width="127" >
+                        <template slot-scope="scope" >
                             <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
                             <span v-if="scope.row.RENEWAL">续签</span>
                         </template>
@@ -418,12 +418,18 @@
                     <el-table-column prop="registTime" label="合同服务期限" width="127">
                     </el-table-column>
                 </el-table>
+
+
                 <div class="plPage clearfix"    >
                     <el-pagination style="margin-top: 10px;float: right;"  @current-change="contractInformationChange" :current-page="currentPageContractInformation" :page-size="pageSizeContractInformation" layout=" prev, pager, next, jumper" :total="totalSizeContractInformation" >
                     </el-pagination>
                 </div>
+
+
                 <div slot="footer"   class="dialog-footer" @click="changeContractInformation()">
                 </div>
+
+                
             </div>
         </el-dialog>
     </div>  
@@ -1191,5 +1197,8 @@ export default {
 }
 .font-color{
     color: #333333;
+}
+.contractInformation{
+    width: 100%
 }
 </style>

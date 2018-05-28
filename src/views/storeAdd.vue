@@ -458,9 +458,9 @@ export default {
                 return false
             }
             // 如果是直营直接转成区域代理
-            // if (data.shopType == 'SELF_SUPPORT') {
-            //     data.agentGradeId = 265;
-            // }
+            if (data.shopType == 'SELF_SUPPORT') {
+                data.agentGradeId = 265;
+            }
             //代理商姓名判断
             if (!data.name) {
                     self.loading = false;
@@ -507,8 +507,8 @@ export default {
                 })
                 return false
             }
-            console.log(!addAddress.provinceCode)
-            console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
+            // console.log(!addAddress.provinceCode)
+            // console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
 
             //详细地址判断
             if (!data.address) {
@@ -529,12 +529,12 @@ export default {
                 }      
             }
             //所属区域判断
-            console.log(data.agentGradeId!=265)
-            console.log(data.shopType == 'SELF_SUPPORT')
+            // console.log(data.agentGradeId!=265)
+            // console.log(data.shopType == 'SELF_SUPPORT')
             
             if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
-                console.log('keyi')
-                console.log(addBelongAddress.provinceCode)
+                // console.log('keyi')
+                // console.log(addBelongAddress.provinceCode)
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -570,7 +570,7 @@ export default {
 
             }
 
-            console.log('ok2')            
+            // console.log('ok2')            
             //年度业绩目标
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
@@ -993,10 +993,10 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            console.log(data)
+            // console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
-            console.log(data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT')
-            console.log(self.$refs.addBelongAddress.getData())
+            // console.log(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT')
+            // console.log(self.$refs.addBelongAddress.getData())
             let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
@@ -1066,7 +1066,7 @@ export default {
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
-            this.addForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.addForm.ruleTitle = ruleNo +' '+  businessExtendsRuleName
             this.addForm.ruleId = id
         }
     },
@@ -1094,7 +1094,7 @@ export default {
         //获取默认规则
         self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
         }).then(function (response) {
-          self.addForm.ruleTitle= response.data.result.ruleNo + response.data.result.businessExtendsRuleName
+          self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
           self.addForm.ruleId = response.data.result.id
         }).catch(function (err) {
             console.log(err);
