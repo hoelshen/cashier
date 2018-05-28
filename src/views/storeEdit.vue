@@ -49,7 +49,7 @@
                     <el-form-item label="合同服务期限：">
                         <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
-                        <span class="textBlue"  v-show="editForm.nextSignedStartTime" >续</span>    
+                        <span class="textBlue"  v-show="editForm.nextSignedStartTime" ></span>    
                         <span slot="content" >{{editForm.nextSignedStartTime}}-{{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
                     </el-form-item>
@@ -140,16 +140,16 @@
                 <h2>账户信息</h2>
             </el-row>
             <el-row>
-                <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')">
-                    <el-form-item label="括展上级：">
-                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" >醉品自开发</el-radio>
-                            <el-radio v-model="editForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                            
+                <el-col :span="8"  v-if="(editForm.agentGradeId=='266'&&editForm.shopType!='SELF_SUPPORT')||(editForm.agentGradeId=='31'&&editForm.shopType!='SELF_SUPPORT')" >
+                    <el-form-item label="括展上级：" >
+                            <el-radio v-model="editForm.extendSuperType" label="ZUIPIN" disabled>醉品自开发</el-radio>
+                            <el-radio v-model="editForm.extendSuperType" label="AGENT" disabled>代理商拓展</el-radio>                            
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span>
-                        <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -1257,15 +1257,5 @@ export default {
     letter-spacing: 0px;
     color: #999999;
 }
-.textBlue {
-    display: inline-block;
-    height: 18px;
-    line-height: 18px;
-    color: white;
-    background-color: #409EFF;
-    border-radius: 3px;
-    margin-left: 5px;
-    font-size: 12px;
-    padding: 0 3px;
-}
+
 </style>
