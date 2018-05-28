@@ -87,7 +87,7 @@
                         合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}}至{{detailForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="detailForm.nextSignedStartTime" ></span>    
-                        <span slot="content" >{{detailForm.nextSignedStartTime}}-{{detailForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{detailForm.nextSignedStartTime}}~{{detailForm.nextSignedEndTime}}</span>
                         </el-tooltip>
                     </el-col>
                 </el-row>
