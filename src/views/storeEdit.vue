@@ -167,8 +167,8 @@
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span>  
-                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button>    
+                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary"  v-popover:rule  @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
                 </el-col>
 
@@ -1105,7 +1105,7 @@ export default {
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
-            this.editForm.ruleTitle = ruleNo +  businessExtendsRuleName
+            this.editForm.ruleTitle = ruleNo + ' ' +  businessExtendsRuleName
             this.editForm.ruleId = id
         },
         //删除规则
@@ -1113,8 +1113,8 @@ export default {
             this.editForm.ruleTitle = '';
             this.editForm.ruleId = '';
 
-            console.log(this.editForm.ruleTitle)
-            console.log(this.editForm.ruleId )
+            // console.log(this.editForm.ruleTitle)
+            // console.log(this.editForm.ruleId )
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
@@ -1163,7 +1163,7 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
-            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + response.data.result.businessExtendsRule.businessExtendsRuleName;
+            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
 

@@ -43,13 +43,14 @@
             </el-row>
             <el-row>
                 <el-col :span="8">
-                    <el-form-item label="合同服务期限：">
+                    <el-form-item label="合同服务期限：" >
                         <el-date-picker
                         v-model="addForm.signedTime"
                         type="daterange"
                         range-separator="-"
                         start-placeholder="开始日期"
                         end-placeholder="结束日期"
+                        style="width: 100%;"
                         >
                         </el-date-picker>
                     </el-form-item>
@@ -161,11 +162,10 @@
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
-                            <el-input placeholder="请选择"   v-popover:rule  @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary" @click="onRelationshipRulesDialogVisible" >选择</el-button> 
+                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary"  v-popover:rule   @click="onRelationshipRulesDialogVisible" >选择</el-button> 
                     </el-form-item>
                 </el-col>
-
             </el-row>
             <!--第三行-->
             <el-row :gutter="10">
