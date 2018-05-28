@@ -908,19 +908,19 @@ export default {
     //保存续约
     saveRenewal(){
         var self = this;
-        self.renewalDialogVisible = false
+       
         if (!this.checkSession()) return;
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
-        this.renewalDialogVisible = true;
+         self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
               method: 'post',
               data: {
                     'contractCycle.shopId': self.detailForm.id,
-                    'contractCycle.beginTime': self.renewalForm.timerValueStar,
-                    'contractCycle.endTime':  self.renewalForm.timerValueEnd,
+                    'contractCycle.beginTime':  Utils.formatDayDate(self.renewalForm.timerValueStar),
+                    'contractCycle.endTime':   Utils.formatDayDate(self.renewalForm.timerValueEnd),
                     'contractCycle.createId':  self.createId,
               },
               transformRequest: [function(data) {
