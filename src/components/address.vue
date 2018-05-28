@@ -96,37 +96,57 @@ export default {
                 areaCode: this.areaCode,
                 detail: this.detail
             },
-            CodeFlage:true
+            CodeFlage:true,
+            isTrue:true,
         };
     },
     watch: {
         provinceCode(val) {
+            // console.log(val)
             this.select.provinceCode =  val;
         },
         cityCode(val) {
+            // console.log(val)
             this.select.cityCode = val;
         },
         areaCode(val) {
+            // console.log(val)
             this.select.areaCode = val;
         },
         detail(val) {
+            // console.log(val)
             this.select.detail = val;
         }
     },
     computed: {
+       
         provinceList() {
             return this.baseData;
         },
         cityList() {
-            try {
+            try { 
+                
                 let data = this.provinceList.filter(
                     val => val.code === this.select.provinceCode
-                );
+                );                
+    
                 data = data[0].childs === null ? [] : data[0].childs;
                 let isTrue = data.some(
-                    val => val.code === this.CodeFlage ?   this.select.cityCode  : ''
+
+                    val => 
+                          function(val){
+                              if(val.code === this.CodeFlage ){
+                                    return this.select.cityCode  
+                              }else{
+                                 return  ''   
+                              }
+                          }  
+                    
                 );
-                if (!isTrue) {
+
+                this.isTrue = isTrue && this.isTrue
+                
+                if (!this.isTrue) {
                     this.select.cityCode = data[0] ? data[0].code : "";
                 }
                 return data;
@@ -136,14 +156,28 @@ export default {
         },
         areaList() {
             try {
+                console.log(this.CodeFlage)
                 let data = this.cityList.filter(
                     val => val.code === this.select.cityCode
                 );
+                
                 data = data[0].childs === null ? [] : data[0].childs;
                 let isTrue = data.some(
-                    val => val.code === this.CodeFlage ?   this.select.areaCode : ''
+                    val => 
+                     function(val){
+                        if(val.code === this.CodeFlage){
+                          return  this.select.areaCode
+                        }else{
+                          return  ''
+                        }
+                     }
+                        
                 );
-                if (!isTrue) {
+                // console.log(this.isTrue)
+                
+                this.isTrue = isTrue && this.isTrue
+                
+                if (!this.isTrue) {
                     this.select.areaCode = data[0] ? data[0].code : "";
                 }
                 return data;
@@ -167,10 +201,17 @@ export default {
         },
         getData() {
             let obj = {};
-
+            this.CodeFlage = true;
+            this.isTrue = false;
             for (let attr in this.select) {
                 obj[attr] = this.select[attr];
             }
+
+            // console.log(obj.provinceCode)
+            // console.log(obj.cityCode)
+            // console.log(obj.areaCode)
+            
+            // (obj.provinceName = val.regionName) (obj.cityName = val.regionName) (obj.areaName = val.regionName)console.log(val.regionName)
 
             this.provinceList.forEach(
                 val => obj.provinceCode === val.code ? (obj.provinceName = val.regionName) : void 0
@@ -182,6 +223,7 @@ export default {
                 val => obj.areaCode === val.code ? (obj.areaName = val.regionName) : void 0
             );
             obj.address = obj.provinceName + obj.cityName + obj.areaName + obj.detail;
+            
             // console.log(obj)
             return obj;
         },
@@ -192,7 +234,7 @@ export default {
                 this.$emit('addAddressFlage');
             });
         },
-        getAddress() {
+        getAddress() {        
             return this.getData().address;
         },
         getDetail() {
@@ -206,13 +248,13 @@ export default {
                 areaCode: '',
                 detail: this.detail
             }
-
         }
     },
     created() {
         this.$ajax.get('/api//http/area/getRegionTree.jhtml'
         ).then((res) => {
             this.baseData = res.data.result;
+            this.isTrue = true
         }).catch(function (err) {
             this.loading = false;
         });
