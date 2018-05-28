@@ -195,7 +195,7 @@
             </el-row>
         </el-form>
         <!--新增规则关系弹窗-->
-        <el-dialog :title="relationshipRulesTitle"  height="440px" :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
+        <el-dialog :title="relationshipRulesTitle"  :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
            <div style="width: 287px;position: relative;float: right;">
                 <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
                 <el-input placeholder="请输入规则编号或规则名称" v-model="selectrelationshipRulesValue"></el-input>
@@ -205,7 +205,7 @@
                 </div>
            </div>
             <div >
-                <el-table :data="relationshipRulesForm" style="width: 100%;">
+                <el-table :data="relationshipRulesForm" :height="440" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
                             <span>{{scope.$index + (currentPage - 1 ) * 30 + 1 }}</span>
@@ -1055,7 +1055,7 @@ export default {
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
-            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.ruleId +"）" 
+            this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
             const self = this;
     
             self.loading = true;
