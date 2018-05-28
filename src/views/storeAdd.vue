@@ -135,7 +135,7 @@
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
                             <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品自开发</el-radio>
-                            <el-radio v-model="addForm.extendSuperType" label="AGENT">代理商拓展</el-radio>                          
+                            <el-radio v-model="addForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                          
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -993,20 +993,13 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            
+            console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
             let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
-            console.log(addAddress)
-            console.log(addBelongAddress)
-            console.log(addAgentAddress)
-
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
-            
-   
-
-
+    
             let dataSignedStartTime = Utils.formatDayDate(data.signedTime[0]);   
             let dataSignedEndTime  = Utils.formatDayDate(data.signedTime[1]);             
 
