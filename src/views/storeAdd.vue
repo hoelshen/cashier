@@ -209,7 +209,7 @@
                     <el-row :gutter="10">
                         <el-col :span="24" style="padding-left:20px;" class="circle">
                            拓展上级：<span v-if="addForm.shopType =='SELF_SUPPORT ' || addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
-                                    <span v-else>{{addForm.extendSuperName}}{{addForm.extendSuperNo}}</span>
+                                    <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -499,7 +499,7 @@ export default {
                     }
             }
             //收件地址判断
-            console.log(this.addressFlage)
+            // console.log(this.addressFlage)
             if(!this.addressFlage){
                 self.loading = false;                
                 self.$message({

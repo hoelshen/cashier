@@ -80,7 +80,7 @@
             </div>
             
             <!--中间-->
-            <div class="orderInfo line-middle" >
+            <div class="orderInfo line-middle" style="width:38%">
                 <div >
                     <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:35px;">
@@ -195,7 +195,7 @@
             </div>      
             </div>
             <!--右边-->
-            <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;">
+            <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;width:28%">
                 <div class="calendar" style="top:7%">
                     <p class="calendarMessage_top">{{message}}</p><br>
                     <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
@@ -268,16 +268,16 @@
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                             代理商拓展上级：
-                            <span v-show="agencyRelationsanceForm.extendSuperShop == null">醉品</span>
-                            <span v-show="agencyRelationsanceForm.extendSuperShop">代理商拓展上级：{{agencyRelationsanceForm.extendSuperShop }}</span>
+                            <span v-if="agencyRelationsanceFormExtendSuperShopNo == null">醉品</span>
+                            <span v-show="agencyRelationsanceFormExtendSuperShopNo">{{agencyRelationsanceFormExtendSuperShopNo }} {{agencyRelationsanceFormExtendSuperName}}</span>
                             <br>
                     </el-col>  
                 </el-row>
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                         代理商归属上级：
-                            <span v-show="agencyRelationsanceForm.superShop == null" >醉品</span>
-                            <span v-show="agencyRelationsanceForm.superShop">{{agencyRelationsanceForm.superShop}}</span>   
+                            <span v-if="agencyRelationsanceFormSuperShopShopNo == null" >醉品</span>
+                            <span v-show="agencyRelationsanceFormSuperShopShopNo">{{agencyRelationsanceFormSuperShopShopNo}} {{agencyRelationsanceFormSuperShopName}}</span>   
                     </el-col>  
                 </el-row>               
             </div>
@@ -471,6 +471,10 @@ export default {
       annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
+      agencyRelationsanceFormExtendSuperShopNo:'',
+      agencyRelationsanceFormExtendSuperName:'',
+      agencyRelationsanceFormSuperShopShopNo:'',
+      agencyRelationsanceFormSuperShopName:'',
       annualAgentsFormSignTime: [],
       contractInformationTitle:'', //签约时间
       contractInformationForm:[],  //签约时间
@@ -674,10 +678,14 @@ export default {
         }).then(function (response) {
             self.loading = false;
             if (response.data.success == 1) {
-                console.log(response.data.result)
-                self.agencyRelationsanceForm.selfShop = response.data.result.selfShop;
-                self.agencyRelationsanceForm.extendSuperShop =  response.data.result.extendSuperShop;
-                self.agencyRelationsanceForm.superShop = response.data.result.superShop;
+                // console.log(response.data.result)
+
+                
+                self.agencyRelationsanceFormExtendSuperShopNo = response.data.result.extendSuperShop.shopNo;
+                self.agencyRelationsanceFormExtendSuperName=  response.data.result.extendSuperShop.name;
+
+                self.agencyRelationsanceFormSuperShopName =  response.data.result.superShop.name;
+                self.agencyRelationsanceFormSuperShopShopNo = response.data.result.superShop.shopNo;
                 } else {
                     self.$message({
                         message: response.data.msg,

@@ -677,7 +677,7 @@ export default {
             if (!self.checkSession()) return;
             self.loading = true;
             const data = self.editForm;
-
+            console.log(self.editForm.ruleId)
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
@@ -1110,11 +1110,14 @@ export default {
         },
         //删除规则
         deleteRuleTitle(){
-            this.editForm.ruleTitle = '';
-            this.editForm.ruleId = '';
+            var self = this  
+            console.log(self.editForm.ruleTitle)
+            console.log(self.editForm.ruleId )
+            self.editForm.ruleTitle = '';
+            self.editForm.ruleId = '';
 
             // console.log(this.editForm.ruleTitle)
-            // console.log(this.editForm.ruleId )
+            console.log(self.editForm.ruleId )
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
