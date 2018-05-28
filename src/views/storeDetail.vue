@@ -268,7 +268,7 @@
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                             代理商拓展上级：
-                            <span v-if="agencyRelationsanceFormExtendSuperShopNo == null">醉品</span>
+                            <span v-if="agencyRelationsanceFormExtendSuper == null">醉品</span>
                             <span v-show="agencyRelationsanceFormExtendSuperShopNo">{{agencyRelationsanceFormExtendSuperShopNo }} {{agencyRelationsanceFormExtendSuperName}}</span>
                             <br>
                     </el-col>  
@@ -276,7 +276,7 @@
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                         代理商归属上级：
-                            <span v-if="agencyRelationsanceFormSuperShopShopNo == null" >醉品</span>
+                            <span v-if="agencyRelationsanceFormSuperShop == null" >醉品</span>
                             <span v-show="agencyRelationsanceFormSuperShopShopNo">{{agencyRelationsanceFormSuperShopShopNo}} {{agencyRelationsanceFormSuperShopName}}</span>   
                     </el-col>  
                 </el-row>               
@@ -472,6 +472,8 @@ export default {
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
       agencyRelationsanceFormExtendSuperShopNo:'',
+      agencyRelationsanceFormExtendSuper:'',
+    agencyRelationsanceFormSuperShop:'',
       agencyRelationsanceFormExtendSuperName:'',
       agencyRelationsanceFormSuperShopShopNo:'',
       agencyRelationsanceFormSuperShopName:'',
@@ -678,14 +680,22 @@ export default {
         }).then(function (response) {
             self.loading = false;
             if (response.data.success == 1) {
-                // console.log(response.data.result)
+                console.log(response.data.result)
 
-                
-                self.agencyRelationsanceFormExtendSuperShopNo = response.data.result.extendSuperShop.shopNo;
-                self.agencyRelationsanceFormExtendSuperName=  response.data.result.extendSuperShop.name;
+                self.agencyRelationsanceFormExtendSuper = response.data.result.extendSuperShop
+                if(self.agencyRelationsanceFormExtendSuper){
+                    self.agencyRelationsanceFormExtendSuperShopNo = response.data.result.extendSuperShop.shopNo;
+                    self.agencyRelationsanceFormExtendSuperName=  response.data.result.extendSuperShop.name;
+                }
 
-                self.agencyRelationsanceFormSuperShopName =  response.data.result.superShop.name;
-                self.agencyRelationsanceFormSuperShopShopNo = response.data.result.superShop.shopNo;
+                self.agencyRelationsanceFormSuperShop =  response.data.result.superShop
+                if(self.agencyRelationsanceFormSuperShop){
+                        self.agencyRelationsanceFormSuperShopName =  response.data.result.superShop.name;
+                        self.agencyRelationsanceFormSuperShopShopNo = response.data.result.superShop.shopNo;
+                }
+
+
+
                 } else {
                     self.$message({
                         message: response.data.msg,

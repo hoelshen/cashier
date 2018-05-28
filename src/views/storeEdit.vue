@@ -167,7 +167,7 @@
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span>  
-                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="editForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary"  v-popover:rule  @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
                 </el-col>
@@ -283,7 +283,8 @@ export default {
                     areaClass:'',
                     superAgentGradeId:'',
                     state:'',
-                    ruleId:'',
+                    ruleId:'',    //规则
+                    ruleTitle:'',                    
             },
             isDisable:false,
             levelArray: [], //代理商等级数组,
@@ -678,6 +679,7 @@ export default {
             self.loading = true;
             const data = self.editForm;
             console.log(self.editForm.ruleId)
+
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
@@ -686,7 +688,7 @@ export default {
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-
+            debugger
             let datas;
             //代理商
             if(data.shopType=='AGENT'){
@@ -706,7 +708,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                        'shop.ruleId': data.id,                    
+                        'shop.ruleId': data.ruleId,                    
                         
                         'shop.agentGradeId': data.agentGradeId,                    
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -1110,26 +1112,29 @@ export default {
         },
         //删除规则
         deleteRuleTitle(){
-            var self = this  
-            console.log(self.editForm.ruleTitle)
-            console.log(self.editForm.ruleId )
-            self.editForm.ruleTitle = '';
-            self.editForm.ruleId = '';
-
-            // console.log(this.editForm.ruleTitle)
-            console.log(self.editForm.ruleId )
+            // var editForm = this.editForm
+            // console.log(self.editForm.ruleTitle)
+            
+            // editForm.ruleTitle = ''
+            // this.$set(this.editForm,'ruleTitle','')
+            this.editForm.ruleTitle = ''
+            this.editForm = Object.assign({},this.editForm)
+            // console.log(self.editForm.ruleTitle)
+            // console.log(self.editForm.ruleId )
+            // console.log(self.editForm.ruleTitle)
+            // console.log(self.editForm.ruleId )
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
 
-                        let self = this
-                        if(self.editForm.ruleTitle){
-                            self.$refs.rule.showPopper=true
-                            setTimeout(function(){
-                                self.$refs.rule.showPopper=false
-                            },6000)                
-                        }
+                let self = this
+                if(self.editForm.ruleTitle){
+                    self.$refs.rule.showPopper=true
+                    setTimeout(function(){
+                        self.$refs.rule.showPopper=false
+                    },6000)                
+                }
         },
 
     },
@@ -1146,7 +1151,6 @@ export default {
 
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
-            // console.log(response);
             if (response.data.success == 1) {
                 self.levelArray = response.data.result
             } else {
@@ -1198,7 +1202,7 @@ export default {
                     this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
                 }
             }
-        }
+        },         
     }
 }
 </script>
