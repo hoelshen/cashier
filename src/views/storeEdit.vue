@@ -1170,6 +1170,15 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
+            // console.log(self.editForm)
+            // console.log(self.editForm.agentProvince)
+            // console.log(self.editForm.agentProvinceName)
+            
+            // console.log(self.editForm.agentCity)
+            // console.log(self.editForm.agentCityName)
+            // console.log(self.editForm.agentCounty)
+            // console.log(self.editForm.agentCountyName)
+
             self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;

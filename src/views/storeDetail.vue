@@ -87,7 +87,7 @@
                         合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}}至{{detailForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="detailForm.nextSignedStartTime" ></span>    
-                        <span slot="content" >{{detailForm.nextSignedStartTime}}~{{detailForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{detailForm.nextSignedStartTime}}至{{detailForm.nextSignedEndTime}}</span>
                         </el-tooltip>
                     </el-col>
                 </el-row>
@@ -252,7 +252,7 @@
                     </el-col>  
                 </el-row>
                 <el-row :gutter="5">
-                    <el-col :span="24"  style="padding-left: 22px;">
+                    <el-col :span="24"  style="margin-left: -9px;">
                         合同签约信息：
                         <span  class="router-link-active" type="primary" @click='openContractInformation(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
