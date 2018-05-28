@@ -410,8 +410,7 @@
                 <el-table :data="contractInformationForm" :height="440"  style="width: 100%">
                     <el-table-column prop="contractType" label="签约类型" width="280" >
                         <template slot-scope="scope" >
-                            <span v-if="scope.row.contractType == 'INITIAL_SIGNATURE' ">首签</span>
-                            <span v-if="scope.row.RENEWAL">续签</span>
+                            <span >{{ scope.row.contractType == 'INITIAL_SIGNATURE' ? '首签' : '续签'}}</span>
                         </template>
                     </el-table-column>
 
@@ -456,11 +455,11 @@ export default {
       pageSize: 30,
       currentPageAgency: 1,
       pageSizeAgency: 30,
-      totalNums:'',
+      totalNums:0,
       totalSizeAgency:0,
       currentPageContractInformation: 1,
       pageSizeContractInformation:30,
-      totalSizeContractInformation:'',
+      totalSizeContractInformation:0,
       user: "",
       tableData:{
           agent:'',
@@ -473,7 +472,7 @@ export default {
       agencyRelationsanceForm:[],
       agencyRelationsanceFormExtendSuperShopNo:'',
       agencyRelationsanceFormExtendSuper:'',
-    agencyRelationsanceFormSuperShop:'',
+      agencyRelationsanceFormSuperShop:'',
       agencyRelationsanceFormExtendSuperName:'',
       agencyRelationsanceFormSuperShopShopNo:'',
       agencyRelationsanceFormSuperShopName:'',
@@ -895,7 +894,7 @@ export default {
 
                 self.contractInformationForm = response.data.result
                 self.totalSizeContractInformation = response.data.totalNums
-
+                console.log(self.totalSizeContractInformation)
                 } else {
                     self.$message({
                         message: response.data.msg,
