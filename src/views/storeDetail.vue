@@ -401,7 +401,7 @@
                             </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div>
                         <el-row>
                             <el-col :span="10">
-                                <el-form-item label="续签期限">
+                                <el-form-item label="续签期限：">
                                     <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
@@ -936,7 +936,11 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result)
+                 self.$message({
+                        message: "代理商续签成功~",
+                        type: 'success'
+                    });
+                 this.$router.push("/storeDetail/"+self.detailForm.id);
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1014,7 +1018,7 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    return time.getTime() > self.thistime
+                    // return time.getTime() > self.thistime
                 }
             }
     },
@@ -1023,7 +1027,7 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    return time.getTime() < self.thistime
+                    // return time.getTime() < self.thistime
                 }
             }
     },
