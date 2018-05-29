@@ -401,7 +401,7 @@
                             </span> {{renewalForm.remainDays}}</div>
                             <!-- </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div> -->
                         <el-row>
-                            <el-col style="width:300px">
+                            <el-col style="width:296px">
                                 <el-form-item label="续签期限：" label-width="92px">
                                     <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
