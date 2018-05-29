@@ -398,7 +398,8 @@
                             <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
                             <span v-if="renewalForm.resignAgentGradeId  == '265'">区域代理</span>
                             <span v-if="renewalForm.resignAgentGradeId  == '31'">单店代理</span>
-                            </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div>
+                            </span> {{renewalForm.remainDays}}</div>
+                            <!-- </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div> -->
                         <el-row>
                             <el-col :span="10">
                                 <el-form-item label="续签期限：">
@@ -635,6 +636,8 @@ export default {
         resignPhone:"",//代理商手机号
         timerValueStar:"",
         timerValueEnd:"",
+        remainDays:"",//服务期限
+        maxEndTime:"",//续签的最后结束时间
     },  //续签
       createId:"",//创建人ID
 
@@ -893,7 +896,41 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result)
+                //  console.log(response.data.result)
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+          }).catch(function (err) {
+              self.loading = false;
+              console.log(err);
+          });        
+        //   获取合同服务期时间和签约日期
+        self.$ajax({
+              url:'/api/http/contractCycle/findRenewalInfo.jhtml',
+              method: 'post',
+              data: {
+                    'contractCycle.shopId': self.detailForm.id,
+              },
+              transformRequest: [function(data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret;
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+          }).then(function (response) {
+               self.loading = false;
+             if (response.data.success == 1) {
+                 console.log(response.data.result);
+                 self.renewalForm.remainDays = response.data.result.remainDays;
+                 self.renewalForm.maxEndTime = response.data.result.maxEndTime;
+
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1018,7 +1055,7 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    // return time.getTime() > self.thistime
+                    return time.getTime() < new Date(self.renewalForm.maxEndTime)
                 }
             }
     },
@@ -1027,7 +1064,11 @@ export default {
         var self = this;
             return  {
                 disabledDate(time){
-                    // return time.getTime() < self.thistime
+                        if(self.renewalForm.timerValueStar){
+                            return time.getTime() < new Date(self.renewalForm.timerValueStar)
+                    }else{
+                        return time.getTime() < new Date(self.renewalForm.maxEndTime)
+                    }
                 }
             }
     },
