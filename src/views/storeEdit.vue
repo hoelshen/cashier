@@ -47,10 +47,10 @@
                  <!--第三行-->
                 <el-col :span="8">
                     <el-form-item label="合同服务期限：">
-                        <span >  {{editForm.signedStartTime}}~{{editForm.signedEndTime}}</span>                   
+                        <span >  {{editForm.signedStartTime}}至{{editForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="editForm.nextSignedStartTime" ></span>    
-                        <span slot="content" >{{editForm.nextSignedStartTime}}-{{editForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{editForm.nextSignedStartTime}}至{{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
                     </el-form-item>
                 </el-col>
@@ -1112,17 +1112,9 @@ export default {
         },
         //删除规则
         deleteRuleTitle(){
-            // var editForm = this.editForm
-            // console.log(self.editForm.ruleTitle)
-            
-            // editForm.ruleTitle = ''
-            // this.$set(this.editForm,'ruleTitle','')
             this.editForm.ruleTitle = ''
             this.editForm = Object.assign({},this.editForm)
-            // console.log(self.editForm.ruleTitle)
-            // console.log(self.editForm.ruleId )
-            // console.log(self.editForm.ruleTitle)
-            // console.log(self.editForm.ruleId )
+
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
@@ -1170,14 +1162,7 @@ export default {
         }).then(function (response) {
             self.loading = false;
             self.editForm = response.data.result;
-            // console.log(self.editForm)
-            // console.log(self.editForm.agentProvince)
-            // console.log(self.editForm.agentProvinceName)
-            
-            // console.log(self.editForm.agentCity)
-            // console.log(self.editForm.agentCityName)
-            // console.log(self.editForm.agentCounty)
-            // console.log(self.editForm.agentCountyName)
+
 
             self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
