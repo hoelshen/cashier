@@ -209,7 +209,7 @@
                     </el-row>
                     <el-row :gutter="10">
                         <el-col :span="24"  style="padding-left:20px;" class="circle">
-                            合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}}~{{changePromptDialogForm.signedEndTime}}</span>
+                            合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}} 至 {{changePromptDialogForm.signedEndTime}}</span>
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
