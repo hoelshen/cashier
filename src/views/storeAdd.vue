@@ -48,17 +48,17 @@
                         v-model="addForm.signedStartTime"
                         type="date"
                         placeholder="开始日期"  
-                        style="width: 50%;float:left"
-                        :picker-options="selectionStartTime"
-                        >
+                        style="float:left;width:46.5%;"
+                        :picker-options="selectionStartTime">
                         </el-date-picker>
+                        <span style="width:7%;float:left;text-align: center;">至</span>
                         <el-date-picker
                         v-model="addForm.signedEndTime"
                         type="date"
                         placeholder="结束日期"
-                        style="width: 50%;"                        
+                        style="float:right;width:46.5%"                        
                         :picker-options="selectionEndTime">
-                    </el-date-picker>
+                        </el-date-picker>
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
