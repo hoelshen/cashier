@@ -47,10 +47,10 @@
                  <!--第三行-->
                 <el-col :span="8">
                     <el-form-item label="合同服务期限：">
-                        <span >  {{editForm.signedStartTime}}至{{editForm.signedEndTime}}</span>                   
+                        <span >  {{editForm.signedStartTime}} 至 {{editForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
                         <span class="textBlue"  v-show="editForm.nextSignedStartTime" ></span>    
-                        <span slot="content" >{{editForm.nextSignedStartTime}}至{{editForm.nextSignedEndTime}}</span>
+                        <span slot="content" >{{editForm.nextSignedStartTime}} 至 {{editForm.nextSignedEndTime}}</span>
                         </el-tooltip> 
                     </el-form-item>
                 </el-col>
