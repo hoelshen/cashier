@@ -387,7 +387,7 @@
         <!-- 查看代理商年度业绩(编号：xxx) end -->  
 
         <!--续签弹窗-->
-        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal">
+        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal" >
                 <!-- <div style="position: relative;padding-bottom:50px;"> -->
                     <el-form>
                         <div class="resign_wrap name-tel">
@@ -401,13 +401,13 @@
                             </span> {{renewalForm.remainDays}}</div>
                             <!-- </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div> -->
                         <el-row>
-                            <el-col :span="10">
-                                <el-form-item label="续签期限：">
+                            <el-col style="width:300px">
+                                <el-form-item label="续签期限：" label-width="92px">
                                     <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
-                            <el-col :span="10">
-                                <el-form-item label="至">
+                            <el-col style="width:220px">
+                                <el-form-item label="至" label-width="25px">
                                     <el-date-picker  width="200" v-model="renewalForm.timerValueEnd" :picker-options="endpPickerOptions" type="date" placeholder="结束日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
