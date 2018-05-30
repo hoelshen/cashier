@@ -482,6 +482,10 @@ export default {
             }
 
             //代理商姓名判断
+            var _zh = data.name ? data.name.match(/[^ -~]/g) : 0;
+            var num = Math.ceil((data.name.length + (_zh && _zh.length) || 0)/2);
+            // console.log(num)
+            // console.log(data.name.length)
             if (!data.name) {
                     self.loading = false;
                     self.$message({
@@ -490,7 +494,7 @@ export default {
                     })
                     return false
                 } else {
-                    if (data.name.length > 20) {
+                    if (num > 10) {
                         self.loading = false;
                         self.$message({
                             message: '代理商姓名长度不得大于10',
@@ -651,8 +655,8 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            console.log(!Number(self.addForm.annualExtendPerformance))
-            console.log(!Number(self.addForm.annualPurchasePerformance))
+            // console.log(!Number(self.addForm.annualExtendPerformance))
+            // console.log(!Number(self.addForm.annualPurchasePerformance))
             
             if( !Number(self.addForm.annualExtendPerformance)||!Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
