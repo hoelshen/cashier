@@ -63,15 +63,15 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
-                        <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩"></el-input>  
-                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
+                        <el-popover  placement="top" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
-                        <el-popover  placement="right" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
                         <el-input  v-popover:annualExtendPerformance v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
@@ -213,8 +213,9 @@
                         </el-col>
                     </el-row>
                     <el-row :gutter="10">
-                        <el-col :span="24" style="padding-left:20px;" class="circle">
-                           拓展上级：<span v-if="addForm.shopType =='SELF_SUPPORT ' || addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
+                        <el-col :span="24" style="padding-left:20px;" class="circle" v-if="addForm.shopType =='SELF_SUPPORT '">
+                           拓展上级：
+                                    <span v-if=" addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
                                     <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
@@ -489,7 +490,7 @@ export default {
                     })
                     return false
                 } else {
-                    if (data.name.length > 10) {
+                    if (data.name.length > 20) {
                         self.loading = false;
                         self.$message({
                             message: '代理商姓名长度不得大于10',
@@ -526,8 +527,7 @@ export default {
                 })
                 return false
             }
-            // console.log(!addAddress.provinceCode)
-            // console.log(!addAddress.provinceCode || !addAddress.cityCode || !addAddress.areaCode)            
+ 
 
             //详细地址判断
             if (!data.address) {
@@ -537,20 +537,19 @@ export default {
                     type: 'error'
                 })
                 return false
-            }else {
-                if (data.address.length > 100) {
-                    self.loading = false;
-                    self.$message({
-                        message: '详细地址长度不得大于100个字符',
-                        type: 'error'
-                    })
-                    return false
-                }      
+                }else {
+                    if (data.address.length > 100) {
+                        self.loading = false;
+                        self.$message({
+                            message: '详细地址长度不得大于100个字符',
+                            type: 'error'
+                        })
+                        return false
+                    }      
             }
             //所属区域判断
-
-            
-            if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
+            // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
+            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
 
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
@@ -652,6 +651,9 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
+            console.log(!Number(self.addForm.annualExtendPerformance))
+            console.log(!Number(self.addForm.annualPurchasePerformance))
+            
             if( !Number(self.addForm.annualExtendPerformance)||!Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
@@ -1011,8 +1013,8 @@ export default {
             
             let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
-
-            if (!this.testData(data)) return;
+            console.log(addBelongAddress)
+            // console.log(addAgentAddress)
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
             let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);   
