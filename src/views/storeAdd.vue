@@ -64,14 +64,14 @@
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
-                        <el-popover  placement="top" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-popover  placement="top" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  class="grayColor"  style="  color: grey"    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
-                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true  style="  color: grey" class="grayColor" popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
                         <el-input  v-popover:annualExtendPerformance v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
@@ -165,7 +165,7 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"    content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200" class="grayColor" popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
@@ -212,8 +212,8 @@
                             合同服务期限：<span class="font-color">{{changePromptDialogForm.signedStartTime}} 至 {{changePromptDialogForm.signedEndTime}}</span>
                         </el-col>
                     </el-row>
-                    <el-row :gutter="10">
-                        <el-col :span="24" style="padding-left:20px;" class="circle" v-if="addForm.shopType =='SELF_SUPPORT '">
+                    <el-row :gutter="10" v-if="addForm.shopType =='AGENT'">
+                        <el-col :span="24" style="padding-left:20px;" class="circle" >
                            拓展上级：
                                     <span v-if=" addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
                                     <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
@@ -472,7 +472,7 @@ export default {
                 return false
             }            
             //合同服务期限判断
-            if (!data.signedStartTime && !data.signedEndTime) {
+            if (data.signedStartTime=='' || data.signedEndTime== '') {
                 self.loading = false;
                 self.$message({
                     message: '合同服务期限不得为空',
@@ -1012,12 +1012,12 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            
+            console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
             
             let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
-            console.log(addBelongAddress)
+
             // console.log(addAgentAddress)
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
@@ -1146,6 +1146,7 @@ export default {
     margin: 1%;
     padding: 20px;
     background-color: #ffffff;
+
     .content_title {
         .content_closeBtn {
             font-size: 19px;
@@ -1185,6 +1186,9 @@ export default {
     }
     .el-dialog--tiny{
         width: 48%
+    }
+    .grayColor{
+          
     }
 }
 

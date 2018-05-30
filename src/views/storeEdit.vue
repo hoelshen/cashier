@@ -666,13 +666,13 @@ export default {
             if (!self.checkSession()) return;
             self.loading = true;
             const data = self.editForm;
-            console.log(data)
-            console.log(self.editForm.ruleId)
+            // console.log(data)
+            // console.log(self.editForm.ruleId)
 
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
-            console.log(editAgentAddress);
+            // console.log(editAgentAddress);
 
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
 
