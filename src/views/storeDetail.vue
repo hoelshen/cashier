@@ -313,11 +313,9 @@
                             <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
                         </template>
                     </el-table-column> -->
-                    <el-table-colum prop='' label='返利比例'>
-
+                    <el-table-colum prop='rebateRate' label='返利比例'>
                     </el-table-colum>
-                    <el-table-colum prop='' label='返利金额'>
-
+                    <el-table-colum prop='rebateAmount' label='返利金额'>
                     </el-table-colum>
                 </el-table>
             </div>
@@ -701,7 +699,6 @@ export default {
             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
                     self.totalSizeAgency = response.data.result.total;
-                    // console.log(self.currentPageAgency)
                 } else {
                     self.$message({
                         message: response.data.msg,

@@ -470,7 +470,7 @@ export default {
                 })
                 return false
             }            
-            //合同签约日期判断
+            //合同服务期限判断
             if (!data.signedStartTime && !data.signedEndTime) {
                 self.loading = false;
                 self.$message({
@@ -548,12 +548,10 @@ export default {
                 }      
             }
             //所属区域判断
-            // console.log(data.agentGradeId!=265)
-            // console.log(data.shopType == 'SELF_SUPPORT')
+
             
             if(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT'){
-                // console.log('keyi')
-                // console.log(addBelongAddress.provinceCode)
+
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -564,11 +562,8 @@ export default {
                 }
             }
             //代理区域判断
-            // console.log('dailikeyi')
-            // console.log(data.agentGradeId == 265)
-            // console.log(data.shopType != 'SELF_SUPPORT')
+
             if (data.agentGradeId == 265 &&  data.shopType != 'SELF_SUPPORT') {
-                // console.log('ok')
                 if (!addAgentAddress.provinceCode || !addAgentAddress.cityCode || !addAgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -589,7 +584,6 @@ export default {
 
             }
 
-            // console.log('ok2')            
             //年度业绩目标
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance ){
@@ -684,7 +678,6 @@ export default {
                     self.$refs.rule.showPopper=false
                 },6000)                
             }
-
         },
         // 新增店铺
         addAgent() {
@@ -1013,13 +1006,13 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            // console.log(data)
+            
             let addAddress =  self.$refs.addAddress.getData();
-            // console.log(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT')
-            // console.log(self.$refs.addBelongAddress.getData())
-            let addBelongAddress = data.agentGradeId !=265  || data.shopType == 'SELF_SUPPORT' ?  self.$refs.addBelongAddress.getData() : null;
+            
+            let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
+            if (!this.testData(data)) return;
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
             let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);   
