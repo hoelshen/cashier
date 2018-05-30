@@ -293,26 +293,32 @@
                             <span>{{scope.$index + (currentPageAgency -1 ) * 30 + 1 }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="agentNo" label="代理商编号" width="127">
+                    <el-table-column prop="agentNo" label="编号" width="127">
                     </el-table-column>
-                    <el-table-column prop="agentName" label="代理商姓名" width="150">
+                    <el-table-column prop="agentName" label="姓名" width="150">
                     </el-table-column>
-                    <el-table-column prop="agentGradeId" label="代理商等级" width="127">
+                    <el-table-column prop="agentGradeId" label="等级" width="127">
                         <template slot-scope="scope">
                             <span v-if="scope.row.agentGradeId  == '266'">微店代理</span>
                             <span v-if="scope.row.agentGradeId  == '265'">区域代理</span>
                             <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="registTime" label="店铺注册" width="127">
+                    <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
-                    <el-table-column prop="relationType" label="关系" width="127">
+                    <!-- <el-table-column prop="relationType" label="关系" width="127">
                         <template slot-scope="scope">
                             <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品开发</span>
                             <span v-if="scope.row.relationType  == 'BUSINESS_EXTEND'">业务拓展</span>
                             <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
                         </template>
-                    </el-table-column>
+                    </el-table-column> -->
+                    <el-table-colum prop='' label='返利比例'>
+
+                    </el-table-colum>
+                    <el-table-colum prop='' label='返利金额'>
+
+                    </el-table-colum>
                 </el-table>
             </div>
             <div class="plPage clearfix"    >
@@ -1121,24 +1127,17 @@ export default {
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
-      
-        //  console.log(self.detailForm.annualAreadyExtendPerformance )
-
-        //  console.log(self.detailForm.isParticipateRebate)
        
         self.detailForm.phone  = Utils.iphoneSymbol(self.detailForm.phone);
 
         self.detailForm.annualPerformanceRatio = (self.detailForm.finishPerformanceSum)/response.data.result.annualPurchasePerformance
-        // console.log(self.detailForm.annualPerformanceRatio)
+
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
-        // console.log(self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        // console.log(response.data.result.annualOwnAreadyPurchasePerformance)
-        // console.log(response.data.result.finishPerformanceSum)
 
         //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
-        // console.log(self.detailForm.annualLowerAreadyPurchasePerformanceRate)
+
         
         //未完成协助所完成的业绩率 
          self.detailForm.annualNotAreadyPurchasePerformanceRate = response.data.result.notFinishPerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
@@ -1148,14 +1147,12 @@ export default {
         
 
         //年度目标
-        // console.log('mubiao'+self.detailForm.annualPurchasePerformance)
 
         //自己的长度
         self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
         self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
        
-        // console.log('ziji'+ self.detailForm.annualOwnAreadyPurchasePerformanceRate)
-        // console.log(self.annualOwnAreadyPurchasePerformanceRateObject.width)
+
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
@@ -1176,12 +1173,9 @@ export default {
         }
        //年度目标店铺拓展
         //  1.已完成
-        // console.log(response.data.result.annualAreadyExtendPerformance)
         self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
-        // console.log(self. SjhExtendPerformance )
         //  2.未完成
         self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
-        // console.log(self.SjhExtendPerformanceObject.width)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
         self.detailForm.endTime = response.data.result.remainDay;
 
