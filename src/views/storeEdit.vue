@@ -364,18 +364,18 @@ export default {
             this.flage = false;
         },
         //提交字段校验
-        testData(data, Address, AgentAddress, BelongAddress ) {
+        testData(data, editAddress, editAgentAddress, editBelongAddress) {
             const self = this;
             let isMobile = /^1\d{10}$/
             //店铺名判断
             if (!data.shopName) {
-                self.loading = false;
-                self.$message({
-                    message: '店铺名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
+                    self.loading = false;
+                    self.$message({
+                        message: '店铺名不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
                 if (data.shopName.length > 50) {
                     self.loading = false;
                     self.$message({
@@ -385,55 +385,10 @@ export default {
                     return false
                 }
             }
-            //代理商姓名判断
-            if (!data.name) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商姓名不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (data.name.length > 10) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商姓名长度不得大于10',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //代理商手机判断
-            if (!data.phone) {
-                self.loading = false;
-                self.$message({
-                    message: '代理商手机不得为空',
-                    type: 'error'
-                })
-                return false
-            } else {
-                if (!isMobile.test(data.phone)) {
-                    self.loading = false;
-                    self.$message({
-                        message: '代理商手机格式有误',
-                        type: 'error'
-                    })
-                    return false
-                }
-            }
-            //合同签约日期判断
-            if (!data.signedTime) {
-                self.loading = false;
-                self.$message({
-                    message: '合同签约日期不得为空',
-                    type: 'error'
-                })
-                return false
-            }
             // 如果是直营直接转成区域代理
             if (data.shopType == 'SELF_SUPPORT') {
                 data.agentGradeId = 265;
-            }
+            }            
             //代理商等级判断
             if (!data.agentGradeId) {
                 self.loading = false;
@@ -442,33 +397,67 @@ export default {
                     type: 'error'
                 })
                 return false
+            }            
+            //合同服务期限判断
+            if (!data.signedStartTime && !data.signedEndTime) {
+                self.loading = false;
+                self.$message({
+                    message: '合同服务期限不得为空',
+                    type: 'error'
+                })
+                return false
+            }
+
+            //代理商姓名判断
+            var _zh = data.name ? data.name.match(/[^ -~]/g) : 0;
+            var num = Math.ceil((data.name.length + (_zh && _zh.length) || 0)/2);
+            if (!data.name) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商姓名不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (num > 10) {
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商姓名长度不得大于10',
+                            type: 'error'
+                        })
+                        return false
+                    }
+            }
+            //代理商手机判断            
+            if (!data.phone) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商手机不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (!isMobile.test(data.phone)) {
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商手机格式有误',
+                            type: 'error'
+                        })
+                        return false
+                    }
             }
             //收件地址判断
-            if (!Address.provinceCode || !Address.cityCode || !Address.areaCode) {
-                self.loading = false;
+            // console.log(this.addressFlage)
+            if(!editAddress){
+                self.loading = false;                
                 self.$message({
                     message: '收件地址不得为空',
                     type: 'error'
                 })
                 return false
-            } else {
-                if (Address.cityCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件城市',
-                        type: 'error'
-                    })
-                    return false
-                }
-                if (Address.areaCode == 1) {
-                    self.loading = false;
-                    self.$message({
-                        message: '请选择具体收件地区',
-                        type: 'error'
-                    })
-                    return false
-                }
             }
+ 
+
             //详细地址判断
             if (!data.address) {
                 self.loading = false;
@@ -477,31 +466,33 @@ export default {
                     type: 'error'
                 })
                 return false
-            } else {
-                if (data.address.length > 100) {
+                }else {
+                    if (data.address.length > 100) {
+                        self.loading = false;
+                        self.$message({
+                            message: '详细地址长度不得大于100个字符',
+                            type: 'error'
+                        })
+                        return false
+                    }      
+            }
+            //所属区域判断
+            // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
+            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
+
+                 if (!editBelongAddress.provinceCode || !editBelongAddress.cityCode || !editBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
-                        message: '详细地址长度不得大于100个字符',
+                        message: '所属区域不得为空',
                         type: 'error'
                     })
-
                     return false
                 }
-          
-            }
-            //业务人员判断
-            if(!data.salesMan){
-                // console.log(data.salesMan)
-                self.loading = false;
-                self.$message({
-                    message:'业务人员为必填项',
-                    type:'error'
-                })
-                return false;
             }
             //代理区域判断
-            if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
-                if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
+
+            if (data.agentGradeId == 265 &&  data.shopType != 'SELF_SUPPORT') {
+                if (!editAgentAddress.provinceCode || !editAgentAddress.cityCode || !editAgentAddress.areaCode) {
                     self.loading = false;
                     self.$message({
                         message: '代理区域不得为空',
@@ -509,7 +500,7 @@ export default {
                     })
                     return false
                 } else {
-                    if (AgentAddress.cityCode == 1) {
+                    if (addAgentAddress.cityCode == 1) {
                         self.loading = false;
                         self.$message({
                             message: '请选择具体代理城市',
@@ -520,47 +511,22 @@ export default {
                 }
 
             }
-            //所属区域判断
-            if ((data.agentGradeId == 266 || data.agentGradeId == 31) && data.shopType != 'SELF_SUPPORT') {
-                if (!BelongAddress.provinceCode || !BelongAddress.cityCode || !BelongAddress.areaCode) {
-                    // debugger
+
+            //年度业绩目标
+            if(data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualPurchasePerformance ){
                     self.loading = false;
                     self.$message({
-                        message: '所属区域不得为空',
+                        message: '年度业绩不得为空',
                         type: 'error'
-                    })
-                    return false
-                } else {
-                    if (BelongAddress.cityCode == 1) {
-                        self.loading = false;
-                        self.$message({
-                            message: '请选择具体所属城市',
-                            type: 'error'
-                        })
-                        return false
-                    }
+                    })                                      
+                    return false;
                 }
-
             }
-
-            //年度业绩目标：
-            // console.log(data.annualPurchasePerformance)
-
-            if(!String(data.annualPurchasePerformance) && data.shopType != 'SELF_SUPPORT' ){
-                self.loading = false;
-                self.$message({
-                    message: '年度业绩不得为空',
-                    type: 'error'
-                })                  
-                
-                return false;
-              
-            }
-        
+       
             // 年度店铺拓展
-         
-            if( (data.agentGradeId == 265) && data.shopType != 'SELF_SUPPORT'){
-                if(!String(data.annualExtendPerformance)){
+            if( (data.agentGradeId ==265) && data.shopType != 'SELF_SUPPORT'){
+                if(!data.annualExtendPerformance){
                     self.loading = false;
                     self.$message({
                         message: '年度店铺不得为空',
@@ -569,21 +535,43 @@ export default {
                     return false  
                 }
             }
-            if(data.extendSuperType =='AGENT'&&data.agentGradeId!='265'){
-                if(!data.extendSuperNo && !data.superAgentGradeId){
+
+            //检验上级代理商的状态
+            if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
+                   if(!data.extendSuperNo){
+                        self.loading = false;
+                        self.$message({
+                            message: '代理商的上级编号/姓名必填',
+                            type: 'error'
+                        })
+                        return false    
+                    }
+            }
+
+            //检验上级代理商的状态
+            if((data.agentGradeId=='31' || data.agentGradeId=='266' ) && data.extendSuperType =='AGENT'){
+                if(data.state!=0){
                     self.loading = false;
                     self.$message({
-                        message: ' 拓展上级编号/姓名必填',
+                        message: '代理商的上级为禁用状态',
                         type: 'error'
                     })
-                    return false 
+                    return false    
                 }
-                  
             }
-          
+
+            //业务人员判断
+            if(!data.salesMan){
+                // console.log(data.salesMan)
+                self.loading = false;
+                self.$message({
+                    message:'业务人员为必填项',
+                    type:'error'
+                })
+                return false;
+            }
             return true
-                 
-        },
+        },        
         //checksession                
         checkSession() {
             const self = this;
@@ -678,17 +666,18 @@ export default {
             if (!self.checkSession()) return;
             self.loading = true;
             const data = self.editForm;
+            console.log(data)
             console.log(self.editForm.ruleId)
 
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
 
-            // console.log(editAgentAddress);
+            console.log(editAgentAddress);
 
             let editBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266) || data.shopType == 'SELF_SUPPORT' ?  self.$refs.editBelongAddress.getData() : null;
 
             if (!self.testData(data, editAddress, editAgentAddress, editBelongAddress)) return;
-            debugger
+
             let datas;
             //代理商
             if(data.shopType=='AGENT'){
@@ -708,7 +697,7 @@ export default {
                         'shop.address': data.address,
                         'shop.city': data.city,
                         'shop.shopType': data.shopType,
-                        'shop.ruleId': data.ruleId,                    
+                        'shop.ruleId': data.ruleId || '',                    
                         
                         'shop.agentGradeId': data.agentGradeId,                    
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
@@ -716,7 +705,7 @@ export default {
                         'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
                     
                         'shop.isShow': data.isShow,
-                        'shop.operator': data.operator,
+                        'shop.operator': data.operator ,
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
@@ -832,7 +821,7 @@ export default {
                         'shop.salesMan': data.salesMan,
                         'shop.salesManId': data.salesManId || '',
                         'shop.operatorId': data.operatorId || '',
-                        'shop.ruleId': data.ruleId,
+                        'shop.ruleId': data.ruleId || '',
                         'shop.belongProvince':editBelongAddress  ? editBelongAddress.provinceCode : "",
                         'shop.belongCity':editBelongAddress  ? editBelongAddress.cityCode : "",
                         'shop.belongCountry':editBelongAddress ? editBelongAddress.areaCode : "",
