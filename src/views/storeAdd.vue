@@ -192,8 +192,8 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top:20px;margin-left:120px;">
+                <el-button @click="goBack" class="button-cancel">取消</el-button>                
                 <el-button type="primary" @click="onChangePromptVisible" class="button-save">保存</el-button>
-                <el-button @click="goBack" class="button-cancel">取消</el-button>
             </el-row>
         </el-form>
         <!-- 新增店铺 end -->

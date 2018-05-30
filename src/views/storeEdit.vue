@@ -190,8 +190,8 @@
                 </el-col>
             </el-row>
             <el-row style="margin-top:20px;margin-left:119px;">
+                <el-button @click="goBack">取消</el-button>                
                 <el-button type="primary" @click="editAgent">保存</el-button>
-                <el-button @click="goBack">取消</el-button>
             </el-row>
         </el-form>
         <!--新增规则关系弹窗-->
