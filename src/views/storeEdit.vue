@@ -479,7 +479,6 @@ export default {
             //所属区域判断
             // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
             if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
-
                  if (!editBelongAddress.provinceCode || !editBelongAddress.cityCode || !editBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -500,7 +499,7 @@ export default {
                     })
                     return false
                 } else {
-                    if (addAgentAddress.cityCode == 1) {
+                    if (editAgentAddress.cityCode == 1) {
                         self.loading = false;
                         self.$message({
                             message: '请选择具体代理城市',

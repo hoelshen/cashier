@@ -313,9 +313,9 @@
                             <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
                         </template>
                     </el-table-column> -->
-                    <el-table-colum prop='rebateRate' label='返利比例'>
+                    <el-table-colum prop='agencyRelationsanceFormRebateRate' label='返利比例' width="127">
                     </el-table-colum>
-                    <el-table-colum prop='rebateAmount' label='返利金额'>
+                    <el-table-colum prop='agencyRelationsanceFormRebateAmount' label='返利金额' width="127">
                     </el-table-colum>
                 </el-table>
             </div>
@@ -503,6 +503,8 @@ export default {
       annualAgentsFormcycleEndTime:'',
       agencyRelationsanceTitle:'',
       agencyRelationsanceForm:[],
+      agencyRelationsanceFormRebateRate:'',
+      agencyRelationsanceFormRebateAmount:'',
       agencyRelationsanceFormExtendSuperShopNo:'',
       agencyRelationsanceFormExtendSuper:'',
       agencyRelationsanceFormSuperShop:'',
@@ -634,15 +636,15 @@ export default {
       renewalTitle:'',
 
 
-    renewalForm:{
-        resignAgentGradeId:"",// 代理商等级
-        resignName:"",//代理商姓名
-        resignPhone:"",//代理商手机号
-        timerValueStar:"",
-        timerValueEnd:"",
-        remainDays:"",//服务期限
-        maxEndTime:"",//续签的最后结束时间
-    },  //续签
+        renewalForm:{
+            resignAgentGradeId:"",// 代理商等级
+            resignName:"",//代理商姓名
+            resignPhone:"",//代理商手机号
+            timerValueStar:"",
+            timerValueEnd:"",
+            remainDays:"",//服务期限
+            maxEndTime:"",//续签的最后结束时间
+        },  //续签
       createId:"",//创建人ID
 
         //开始日期
@@ -699,6 +701,9 @@ export default {
             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
                     self.totalSizeAgency = response.data.result.total;
+                    self.agencyRelationsanceForm.rebateRate = response.data.result.list.rebateRate;
+                    self.agencyRelationsanceForm.rebateAmount = response.data.result.list.rebateAmount;
+                    
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -840,8 +845,6 @@ export default {
     annualAgentsFormAnnualCycle(){
         const self = this;
             if (!self.checkSession()) return;
-
-            console.log(self.detailForm.id)
             //清除排序
             self.loading = true;
             self.$ajax.post('/api/http/annualPerformanceCycle/findListByShopId.jhtml', {
