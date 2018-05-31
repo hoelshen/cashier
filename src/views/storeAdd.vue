@@ -64,14 +64,14 @@
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
-                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  class="grayColor"  style="  color: grey"    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
                         <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
-                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true  style="  color: grey" class="grayColor" popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
                         <el-input  v-popover:annualExtendPerformance v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
@@ -1139,7 +1139,13 @@ export default {
 
 </style>
 
-<style lang="less"  scoped>
+<style >
+    .grayColor{
+          color: gray
+    }
+</style>
+
+<style lang="less">
 @import url("../assets/less/storeAdd.less");
 #addStore {
     width: 98%;
@@ -1187,9 +1193,7 @@ export default {
     .el-dialog--tiny{
         width: 48%
     }
-    .grayColor{
-          
-    }
+
 }
 
 </style>
