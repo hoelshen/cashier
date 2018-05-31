@@ -236,7 +236,7 @@
                 </el-row>
                 <el-row :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
-                        匹配规则：{{ detailForm.businessExtendsRule.ruleNo }} {{ detailForm.businessExtendsRule.businessExtendsRuleName }}
+                        匹配规则：{{ detailForm.businessExtendsRuleRuleNo }} {{ detailForm.businessExtendsRuleName }}
                     </el-col>
                 </el-row>
                      
@@ -592,10 +592,9 @@ export default {
         activeColor3:'',
         endTime: '',        
         height:10,
-        businessExtendsRule:{
-            businessExtendsRuleName:'', //规则名字 
-            ruleNo:'', //规则编号
-        }   
+        businessExtendsRuleRuleNo:'',
+        businessExtendsRuleName:'',
+
       },
       annualOwnAreadyPurchasePerformanceRateObject:{
           height:10 +'px',
@@ -1129,8 +1128,15 @@ export default {
         // 灰色
         self.detailForm.activeColor4 = 'e3e5e6';
 
-        self.detailForm.ruleNo =  response.data.result.ruleId==null || ''; 
+    
+        console.log(response.data.result.ruleId)
+        if(response.data.result.ruleId==null){
+            console.log('ok')
+             self.detailForm.businessExtendsRuleRuleNo =1; 
+             console.log(self.detailForm.businessExtendsRuleRuleNo)
+        }
 
+        console.log(self.detailForm.businessExtendsRule.ruleNo)
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
