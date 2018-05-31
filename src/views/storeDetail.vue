@@ -306,21 +306,25 @@
                     </el-table-column>
                     <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
-                    <!-- <el-table-column prop="relationType" label="关系" width="127">
-                        <template slot-scope="scope">
-                            <span v-if="scope.row.relationType  == 'ZUIPIN_EXTEND'">醉品开发</span>
-                            <span v-if="scope.row.relationType  == 'BUSINESS_EXTEND'">业务拓展</span>
-                            <span v-if="scope.row.relationType  == 'IMMEDIATE_SUPER'">直接上级</span>
+                    <el-table-colum prop="rebateRate" label='返利比例' width="127">
+                        <template slot-scope="">
+
                         </template>
-                    </el-table-column> -->
-                    <el-table-colum prop='agencyRelationsanceFormRebateRate' label='返利比例' width="127">
+                        <!-- {{agencyRelationsanceFormRebateRate}} -->
                     </el-table-colum>
-                    <el-table-colum prop='agencyRelationsanceFormRebateAmount' label='返利金额' width="127">
+                
+                    <el-table-colum prop="rebateAmount" label='返利金额' width="127">
+                        <template>
+                            
+                        </template>        <!-- {{agencyRelationsanceFormRebateAmount}} -->
                     </el-table-colum>
                 </el-table>
             </div>
-            <div class="plPage clearfix"    >
-                <el-pagination style="margin-top: 10px;float: right;"  @current-change="agencyRelationsanceHandleCurrentChange" :current-page="currentPageAgency" :page-size="pageSizeAgency" layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
+            <div class="plPage clearfix">
+                <el-pagination style="margin-top: 10px;float: right;"  
+                    @current-change="agencyRelationsanceHandleCurrentChange" 
+                    :current-page="currentPageAgency" :page-size="pageSizeAgency" 
+                    layout=" prev, pager, next, jumper" :total="totalSizeAgency" >
                 </el-pagination>
             </div>
             <div slot="footer"   class="dialog-footer" @click="changeCancle()">
@@ -672,19 +676,19 @@ export default {
     //查看代理商关系
     openAgencyRelationsance(shopNo) {
         this.agencyRelationsanceTitle = "查看代理商关系（编号：" + shopNo + "）"
-        // console.log(shopNo)
         if (!this.checkSession()) return;
         const self = this;
         self.agencyRelationsanceDialogVisible = true;
         self.loading = true;
+        console.log(Utils.formatYearDate(self.searchRegistTime) )
         self.$ajax({
             url:'/api/shop/shopManage/getAgentRelationList.jhtml',
             method: 'post',
             data: {
-                    'shopNo': shopNo,
+                    'shopNo': 10074,
                     'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
-                    'registTime': Utils.formatYearDate(self.searchRegistTime),
+                    'registTime': 2018,
             },
             transformRequest: [function(data) {
                     let ret = ''
@@ -700,9 +704,10 @@ export default {
             self.loading = false;
             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
+                    console.log(response.data.result.list)
                     self.totalSizeAgency = response.data.result.total;
-                    self.agencyRelationsanceForm.rebateRate = response.data.result.list.rebateRate;
-                    self.agencyRelationsanceForm.rebateAmount = response.data.result.list.rebateAmount;
+                    // self.agencyRelationsanceFormRebateRate = response.data.result.list.rebateRate;
+                    // self.agencyRelationsanceFormRebateAmount = response.data.result.list.rebateAmount;
                     
                 } else {
                     self.$message({
@@ -731,7 +736,7 @@ export default {
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded'
                 }
-        }).then(function (response) {
+            }).then(function (response) {
             self.loading = false;
             if (response.data.success == 1) {
                 console.log(response.data.result)
@@ -1124,6 +1129,8 @@ export default {
         // 灰色
         self.detailForm.activeColor4 = 'e3e5e6';
 
+        self.detailForm.ruleNo =  response.data.result.ruleId==null || ''; 
+
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
@@ -1184,6 +1191,9 @@ export default {
         self.renewalForm.resignAgentGradeId = response.data.result.agentGradeId;
         self.renewalForm.resignName = response.data.result.name;
         self.renewalForm.resignPhone = response.data.result.phone;
+
+        
+
         
       })
       .catch(function(err) {
