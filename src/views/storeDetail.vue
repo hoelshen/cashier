@@ -393,7 +393,7 @@
                     <el-form>
                         <div class="resign_wrap name-tel">
                             <span class=resign-name>{{renewalForm.resignName}}</span>
-                            <span >{{renewalForm.resignPhone}}</span>
+                            <span v-html="renewalForm.resignPhone"></span>
                         </div >
                         <div  class="resign_wrap"> <span class="resign-store-icon-wrap">
                             <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
@@ -404,7 +404,7 @@
                         <el-row>
                             <el-col style="width:296px">
                                 <el-form-item label="续签期限：" label-width="92px">
-                                    <el-date-picker width="200" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
+                                    <el-date-picker width="200" :default-value="renewalForm.maxEndTime" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
                             <el-col style="width:220px">
