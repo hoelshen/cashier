@@ -306,18 +306,18 @@
                     </el-table-column>
                     <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
-                    <el-table-colum prop="rebateRate" label='返利比例' width="127">
-                        <template slot-scope="">
+                    <el-table-column prop="rebateRate" label='返利比例' width="127">
+                        <!-- <template slot-scope="">
+                        {{agencyRelationsanceFormRebateRate}}
 
-                        </template>
-                        <!-- {{agencyRelationsanceFormRebateRate}} -->
-                    </el-table-colum>
+                        </template> -->
+                    </el-table-column>
                 
-                    <el-table-colum prop="rebateAmount" label='返利金额' width="127">
-                        <template>
-                            
-                        </template>        <!-- {{agencyRelationsanceFormRebateAmount}} -->
-                    </el-table-colum>
+                    <el-table-column prop="rebateAmount" label='返利金额' width="127">
+                        <!-- <template>
+                             {{agencyRelationsanceFormRebateAmount}}
+                        </template>        -->
+                    </el-table-column>
                 </el-table>
             </div>
             <div class="plPage clearfix">
