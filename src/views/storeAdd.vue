@@ -1153,7 +1153,22 @@ export default {
                 }
             }
         },
-
+        'addForm.annualExtendPerformance'(newval,oldval){
+            if(newval==''){
+                newval ='';
+            }else{
+                if(Utils.digitZero(newval)){
+                    this.$nextTick(() => {
+                            this.addForm.annualExtendPerformance = newval
+                            oldval = newval
+                    })
+                }else{
+                    this.$nextTick(() => {
+                        this.addForm.annualExtendPerformance = oldval
+                    })               
+                }
+            }            
+        }
 
     },
     // computed:{

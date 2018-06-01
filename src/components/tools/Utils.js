@@ -162,7 +162,12 @@ let Utils = {
         digitTwo(val){
             var reg = /^\d+\.?\d{0,2}$/.test(val)
             return reg
-        }   
+        },
+        //没有小数
+        digitZero(val){
+            var reg = /^[0-9]*$/.test(val)
+            return reg
+        }  
     }
 
         export default Utils

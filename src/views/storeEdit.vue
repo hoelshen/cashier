@@ -64,7 +64,7 @@
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'" >  
-                        <el-popover  placement="right" ref="annualExtendPerformance"  width="200" trigger="manual"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>                        
                         <el-input   v-popover:annualExtendPerformance v-model="editForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple"  >                              
                             <template slot="prepend">店铺拓展：  
