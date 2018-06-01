@@ -1185,7 +1185,27 @@ export default {
                     this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
                 }
             }
-        },         
+        },  
+        'editForm.annualPurchasePerformance'(newVal,oldVal){
+            if(newVal==''){
+                newVal ='';
+            }else{
+                console.log('1')
+                if(Utils.digitTwo(newVal)){
+                    
+                    this.$nextTick(() => {
+                            this.editForm.annualPurchasePerformance = newVal
+                            oldVal = newVal
+                            // console.log('ok')
+                        })
+
+                }else{
+                    this.$nextTick(() => {
+                        this.editForm.annualPurchasePerformance = oldVal
+                        })               
+                }
+            }
+        },               
     }
 }
 </script>
