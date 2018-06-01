@@ -49,7 +49,7 @@
                         type="date"
                         placeholder="开始日期"  
                         style="float:left;width:46.5%;"
-                        :picker-options="selectionStartTime">
+                        >
                         </el-date-picker>
                         <span style="width:7%;float:left;text-align: center;">至</span>
                         <el-date-picker
@@ -63,17 +63,19 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
-                        <el-input v-show="addForm.agentGradeId ==265" v-model="addForm.annualPurchasePerformance" placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
+                        <el-input v-show="addForm.agentGradeId ==265" type="number" v-model="addForm.annualPurchasePerformance"    placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
-                        </el-popover>                    
-                        <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
+                        </el-popover>
+                        <span class="typeNumber"></span>                                            
+                        <el-input v-show="addForm.agentGradeId !=265 " type="number"  v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
                         <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
-                        <el-input  v-popover:annualExtendPerformance v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
+                        <span class="typeNumber"></span>                                                                    
+                        <el-input  v-popover:annualExtendPerformance  v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
                             </template>
                             <template slot="append"> 家
@@ -90,7 +92,8 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="代理商手机：">
-                        <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                        <span class="typeNumber"></span>                                                                    
+                        <el-input v-model="addForm.phone"  :maxlength='phoneLength' placeholder="代理商手机"></el-input>
                         <div class="m-2-o">
                             代理商登录系统使用的账号
                         </div>
@@ -991,6 +994,10 @@ export default {
         resetPromptForm(){
             
         },
+        //校验除数字外的
+        // limitAnnualPurchasePerformance(val){
+        //     // console.log(val)
+        // },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
@@ -1126,6 +1133,18 @@ export default {
                     this.addForm.annualExtendPerformance=( this.areaClassFlag && String(this.addForm.annualExtendPerformance)  ) || item.num
                 }
             }
+        },
+        'addForm.annualPurchasePerformance'(newval){
+           this.addForm.annualPurchasePerformance =  Utils.digitInput(newval)
+           this.addForm = Object.assign({},this.addForm)
+
+        },
+
+
+    },
+    computed:{
+        annualExtendPerformance(){
+            this.addForm.annualPurchasePerformance =  Utils.digitInput(newval)
         }
     }
 
@@ -1160,6 +1179,15 @@ export default {
             color: #0000ff9e;
             cursor: pointer;
         }
+    }
+    .typeNumber{
+            position: absolute;
+            right: 10px;
+            top: 7px;
+            background: #ffffff;
+            z-index: 9999;
+            width: 16px;
+            height: 18px;
     }
     .delete_left {
         background: url("../assets/images/zph_close.png") no-repeat center;

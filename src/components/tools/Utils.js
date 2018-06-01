@@ -152,8 +152,12 @@ let Utils = {
                 var newVal =  oldVal.match(/(\d{3})(\d{4})(\d{4})/).slice(1).join('-');
                 return newVal 
             }
+        },
+        //限制除数字的其他文字
+        digitInput(val){
+            var val2 = val.replace(/[^\d]/g, ''); 
+            return val=val2            
         }
-    
     }
 
         export default Utils
