@@ -395,12 +395,17 @@
                             <span class=resign-name>{{renewalForm.resignName}}</span>
                             <span v-html="renewalForm.resignPhone"></span>
                         </div >
-                        <div  class="resign_wrap"> <span class="resign-store-icon-wrap">
-                            <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
-                            <span v-if="renewalForm.resignAgentGradeId  == '265'">区域代理</span>
-                            <span v-if="renewalForm.resignAgentGradeId  == '31'">单店代理</span>
-                            </span> {{renewalForm.remainDays}}</div>
-                            <!-- </span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div> -->
+                        <div  class="resign_wrap">
+                             <span class="resign-store-icon-wrap">
+                                <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
+                                <span v-if="renewalForm.resignAgentGradeId  == '265'">区域代理</span>
+                                <span v-if="renewalForm.resignAgentGradeId  == '31'">单店代理</span>
+                            </span> 
+                           
+                            <span v-if="renewalForm.remainYear==0&&renewalForm.remainDay==0">该代理商服务期限已到期！</span> 
+                             <span v-else>该代理商服务期限还有 <span class="resign-color"> <span v-if="renewalForm.remainYear!=0"> {{renewalForm.remainYear}}年</span>{{renewalForm.remainDay}}天 </span> 到期~</span> 
+                         </div>
+                            <!-- <span> 该代理商服务期限还有 <span class="resign-color">1年223天 </span> 到期~</div> -->
                         <el-row>
                             <el-col style="width:296px">
                                 <el-form-item label="续签期限：" label-width="92px">
@@ -638,7 +643,8 @@ export default {
             resignPhone:"",//代理商手机号
             timerValueStar:"",
             timerValueEnd:"",
-            remainDays:"",//服务期限
+            remainDay:"",//服务期限日
+            remainYear:"",//服务期限年
             maxEndTime:"",//续签的最后结束时间
         },  //续签
       createId:"",//创建人ID
@@ -930,8 +936,9 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                //  console.log(response.data.result);
-                 self.renewalForm.remainDays = response.data.result.remainDays;
+                 console.log(response.data.result);
+                 self.renewalForm.remainDay = response.data.result.remainDay;
+                 self.renewalForm.remainYear = response.data.result.remainYear;
                  self.renewalForm.maxEndTime = response.data.result.maxEndTime;
 
                 } else {
