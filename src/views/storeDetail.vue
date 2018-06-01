@@ -679,15 +679,15 @@ export default {
         const self = this;
         self.agencyRelationsanceDialogVisible = true;
         self.loading = true;
-        console.log(Utils.formatYearDate(self.searchRegistTime) )
+        // console.log(Utils.formatYearDate(self.searchRegistTime) )
         self.$ajax({
             url:'/api/shop/shopManage/getAgentRelationList.jhtml',
             method: 'post',
             data: {
-                    'shopNo': 10074,
+                    'shopNo':self.detailForm.shopNo,
                     'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
-                    'registTime': 2018,
+                    'registTime': Utils.formatYearDate(self.searchRegistTime),
             },
             transformRequest: [function(data) {
                     let ret = ''
@@ -703,7 +703,7 @@ export default {
             self.loading = false;
             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
-                    console.log(response.data.result.list)
+                    // console.log(response.data.result.list)
                     self.totalSizeAgency = response.data.result.total;
                     // self.agencyRelationsanceFormRebateRate = response.data.result.list.rebateRate;
                     // self.agencyRelationsanceFormRebateAmount = response.data.result.list.rebateAmount;
