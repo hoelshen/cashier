@@ -971,7 +971,7 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            if( !Number(self.editForm.annualExtendPerformance)|| !Number(self.editForm.annualPurchasePerformance)){
+            if( !Number(self.editForm.annualExtendPerformance) && !Number(self.editForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
@@ -1190,13 +1190,11 @@ export default {
             if(newVal==''){
                 newVal ='';
             }else{
-                console.log('1')
                 if(Utils.digitTwo(newVal)){
                     
                     this.$nextTick(() => {
                             this.editForm.annualPurchasePerformance = newVal
                             oldVal = newVal
-                            // console.log('ok')
                         })
 
                 }else{

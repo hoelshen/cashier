@@ -69,7 +69,7 @@
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>
                         <span class="typeNumber"></span>                                            
-                        <el-input v-show="addForm.agentGradeId !=265 "   v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
+                        <el-input v-show="addForm.agentGradeId !=265 "  v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
@@ -667,7 +667,7 @@ export default {
             // console.log(!Number(self.addForm.annualExtendPerformance))
             // console.log(!Number(self.addForm.annualPurchasePerformance))
             
-            if( !Number(self.addForm.annualExtendPerformance)||!Number(self.addForm.annualPurchasePerformance)){
+            if( !Number(self.addForm.annualExtendPerformance) && !Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
@@ -1141,25 +1141,18 @@ export default {
             }
         },
         'addForm.annualPurchasePerformance'(newval,oldval){
-            console.log(newval)
             if(newval==''){
                 newval ='';
-                console.log(newval)
-
             }else{
                 if(Utils.digitTwo(newval)){
-                    
                     this.$nextTick(() => {
                             this.addForm.annualPurchasePerformance = newval
-                            // console.log(newval)
                             oldval = newval
-                            // console.log(newval)
                     })
                 }else{
                     this.$nextTick(() => {
-                        //   console.log(oldval)
                         this.addForm.annualPurchasePerformance = oldval
-                        })               
+                    })               
                 }
             }
         },
