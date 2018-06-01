@@ -65,14 +65,9 @@
                     <el-form-item v-if="addForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="addForm.agentGradeId ==265" type="number" v-model="addForm.annualPurchasePerformance"    placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
-<<<<<<< HEAD
-                        </el-popover>                    
-                        <el-input v-show="addForm.agentGradeId !=265 " v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩" ></el-input>  
-=======
                         </el-popover>
                         <span class="typeNumber"></span>                                            
                         <el-input v-show="addForm.agentGradeId !=265 " type="number"  v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
->>>>>>> 02fddf4a41cc3b0d22904a2c10acbc9ba7e5d7a3
                     </el-form-item>
                 </el-col>
                 <el-col :span="5">
