@@ -982,7 +982,9 @@ export default {
                         message: "代理商续签成功~",
                         type: 'success'
                     });
-                 self.$router.push({ name:'storeDetail',params:{shopId:self.detailForm.id} })
+
+                 console.log(self.detailForm.id)
+                 self.$router.go(0);
                 } else {
                     self.$message({
                         message: response.data.msg,

@@ -59,7 +59,7 @@
                         <el-input v-show="editForm.agentGradeId ==265" v-model="editForm.annualPurchasePerformance" placeholder="进货业绩"></el-input>  
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
-                        <el-input v-show="editForm.agentGradeId !=265 " v-model="editForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
+                        <el-input v-show="editForm.agentGradeId !=265 " v-model.number="editForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="6">
@@ -512,8 +512,9 @@ export default {
             }
 
             //年度业绩目标
+            // console.log(!data.annualPurchasePerformance==0)
             if(data.shopType != 'SELF_SUPPORT'){
-                if(!data.annualPurchasePerformance ){
+                if(!data.annualPurchasePerformance && !data.annualPurchasePerformance==0 ){
                     self.loading = false;
                     self.$message({
                         message: '年度业绩不得为空',
