@@ -307,16 +307,9 @@
                     <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
                     <el-table-column prop="rebateRate" label='返利比例' width="127">
-                        <!-- <template slot-scope="">
-                        {{agencyRelationsanceFormRebateRate}}
-
-                        </template> -->
                     </el-table-column>
                 
                     <el-table-column prop="rebateAmount" label='返利金额' width="127">
-                        <!-- <template>
-                             {{agencyRelationsanceFormRebateAmount}}
-                        </template>        -->
                     </el-table-column>
                 </el-table>
             </div>
@@ -1119,8 +1112,7 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
-      
-        self.detailForm.id = response.data.result.id
+
 
         console.log(self.detailForm.id)
         //橙色 
@@ -1132,11 +1124,15 @@ export default {
         // 灰色
         self.detailForm.activeColor4 = 'e3e5e6';
 
+         
     
         if(response.data.result.ruleId==null){
-             self.detailForm.businessExtendsRuleRuleNo =1; 
+             self.detailForm.businessExtendsRuleRuleNo =1;
+        }else{
+            self.detailForm.businessExtendsRuleRuleNo = response.data.result.businessExtendsRule.ruleNo
         }
-
+        self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
+        
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
