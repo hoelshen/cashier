@@ -663,15 +663,12 @@ export default {
         },
         //气泡提示
         annualExtendPerformanceTitple(){
-            let self = this
-            // console.log(!Number(self.addForm.annualExtendPerformance))
-            // console.log(!Number(self.addForm.annualPurchasePerformance))
-            
+            let self = this            
             if( !Number(self.addForm.annualExtendPerformance) && !Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
-                },6000)
+                },3000)
             }
         },
         //气泡提示
@@ -681,7 +678,7 @@ export default {
                     self.$refs.annualPurchasePerformance.showPopper=true
                     setTimeout(function(){
                         self.$refs.annualPurchasePerformance.showPopper=false
-                    },6000)
+                    },3000)
             }
         },
         //气泡提示

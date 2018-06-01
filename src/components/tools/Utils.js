@@ -161,7 +161,6 @@ let Utils = {
         //小数点后两位
         digitTwo(val){
             var reg = /^\d+\.?\d{0,2}$/.test(val)
-            console.log(reg)
             return reg
         }   
     }
