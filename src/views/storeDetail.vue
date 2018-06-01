@@ -874,7 +874,7 @@ export default {
     },
     //改变代理商关系当前页
     agencyRelationsanceHandleCurrentChange(val){
-             let self = this;
+            let self = this;
             self.currentPageAgency = val;
             self.openAgencyRelationsance(this.detailForm.shopNo);
     },
@@ -937,7 +937,7 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result);
+                //  console.log(response.data.result);
                  self.renewalForm.remainDays = response.data.result.remainDays;
                  self.renewalForm.maxEndTime = response.data.result.maxEndTime;
 
@@ -960,7 +960,7 @@ export default {
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
-         self.renewalDialogVisible = false
+        self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
               method: 'post',
@@ -987,7 +987,7 @@ export default {
                         message: "代理商续签成功~",
                         type: 'success'
                     });
-                 self.$router.push({ name:'storeDetail',params:{shopId:self.editForm.shopId} })
+                 self.$router.push({ name:'storeDetail',params:{shopId:self.detailForm.id} })
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1038,7 +1038,7 @@ export default {
 
                 self.contractInformationForm = response.data.result
                 self.totalSizeContractInformation = response.data.totalNums
-                console.log(self.totalSizeContractInformation)
+                // console.log(self.totalSizeContractInformation)
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1119,6 +1119,10 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
+      
+        self.detailForm.id = response.data.result.id
+
+        console.log(self.detailForm.id)
         //橙色 
         self.detailForm.activeColor1 = 'ff6600';
         //蓝色
@@ -1129,14 +1133,10 @@ export default {
         self.detailForm.activeColor4 = 'e3e5e6';
 
     
-        console.log(response.data.result.ruleId)
         if(response.data.result.ruleId==null){
-            console.log('ok')
              self.detailForm.businessExtendsRuleRuleNo =1; 
-             console.log(self.detailForm.businessExtendsRuleRuleNo)
         }
 
-        console.log(self.detailForm.businessExtendsRule.ruleNo)
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
