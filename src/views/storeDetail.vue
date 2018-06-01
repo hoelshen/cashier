@@ -404,7 +404,7 @@
                         <el-row>
                             <el-col style="width:296px">
                                 <el-form-item label="续签期限：" label-width="92px">
-                                    <el-date-picker width="200" :default-value="renewalForm.defaultValueShow" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
+                                    <el-date-picker width="200" :default-value="renewalForm.maxEndTime" v-model="renewalForm.timerValueStar" :picker-options="starPickerOptions" type="date" placeholder="开始日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
                             <el-col style="width:220px">
@@ -640,7 +640,6 @@ export default {
             timerValueEnd:"",
             remainDays:"",//服务期限
             maxEndTime:"",//续签的最后结束时间
-            defaultValueShow:"",//时间控件下拉后显示的时间
         },  //续签
       createId:"",//创建人ID
 
@@ -934,7 +933,6 @@ export default {
                 //  console.log(response.data.result);
                  self.renewalForm.remainDays = response.data.result.remainDays;
                  self.renewalForm.maxEndTime = response.data.result.maxEndTime;
-                 self.renewalForm.defaultValueShow = string(response.data.result.maxEndTime);
 
                 } else {
                     self.$message({
