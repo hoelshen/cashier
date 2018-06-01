@@ -160,8 +160,8 @@ let Utils = {
         },
         //小数点后两位
         digitTwo(val){
-            // var reg = /^0\.[1-9]{0,2}$/;
-            var reg = /^-?\d+\.?\d{0,2}$/.test(val)
+            var reg = /^\d+\.?\d{0,2}$/.test(val)
+            console.log(reg)
             return reg
         }   
     }

@@ -971,7 +971,7 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            if( !Number(self.editForm.annualExtendPerformance)|| !Number(self.editForm.annualPurchasePerformance)){
+            if( !Number(self.editForm.annualExtendPerformance) && !Number(self.editForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
@@ -1185,7 +1185,25 @@ export default {
                     this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
                 }
             }
-        },         
+        },  
+        'editForm.annualPurchasePerformance'(newVal,oldVal){
+            if(newVal==''){
+                newVal ='';
+            }else{
+                if(Utils.digitTwo(newVal)){
+                    
+                    this.$nextTick(() => {
+                            this.editForm.annualPurchasePerformance = newVal
+                            oldVal = newVal
+                        })
+
+                }else{
+                    this.$nextTick(() => {
+                        this.editForm.annualPurchasePerformance = oldVal
+                        })               
+                }
+            }
+        },               
     }
 }
 </script>
