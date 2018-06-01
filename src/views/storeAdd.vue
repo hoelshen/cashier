@@ -302,7 +302,7 @@ export default {
                 shopName: '',
                 name: '',
                 phone: '',
-                signedStartTime: Date.now() , //注册开始时间
+                signedStartTime:  new Date() , //注册开始时间
                 signedEndTime:'',  //注册结束时间
                 agentGradeId: '',
                 provinceCode: '',
@@ -479,6 +479,7 @@ export default {
                 return false
             }            
             //合同服务期限判断
+            console.log(data.signedStartTime)
             if (data.signedStartTime=='' || data.signedEndTime== '') {
                 self.loading = false;
                 self.$message({
