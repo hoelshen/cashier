@@ -1218,7 +1218,7 @@ export default {
         height: 20px;
         top: 9px;
         left: 164px;
-        z-index: 1000;
+        // z-index: 1000;
     }
     .delete_right {
         background: url("../assets/images/zph_close.png") no-repeat center;
@@ -1227,7 +1227,7 @@ export default {
         height: 20px;
         top: 9px;
         left: 164px;
-        z-index: 1000;
+        // z-index: 1000;
     }
 }
 .mark{

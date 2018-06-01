@@ -306,18 +306,11 @@
                     </el-table-column>
                     <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
-                    <el-table-colum prop="rebateRate" label='返利比例' width="127">
-                        <template slot-scope="">
-
-                        </template>
-                        <!-- {{agencyRelationsanceFormRebateRate}} -->
-                    </el-table-colum>
+                    <el-table-column prop="rebateRate" label='返利比例' width="127">
+                    </el-table-column>
                 
-                    <el-table-colum prop="rebateAmount" label='返利金额' width="127">
-                        <template>
-                            
-                        </template>        <!-- {{agencyRelationsanceFormRebateAmount}} -->
-                    </el-table-colum>
+                    <el-table-column prop="rebateAmount" label='返利金额' width="127">
+                    </el-table-column>
                 </el-table>
             </div>
             <div class="plPage clearfix">
@@ -680,15 +673,15 @@ export default {
         const self = this;
         self.agencyRelationsanceDialogVisible = true;
         self.loading = true;
-        console.log(Utils.formatYearDate(self.searchRegistTime) )
+        // console.log(Utils.formatYearDate(self.searchRegistTime) )
         self.$ajax({
             url:'/api/shop/shopManage/getAgentRelationList.jhtml',
             method: 'post',
             data: {
-                    'shopNo': 10074,
+                    'shopNo':self.detailForm.shopNo,
                     'pageIndex': self.currentPageAgency,
                     'pageSize': self.pageSizeAgency,
-                    'registTime': 2018,
+                    'registTime': Utils.formatYearDate(self.searchRegistTime),
             },
             transformRequest: [function(data) {
                     let ret = ''
@@ -704,7 +697,7 @@ export default {
             self.loading = false;
             if (response.data.success == 1) {
                     self.agencyRelationsanceForm = response.data.result.list;
-                    console.log(response.data.result.list)
+                    // console.log(response.data.result.list)
                     self.totalSizeAgency = response.data.result.total;
                     // self.agencyRelationsanceFormRebateRate = response.data.result.list.rebateRate;
                     // self.agencyRelationsanceFormRebateAmount = response.data.result.list.rebateAmount;
@@ -875,7 +868,7 @@ export default {
     },
     //改变代理商关系当前页
     agencyRelationsanceHandleCurrentChange(val){
-             let self = this;
+            let self = this;
             self.currentPageAgency = val;
             self.openAgencyRelationsance(this.detailForm.shopNo);
     },
@@ -938,7 +931,7 @@ export default {
           }).then(function (response) {
                self.loading = false;
              if (response.data.success == 1) {
-                 console.log(response.data.result);
+                //  console.log(response.data.result);
                  self.renewalForm.remainDays = response.data.result.remainDays;
                  self.renewalForm.maxEndTime = response.data.result.maxEndTime;
                  self.renewalForm.defaultValueShow = string(response.data.result.maxEndTime);
@@ -962,7 +955,7 @@ export default {
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
-         self.renewalDialogVisible = false
+        self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
               method: 'post',
@@ -989,7 +982,7 @@ export default {
                         message: "代理商续签成功~",
                         type: 'success'
                     });
-                 self.$router.push({ name:'storeDetail',params:{shopId:self.editForm.shopId} })
+                 self.$router.push({ name:'storeDetail',params:{shopId:self.detailForm.id} })
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1040,7 +1033,7 @@ export default {
 
                 self.contractInformationForm = response.data.result
                 self.totalSizeContractInformation = response.data.totalNums
-                console.log(self.totalSizeContractInformation)
+                // console.log(self.totalSizeContractInformation)
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -1121,6 +1114,9 @@ export default {
       .then(function(response) {
         self.loading = false;
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
+
+
+        console.log(self.detailForm.id)
         //橙色 
         self.detailForm.activeColor1 = 'ff6600';
         //蓝色
@@ -1130,15 +1126,15 @@ export default {
         // 灰色
         self.detailForm.activeColor4 = 'e3e5e6';
 
+         
     
-        console.log(response.data.result.ruleId)
         if(response.data.result.ruleId==null){
-            console.log('ok')
-             self.detailForm.businessExtendsRuleRuleNo =1; 
-             console.log(self.detailForm.businessExtendsRuleRuleNo)
+             self.detailForm.businessExtendsRuleRuleNo =1;
+        }else{
+            self.detailForm.businessExtendsRuleRuleNo = response.data.result.businessExtendsRule.ruleNo
         }
-
-        console.log(self.detailForm.businessExtendsRule.ruleNo)
+        self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
+        
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
