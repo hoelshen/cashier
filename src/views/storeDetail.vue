@@ -402,7 +402,7 @@
                             <span class=resign-name>{{renewalForm.resignName}}</span>
                             <span >{{renewalForm.resignPhone}}</span>
                         </div >
-                        <div  class="resign_wrap"> <span class="store-icon-wrap">
+                        <div  class="resign_wrap"> <span class="resign-store-icon-wrap">
                             <span v-if="renewalForm.resignAgentGradeId  == '266'">微店代理</span>
                             <span v-if="renewalForm.resignAgentGradeId  == '265'">区域代理</span>
                             <span v-if="renewalForm.resignAgentGradeId  == '31'">单店代理</span>
@@ -1401,22 +1401,24 @@ export default {
     color: #333333;
 }
 .resign_wrap{
-    padding-bottom:20px
+    padding-bottom:20px;
 }
 .name-tel{
     font-weight: bold;
+    padding:0 0 20px 10px;
 }
 .resign-name{
     padding-right: 30px;
 }
-.store-icon-wrap{
+.resign-store-icon-wrap{
     display: inline-block;
     height: 18px;
     line-height: 18px;
     color: white;
     background-color: #1699fd;
     border-radius:3px;
-    margin-left: 5px;
+    margin-left: 10px;
+    margin-right: 30px;
     font-size: 12px;
     padding: 0 3px;
 }
