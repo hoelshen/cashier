@@ -409,7 +409,7 @@
                             </el-col>
                             <el-col style="width:220px">
                                 <el-form-item label="至" label-width="25px">
-                                    <el-date-picker  width="200" v-model="renewalForm.timerValueEnd" :picker-options="endpPickerOptions" type="date" placeholder="结束日期"></el-date-picker>
+                                    <el-date-picker  width="200" v-model="renewalForm.timerValueEnd" :default-value="renewalForm.maxEndTime" :picker-options="endpPickerOptions" type="date" placeholder="结束日期"></el-date-picker>
                                 </el-form-item>
                             </el-col>
                         </el-row>
