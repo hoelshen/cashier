@@ -975,7 +975,7 @@ export default {
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
-                },6000)
+                },3000)
             }
         },
         //气泡提示
@@ -985,7 +985,7 @@ export default {
                     self.$refs.annualPurchasePerformance.showPopper=true
                     setTimeout(function(){
                         self.$refs.annualPurchasePerformance.showPopper=false
-                    },6000)
+                    },3000)
             }
 
         },
@@ -1071,7 +1071,6 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 if (response.data.success == 1) {
-                        console.log(self.relationshipRulesDialogForm)
                         self.relationshipRulesForm = response.data.result;
                         self.totalSize = response.data.totalNums;
                     } else {
