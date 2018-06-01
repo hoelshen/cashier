@@ -49,6 +49,8 @@
                         type="date"
                         placeholder="开始日期"  
                         style="float:left;width:46.5%;"
+                        :picker-options="selectionStartTime"
+                        disabled
                         >
                         </el-date-picker>
                         <span style="width:7%;float:left;text-align: center;">至</span>
@@ -300,7 +302,7 @@ export default {
                 shopName: '',
                 name: '',
                 phone: '',
-                signedStartTime: '', //注册开始时间
+                signedStartTime: Date.now() , //注册开始时间
                 signedEndTime:'',  //注册结束时间
                 agentGradeId: '',
                 provinceCode: '',
@@ -372,7 +374,9 @@ export default {
             //时间选择器
             selectionStartTime: {
                disabledDate(time) {
-                    return time.getTime() > Date.now();
+                    // console.log(time.getTime() = new Date() )
+                    // return  new Date()
+                    
                 }
             },
             selectionEndTime:{
