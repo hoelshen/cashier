@@ -220,43 +220,40 @@
                         </span>                                           
                     </el-col>
                 </el-row>
-                <div v-if="detailForm.shopType!='SELF_SUPPORT'">
-                    <el-row :gutter="5">
+                <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5">
                     <el-col :span="24"  style="padding-left: 7px;">
                         代理商关系：
-                          <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>            
+                        <span  class="router-link-active" type="primary" @click='openAgencyRelationsance(detailForm.shopNo)'>点击查看</span>            
                     </el-col>
-                </el-row>    
-                <el-row :gutter="5"  >
+                    </el-row>    
+                <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5"  >
                     <el-col :span="24" style="margin-left:-23px;">
-                       代理商年度业绩： 
+                    代理商年度业绩： 
                         <span  class="router-link-active" type="primary" @click='openAnnualAgents(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
-              
+            
                 </el-row>
-                <el-row :gutter="5">
+                <el-row   :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
-                        匹配规则：{{ detailForm.businessExtendsRuleRuleNo }} {{ detailForm.businessExtendsRuleName }}
+                        匹配规则：{{ detailForm.businessExtendsRuleRuleNo }} {{ detailForm.businessExtendsRuleName }} 
                     </el-col>
-                </el-row>
-                     
-                </div>
-                <el-row :gutter="5"> 
+                </el-row> 
+                <el-row  :gutter="5"> 
                     <el-col :span="24"  style="padding-left: 22px;">
                         运营人员：{{ detailForm.operator }}
                     </el-col>
                 </el-row>        
-                <el-row :gutter="5">
+                <el-row   :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
                         业务人员：{{ detailForm.salesMan }}
                     </el-col>  
                 </el-row>
-                <el-row :gutter="5">
+                <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5">
                     <el-col :span="24"  style="margin-left: -9px;">
                         合同签约信息：
                         <span  class="router-link-active" type="primary" @click='openContractInformation(detailForm.id,detailForm.shopNo)'>点击查看</span>
                     </el-col>
-                </el-row>                     
+                </el-row>   
             </div>
         </div>
 
@@ -418,13 +415,6 @@
                                 </el-form-item>
                             </el-col>
                         </el-row>
-                         <!-- <el-row>
-                            <el-col :span="18" >
-                                <el-form-item >
-                                    <span style="padding-left:348px;">选择续签时长 <span v-if="renewalForm.timerValueEnd">{{(renewalForm.timerValueEnd-renewalForm.timerValueStar)/(1000 * 60 * 60 * 24) }}</span> <span v-else>0</span> 天</span>
-                                </el-form-item>
-                            </el-col>
-                        </el-row> -->
                     </el-form>
                     <div slot="footer" >
                         <el-button @click="renewalDialogVisible = false">取 消</el-button>
@@ -737,7 +727,6 @@ export default {
             }).then(function (response) {
             self.loading = false;
             if (response.data.success == 1) {
-                console.log(response.data.result)
 
                 self.agencyRelationsanceFormExtendSuper = response.data.result.extendSuperShop
                 if(self.agencyRelationsanceFormExtendSuper){
@@ -1159,13 +1148,14 @@ export default {
         }else{
             self.detailForm.businessExtendsRuleRuleNo = response.data.result.businessExtendsRule.ruleNo
         }
+
         self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
-        
-        if(self.detailForm.operatorId =='' ){
+        if(self.detailForm.operator =='' ){
             self.detailForm.operator = "--"
-
         }
-
+        if(self.detailForm.salesMan =='' ){
+            self.detailForm.salesMan= "--"
+        }
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));

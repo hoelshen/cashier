@@ -20,7 +20,7 @@
                 <el-col :span="8">
                     <el-form-item label="店铺类型：" >
                         <el-radio v-model="editForm.shopType" label="AGENT"  disabled>代理商</el-radio>
-                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT" @click.native="deleteSelfSupport"  disabled>直营店铺</el-radio>
+                        <el-radio v-model="editForm.shopType" label="SELF_SUPPORT"   disabled>直营店铺</el-radio>
                     </el-form-item>
                 </el-col>
              
@@ -220,7 +220,7 @@
                             {{scope.row.agentPaymentDifinition=='ZUIPIN_EXTEND' ? '醉品拓展' :'业务拓展'}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="创建时间"  width="200">
+                    <el-table-column prop="createTime" label="创建时间"  width="120">
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
@@ -654,8 +654,8 @@ export default {
             if (!self.checkSession()) return;
             self.loading = true;
             const data = self.editForm;
-            // console.log(data)
-            // console.log(self.editForm.ruleId)
+            console.log(data)
+            console.log(self.editForm.ruleId)
 
             let editAddress = self.$refs.editAddress.getData();
             let editAgentAddress =(data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.editAgentAddress.getData() : null;
@@ -1070,7 +1070,9 @@ export default {
         },
         //删除规则
         deleteRuleTitle(){
-            this.editForm.ruleTitle = ''
+            this.editForm.ruleTitle = '';
+            this.editForm.ruleId = '';
+            this.editForm.businessExtendsRuleName = '';
             this.editForm = Object.assign({},this.editForm)
 
         },
