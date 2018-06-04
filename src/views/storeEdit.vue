@@ -57,14 +57,14 @@
                 <el-col :span="8">
                     <el-form-item v-show="editForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
                         <el-input v-show="editForm.agentGradeId ==265" v-model="editForm.annualPurchasePerformance" placeholder="进货业绩"></el-input>  
-                        <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-popover  placement="right" ref="annualPurchasePerformance"  class="grayColor" width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
                         <el-input v-show="editForm.agentGradeId !=265 " v-model.number="editForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'" >  
-                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" class="grayColor"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>                        
                         <el-input   v-popover:annualExtendPerformance v-model="editForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple"  >                              
                             <template slot="prepend">店铺拓展：  
@@ -164,7 +164,7 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"   class="grayColor"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;z-index:99"></span>  
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
@@ -1176,6 +1176,11 @@ export default {
     }
 }
 </script>
+<style >
+    .grayColor{
+          color: gray
+    }
+</style>
 <style lang='less' scoped>
 @import url("../assets/less/storeEdit.less");
 
