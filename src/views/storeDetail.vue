@@ -964,6 +964,21 @@ export default {
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
+        
+        if(!self.renewalForm.timerValueStar){
+            self.$message({
+                message: "合同开始时间不能为空",
+                type: 'error'
+            })
+            return
+        }
+        if(!self.renewalForm.timerValueEnd){
+            self.$message({
+                message: "合同结束时间不能为空",
+                type: 'error'
+            })
+            return
+        }
         self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
