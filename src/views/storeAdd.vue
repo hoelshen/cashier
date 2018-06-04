@@ -320,7 +320,7 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                annualPurchasePerformance:this.value,   //店铺年度目标
+                annualPurchasePerformance:'',   //店铺年度目标
                 annualExtendPerformance:'',   //店铺拓展
                 extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
@@ -386,7 +386,6 @@ export default {
             }
         }
     },
-    props:['value'],
     components: {
         addressComponent
     },
@@ -1156,16 +1155,11 @@ export default {
 
 
     },
-    // computed:{
-    //     'addForm.annualPurchasePerformance':{
-    //         get:function(){
-    //             return value
-    //         },
-    //         set:function(){
-    //             return value*2
-    //         }
-    //     }
-    // }
+    computed:{
+        annualExtendPerformance(){
+            this.addForm.annualPurchasePerformance =  Utils.digitInput(newval)
+        }
+    }
 
 }
 </script>
