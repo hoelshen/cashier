@@ -220,7 +220,7 @@
                             {{scope.row.agentPaymentDifinition=='ZUIPIN_EXTEND' ? '醉品拓展' :'业务拓展'}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
+                    <el-table-column prop="createTime" label="创建时间"  width="200">
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
@@ -627,23 +627,13 @@ export default {
                 for (let i of response.data.result) {
                     i.value = i.name;  //将CUSTOMER_NAME作为value
                 }
-
-                // console.log(!queryString)
-
                 if (!queryString) {
-                    // console.log(response.data.result)
-
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-                    // console.log(list)
-                    
                     callback(list);
-
                 } else {
-
                     let QS = queryString.toLocaleLowerCase();
-
                     for (let item of response.data.result) {
                         if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
                             list.push(item)
@@ -653,8 +643,6 @@ export default {
                         list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
                     }
                 }
-
-
                 callback(list);
             }).catch((error) => {
                 console.log(error);
@@ -991,13 +979,6 @@ export default {
         },
         //清除代理商编号、类别
         deleteExtendSuperNo(){
-
-            // if(shopType == 'AGENT' && agentGradeId == 31){
-
-            // }
-            // this.editForm.extendSuperNo = '';
-            // this.editForm.superAgentGradeId = '';
-
             this.editForm.areaClass = '';
         },
 
@@ -1007,19 +988,7 @@ export default {
             // this.editForm.areaClass = '';
         },
         areaClassNum(val){
-            // console.log(val);
-            // console.log('ok');
-
             this.editForm.annualExtendPerformance = val;
-            // console.log(this.editForm.annualExtendPerformance)
-
-
-            // this.$nextTick(() => {
-            //     console.log(val);
-            //     this.editForm.annualExtendPerformance = val;
-            //     console.log(this.editForm.annualExtendPerformance)
-            // })
-            
         },
         //重置直营店铺不要的项
         deleteSelfSupport(){
@@ -1045,6 +1014,7 @@ export default {
         },
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
+            console.log('ok')
             this.relationshipRulesDialogVisible = true;
             this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
             const self = this;
@@ -1108,13 +1078,13 @@ export default {
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
 
-                let self = this
-                if(self.editForm.ruleTitle){
-                    self.$refs.rule.showPopper=true
-                    setTimeout(function(){
-                        self.$refs.rule.showPopper=false
-                    },6000)                
-                }
+            let self = this
+            if(self.editForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+                setTimeout(function(){
+                    self.$refs.rule.showPopper=false
+                },6000)                
+            }
         },
 
     },

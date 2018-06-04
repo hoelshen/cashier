@@ -94,7 +94,7 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="代理商手机：">
-                        <span class="typeNumber"></span>                                                                    
+                        <!-- <span class="typeNumber"></span>                                                                     -->
                         <el-input v-model="addForm.phone"  :maxlength='phoneLength' placeholder="代理商手机"></el-input>
                         <div class="m-2-o">
                             代理商登录系统使用的账号
@@ -995,24 +995,6 @@ export default {
         resetPromptForm(){
             
         },
-        //校验除数字外的
-        // limitAnnualPurchasePerformance(val){
-        //     // console.log(val)
-        // },
-        changeCancle(){
-            this.relationshipRulesDialogForm = [];
-            this.relationshipRulesDialogVisible = false; 
-            this.isSearchRuleNo = '';  
-            
-            
-            let self = this
-            if(self.addForm.ruleTitle){
-                self.$refs.rule.showPopper=true
-                setTimeout(function(){
-                    self.$refs.rule.showPopper=false
-                },6000)                
-            }
-        },
         //打开保存确认弹窗
         onChangePromptVisible(){
             const self = this;
@@ -1020,7 +1002,7 @@ export default {
             self.loading = true;
             
             const data = self.addForm;
-            console.log(data)
+            // console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
             
             let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
@@ -1082,6 +1064,19 @@ export default {
         onRelationshipRulesDialogChange(val){
             this.currentPage = val;
             this.onRelationshipRulesDialogVisible();
+        },
+        //关闭规则选择弹窗
+        changeCancle(){
+            this.relationshipRulesDialogForm = [];
+            this.relationshipRulesDialogVisible = false; 
+            this.isSearchRuleNo = '';  
+            let self = this
+            if(self.addForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+                setTimeout(function(){
+                    self.$refs.rule.showPopper=false
+                },4000)                
+            }
         },
         //查询关系
         selectrelationshipRules(){
