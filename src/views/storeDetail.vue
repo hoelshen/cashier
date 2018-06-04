@@ -1062,7 +1062,7 @@ export default {
          self.currentPageContractInformation = val;
          self.openAgencyRelationsance(this.detailForm.shopNo);
     },
-        // 合同续签开始时间控制
+    // 合同续签开始时间控制
     starTime(){
         var self = this;
             return  {
@@ -1123,7 +1123,6 @@ export default {
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
 
 
-        console.log(self.detailForm.id)
         //橙色 
         self.detailForm.activeColor1 = 'ff6600';
         //蓝色
