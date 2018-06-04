@@ -166,7 +166,7 @@
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"       content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
-                            <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span>  
+                            <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;z-index:99"></span>  
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary"  v-popover:rule  @click="onRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
