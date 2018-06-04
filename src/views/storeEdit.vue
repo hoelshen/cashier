@@ -971,11 +971,11 @@ export default {
         //气泡提示
         annualExtendPerformanceTitple(){
             let self = this
-            if( !Number(self.editForm.annualExtendPerformance)|| !Number(self.editForm.annualPurchasePerformance)){
+            if( !Number(self.editForm.annualExtendPerformance) && !Number(self.editForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
                 setTimeout(function(){
                     self.$refs.annualExtendPerformance.showPopper=false
-                },6000)
+                },3000)
             }
         },
         //气泡提示
@@ -985,7 +985,7 @@ export default {
                     self.$refs.annualPurchasePerformance.showPopper=true
                     setTimeout(function(){
                         self.$refs.annualPurchasePerformance.showPopper=false
-                    },6000)
+                    },3000)
             }
 
         },
@@ -1071,7 +1071,6 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 if (response.data.success == 1) {
-                        console.log(self.relationshipRulesDialogForm)
                         self.relationshipRulesForm = response.data.result;
                         self.totalSize = response.data.totalNums;
                     } else {
@@ -1185,7 +1184,25 @@ export default {
                     this.editForm.annualExtendPerformance=( this.areaClassFlag && String(this.editForm.annualExtendPerformance)  ) || item.num
                 }
             }
-        },         
+        },  
+        'editForm.annualPurchasePerformance'(newVal,oldVal){
+            if(newVal==''){
+                newVal ='';
+            }else{
+                if(Utils.digitTwo(newVal)){
+                    
+                    this.$nextTick(() => {
+                            this.editForm.annualPurchasePerformance = newVal
+                            oldVal = newVal
+                        })
+
+                }else{
+                    this.$nextTick(() => {
+                        this.editForm.annualPurchasePerformance = oldVal
+                        })               
+                }
+            }
+        },               
     }
 }
 </script>

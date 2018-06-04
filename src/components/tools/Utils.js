@@ -157,7 +157,12 @@ let Utils = {
         digitInput(val){
             var val2 = val.replace(/[^\d]/g, ''); 
             return val=val2            
-        }
+        },
+        //小数点后两位
+        digitTwo(val){
+            var reg = /^\d+\.?\d{0,2}$/.test(val)
+            return reg
+        }   
     }
 
         export default Utils
