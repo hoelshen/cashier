@@ -168,7 +168,7 @@
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;z-index:99"></span>  
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary"  v-popover:rule  @click="onRelationshipRulesDialogVisible" >选择</el-button>    
+                            <el-button type="primary"  v-popover:rule  @click="onOpenRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
                 </el-col>
 
@@ -1013,6 +1013,11 @@ export default {
             },2000)
         },
         //打开规则关系弹窗
+        onOpenRelationshipRulesDialogVisible(val){
+            this.relationshipRulesDialogVisible = true;
+            this.onRelationshipRulesDialogVisible(1);
+        },        
+        //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
             this.relationshipRulesDialogVisible = true;
             this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
@@ -1026,6 +1031,7 @@ export default {
                     'pager.pageIndex': self.currentPage,
                     'pager.pageSize': self.pageSize,
                     'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
+                    'businessExtendsRuleVo.isSearchRuleNo' : 1                    
                 },
                 transformRequest: [function(data) {
                         let ret = ''
@@ -1055,12 +1061,12 @@ export default {
         },
         //查询关系
         selectrelationshipRulesMethod(){
-            this.onRelationshipRulesDialogVisible();
+            this.onRelationshipRulesDialogVisible(1);
         },
         //改变规则关系页码
         onRelationshipRulesDialogChange(val){
             this.currentPage = val;
-            this.onRelationshipRulesDialogVisible();
+            this.onRelationshipRulesDialogVisible(val);
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
