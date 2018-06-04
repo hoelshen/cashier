@@ -10,7 +10,7 @@
                         <span class="defaults-rules" v-if="isDefault==1">
                             默认规则
                         </span>
-                        <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
+                        <div class="content_closeBtn" @click="goBack">X</div>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -339,14 +339,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$confirm(`你确定要放弃编辑吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$router.push("/rebate");
-        this.$message("取消成功");
-      });
+        this.$router.push("/rebateList");
     },
     //判断是否超时
     checkSession() {
