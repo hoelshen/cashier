@@ -262,7 +262,7 @@
                             <span>{{ formatDayDate(scope.row.createTime)}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ruleNo" label="操作"  width="100"  align="right">
+                    <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
                             <span v-if="scope.row.id == addForm.ruleId">  
                                <span style="color:#909399" disabled="disabled"> 已选</span>
@@ -398,7 +398,6 @@ export default {
         },
         //获得区域等级等级
         getAreaName(){
-            console.log('ok')
             const self = this;
             //获取区域等级列表
             let url = '/api/shop/shopManage/getAreaClassByAreaName.jhtml?areaName=' + self.$refs.addAgentAddress.getData().cityName

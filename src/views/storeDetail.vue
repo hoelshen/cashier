@@ -1136,12 +1136,17 @@ export default {
          
     
         if(response.data.result.ruleId==null){
-             self.detailForm.businessExtendsRuleRuleNo =1;
+             self.detailForm.businessExtendsRuleRuleNo ="--";
         }else{
             self.detailForm.businessExtendsRuleRuleNo = response.data.result.businessExtendsRule.ruleNo
         }
         self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
         
+        if(self.detailForm.operatorId =='' ){
+            self.detailForm.operator = "--"
+
+        }
+
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
