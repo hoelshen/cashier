@@ -1025,8 +1025,7 @@ export default {
         onOpenRelationshipRulesDialogVisible(val){
             this.relationshipRulesDialogVisible = true;
             this.onRelationshipRulesDialogVisible(1);
-        }
-        ,
+        },
         onRelationshipRulesDialogVisible(value){
             const self = this;    
             self.loading = true;
