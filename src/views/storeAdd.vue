@@ -275,7 +275,7 @@
                 </el-table>
             </div>
             <div class="plPage clearfix"    >
-                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onOpenRelationshipRulesDialogVisible" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
+                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onRelationshipRulesDialogChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
                 </el-pagination>
             </div>
         </el-dialog>     
@@ -1022,10 +1022,8 @@ export default {
             this.changePromptDialogForm.signedEndTime = this.changePromptDialogForm.signedEndTime.replace('-','.')
         },
         //打开规则关系弹窗
-        onOpenRelationshipRulesDialogVisible(){
-            console.log(this.currentPage)
+        onOpenRelationshipRulesDialogVisible(val){
             this.relationshipRulesDialogVisible = true;
-            
             this.onRelationshipRulesDialogVisible(1);
         }
         ,
@@ -1036,7 +1034,7 @@ export default {
                 url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
                 method: 'post',
                 data:{
-                    'pager.pageIndex': self.currentPage,
+                    'pager.pageIndex': value,
                     'pager.pageSize': self.pageSize,
                     'businessExtendsRuleVo.ruleName':self.isSearchRuleNo || '',
                     'businessExtendsRuleVo.isSearchRuleNo' : 1
@@ -1070,7 +1068,7 @@ export default {
         //改变规则关系页码
         onRelationshipRulesDialogChange(val){
             this.currentPage = val;
-            this.onRelationshipRulesDialogVisible();
+            this.onRelationshipRulesDialogVisible(val);
         },
         //关闭规则选择弹窗
         changeCancle(){
