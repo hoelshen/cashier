@@ -634,7 +634,7 @@ export default {
       searchRegistTime:"",       //搜索关系
       searchRegistTimeAnnual:"",   //搜索年度业绩
       searchContractInformationTime:'',  //搜索合同签约信息
-      renewalTitle:'',
+      renewalTitle:'代理商续签',
 
 
         renewalForm:{
@@ -940,6 +940,10 @@ export default {
                  self.renewalForm.remainDay = response.data.result.remainDay;
                  self.renewalForm.remainYear = response.data.result.remainYear;
                  self.renewalForm.maxEndTime = response.data.result.maxEndTime;
+                  // 代理商的店铺名字/手机号码/店铺类型
+                self.renewalForm.resignAgentGradeId = response.data.result.agentGradeId;
+                self.renewalForm.resignName = response.data.result.agentName;
+                self.renewalForm.resignPhone = response.data.result.phone;
 
                 } else {
                     self.$message({
@@ -959,6 +963,21 @@ export default {
         if (!this.checkSession()) return;
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
+        }
+        
+        if(!self.renewalForm.timerValueStar){
+            self.$message({
+                message: "合同开始时间不能为空",
+                type: 'error'
+            })
+            return
+        }
+        if(!self.renewalForm.timerValueEnd){
+            self.$message({
+                message: "合同结束时间不能为空",
+                type: 'error'
+            })
+            return
         }
         self.renewalDialogVisible = false
         self.$ajax({
@@ -1040,6 +1059,7 @@ export default {
 
                 self.contractInformationForm = response.data.result
                 self.totalSizeContractInformation = response.data.totalNums
+                       
                 // console.log(self.totalSizeContractInformation)
                 } else {
                     self.$message({
@@ -1202,10 +1222,7 @@ export default {
         self.detailForm.endTime = response.data.result.remainDay;
 
 
-        // 代理商的店铺名字/手机号码/店铺类型
-        self.renewalForm.resignAgentGradeId = response.data.result.agentGradeId;
-        self.renewalForm.resignName = response.data.result.name;
-        self.renewalForm.resignPhone = response.data.result.phone;
+
 
         
 

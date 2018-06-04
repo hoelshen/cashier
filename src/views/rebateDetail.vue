@@ -5,18 +5,18 @@
         <el-form ref="form" >
             <el-row>
                 <el-col>
-                    <el-form-item label="规则名称：">
+                    <el-form-item label="规则名称：" label-width="11.5%">
                         <span>{{businessExtendsRuleName}}</span>
                         <span class="defaults-rules" v-if="isDefault==1">
                             默认规则
                         </span>
-                        <!-- <div class="content_closeBtn" @click="goBack">X</div> -->
+                        <div class="content_closeBtn" @click="goBack">X</div>
                     </el-form-item>
                 </el-col>
             </el-row>
             <el-row>
                 <el-col>
-                    <el-form-item label="适配代理商：">
+                    <el-form-item label="适配代理商：" label-width="11.5%">
                         <el-button type="primary" @click="relatedAgenciesData(ruleNo,urlId)">查看详情</el-button>
                     </el-form-item>
                 </el-col>
@@ -26,17 +26,16 @@
                 
             </el-row>
             <el-row class="text-wrap">
-                <p>
-                    <span>进货款定义：</span>
-                    <span>首批进货款</span>
-                </p>
+                <el-col>
+                    <el-form-item  label="进货款定义：" label-width="12%" style="margin-bottom:0">
+                        <span>首批进货款</span>
+                    </el-form-item>
+                </el-col>
             </el-row>
-          
-
           
             <el-row  class="text-wrap">
               <el-col >
-                  <el-form-item label="时间周期：" >
+                  <el-form-item label="时间周期：" label-width="12%" style="margin-bottom:0">
                           <el-radio  v-model="form.zpTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
                           <el-radio v-model="form.zpTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
                   </el-form-item>
@@ -119,14 +118,15 @@
                 <h2>代理商拓展返利设置</h2>
               </el-row>
               <el-row class="text-wrap">
-                  <p>
-                      <span>进货款定义：</span>
-                      <span>首批进货款</span>
-                  </p>
+                 <el-col>
+                    <el-form-item  label="进货款定义：" label-width="12%"  style="margin-bottom:0">
+                        <span>首批进货款</span>
+                    </el-form-item>
+                </el-col>
               </el-row>
               <el-row class="text-wrap">
                     <el-col :span="12">
-                        <el-form-item label="时间周期：" label-width="200px">
+                        <el-form-item label="时间周期：" label-width="24%" style="margin-bottom:0">
                                 <el-radio v-model="form.dlTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
                                 <el-radio v-model="form.dlTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
                         </el-form-item>
@@ -257,7 +257,7 @@
                       </el-table-column>
                       <el-table-column  label="合同服务期限" width="200" align="right">
                            <template slot-scope="scope">
-                                <span>{{scope.row.signedStartTime}}</span>-
+                                <span>{{scope.row.signedStartTime}}</span>~
                                 <span>{{scope.row.signedEndTime}}</span>
                                
                             </template>
@@ -339,14 +339,7 @@ export default {
   },
   methods: {
     goBack() {
-      this.$confirm(`你确定要放弃编辑吗？`, "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
-      }).then(() => {
-        this.$router.push("/rebate");
-        this.$message("取消成功");
-      });
+        this.$router.push("/rebateList");
     },
     //判断是否超时
     checkSession() {
