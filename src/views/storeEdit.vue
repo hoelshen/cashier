@@ -1014,7 +1014,6 @@ export default {
         },
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
-            console.log('ok')
             this.relationshipRulesDialogVisible = true;
             this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
             const self = this;
@@ -1056,7 +1055,7 @@ export default {
         },
         //查询关系
         selectrelationshipRulesMethod(){
-            this.onRelationshipRulesDialogVisible(this.selectrelationshipRulesValue);
+            this.onRelationshipRulesDialogVisible();
         },
         //改变规则关系页码
         onRelationshipRulesDialogChange(val){
