@@ -1087,7 +1087,7 @@ export default {
         },
         //查询关系
         selectrelationshipRules(){
-            this.onRelationshipRulesDialogVisible(this.isSearchRuleNo);
+            this.onRelationshipRulesDialogVisible(1);
         },
         deleteRuleTitle(){
             this.addForm.ruleTitle = '';
