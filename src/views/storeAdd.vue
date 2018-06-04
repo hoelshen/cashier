@@ -174,7 +174,7 @@
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary"  v-popover:rule   @click="onRelationshipRulesDialogVisible" >选择</el-button> 
+                            <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible" >选择</el-button> 
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -997,6 +997,7 @@ export default {
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
+
             const self = this;
             if (!this.checkSession()) return;
             self.loading = true;
@@ -1022,6 +1023,7 @@ export default {
         },
         //打开规则关系弹窗
         onOpenRelationshipRulesDialogVisible(){
+            console.log(this.currentPage)
             this.relationshipRulesDialogVisible = true;
             
             this.onRelationshipRulesDialogVisible(1);
