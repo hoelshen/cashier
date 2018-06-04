@@ -59,11 +59,11 @@
                 </el-row>
 
 
-                <el-row :gutter="10" v-if="detailForm.shopType =='AGENT'">
-                    <el-col :span="24" v-if="detailForm.agentGradeId == 265">
+                <el-row :gutter="10" >
+                    <el-col :span="24" v-if="detailForm.agentGradeId == 265 && detailForm.shopType =='AGENT'">
                         店铺代理区域：<span class="font-color">{{ detailForm.agentProvinceName }}/{{detailForm.agentCityName}}/{{detailForm.agentCountyName}}</span>
                     </el-col>
-                    <el-col :span="24" v-if="detailForm.agentGradeId == 266 || detailForm.agentGradeId ==31">
+                    <el-col :span="24" v-if="detailForm.agentGradeId == 266 || detailForm.agentGradeId ==31 || detailForm.shopType =='SELF_SUPPORT' ">
                         店铺所属区域：<span class="font-color">{{ detailForm.belongProvinceName }}/{{detailForm.belongCityName}}/{{detailForm.belongCountryName}}</span>
                     </el-col>
                 </el-row>
@@ -1131,7 +1131,7 @@ export default {
         self.loading = false;
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
 
-
+        console.log(self.detailForm.shopType)
         //橙色 
         self.detailForm.activeColor1 = 'ff6600';
         //蓝色
