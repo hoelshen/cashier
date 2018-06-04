@@ -1248,7 +1248,11 @@ export default {
 };
 </script>
 
-
+<style >
+    .grayColor{
+          color: gray
+    }
+</style>
 <style lang='less' scoped>
 @import url("../assets/less/storeDetail.less");
 .el-message-box {

@@ -275,7 +275,7 @@
                 </el-table>
             </div>
             <div class="plPage clearfix"    >
-                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onRelationshipRulesDialogChange" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
+                <el-pagination style="margin-top: 10px;float: right;"  @current-change="onOpenRelationshipRulesDialogVisible" :current-page="currentPage" :page-size="pageSize" layout=" prev, pager, next, jumper" :total="totalSize" >
                 </el-pagination>
             </div>
         </el-dialog>     
@@ -1021,8 +1021,13 @@ export default {
             this.changePromptDialogForm.signedEndTime = this.changePromptDialogForm.signedEndTime.replace('-','.')
         },
         //打开规则关系弹窗
-        onRelationshipRulesDialogVisible(value){
+        onOpenRelationshipRulesDialogVisible(){
             this.relationshipRulesDialogVisible = true;
+            
+            this.onRelationshipRulesDialogVisible(1);
+        }
+        ,
+        onRelationshipRulesDialogVisible(value){
             const self = this;    
             self.loading = true;
             self.$ajax({
@@ -1067,8 +1072,10 @@ export default {
         },
         //关闭规则选择弹窗
         changeCancle(){
+            // debugger      
+            this.relationshipRulesDialogVisible = false;                   
             this.relationshipRulesDialogForm = [];
-            this.relationshipRulesDialogVisible = false; 
+            this.currentPage = 1;            
             this.isSearchRuleNo = '';  
             let self = this
             if(self.addForm.ruleTitle){
