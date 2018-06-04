@@ -68,7 +68,7 @@
                         <el-input v-show="addForm.agentGradeId ==265"  v-model="addForm.annualPurchasePerformance"    placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>
-                        <span class="typeNumber"></span>                                            
+                        <!-- <span class="typeNumber"></span>                                             -->
                         <el-input v-show="addForm.agentGradeId !=265 "  v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
@@ -76,7 +76,7 @@
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
                         <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
-                        <span class="typeNumber"></span>                                                                    
+                        <!-- <span class="typeNumber"></span>                                                                     -->
                         <el-input  v-popover:annualExtendPerformance  v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
                             </template>
@@ -235,13 +235,13 @@
         <el-dialog :title="relationshipRulesTitle"   :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
            <div style="width: 287px;position: relative;float: right;">
                 <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
-                <el-input placeholder="请输入规则编号或规则名称" v-model="isSearchRuleNo"></el-input>
+                    <el-input placeholder="请输入规则编号或规则名称" v-model="isSearchRuleNo"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
                     <el-button type="primary" @click="selectrelationshipRules">查询</el-button>
                 </div>
            </div>
-            <div >
+            <div>
                 <el-table :data="relationshipRulesForm" :height="440" style="width: 100%;">
                     <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
@@ -252,17 +252,17 @@
                     </el-table-column>
                     <el-table-column prop="businessExtendsRuleName" label="规则名称" :show-overflow-tooltip="true"  width="200" >
                     </el-table-column>
-                    <el-table-column prop="agentPaymentDifinition" label="规则类型" width="100">
+                    <el-table-column prop="agentPaymentDifinition" label="规则类型" width="120">
                         <template scope="scope">
                             {{scope.row.agentPaymentDifinition=='ZUIPIN_EXTEND' ? '醉品拓展' :'业务拓展'}}
                         </template>
                     </el-table-column>
-                    <el-table-column prop="createTime" label="创建时间"  width="200"  align="right">
+                    <el-table-column prop="createTime" label="创建时间"  width="120"  >
                         <template  scope="scope">
                             <span>{{ formatDayDate(scope.row.createTime)}}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
+                    <el-table-column prop="ruleNo" label="操作"  width="100"  align="right">
                         <template slot-scope="scope">
                             <span v-if="scope.row.id == addForm.ruleId">  
                                <span style="color:#909399" disabled="disabled"> 已选</span>
@@ -1152,7 +1152,22 @@ export default {
                 }
             }
         },
-
+        'addForm.annualExtendPerformance'(newval,oldval){
+            if(newval==''){
+                newval ='';
+            }else{
+                if(Utils.digitZero(newval)){
+                    this.$nextTick(() => {
+                            this.addForm.annualExtendPerformance = newval
+                            oldval = newval
+                    })
+                }else{
+                    this.$nextTick(() => {
+                        this.addForm.annualExtendPerformance = oldval
+                    })               
+                }
+            }            
+        }
 
     },
     computed:{
