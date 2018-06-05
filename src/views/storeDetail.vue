@@ -1006,7 +1006,10 @@ export default {
                     });
 
                  console.log(self.detailForm.id)
-                 self.$router.go(0);
+                 self.$nextTick(()=>{
+                      self.$router.go(0);
+                 })
+                
                 } else {
                     self.$message({
                         message: response.data.msg,
