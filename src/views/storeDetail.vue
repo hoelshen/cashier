@@ -288,7 +288,7 @@
                             <span>{{scope.$index + (currentPageAgency -1 ) * 30 + 1 }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="agentNo" label="编号" width="127">
+                    <el-table-column prop="agentNo" label="下级编号" width="127">
                     </el-table-column>
                     <el-table-column prop="agentName" label="姓名" width="150">
                     </el-table-column>
@@ -966,6 +966,13 @@ export default {
         if(!self.renewalForm.timerValueEnd){
             self.$message({
                 message: "合同结束时间不能为空",
+                type: 'error'
+            })
+            return
+        }
+        if(self.renewalForm.timerValueEnd<self.renewalForm.timerValueStar){
+            self.$message({
+                message: "开始时间不能大于结束时间",
                 type: 'error'
             })
             return
