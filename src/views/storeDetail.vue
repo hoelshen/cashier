@@ -993,7 +993,7 @@ export default {
                         type: 'success'
                     });
 
-                 console.log(self.detailForm.id)
+                //  console.log(self.detailForm.id)
                  self.$router.go(0);
                 } else {
                     self.$message({
