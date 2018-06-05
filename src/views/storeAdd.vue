@@ -235,7 +235,7 @@
         <el-dialog :title="relationshipRulesTitle"   :visible.sync="relationshipRulesDialogVisible"  size="180%"  :before-close="changeCancle">
            <div style="width: 287px;position: relative;float: right;">
                 <div style="width:216px;float:left;;padding: 10px;padding-bottom:15px;">
-                    <el-input placeholder="请输入规则编号或规则名称" v-model="isSearchRuleNo"></el-input>
+                    <el-input placeholder="请输入规则编号或规则名称" @keyup.enter.native="selectrelationshipRules" v-model="isSearchRuleNo"></el-input>
                 </div>
                 <div style="width:50px;float:left;padding: 10px;padding-bottom:15px">
                     <el-button type="primary" @click="selectrelationshipRules">查询</el-button>
