@@ -1082,6 +1082,9 @@ export default {
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
             this.currentPage = 1;
+            this.selectrelationshipRulesValue = '';  
+            console.log(this.selectrelationshipRulesValue) 
+                        
             let self = this
             if(self.editForm.ruleTitle){
                 self.$refs.rule.showPopper=true
