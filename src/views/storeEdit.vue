@@ -999,7 +999,6 @@ export default {
         deleteExtendSuperNo(){
             this.editForm.areaClass = '';
         },
-
         deleteExtendSuperNoName(){
             this.editForm.extendSuperNo = '';
             this.editForm.superAgentGradeId = '';
@@ -1038,10 +1037,8 @@ export default {
         },        
         //打开规则关系弹窗
         onRelationshipRulesDialogVisible(value){
-            this.relationshipRulesDialogVisible = true;
             this.relationshipRulesTitle="规则选择（代理商编号："+ this.editForm.shopNo +"）" 
             const self = this;
-    
             self.loading = true;
             self.$ajax({
                 url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
@@ -1103,13 +1100,13 @@ export default {
         changeCancle(){
             this.relationshipRulesDialogForm = [];
             this.relationshipRulesDialogVisible = false; 
-
+            this.currentPage = 1;
             let self = this
             if(self.editForm.ruleTitle){
                 self.$refs.rule.showPopper=true
-                setTimeout(function(){
-                    self.$refs.rule.showPopper=false
-                },6000)                
+                // setTimeout(function(){
+                //     self.$refs.rule.showPopper=false
+                // },6000)                
             }
         },
 

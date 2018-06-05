@@ -1064,7 +1064,6 @@ export default {
         },
         //关闭规则选择弹窗
         changeCancle(){
-            // debugger      
             this.relationshipRulesDialogVisible = false;                   
             this.relationshipRulesDialogForm = [];
             this.currentPage = 1;            
@@ -1072,9 +1071,9 @@ export default {
             let self = this
             if(self.addForm.ruleTitle){
                 self.$refs.rule.showPopper=true
-                setTimeout(function(){
-                    self.$refs.rule.showPopper=false
-                },4000)                
+                // setTimeout(function(){
+                //     self.$refs.rule.showPopper=false
+                // },4000)                
             }
         },
         //查询关系
