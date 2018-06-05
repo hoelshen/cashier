@@ -68,7 +68,6 @@
                         <el-input v-show="addForm.agentGradeId ==265"  v-model="addForm.annualPurchasePerformance"    placeholder="进货业绩"  @blur="annualExtendPerformanceTitple"></el-input>  
                         <el-popover  placement="right" ref="annualPurchasePerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor" content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>
-                        <!-- <span class="typeNumber"></span>                                             -->
                         <el-input v-show="addForm.agentGradeId !=265 "  v-model="addForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>
                 </el-col>
@@ -76,7 +75,6 @@
                     <el-form-item  v-if="addForm.agentGradeId==265 && addForm.shopType!='SELF_SUPPORT'"  label-width="0px"   style="padding-left: 40px;">
                         <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" manual=true    popper-class="grayColor"   content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>
-                        <!-- <span class="typeNumber"></span>                                                                     -->
                         <el-input  v-popover:annualExtendPerformance  v-model="addForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple" > 
                             <template slot="prepend">店铺拓展：  
                             </template>
@@ -155,8 +153,8 @@
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
-                            <span class="search_left"></span>
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                            
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -170,7 +168,7 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200" class="grayColor" popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
@@ -325,7 +323,8 @@ export default {
                 extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
                 extendSuperNo:'',    //上级编号
-                extendSuperName:'',  //上级姓名  
+                extendSuperName:'',  //上级姓名 
+                extendSuperNoName:'', 
                 areaClass:'',     //所属类别
                 belongProvince:'', //所属区域
                 belongCity:'',     //所属城市
@@ -664,9 +663,9 @@ export default {
             let self = this            
             if( !Number(self.addForm.annualExtendPerformance) && !Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
-                setTimeout(function(){
-                    self.$refs.annualExtendPerformance.showPopper=false
-                },3000)
+                // setTimeout(function(){
+                //     self.$refs.annualExtendPerformance.showPopper=false
+                // },3000)
             }
         },
         //气泡提示
@@ -674,9 +673,9 @@ export default {
             let self = this
             if(!Number(self.addForm.annualPurchasePerformance) ){
                     self.$refs.annualPurchasePerformance.showPopper=true
-                    setTimeout(function(){
-                        self.$refs.annualPurchasePerformance.showPopper=false
-                    },3000)
+                    // setTimeout(function(){
+                    //     self.$refs.annualPurchasePerformance.showPopper=false
+                    // },3000)
             }
         },
         //气泡提示
@@ -684,9 +683,9 @@ export default {
             let self = this
             if(self.addForm.ruleTitle){
                 self.$refs.rule.showPopper=true
-                setTimeout(function(){
-                    self.$refs.rule.showPopper=false
-                },6000)                
+                // setTimeout(function(){
+                //     self.$refs.rule.showPopper=false
+                // },6000)                
             }
         },
         // 新增店铺
@@ -916,18 +915,13 @@ export default {
                     i.value = i.name;  //将CUSTOMER_NAME作为value
                 }
 
-                // console.log(!queryString)
-
                 if (!queryString) {
-                    // console.log(response.data.result)
 
                     for (let item of response.data.result) {
                         list.push(item)
                     }
                     // console.log(list)
-                    
                     callback(list);
-
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
@@ -941,8 +935,6 @@ export default {
                         list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
                     }
                 }
-
-
                 callback(list);
             }).catch((error) => {
                 console.log(error);
@@ -960,6 +952,7 @@ export default {
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
                 this.addForm.extendSuperName = item.name;
+                this.addForm.extendSuperNoName = item.shopNo + ' ' +item.name;
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 this.addForm.state = item.state;
         },  
