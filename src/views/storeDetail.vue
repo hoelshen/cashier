@@ -1183,7 +1183,9 @@ export default {
         //年度目标
 
         //自己的长度
-        if(detailForm.annualPurchasePerformance == 0){
+        
+
+        if(self.detailForm.annualPurchasePerformance == 0){
             self.annualOwnAreadyPurchasePerformanceRateObject.width = 144 + 'px'
             self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1  //红色
             
