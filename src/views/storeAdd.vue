@@ -168,7 +168,7 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200" class="grayColor" popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
@@ -663,9 +663,9 @@ export default {
             let self = this            
             if( !Number(self.addForm.annualExtendPerformance) && !Number(self.addForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
-                setTimeout(function(){
-                    self.$refs.annualExtendPerformance.showPopper=false
-                },3000)
+                // setTimeout(function(){
+                //     self.$refs.annualExtendPerformance.showPopper=false
+                // },3000)
             }
         },
         //气泡提示
@@ -673,9 +673,9 @@ export default {
             let self = this
             if(!Number(self.addForm.annualPurchasePerformance) ){
                     self.$refs.annualPurchasePerformance.showPopper=true
-                    setTimeout(function(){
-                        self.$refs.annualPurchasePerformance.showPopper=false
-                    },3000)
+                    // setTimeout(function(){
+                    //     self.$refs.annualPurchasePerformance.showPopper=false
+                    // },3000)
             }
         },
         //气泡提示
@@ -683,9 +683,9 @@ export default {
             let self = this
             if(self.addForm.ruleTitle){
                 self.$refs.rule.showPopper=true
-                setTimeout(function(){
-                    self.$refs.rule.showPopper=false
-                },6000)                
+                // setTimeout(function(){
+                //     self.$refs.rule.showPopper=false
+                // },6000)                
             }
         },
         // 新增店铺
