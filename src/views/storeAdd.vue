@@ -144,7 +144,7 @@
             <el-row >
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="deleteExtendSuperNo" >醉品自开发</el-radio>
+                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN"  >醉品自开发</el-radio>
                             <el-radio v-model="addForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                          
                     </el-form-item>
                 </el-col>
@@ -659,6 +659,7 @@ export default {
             this.addForm.superAgentGradeId = '';
             this.addForm.extendSuperNoName = '';
         },
+        //清除代理商
         deleteExtendSuperType(val){  
             this.addForm.extendSuperNo= '';
             this.addForm.superAgentGradeId= '';
@@ -1013,9 +1014,7 @@ export default {
 
             this.changePromptDialogFormVisible = true;
             this.changePromptDialogForm.signedStartTime = dataSignedStartTime
-            this.changePromptDialogForm.signedStartTime = this.changePromptDialogForm.signedStartTime.replace('-','.')
             this.changePromptDialogForm.signedEndTime = dataSignedEndTime
-            this.changePromptDialogForm.signedEndTime = this.changePromptDialogForm.signedEndTime.replace('-','.')
         },
         //打开规则关系弹窗
         onOpenRelationshipRulesDialogVisible(val){
