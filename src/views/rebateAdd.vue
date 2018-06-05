@@ -4,7 +4,7 @@
         <el-form ref="form" :model="form" :rules="rules">
             <el-row >
                 <el-col :span="12">
-                    <el-form-item label="规则名称："  label-width="100px"
+                    <el-form-item label="规则名称："   label-width="125px"
                      prop="businessExtendsRuleName"
                             >
                         <el-input  placeholder="请输入规则名称，最多25个汉字" :maxlength="50" v-model="form.businessExtendsRuleName"></el-input>
@@ -17,15 +17,16 @@
                
             </el-row>
             <el-row class="text-wrap">
-                <p>
-                    <span>进货款定义：</span>
-                    <span>首批进货款</span>
-                </p>
+                <el-col>
+                    <el-form-item  label="进货款定义：" label-width="130px" style="margin-bottom:0">
+                        <span>首批进货款</span>
+                    </el-form-item>
+                </el-col>
             </el-row>
             
             <el-row  class="text-wrap">
                 <el-col  class="fl-left">
-                    <el-form-item label="时间周期：" label-width="200px">
+                    <el-form-item label="时间周期：" label-width="250px">
                             <el-radio  v-model="form.zpTimeChose"  label="CONTRACT_TERM" >合同期</el-radio>
                             <el-radio v-model="form.zpTimeChose" label="TIME_RANGE">时间范围</el-radio>
                     </el-form-item>
@@ -225,14 +226,15 @@
             <h2>代理商拓展返利设置</h2>
             </el-row>
             <el-row class="text-wrap">
-                <p>
-                    <span>进货款定义：</span>
-                    <span>首批进货款</span>
-                </p>
+               <el-col>
+                    <el-form-item  label="进货款定义：" label-width="130px" style="margin-bottom:0">
+                        <span>首批进货款</span>
+                    </el-form-item>
+                </el-col>
             </el-row>
             <el-row class="text-wrap">
                 <el-col :span="12" class="fl-left">
-                    <el-form-item label="时间周期：" label-width="200px">
+                    <el-form-item label="时间周期：" label-width="250px">
                             <el-radio v-model="form.dlTimeChose"  label="CONTRACT_TERM">合同期</el-radio>
                             <el-radio v-model="form.dlTimeChose" label="TIME_RANGE">时间范围</el-radio>
                     </el-form-item>
