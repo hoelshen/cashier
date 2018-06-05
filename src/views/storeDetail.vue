@@ -198,8 +198,7 @@
             <div class="orderInfo line-middle"  v-if="detailForm.isParticipateRebate==1" style="float: right;width:28%">
                 <div class="calendar" style="top:7%">
                     <p class="calendarMessage_top">{{message}}</p><br>
-                    <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.endTime}}</p>
-                    <!-- <timeComponent class="calendarMessage_bottom"  @time-end=" message = '倒计时结束' " :endTime='detailForm.endTime'></timeComponent>   -->
+                    <p style="position:absolute;left: 41px;top: 49px;">{{detailForm.remainDay}}</p>
                 </div> 
             </div>
         </div>
@@ -582,7 +581,7 @@ export default {
         activeColor1:"ff6600",   //橙色
         activeColor2:"ffd199",     //红色
         activeColor3:'',
-        endTime: '',        
+        remainDay: '',        
         height:10,
         businessExtendsRuleRuleNo:'',
         businessExtendsRuleName:'',
@@ -1154,11 +1153,16 @@ export default {
         }
 
         self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
+
         if(self.detailForm.operator =='' ){
             self.detailForm.operator = "--"
         }
         if(self.detailForm.salesMan =='' ){
             self.detailForm.salesMan= "--"
+        }
+
+        if(self.detailForm.remainDay == null){
+            self.detailForm.remainDay= "--"
         }
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
@@ -1213,14 +1217,6 @@ export default {
         //  2.未完成
         self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
-        self.detailForm.endTime = response.data.result.remainDay;
-
-
-
-
-        
-
-        
       })
       .catch(function(err) {
         self.loading = false;
