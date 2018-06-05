@@ -623,7 +623,7 @@ export default {
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
 
-            queryString = !this.editForm.extendSuperNo ? '' : queryString;
+            queryString = this.editForm.extendSuperNo ? '' : queryString;
     
             var list = [{}];
             //调用的后台接口
@@ -1003,6 +1003,7 @@ export default {
         deleteExtendSuperNoName(){
             this.editForm.extendSuperNo = '';
             this.editForm.superAgentGradeId = '';
+            this.editForm.extendSuperNoName = '';
             // this.editForm.areaClass = '';
         },
         areaClassNum(val){
