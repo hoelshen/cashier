@@ -455,7 +455,6 @@ export default {
                     }
             }
             //收件地址判断
-            // console.log(this.addressFlage)
             if(!editAddress){
                 self.loading = false;                
                 self.$message({
@@ -485,7 +484,6 @@ export default {
                     }      
             }
             //所属区域判断
-            // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
             if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
                  if (!editBelongAddress.provinceCode || !editBelongAddress.cityCode || !editBelongAddress.areaCode) {
                     self.loading = false;
@@ -520,7 +518,6 @@ export default {
             }
 
             //年度业绩目标
-            // console.log(!data.annualPurchasePerformance==0)
             if(data.shopType != 'SELF_SUPPORT'){
                 if(!data.annualPurchasePerformance && !data.annualPurchasePerformance==0 ){
                     self.loading = false;
@@ -570,7 +567,6 @@ export default {
 
             //业务人员判断
             if(!data.salesMan){
-                // console.log(data.salesMan)
                 self.loading = false;
                 self.$message({
                     message:'业务人员为必填项',
@@ -622,9 +618,7 @@ export default {
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
-
             queryString = this.editForm.extendSuperNo ? '' : queryString;
-    
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
@@ -862,9 +856,7 @@ export default {
             });
         },
         operatorQuerySearchAsync(queryString, callback) {
-    
             queryString = !this.editForm.operator ? '' : queryString;
-
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
@@ -875,21 +867,17 @@ export default {
                     i.value = i.userName;  //将CUSTOMER_NAME作为
                 }
                 if (!queryString) {
-                    // console.log(response.data.result)
                     for (let item of response.data.result) {
                         list.push(item)
                     }
                     callback(list);
                 } else {
-
                     let QS = queryString.toLocaleLowerCase();
-
                     for (let item of response.data.result) {
                         if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
                             list.push(item)
                         }
                     }
-                    // console.log(list);
                     if (list.length == 1) {
                         list.push({ value: `没有匹配结果"${queryString}"` });
                     }
@@ -900,8 +888,7 @@ export default {
         });
         },
         salesManQuerySearchAsync(queryString, callback) {
-             queryString = !this.editForm.salesMan ? '' : queryString;
-        
+            queryString = !this.editForm.salesMan ? '' : queryString;
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
@@ -911,17 +898,11 @@ export default {
                 for (let i of response.data.result) {
                     i.value = i.userName;  //将CUSTOMER_NAME作为
                 }
-
-
                 if (!queryString) {
-                    // console.log(response.data.result)
-
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-
                     callback(list);
-
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
@@ -1104,9 +1085,6 @@ export default {
             let self = this
             if(self.editForm.ruleTitle){
                 self.$refs.rule.showPopper=true
-                // setTimeout(function(){
-                //     self.$refs.rule.showPopper=false
-                // },6000)                
             }
         },
 
@@ -1144,7 +1122,14 @@ export default {
             self.loading = false;
             self.editForm = response.data.result;
 
-            self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
+            // console.log(self.editForm)
+            // console.log(self.editForm.businessExtendsRule)
+            if(!self.editForm.businessExtendsRule){
+                self.editForm.ruleTitle = ''
+            }else{
+                 self.editForm.ruleTitle = self.editForm.businessExtendsRule.ruleNo + ' '+ self.editForm.businessExtendsRule.businessExtendsRuleName;
+            }
+
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
             }else{
@@ -1158,7 +1143,18 @@ export default {
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-            self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.name
+
+            if(self.editForm.ruleId == null){
+                console.log('ok')
+                self.editForm.ruleId = '' 
+            }
+            console.log(self.editForm.extendSuperNo )
+            if(self.editForm.extendSuperNo==null){
+                self.editForm.extendSuperNoName = '';
+            }else{
+                self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.name
+            }
+
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -1176,7 +1172,6 @@ export default {
             }
         },  
         'editForm.annualPurchasePerformance'(newVal,oldVal){
-            console.log('ok')
             if(newVal==''){
                 newVal ='';
             }else{

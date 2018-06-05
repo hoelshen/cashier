@@ -156,7 +156,7 @@ export default {
         },
         areaList() {
             try {
-                console.log(this.CodeFlage)
+                // console.log(this.CodeFlage)
                 let data = this.cityList.filter(
                     val => val.code === this.select.cityCode
                 );
