@@ -25,34 +25,29 @@
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:36px;" >
-                        显示选项： <span class="font-color" >
-                                    <span style="position: absolute;left: 104px;" v-if="detailForm.isShow == 0" class="font-color">不显示到醉品线下M2O体验店</span>                               
-                                    <span  v-else  class="font-color" >显示到醉品线下M2O体验店</span>
-                                   </span>
+                    显示选项： <span class="font-color" >
+                                <span style="position: absolute;left: 104px;" v-if="detailForm.isShow == 0" class="font-color">不显示到醉品线下M2O体验店</span>                               
+                                <span  v-else  class="font-color" >显示到醉品线下M2O体验店</span>
+                                </span>
                     </el-col>
-            
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:20px;">
                         代理商姓名：<span class="font-color">{{ detailForm.name }}</span>
                     </el-col>
-                
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24"  style="padding-left:20px;">
                         代理商手机：<span class="font-color">{{ detailForm.phone }}</span>
                     </el-col>
-              
                 </el-row>
                 <el-row :gutter="10">
                     <el-col :span="24" style="padding-left:20px;" >
                         代理商状态：<span v-if="detailForm.state!=1" style="position:  relative;"> <div class="icon-green"></div></span><span v-if="detailForm.state==1" style="position:  relative;"> <div class="icon-red"></div></span> <span class="font-color" style="padding-left:6px;">{{ detailForm.state	=== 1 ? '禁用' : '启用' }}</span>
                     </el-col>
-             
                 </el-row>
           
                 <el-row :gutter="10" v-if="detailForm.shopType!='SELF_SUPPORT'">
-
                     <el-col :span="24" style="padding-left:20px;" v-if="detailForm.shopType!='SELF_SUPPORT'">
                         代理商等级：<span class="font-color">{{   detailForm.agentGradeId == 265 ? "区域代理" :  detailForm.agentGradeId == 266   ? '微店代理' : '单店代理'     }}</span>
                     </el-col>
@@ -91,7 +86,6 @@
                     </el-col>
                 </el-row>
                 </div>
-
                 <div v-if="detailForm.isParticipateRebate==1">
                     <el-row :gutter="10">      
                     <el-col :span="24" style="padding-left:20px;"  v-if="detailForm.shopType!='SELF_SUPPORT'" >
@@ -119,18 +113,13 @@
                                     进货业绩达成率：
                                 </span> 
                                 <!--颜色
-                                    //橙色  
-                                    'ff6600';  
-                                    //蓝色 
-                                    '20a0ff'; 
-                                    //淡橙色
-                                    'ffd199';
+                                    //橙色     //蓝色      //淡橙色
+                                    'ff6600';   '20a0ff';     'ffd199';
                                 -->
                                 <!--
                                     1.目标不为零得情况 
                                 -->
-                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                            " 
+                                <div  v-if="detailForm.shopType!='SELF_SUPPORT' " 
                                             class="annualPurchasePerformanceCss" > 
                                         <div v-bind:style="annualOwnAreadyPurchasePerformanceRateObject" 
                                         style="position:relative;border-bottom-left-radius: 10px; border-top-left-radius: 10px;float: left;"></div>
@@ -182,12 +171,11 @@
                                     </div>                              
                                     <!--灰色-->
                                     <span  v-if="detailForm.shopType!='SELF_SUPPORT' && detailForm.annualExtendPerformance!=0  "  
-                                                style="left: 275px;position: absolute">
+                                                style="left: 275px;position: absolute" >
                                         {{Number(detailForm.storeExpansionRate*100).toFixed(2)}}%
                                     </span>
                                     <span v-if="detailForm.annualPurchasePerformance">
                                     </span>
-
                             </div>
                         </el-col>
                     </el-row>
@@ -238,12 +226,12 @@
                 </el-row> 
                 <el-row  :gutter="5"> 
                     <el-col :span="24"  style="padding-left: 22px;">
-                        运营人员：<span v-if="detailForm.operator">{{detailForm.operatorId}} {{ detailForm.operator }}</span><span v-else>--</span>
+                        运营人员：<span v-if="detailForm.operator">{{ detailForm.operator }}</span><span v-else>--</span>
                     </el-col>
                 </el-row>        
                 <el-row   :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
-                        业务人员：<span v-if="detailForm.salesMan">{{detailForm.salesManId}} {{ detailForm.salesMan }}</span> 
+                        业务人员：<span v-if="detailForm.salesMan">{{ detailForm.salesMan }}</span> <span v-else>--</span>
                     </el-col>  
                 </el-row>
                 <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5">
@@ -1140,8 +1128,7 @@ export default {
         self.loading = false;
         self.detailForm = JSON.parse(JSON.stringify( response.data.result ));
 
-        console.log(self.detailForm.shopType)
-        //橙色 
+        //红色 
         self.detailForm.activeColor1 = 'ff6600';
         //蓝色
         self.detailForm.activeColor2 = '20a0ff'; 
@@ -1156,9 +1143,10 @@ export default {
              self.detailForm.businessExtendsRuleRuleNo ="--";
         }else{
             self.detailForm.businessExtendsRuleRuleNo = response.data.result.businessExtendsRule.ruleNo
+            self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
+            
         }
 
-        self.detailForm.businessExtendsRuleName =  response.data.result.businessExtendsRule.businessExtendsRuleName
 
         if(self.detailForm.operator =='' ){
             self.detailForm.operator = "--"
@@ -1195,14 +1183,19 @@ export default {
         //年度目标
 
         //自己的长度
-        self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
-        self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1
-       
+        if(detailForm.annualPurchasePerformance == 0){
+            self.annualOwnAreadyPurchasePerformanceRateObject.width = 144 + 'px'
+            self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1  //红色
+            
+        }else{
+            self.annualOwnAreadyPurchasePerformanceRateObject.width = self.detailForm.annualOwnAreadyPurchasePerformanceRate  *144 + 'px'
+            self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1  //红色
+        }
 
         //下级的长度
 
         self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
-        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3
+        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3    //橙色
         
         //上级为零,下级不为零    
         if(self.annualOwnAreadyPurchasePerformanceRateObject.width =='0px'){
@@ -1214,15 +1207,20 @@ export default {
         if(self.annualLowerAreadyPurchasePerformanceRateObject.width =='0px'){
           self.annualOwnAreadyPurchasePerformanceRateObject.borderBottomRightRadius = 10 + 'px';
           self.annualOwnAreadyPurchasePerformanceRateObject.borderTopRightRadius =  10 +'px';
-          
-            
         }
-       //年度目标店铺拓展
+
+        //年度目标店铺拓展
         //  1.已完成
-        self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
-        //  2.未完成
-        self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
-        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2
+
+        if(self.annualExtendPerformance==0){
+            self.SjhExtendPerformanceObject.width = 144 + 'px'
+        }else{
+            self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
+            //  2.未完成
+            self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
+        }
+        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2   //淡蓝色            
+
       })
       .catch(function(err) {
         self.loading = false;

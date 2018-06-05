@@ -1146,7 +1146,6 @@ export default {
             self.loading = false;
             self.editForm = response.data.result;
 
-
             self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
@@ -1161,7 +1160,7 @@ export default {
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-            self.editForm.extendSuperNoName = response.data.result.extendSuperShop.extendSuperNo +' '+ response.data.result.extendSuperShop
+            self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.name
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
