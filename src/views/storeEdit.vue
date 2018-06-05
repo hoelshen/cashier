@@ -221,6 +221,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="createTime" label="创建时间"  width="120">
+                    <template  scope="scope">
+                            <span>{{ formatDayDate(scope.row.createTime)}}</span>
+                        </template>
                     </el-table-column>
                     <el-table-column prop="ruleNo" label="操作"  width="120"  align="right">
                         <template slot-scope="scope">
@@ -329,7 +332,10 @@ export default {
     components: {
         addressComponent
     },
-    methods:{         
+    methods:{
+        formatDayDate(date){
+            return Utils.formatDayDate(date)
+        },         
         //获得区域等级等级
         getAreaName(){
             // console.log(this.$refs.editAgentAddress.getData().cityName)
