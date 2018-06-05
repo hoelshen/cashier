@@ -1154,7 +1154,7 @@ export default {
             if(self.editForm.extendSuperNo==null){
                 self.editForm.extendSuperNoName = '';
             }else{
-                self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.name
+                self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.extendSuperShop.name
             }
 
         }).catch(function (err) {
