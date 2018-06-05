@@ -1034,7 +1034,7 @@ export default {
                 url:'/api/http/businessExtendsRule/getBusinessExtendsRuleList.jhtml',
                 method: 'post',
                 data:{
-                    'pager.pageIndex': self.currentPage,
+                    'pager.pageIndex': value,
                     'pager.pageSize': self.pageSize,
                     'businessExtendsRuleVo.ruleName':self.selectrelationshipRulesValue || '',
                     'businessExtendsRuleVo.isSearchRuleNo' : 1                    
@@ -1167,6 +1167,7 @@ export default {
             }
         },  
         'editForm.annualPurchasePerformance'(newVal,oldVal){
+            console.log('ok')
             if(newVal==''){
                 newVal ='';
             }else{
@@ -1183,7 +1184,23 @@ export default {
                         })               
                 }
             }
-        },               
+        },
+        'editForm.annualExtendPerformance'(newval,oldval){
+            if(newval==''){
+                newval ='';
+            }else{
+                if(Utils.digitZero(newval)){
+                    this.$nextTick(() => {
+                            this.editForm.annualExtendPerformance = newval
+                            oldval = newval
+                    })
+                }else{
+                    this.$nextTick(() => {
+                        this.editForm.annualExtendPerformance = oldval
+                    })               
+                }
+            }            
+        }               
     }
 }
 </script>
