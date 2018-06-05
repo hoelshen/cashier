@@ -56,15 +56,15 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item v-show="editForm.shopType!='SELF_SUPPORT'" label="年度业绩目标：">
-                        <el-input v-show="editForm.agentGradeId ==265" v-model="editForm.annualPurchasePerformance" placeholder="进货业绩"></el-input>  
-                        <el-popover  placement="right" ref="annualPurchasePerformance"  class="grayColor" width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
+                        <el-input v-show="editForm.agentGradeId ==265" v-model="editForm.annualPurchasePerformance" placeholder="进货业绩" @blur="annualExtendPerformanceTitple"></el-input>  
+                        <el-popover  placement="right" ref="annualPurchasePerformance"  popper-class="grayColor" width="200" trigger="manual" manual=true  content="若年度目标设为0，默认代理商可直接获得达标奖励">     
                         </el-popover>                    
                         <el-input v-show="editForm.agentGradeId !=265 " v-model.number="editForm.annualPurchasePerformance"  v-popover:annualPurchasePerformance  @blur="annualPurchasePerformanceTitple"  placeholder="进货业绩"></el-input>  
                     </el-form-item>                    
                 </el-col>
                 <el-col :span="6">
                     <el-form-item  v-show="editForm.agentGradeId==265 && editForm.shopType!='SELF_SUPPORT'" >  
-                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" class="grayColor"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
+                        <el-popover  placement="top" ref="annualExtendPerformance"  width="200" trigger="manual" popper-class="grayColor"    content="若年度目标设为0，默认代理商可直接获得达标奖励"  >     
                         </el-popover>                        
                         <el-input   v-popover:annualExtendPerformance v-model="editForm.annualExtendPerformance" @blur="annualExtendPerformanceTitple"  >                              
                             <template slot="prepend">店铺拓展：  
@@ -164,7 +164,7 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"   class="grayColor"    content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"   popper-class="grayColor"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;z-index:99"></span>  
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
@@ -957,7 +957,7 @@ export default {
             this.editForm.extendSuperNo = item.shopNo;
             this.editForm.extendSuperName = item.name;
             
-            this.editForm.extendSuperNoName = item.shopNo + ' ' +item.name
+            this.editForm.extendSuperNoName = item.shopNo + ' ' + item.name
             
             this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
             this.editForm.state = item.state;
@@ -973,9 +973,12 @@ export default {
             let self = this
             if( !Number(self.editForm.annualExtendPerformance) && !Number(self.editForm.annualPurchasePerformance)){
                 self.$refs.annualExtendPerformance.showPopper=true
-                setTimeout(function(){
-                    self.$refs.annualExtendPerformance.showPopper=false
-                },3000)
+                // setTimeout(function(){
+                //     self.$refs.annualExtendPerformance.showPopper=false
+                // },3000)
+            }else{
+                self.$refs.annualExtendPerformance.showPopper=false
+                
             }
         },
         //气泡提示
@@ -983,9 +986,12 @@ export default {
             let self = this
             if(!Number(self.editForm.annualPurchasePerformance) ){
                     self.$refs.annualPurchasePerformance.showPopper=true
-                    setTimeout(function(){
-                        self.$refs.annualPurchasePerformance.showPopper=false
-                    },3000)
+                    // setTimeout(function(){
+                    //     self.$refs.annualPurchasePerformance.showPopper=false
+                    // },3000)
+            }else{
+                    self.$refs.annualPurchasePerformance.showPopper=false
+                
             }
 
         },
@@ -1155,7 +1161,7 @@ export default {
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-            self.editForm.extendSuperNoName = response.data.result.extendSuperNo
+            self.editForm.extendSuperNoName = response.data.result.extendSuperShop.extendSuperNo +' '+ response.data.result.extendSuperShop
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
