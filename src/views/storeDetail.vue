@@ -271,7 +271,7 @@
             </div>
             <div>
                 <el-table :data="agencyRelationsanceForm"  style="width: 100%">
-                    <el-table-column type="index" label="序列"  width="80">
+                    <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
                             <span>{{scope.$index + (currentPageAgency -1 ) * 30 + 1 }}</span>
                         </template>
@@ -325,7 +325,7 @@
             </div>
             <div >
                 <el-table :data="annualAgentsForm" style="width: 100%;">
-                    <el-table-column type="index" label="序列"  width="80">
+                    <el-table-column type="index" label="序号"  width="80">
                         <template slot-scope="scope">
                             <span>{{scope.$index + (currentPage -1 ) * 30 + 1 }}</span>
                         </template>
