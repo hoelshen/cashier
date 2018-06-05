@@ -627,7 +627,7 @@ export default {
                 //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
 
                 for (let i of response.data.result) {
-                    i.value = i.name;  //将CUSTOMER_NAME作为value
+                    i.value = i.shopNoAndName;  //将CUSTOMER_NAME作为value
                 }
                 if (!queryString) {
                     for (let item of response.data.result) {
@@ -1083,8 +1083,6 @@ export default {
             this.relationshipRulesDialogVisible = false; 
             this.currentPage = 1;
             this.selectrelationshipRulesValue = '';  
-            console.log(this.selectrelationshipRulesValue) 
-                        
             let self = this
             if(self.editForm.ruleTitle){
                 self.$refs.rule.showPopper=true
