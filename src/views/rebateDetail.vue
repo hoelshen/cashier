@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：" label-width="11.5%">
-                        <el-button type="primary" @click="relatedAgenciesData(ruleNo,urlId)">查看详情</el-button>
+                        <el-button type="primary" @click="relatedAgenciesData(ruleNo,urlId)">点击查看</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -36,8 +36,8 @@
             <el-row  class="text-wrap">
               <el-col >
                   <el-form-item label="时间周期：" label-width="12%" style="margin-bottom:0">
-                          <el-radio  v-model="form.zpTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
-                          <el-radio v-model="form.zpTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
+                      <span v-if="form.zpTimeChose=='CONTRACT_TERM'">合同期</span>
+                      <span v-if="form.zpTimeChose=='TIME_RANGE'">时间范围</span>
                   </el-form-item>
               </el-col>
           </el-row>
@@ -45,14 +45,14 @@
                 <el-row >
                     <el-col :span="10">
                         <el-form-item label="所属单店返利点数：" label-width="300px">
-                            <el-input placeholder="请输入折扣率"  v-model="form.zpSingleRebate" disabled></el-input>
+                            <span>{{form.zpSingleRebate}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row >
                     <el-col :span="10">
                         <el-form-item label="所属区域代理返利点数：" label-width="300px">
-                            <el-input placeholder="请输入折扣率" v-model="form.zpAreaRebate" disabled></el-input>
+                            <span>{{form.zpAreaRebate}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -62,7 +62,7 @@
                 <el-row>
                     <el-col :span="8">
                         <el-form-item label=" 1）正式签约起" label-width="200px">
-                            <el-input placeholder="请输入正整数"  class="sig-time1" v-model="form.zpTimeLimit.zpdateBefore" disabled></el-input>
+                            <span>{{form.zpTimeLimit.zpdateBefore}}</span>天内
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -94,21 +94,21 @@
                 <el-row class="oter-time-wrap">
                     <el-col :span="8">
                         <el-form-item label=" 2）正式签约起" label-width="200px">
-                            <el-input placeholder="请输入正整数" class="sig-time2"  v-model="form.zpTimeLimit.zpdateAfter" disabled></el-input>
+                            <span>{{form.zpTimeLimit.zpdateAfter}}</span>天后
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row >
                     <el-col :span="10">
                         <el-form-item label="所属单店返利点数：" label-width="300px">
-                            <el-input placeholder="请输入折扣率"   v-model="form.zpSingleRebate" disabled></el-input>
+                            <span>{{form.zpSingleRebate}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row >
                     <el-col :span="10">
                         <el-form-item label="所属区域代理返利点数：" label-width="300px">
-                            <el-input placeholder="请输入折扣率"   v-model="form.zpAreaRebate" disabled></el-input>
+                            <span>{{form.zpAreaRebate}}</span>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -127,8 +127,8 @@
               <el-row class="text-wrap">
                     <el-col :span="12">
                         <el-form-item label="时间周期：" label-width="24%" style="margin-bottom:0">
-                                <el-radio v-model="form.dlTimeChose"  label="CONTRACT_TERM" disabled>合同期</el-radio>
-                                <el-radio v-model="form.dlTimeChose" label="TIME_RANGE" disabled>时间范围</el-radio>
+                             <span v-if="form.dlTimeChose=='CONTRACT_TERM'">合同期</span>
+                             <span v-if="form.dlTimeChose=='TIME_RANGE'">时间范围</span>
                         </el-form-item>
                     </el-col>
               </el-row>
@@ -136,14 +136,14 @@
                   <el-row >
                       <el-col :span="10">
                           <el-form-item label="所属单店返利点数：" label-width="300px">
-                              <el-input placeholder="请输入折扣率" v-model="form.dlSingleRebate" disabled></el-input>
+                              <span>{{form.dlSingleRebate}}</span>
                           </el-form-item>
                       </el-col>
                   </el-row>
                   <el-row >
                       <el-col :span="10">
                           <el-form-item label="所属区域代理返利点数：" label-width="300px">
-                              <el-input placeholder="请输入折扣率" v-model="form.dlAreaRebate" disabled></el-input>
+                              <span>{{form.dlAreaRebate}}</span>
                           </el-form-item>
                       </el-col>
                   </el-row>
@@ -153,7 +153,7 @@
                   <el-row>
                       <el-col :span="8">
                           <el-form-item label=" 1）正式签约起" label-width="200px">
-                              <el-input placeholder="请输入正整数"  class="sig-time1" v-model="form.dlTimeLimit.dldateBefore" disabled></el-input>
+                              <span>{{form.dlTimeLimit.dldateBefore}}</span>天内
                           </el-form-item>
                       </el-col>
                   </el-row>
@@ -185,21 +185,21 @@
                   <el-row class="oter-time-wrap">
                       <el-col :span="8">
                           <el-form-item label=" 2）正式签约起" label-width="200px">
-                              <el-input placeholder="请输入正整数" class="sig-time2" v-model="form.dlTimeLimit.dldateAfter" disabled></el-input>
+                              <span>{{form.dlTimeLimit.dldateAfter}}</span>天后
                           </el-form-item>
                       </el-col>
                   </el-row>
                   <el-row >
                       <el-col :span="10">
                           <el-form-item label="所属单店返利点数：" label-width="300px">
-                              <el-input placeholder="请输入折扣率"   v-model="form.dlSingleRebate" disabled></el-input>
+                              <span>{{form.dlSingleRebate}}</span>
                           </el-form-item>
                       </el-col>
                   </el-row>
                   <el-row >
                       <el-col :span="10">
                           <el-form-item label="所属区域代理返利点数：" label-width="300px">
-                              <el-input placeholder="请输入折扣率"  v-model="form.dlAreaRebate"  disabled></el-input>
+                              <span>{{form.dlAreaRebate}}</span>
                           </el-form-item>
                       </el-col>
                   </el-row>
