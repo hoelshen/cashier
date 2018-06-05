@@ -289,7 +289,7 @@
                             <span>{{scope.$index + (currentPageAgency -1 ) * 30 + 1 }}</span>
                         </template>
                     </el-table-column>
-                    <el-table-column prop="agentNo" label="编号" width="127">
+                    <el-table-column prop="agentNo" label="下级编号" width="127">
                     </el-table-column>
                     <el-table-column prop="agentName" label="姓名" width="150">
                     </el-table-column>
