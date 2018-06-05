@@ -234,7 +234,7 @@
                         业务人员：<span v-if="detailForm.salesMan">{{ detailForm.salesMan }}</span> <span v-else>--</span>
                     </el-col>  
                 </el-row>
-                <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5">
+                <el-row  :gutter="5">
                     <el-col :span="24"  style="margin-left: -9px;">
                         合同签约信息：
                         <span  class="router-link-active" type="primary" @click='openContractInformation(detailForm.id,detailForm.shopNo)'>点击查看</span>

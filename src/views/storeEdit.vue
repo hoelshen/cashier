@@ -1124,6 +1124,7 @@ export default {
 
             // console.log(self.editForm)
             // console.log(self.editForm.businessExtendsRule)
+            //匹配规则
             if(!self.editForm.businessExtendsRule){
                 self.editForm.ruleTitle = ''
             }else{
@@ -1145,9 +1146,10 @@ export default {
             }
 
             if(self.editForm.ruleId == null){
-                console.log('ok')
+                // console.log('ok')
                 self.editForm.ruleId = '' 
             }
+            //拓展上级
             console.log(self.editForm.extendSuperNo )
             if(self.editForm.extendSuperNo==null){
                 self.editForm.extendSuperNoName = '';
