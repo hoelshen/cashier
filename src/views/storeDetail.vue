@@ -240,7 +240,7 @@
                 </el-row> 
                 <el-row  :gutter="5"> 
                     <el-col :span="24"  style="padding-left: 22px;">
-                        运营人员：{{ detailForm.operator }}
+                        运营人员：<span v-if="detailForm.operator">{{ detailForm.operator }}</span><span v-else>--</span>
                     </el-col>
                 </el-row>        
                 <el-row   :gutter="5">
@@ -304,9 +304,13 @@
                     <el-table-column prop="registTime" label="签约时间" width="127">
                     </el-table-column>
                     <el-table-column prop="rebateRate" label='返利比例' width="127">
+                        <template slot-scope="scope">
+                            <span v-if="scope.row.rebateRate">{{scope.row.rebateRate}}</span>
+                            <span v-else>--</span>
+                        </template>
                     </el-table-column>
                 
-                    <el-table-column prop="rebateAmount" label='返利金额' width="127">
+                    <el-table-column prop="rebateAmount" label='返利金额' width="127" align="right">
                     </el-table-column>
                 </el-table>
             </div>
