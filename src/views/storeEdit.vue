@@ -149,7 +149,7 @@
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span>
-                        <el-autocomplete v-model="editForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
+                        <el-autocomplete v-model="editForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -279,7 +279,9 @@ export default {
                     annualExtendPerformance:'',
                     extendSuperType:'ZUIPIN',
                     superAreaClass:'',
-                    extendSuperNo:'',
+                    extendSuperNo:'',  //扩展上级
+                    extendSuperName:'',   //扩展上级编号
+                    extendSuperNoName:'',  //扩展上级姓名
                     areaClass:'',
                     superAgentGradeId:'',
                     state:'',
@@ -947,6 +949,10 @@ export default {
         },
         handleExtendSuperNoSelect(item){
             this.editForm.extendSuperNo = item.shopNo;
+            this.editForm.extendSuperName = item.name;
+            
+            this.editForm.extendSuperNoName = item.shopNo + ' ' +item.name
+            
             this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
             this.editForm.state = item.state;
         },
@@ -1132,7 +1138,6 @@ export default {
             self.editForm.ruleTitle = response.data.result.businessExtendsRule.ruleNo + ' '+ response.data.result.businessExtendsRule.businessExtendsRuleName;
             if(self.flage ){
                 self.editForm.areaClass = response.data.result.areaClass;
-
             }else{
                 self.editForm.areaClass = self.editForm.agentCityName        
             }
@@ -1141,11 +1146,10 @@ export default {
             if(self.editForm.shopType=='SELF_SUPPORT'){
                     self.areaClassFlag = false;
             }
-
             if(self.editForm.superAgentGradeId){
                 self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
             }
-
+            self.editForm.extendSuperNoName = response.data.result.extendSuperNo
         }).catch(function (err) {
             self.loading = false;
             console.log(err);

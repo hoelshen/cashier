@@ -74,7 +74,6 @@
                         <div style="overflow: hidden;">
                             <span style="display: inline-block;float: left;" >收件地址：</span><span class="font-color" style="display: inline-block;float: left;width:200px;" >{{ detailForm.province }}/{{detailForm.city}}/{{detailForm.county}}/{{ detailForm.address }}</span>
                         </div>
-                        
                     </el-col>
                 </el-row>
             </div>
@@ -239,12 +238,12 @@
                 </el-row> 
                 <el-row  :gutter="5"> 
                     <el-col :span="24"  style="padding-left: 22px;">
-                        运营人员：<span v-if="detailForm.operator">{{ detailForm.operator }}</span><span v-else>--</span>
+                        运营人员：<span v-if="detailForm.operator">{{detailForm.operatorId}} {{ detailForm.operator }}</span><span v-else>--</span>
                     </el-col>
                 </el-row>        
                 <el-row   :gutter="5">
                     <el-col :span="24"  style="padding-left: 22px;">
-                        业务人员：{{ detailForm.salesMan }}
+                        业务人员：<span v-if="detailForm.salesMan">{{detailForm.salesManId}} {{ detailForm.salesMan }}</span> 
                     </el-col>  
                 </el-row>
                 <el-row  v-if="detailForm.shopType!='SELF_SUPPORT'" :gutter="5">
