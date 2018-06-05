@@ -1150,7 +1150,7 @@ export default {
                 self.editForm.ruleId = '' 
             }
             //拓展上级
-            console.log(self.editForm.extendSuperNo )
+            // console.log(self.editForm.extendSuperNo )
             if(self.editForm.extendSuperNo==null){
                 self.editForm.extendSuperNoName = '';
             }else{

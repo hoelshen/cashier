@@ -666,16 +666,18 @@ export default {
                 // setTimeout(function(){
                 //     self.$refs.annualExtendPerformance.showPopper=false
                 // },3000)
+            }else{
+                self.$refs.annualExtendPerformance.showPopper=false
             }
         },
         //气泡提示
         annualPurchasePerformanceTitple(){
             let self = this
+            console.log(self.addForm.annualPurchasePerformance)
             if(!Number(self.addForm.annualPurchasePerformance) ){
                     self.$refs.annualPurchasePerformance.showPopper=true
-                    // setTimeout(function(){
-                    //     self.$refs.annualPurchasePerformance.showPopper=false
-                    // },3000)
+            }else{
+                    self.$refs.annualPurchasePerformance.showPopper=false
             }
         },
         //气泡提示
