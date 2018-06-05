@@ -657,6 +657,11 @@ export default {
         deleteExtendSuperNo(){
             this.addForm.extendSuperNo = '';
             this.addForm.superAgentGradeId = '';
+            this.addForm.extendSuperNoName = '';
+        },
+        deleteExtendSuperType(val){  
+            this.addForm.extendSuperNo= '';
+            this.addForm.superAgentGradeId= '';
         },
         //气泡提示
         annualExtendPerformanceTitple(){
@@ -968,10 +973,6 @@ export default {
         },
         deleteSalesMan(){
             this.addForm.salesMan='';    
-        },
-        deleteExtendSuperType(val){  
-            this.addForm.extendSuperNo= '';
-            this.addForm.superAgentGradeId= '';
         },
         deleteSelfSupport(){
             this.addForm.extendSuperNo= '';
