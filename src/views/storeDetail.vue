@@ -971,6 +971,13 @@ export default {
             })
             return
         }
+        if(self.renewalForm.timerValueEnd<self.renewalForm.timerValueStar){
+            self.$message({
+                message: "开始时间不能大于结束时间",
+                type: 'error'
+            })
+            return
+        }
         self.renewalDialogVisible = false
         self.$ajax({
               url:'/api/http/contractCycle/doRenewal.jhtml',
