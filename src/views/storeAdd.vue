@@ -1069,7 +1069,7 @@ export default {
             this.relationshipRulesDialogVisible = false;                   
             this.relationshipRulesDialogForm = [];
             this.currentPage = 1;            
-            this.isSearchRuleNo = '';  
+            this.isSearchRuleNo = ''; 
             let self = this
             if(self.addForm.ruleTitle){
                 self.$refs.rule.showPopper=true
