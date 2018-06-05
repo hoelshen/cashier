@@ -155,8 +155,8 @@
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
                         <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNo" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
-                            <span class="search_left"></span>
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                            
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -325,7 +325,8 @@ export default {
                 extendSuperType:'ZUIPIN',    //扩展上级
                 superAreaClass:'',
                 extendSuperNo:'',    //上级编号
-                extendSuperName:'',  //上级姓名  
+                extendSuperName:'',  //上级姓名 
+                extendSuperNoName:'', 
                 areaClass:'',     //所属类别
                 belongProvince:'', //所属区域
                 belongCity:'',     //所属城市
@@ -916,18 +917,13 @@ export default {
                     i.value = i.name;  //将CUSTOMER_NAME作为value
                 }
 
-                // console.log(!queryString)
-
                 if (!queryString) {
-                    // console.log(response.data.result)
 
                     for (let item of response.data.result) {
                         list.push(item)
                     }
                     // console.log(list)
-                    
                     callback(list);
-
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
@@ -941,8 +937,6 @@ export default {
                         list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
                     }
                 }
-
-
                 callback(list);
             }).catch((error) => {
                 console.log(error);
@@ -960,6 +954,7 @@ export default {
         handleExtendSuperNoSelect(item){
                 this.addForm.extendSuperNo = item.shopNo;
                 this.addForm.extendSuperName = item.name;
+                this.addForm.extendSuperNoName = item.shopNo + ' ' +item.name;
                 this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
                 this.addForm.state = item.state;
         },  
