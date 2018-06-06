@@ -233,7 +233,7 @@
                 </div>
                 <div>
                     <el-table :data="relatedAgenciesForm" :height="440" style="width: 100%">
-                      <el-table-column  label="序列" type="index"  width="80">
+                      <el-table-column  label="序号" type="index"  width="80">
                           <template slot-scope="scope">
                              <span> {{scope.$index + (currentPage - 1) * 30 + 1}}</span>
                           </template>
@@ -248,11 +248,17 @@
                                 <span class="state-wrap" v-if="scope.row.state  == '1'"> <i class="icon-red"></i>禁用</span>
                             </template>
                       </el-table-column>
-                      <el-table-column prop="agentGradeId" label="代理商等级" width="127">
+                      <el-table-column label="代理商等级" width="127">
                            <template slot-scope="scope">
-                                <span v-if="scope.row.agentGradeId  == '266'">微店代理</span>
-                                <span v-if="scope.row.agentGradeId  == '265'">区域代理</span>
-                                <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
+                               <div v-if="scope.row.shopType == 'SELF_SUPPORT'">
+                                   <span>直营</span>
+                               </div>
+                               <div v-else>
+                                   <span v-if="scope.row.agentGradeId  == '266'">微店代理</span>
+                                    <span v-if="scope.row.agentGradeId  == '265'">区域代理</span>
+                                    <span v-if="scope.row.agentGradeId  == '31'">单店代理</span>
+                               </div>
+                                
                             </template>
                       </el-table-column>
                       <el-table-column  label="合同服务期限" width="200" align="right">
@@ -396,9 +402,10 @@ export default {
                 console.log(response)
                 self.loading = false;
              if (response.data.success == 1) {
+                 console.log(response.data.result)
                     self.relatedAgenciesForm = response.data.result;
                     self.totalSize = response.data.totalNums;
-                   
+                    
                 } else {
                     self.$message({
                         message: response.data.msg,
@@ -413,7 +420,7 @@ export default {
     },
     onSubmit(){
         this.relatedAgenciesData(this.ruleNo,this.urlId);
-        this.handleCurrentChange(1)
+        self.currentPage=1;
     },
     getUrlId() {
       this.urlId = this.$route.query.id
@@ -614,6 +621,7 @@ export default {
 }
 .state-wrap{
     position: relative;
+    padding-left: 10px;
 }
 .icon-green{
     width: 5px;
@@ -623,7 +631,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left: -10px;
+    left:0px;
 }
 .icon-red{
     width: 5px;
@@ -633,7 +641,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left: -10px;
+    left: 0px;
 }
 </style>
 
