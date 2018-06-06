@@ -156,7 +156,7 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
+                                    <span v-if="scope.row.state==0"> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
                                     <span> <router-link class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
@@ -1201,7 +1201,7 @@ export default {
     padding: 0px 20px 30px;
 }
 .delete_addressComponent {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
@@ -1223,7 +1223,7 @@ export default {
     position: relative;
 }
 .xg-search-yy-wrap .delete_left {
-    background: url("../assets/images/zph_close.png") no-repeat center;
+    background: url("../assets/images/zph_close.jpg") no-repeat center;
     position: absolute;
     width: 20px;
     height: 20px;
@@ -1232,7 +1232,7 @@ export default {
     z-index: 1000;
 }
 .xg-search-yw-wrap .delete_right {
-    background: url("../assets/images/zph_close.png") no-repeat center;
+    background: url("../assets/images/zph_close.jpg") no-repeat center;
     position: absolute;
     width: 20px;
     height: 20px;

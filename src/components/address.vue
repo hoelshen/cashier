@@ -29,21 +29,21 @@
     <div class="address-wrap">
         <div class="address-select">
             <span v-if="isShow&&select.provinceCode" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
-            <el-select v-model="select.provinceCode" placeholder="请选择省份" @change="getAllData" >
+            <el-select v-model="select.provinceCode" ref="provinceCode" placeholder="请选择省份" @change="getAllData"  >
                 <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">              
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
             <span v-if="isShow&&select.cityCode" class="delete_addressComponent"  @click='closeAddressCityComponent' ></span> 
-            <el-select v-model="select.cityCode" placeholder="请选择城市" @change="getAllData" >
+            <el-select v-model="select.cityCode" ref="cityCode"  placeholder="请选择城市" @change="getAllData" >
                 <el-option v-for="item in cityList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
             <span v-if="isShow&&select.areaCode" class="delete_addressComponent"  @click='closeAddressAreaComponent' ></span> 
-            <el-select v-model="select.areaCode" placeholder="请选择区域" @change="getAllData" >
+            <el-select v-model="select.areaCode" ref="areaCode"  placeholder="请选择区域" @change="getAllData" >
                 <el-option v-for="item in areaList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
@@ -98,11 +98,13 @@ export default {
             },
             CodeFlage:true,
             isTrue:true,
+            // isareaClass:true,
+            // iscityClass:true,
+            // isprovinceClass:true
         };
     },
     watch: {
         provinceCode(val) {
-            // console.log(val)
             this.select.provinceCode =  val;
         },
         cityCode(val) {
@@ -272,15 +274,24 @@ export default {
     }
 }
 .delete_addressComponent {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
         top: 9px;
-        right: 28px;
+        right: 5px;
         z-index: 1000;
 }
 .address-select{
      position:relative
+}
+.provinceClass{
+    color: aqua
+}
+.cityClass{
+    color:aquamarine
+}
+.areaClass{
+    color: aquamarine
 }
 </style>
