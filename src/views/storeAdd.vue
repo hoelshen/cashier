@@ -152,7 +152,7 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
+                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName"></span>
                         <el-autocomplete v-model="addForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             
                         </el-autocomplete>
@@ -189,7 +189,7 @@
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
                          <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找"  icon="circle-close">
+                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找"  icon="caret-top">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -1217,7 +1217,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 164px;
+        left: 189px;
         z-index: 1000;
     }
     .delete_right {
@@ -1226,7 +1226,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left:164px;
+        left: 189px;
         z-index: 1000;
     }
     .content_title h2 {

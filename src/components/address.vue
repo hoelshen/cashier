@@ -29,21 +29,21 @@
     <div class="address-wrap">
         <div class="address-select">
             <span v-if="isShow&&select.provinceCode" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
-            <el-select v-model="select.provinceCode" ref="provinceCode" placeholder="请选择省份" @change="getAllData"  v-bind:class="{provinceClass:isProvinceClass}">
+            <el-select v-model="select.provinceCode" ref="provinceCode" placeholder="请选择省份" @change="getAllData"  >
                 <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">              
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
             <span v-if="isShow&&select.cityCode" class="delete_addressComponent"  @click='closeAddressCityComponent' ></span> 
-            <el-select v-model="select.cityCode" ref="cityCode"  placeholder="请选择城市" @change="getAllData" v-bind:class="{cityClass:iscityClass}">
+            <el-select v-model="select.cityCode" ref="cityCode"  placeholder="请选择城市" @change="getAllData" >
                 <el-option v-for="item in cityList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
             <span v-if="isShow&&select.areaCode" class="delete_addressComponent"  @click='closeAddressAreaComponent' ></span> 
-            <el-select v-model="select.areaCode" ref="areaCode"  placeholder="请选择区域" @change="getAllData" v-bind:class="{areaClass:isareaClass}">
+            <el-select v-model="select.areaCode" ref="areaCode"  placeholder="请选择区域" @change="getAllData" >
                 <el-option v-for="item in areaList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
@@ -98,9 +98,9 @@ export default {
             },
             CodeFlage:true,
             isTrue:true,
-            isareaClass:true,
-            iscityClass:true,
-            isprovinceClass:true
+            // isareaClass:true,
+            // iscityClass:true,
+            // isprovinceClass:true
         };
     },
     watch: {
