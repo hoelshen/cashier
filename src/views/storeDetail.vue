@@ -331,6 +331,9 @@
                         </template>
                     </el-table-column>
                     <el-table-column prop="agentGradeName" label="代理商等级" width="127">
+                        <template slot-scope="scope">
+                            {{scope.row.agentGradeName}}代理
+                        </template>
                     </el-table-column>
                     <el-table-column prop="annualCycle" label="年份" width="127" >
                     </el-table-column>
