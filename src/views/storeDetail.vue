@@ -1158,6 +1158,8 @@ export default {
         if(self.detailForm.remainDay == null){
             self.detailForm.remainDay= "--"
         }
+
+
         self.detailForm.annualAreadyExtendPerformance  =  ( !response.data.result.annualAreadyExtendPerformance  ?  0 :  (response.data.result.annualAreadyExtendPerformance));
         
         self.detailForm.finishPerformanceSum = ( !response.data.result.finishPerformanceSum  ?  0 :  (response.data.result.finishPerformanceSum));
@@ -1168,6 +1170,8 @@ export default {
 
         //年度自己所完成的业绩率    //年度自己所完成的业绩   //年度目标进货业绩
         self.detailForm.annualOwnAreadyPurchasePerformanceRate = response.data.result.annualOwnAreadyPurchasePerformance / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
+        
+        // console.log(response.data.result.annualOwnAreadyPurchasePerformance)
 
         //年度下级协助所完成的业绩率   //年度下级协助所完成的业绩   //年度目标进货业绩
         self.detailForm.annualLowerAreadyPurchasePerformanceRate = response.data.result.annualLowerAreadyPurchasePerformance  / (response.data.result.finishPerformanceSum + response.data.result.notFinishPerformance)
@@ -1179,11 +1183,9 @@ export default {
         //年度店铺扩展达成率    //已达成店铺拓展   //年度目标店铺拓展
         self.detailForm.storeExpansionRate  = response.data.result.annualAreadyExtendPerformance/response.data.result.annualExtendPerformance
         
-
         //年度目标
 
         //自己的长度
-        
 
         if(self.detailForm.annualPurchasePerformance == 0){
             self.annualOwnAreadyPurchasePerformanceRateObject.width = 144 + 'px'
@@ -1194,10 +1196,17 @@ export default {
             self.annualOwnAreadyPurchasePerformanceRateObject.backgroundColor  = '#' + self.detailForm.activeColor1  //红色
         }
 
-        //下级的长度
 
-        self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
-        self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3    //橙色
+
+        //下级的长度
+        if(self.detailForm.annualLowerAreadyPurchasePerformance == 0){
+            self.annualLowerAreadyPurchasePerformanceRateObject.width =  0 + 'px'
+            self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3    //橙色
+        }else{
+            self.annualLowerAreadyPurchasePerformanceRateObject.width =  self.detailForm.annualLowerAreadyPurchasePerformanceRate    *144 + 'px'
+            self.annualLowerAreadyPurchasePerformanceRateObject.backgroundColor = '#' + self.detailForm.activeColor3    //橙色
+        }
+
         
         //上级为零,下级不为零    
         if(self.annualOwnAreadyPurchasePerformanceRateObject.width =='0px'){
@@ -1211,6 +1220,8 @@ export default {
           self.annualOwnAreadyPurchasePerformanceRateObject.borderTopRightRadius =  10 +'px';
         }
 
+        
+
         //年度目标店铺拓展
         //  1.已完成
 
@@ -1221,8 +1232,9 @@ export default {
             //  2.未完成
             self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         }
+        // console.log(response.data.result.annualAreadyExtendPerformance)
         self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2   //淡蓝色            
-
+        // console.log(self.SjhExtendPerformanceObject.width)
       })
       .catch(function(err) {
         self.loading = false;
