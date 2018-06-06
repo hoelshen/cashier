@@ -240,7 +240,7 @@
                       </el-table-column>
                       <el-table-column prop="shopNo" label="代理商编号" width="127">
                            <template slot-scope="scope">
-                               <span> <router-link  target="_blank" class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.shopNo}}">{{scope.row.shopNo}}</router-link></span>
+                               <span> <router-link  target="_blank" class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">{{scope.row.shopNo}}</router-link></span>
                            </template>
                           
                       </el-table-column>
