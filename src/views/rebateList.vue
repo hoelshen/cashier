@@ -43,7 +43,7 @@
 					<el-table-column prop="isDefault"  label="操作" width="200">
                         <template  slot-scope="scope">
                             <p class="operat">
-                                <span> <router-link class="router-link-active" :to="{ name: 'rebateDetail', query: { id: scope.row.id}}">详情</router-link></span>
+                                <span> <router-link  target="_blank" class="router-link-active" :to="{ name: 'rebateDetail', query: { id: scope.row.id}}">详情</router-link></span>
                                 <span v-if="scope.row.isDefault==0" @click="confirmsetDefault(scope.row.id,scope.row.businessExtendsRuleName)">设为默认规则</span>
                                 <span  v-if="scope.row.isDefault==1" class="default-rules" style="cursor:default;">默认规则</span>
                             </p>

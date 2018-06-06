@@ -6,8 +6,10 @@
                 <el-col :span="12">
                     <el-form-item label="规则名称："   label-width="125px"
                      prop="businessExtendsRuleName"
-                            >
-                        <el-input  placeholder="请输入规则名称，最多25个汉字" :maxlength="50" v-model="form.businessExtendsRuleName"></el-input>
+                            :rules="[
+                            { required: true, message: '时间不能为空'}
+                            ]">
+                        <el-input type="businessExtendsRuleName" placeholder="请输入规则名称，最多25个汉字" :maxlength="50" v-model="form.businessExtendsRuleName"></el-input>
                     </el-form-item>
                 </el-col>
                  <div class="content_closeBtn" @click="goBack">X</div>
@@ -442,26 +444,26 @@ let qs = require("qs");
 export default {
   data() {
     //   验证规则字符长度
-    let validateRuleName = (rule, value, callback) => {
-        let regExp = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
-        var _zh = value ? value.match(/[^ -~]/g) : 0;
-        var num = 25-Math.ceil((value.length + (_zh && _zh.length) || 0)/2);
-        if (value === '') {
-            callback(new Error('规则名称不能为空'))
-        } else if (num<0) {
-        callback(new Error('最多25个中文，50个英文字符'))
-        } else {
-            callback()
-        }
-    };
+    // let validateRuleName = (rule, value, callback) => {
+    //     let regExp = /^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{8,16}$/
+    //     var _zh = value ? value.match(/[^ -~]/g) : 0;
+    //     var num = 25-Math.ceil((value.length + (_zh && _zh.length) || 0)/2);
+    //     if (value === '') {
+    //         callback(new Error('规则名称不能为空'))
+    //     } else if (num<0) {
+    //     callback(new Error('最多25个中文，50个英文字符'))
+    //     } else {
+    //         callback()
+    //     }
+    // };
     
     return {
         creator:"",
-        rules:{
-             businessExtendsRuleName: [
-                { validator: validateRuleName, trigger: 'blur' }
-            ]
-        },
+        // rules:{
+        //      businessExtendsRuleName: [
+        //         { validator: validateRuleName, trigger: 'blur' }
+        //     ]
+        // },
       form:{
         businessExtendsRuleName:"",
         dlTimeChose:"CONTRACT_TERM",
