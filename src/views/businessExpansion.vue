@@ -468,10 +468,10 @@ export default {
                         for(var i = 0; i< self.downData.length; i++){
                             for(var j = 0; j < self.downData[i].list.length; j++){
                                 if(self.downData[i].list[j].relationType=='BUSINESS_EXTEND'){
-                                    self.downData[i].list[j].remark = self.downData[i].list[j].remark+'自主拓展'
+                                    self.downData[i].list[j].remark = self.downData[i].list[j].remark+' 自主拓展'
                                 }
                                 if(self.downData[i].list[j].relationType=='ZUIPIN_EXTEND'){
-                                    self.downData[i].list[j].remark =  self.downData[i].list[j].remark+'醉品开发'
+                                    self.downData[i].list[j].remark =  self.downData[i].list[j].remark+' 醉品开发'
                                 }
                             }
                         }
