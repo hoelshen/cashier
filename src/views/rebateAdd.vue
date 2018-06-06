@@ -432,7 +432,7 @@
                 </el-row>
             </div>
             <el-row style="margin-top:20px;">
-                <el-button @click="resetForm('form')">取消</el-button>
+                <el-button @click="goBack">取消</el-button>
                 <el-button type="primary" @click="submitForm('form')">保存</el-button>
             </el-row>
         </el-form>
