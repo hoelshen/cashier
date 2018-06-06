@@ -630,7 +630,6 @@ export default {
 }
 .state-wrap{
     position: relative;
-    padding-left: 10px;
 }
 .icon-green{
     width: 5px;
@@ -640,7 +639,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left:0px;
+    left:-10px;
 }
 .icon-red{
     width: 5px;
@@ -650,7 +649,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left: 0px;
+    left:-10px;
 }
 </style>
 
