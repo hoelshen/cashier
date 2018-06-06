@@ -445,6 +445,7 @@ export default {
                 // console.log(response.data)
                 
                     if (response.data.success === 1) {
+                        console.log(response.data.result)
                         self.downData = response.data.result;
                         for(var i = 0; i< self.downData.length; i++){
                             for(var j = 0; j < self.downData[i].list.length; j++){
@@ -463,6 +464,16 @@ export default {
                                     self.downData[i].list[j].agentGradeId = '微店代理'
                                 }
                                 
+                            }
+                        }
+                        for(var i = 0; i< self.downData.length; i++){
+                            for(var j = 0; j < self.downData[i].list.length; j++){
+                                if(self.downData[i].list[j].relationType=='BUSINESS_EXTEND'){
+                                    self.downData[i].list[j].remark = self.downData[i].list[j].remark+'自主拓展'
+                                }
+                                if(self.downData[i].list[j].relationType=='ZUIPIN_EXTEND'){
+                                    self.downData[i].list[j].remark =  self.downData[i].list[j].remark+'醉品开发'
+                                }
                             }
                         }
                      if(self.downData.length>0){
