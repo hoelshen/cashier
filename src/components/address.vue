@@ -280,7 +280,7 @@ export default {
         height: 20px;
         top: 9px;
         right: 5px;
-        z-index: 1000000;
+        z-index: 1000;
 }
 .address-select{
      position:relative
