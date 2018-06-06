@@ -28,21 +28,21 @@
 <template>
     <div class="address-wrap">
         <div class="address-select">
-            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
+            <span v-if="isShow&&select.provinceCode" class="delete_addressComponent"  @click='closeAddressProvinceComponent' ></span> 
             <el-select v-model="select.provinceCode" placeholder="请选择省份" @change="getAllData" >
                 <el-option v-for="item in provinceList" :key="item.code" :label="item.regionName" :value="item.code">              
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
-            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressCityComponent' ></span> 
+            <span v-if="isShow&&select.cityCode" class="delete_addressComponent"  @click='closeAddressCityComponent' ></span> 
             <el-select v-model="select.cityCode" placeholder="请选择城市" @change="getAllData" >
                 <el-option v-for="item in cityList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
             </el-select>
         </div>
         <div class="address-select">
-            <span v-if="isShow" class="delete_addressComponent"  @click='closeAddressAreaComponent' ></span> 
+            <span v-if="isShow&&select.areaCode" class="delete_addressComponent"  @click='closeAddressAreaComponent' ></span> 
             <el-select v-model="select.areaCode" placeholder="请选择区域" @change="getAllData" >
                 <el-option v-for="item in areaList" :key="item.code" :label="item.regionName" :value="item.code">
                 </el-option>
@@ -117,9 +117,9 @@ export default {
             // console.log(val)
             this.select.detail = val;
         }
+        
     },
     computed: {
-       
         provinceList() {
             return this.baseData;
         },
