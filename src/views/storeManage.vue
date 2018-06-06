@@ -156,9 +156,9 @@
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span v-if="scope.row.state==0"> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
                                     <span> <router-link class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
-                                    <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
+                                    <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)' style="flex:none" >预存款变更</span>
+                                    <span v-if="scope.row.state==0"> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
                                 </p>
                             </template>
                         </el-table-column>
