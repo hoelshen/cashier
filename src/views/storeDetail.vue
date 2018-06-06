@@ -164,8 +164,7 @@
                                     <span  v-if="detailForm.shopType!='SELF_SUPPORT'" style="float:left"> 
                                     店铺拓展达成率：
                                     </span>
-                                    <div  v-if="detailForm.shopType!='SELF_SUPPORT' 
-                                                " 
+                                    <div  v-if=" detailForm.shopType!='SELF_SUPPORT' " 
                                                 class="annualPurchasePerformanceCss" >
                                         <div v-bind:style="SjhExtendPerformanceObject" style="border-radius: 10px; "></div>
                                     </div>                              
@@ -594,16 +593,16 @@ export default {
       },
 
       SjhExtendPerformanceObject:{
-          height:10  +'px',
-          width:'',
-          backgroundColor:'',
-          top: 10 +'px',
+        height:10  +'px',
+        width:'',
+        backgroundColor:'',
+        top: 10 +'px',
       },
       SjhNotExtendPerformanceObject:{
-          height:10  +'px',
-          width:'',
-          backgroundColor:'',
-           top: 10 +'px',
+        height:10  +'px',
+        width:'',
+        backgroundColor:'',
+        top: 10 +'px',
       },
       agencyRelationsanceDialogVisible:false,  //代理商关系
       annualAgentsDialogVisible:false,  //年度业绩 
@@ -630,7 +629,7 @@ export default {
             remainYear:"",//服务期限年
             maxEndTime:"",//续签的最后结束时间
         },  //续签
-      createId:"",//创建人ID
+        createId:"",//创建人ID
 
         //开始日期
         starPickerOptions: this.starTime(),
@@ -1229,17 +1228,18 @@ export default {
 
         //年度目标店铺拓展
         //  1.已完成
+  
 
-        if(self.annualExtendPerformance==0){
+        if(self.detailForm.annualExtendPerformance==0){
             self.SjhExtendPerformanceObject.width = 144 + 'px'
         }else{
             self. SjhExtendPerformance =  ( response.data.result.annualAreadyExtendPerformance/(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance) )
             //  2.未完成
             self.SjhExtendPerformanceObject.width =  self. SjhExtendPerformance  *144 + 'px'
         }
-        // console.log(response.data.result.annualAreadyExtendPerformance)
-        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2   //淡蓝色            
-        // console.log(self.SjhExtendPerformanceObject.width)
+        self.SjhExtendPerformanceObject.backgroundColor = '#' + self.detailForm.activeColor2   //淡蓝色   
+        console.log(response.data.result.notFinishShopNums + response.data.result.annualAreadyExtendPerformance)        
+        console.log(self.SjhExtendPerformanceObject.width)
       })
       .catch(function(err) {
         self.loading = false;

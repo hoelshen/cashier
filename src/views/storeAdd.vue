@@ -92,7 +92,6 @@
                 </el-col>
                 <el-col :span="8">
                     <el-form-item label="代理商手机：">
-                        <!-- <span class="typeNumber"></span>                                                                     -->
                         <el-input v-model="addForm.phone"  :maxlength='phoneLength' placeholder="代理商手机"></el-input>
                         <div class="m-2-o">
                             代理商登录系统使用的账号
@@ -152,9 +151,8 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
-                            
+                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -170,9 +168,9 @@
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
-                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;"></span> 
-                            <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
-                            <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible" >选择</el-button> 
+                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
+                            <el-input placeholder="请选择"    @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
+                            <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible"   >选择</el-button> 
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -180,16 +178,15 @@
             <el-row :gutter="10">
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
-                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
-                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找"  icon="caret-top">
-                            <span class="search_left"></span>
+                        <span class="arrowPng" @click="deleteOperator" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span>
+                        <el-autocomplete v-model="addForm.operator" :class="{DelectClass:isDelectClass}"    :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找"  >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
-                         <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找"  icon="caret-top">
+                        <span class="arrowPng"  @click="deleteSalesMan" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
+                        <el-autocomplete v-model="addForm.salesMan" :class="{DelectClass:isDelectClass}"  :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -218,8 +215,8 @@
                     <el-row :gutter="10" v-if="addForm.shopType =='AGENT'">
                         <el-col :span="24" style="padding-left:20px;" class="circle" >
                            拓展上级：
-                                    <span v-if=" addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
-                                    <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
+                                <span v-if=" addForm.agentGradeId == 265 || addForm.extendSuperType=='ZUIPIN'" class="font-color">醉品自开发</span>
+                                <span v-else>{{addForm.extendSuperName}} {{addForm.extendSuperNo}}</span>
                         </el-col>
                     </el-row>
                 </el-form>
@@ -382,7 +379,8 @@ export default {
                   disabledDate(time) {
                     return time.getTime() < Date.now();
                 }
-            }
+            },
+            isDelectClass:true,
         }
     },
     components: {
@@ -425,7 +423,6 @@ export default {
         //判断是否超时
         checkSession() {
             const self = this;
-            console.log(window.sessionStorage)
             if (window.sessionStorage) {
                 let nowDate = new Date().getTime();
                 let time = (nowDate - sessionStorage.haha) / 1000
@@ -1091,6 +1088,14 @@ export default {
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
             this.addForm.ruleTitle = ruleNo +' '+  businessExtendsRuleName
             this.addForm.ruleId = id
+        },
+        //添加样式
+        changeActive($event){
+             $event.currentTarget.className=" delete_left ";
+        },
+        //移除样式        
+        removeActive($event){     
+            $event.currentTarget.className=" arrowPng ";
         }
     },
     created(){
@@ -1217,7 +1222,7 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 189px;
+        left: 173px;
         z-index: 1000;
     }
     .delete_right {
@@ -1226,12 +1231,21 @@ export default {
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 189px;
+        left: 173px;
+        z-index: 1000;
+    }
+    .arrowPng{
+        background: url("../assets/images/arrow.jpg") no-repeat center;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 9px;
+        left: 173px;
         z-index: 1000;
     }
     .content_title h2 {
-    line-height: 38px;
-    margin-bottom: 30px;
+        line-height: 38px;
+        margin-bottom: 30px;
     }
     .button-cancel{
         color: #167edf;
@@ -1242,6 +1256,9 @@ export default {
     }
     .el-dialog--tiny{
         width: 48%
+    }
+    .DelectClass{
+        width: 200px;
     }
 
 }

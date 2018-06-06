@@ -166,7 +166,7 @@
                     <el-form-item label="匹配规则:"  style="width: 1024px;">
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"   popper-class="grayColor"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
-                            <span class="delete_left" v-if="!(editForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;z-index:99"></span>  
+                            <span class="arrowPng"  @click="deleteRuleTitle" style="left: 416px;z-index:99" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>  
                             <el-input placeholder="请选择"   @blur="ruleTitleTitple" v-model="editForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary"  v-popover:rule  @click="onOpenRelationshipRulesDialogVisible" >选择</el-button>    
                     </el-form-item>
@@ -176,15 +176,16 @@
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
-                        <span class="delete_left" v-if="editForm.operator" @click="deleteOperator"></span>     
-                        <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">    
+                        <span class="arrowPng" @click="deleteOperator" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>     
+                        <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" >    
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
-                        <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>                       
-                        <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <span class="arrowPng" @click="deleteSalesMan" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span> 
+                                              
+                        <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -248,7 +249,7 @@
 
 <script>
 import Utils from '../components/tools/Utils';
-import addressComponent from '../components/address.vue';
+import addressComponent from '../components/address2.vue';
 import axios from 'axios';
 import $ from 'jquery';
 export default {
@@ -1088,6 +1089,14 @@ export default {
                 self.$refs.rule.showPopper=true
             }
         },
+        //添加样式
+        changeActive($event){
+             $event.currentTarget.className=" delete_left ";
+        },
+        //移除样式        
+        removeActive($event){     
+            $event.currentTarget.className=" arrowPng ";
+        }        
 
     },
   
@@ -1246,7 +1255,7 @@ export default {
         height: 20px;
         top: 9px;
         left: 164px;
-        // z-index: 1000;
+        z-index: 1000;
     }
     .delete_right {
         background: url("../assets/images/zph_close.jpg") no-repeat center;
@@ -1255,8 +1264,17 @@ export default {
         height: 20px;
         top: 9px;
         left: 164px;
-        // z-index: 1000;
+        z-index: 1000;
     }
+    .arrowPng{
+        background: url("../assets/images/arrow.jpg") no-repeat center;
+        position: absolute;
+        width: 20px;
+        height: 20px;
+        top: 9px;
+        left: 164px;
+        z-index: 1000;
+    }    
 }
 .mark{
     font-family: 'MicrosoftYaHei';
