@@ -249,7 +249,7 @@
 
 <script>
 import Utils from '../components/tools/Utils';
-import addressComponent from '../components/address.vue';
+import addressComponent from '../components/address2.vue';
 import axios from 'axios';
 import $ from 'jquery';
 export default {
