@@ -54,14 +54,14 @@
 							<div class="noticeTitle" :title="scope.row.noticeTitle">{{scope.row.noticeTitle}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column prop="noticeType" label="通知类型" align="center">
+					<el-table-column prop="noticeType" label="通知类型" align="center" width="200px">
 						<template slot-scope="scope">
 							{{ scope.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
 						</template>
 					</el-table-column>
 					<el-table-column label="发送对象" align="center" width=200>
 						<template scope="scope">
-							<span>已读{{scope.row.numberOfReaders}}/{{scope.row.sendTheTotalNumber}}</span>
+							<span>已读({{scope.row.numberOfReaders}}/{{scope.row.sendTheTotalNumber}})</span>
 							<!-- <span>已读{{tableData[scope.$index].numberOfReaders }}/{{tableData[scope.$index].sendTheTotalNumber}}</span> -->
 						</template>
 					</el-table-column>
@@ -117,7 +117,7 @@ export default {
 	methods: {
 		sequence(val){
 			return (this.currentPage - 1) * this.pageSize + val + 1 < 10 ?  
-									Number('0' + ((this.currentPage - 1) * this.pageSize + val + 1))  : Number((this.currentPage - 1) * this.pageSize + val + 1  ) 
+						Number('0' + ((this.currentPage - 1) * this.pageSize + val + 1))  : Number((this.currentPage - 1) * this.pageSize + val + 1  ) 
 									
 		},
 		closeTip(e) {

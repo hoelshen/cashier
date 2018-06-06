@@ -152,7 +152,7 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" style="left: 164px;"></span>
+                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName"></span>
                         <el-autocomplete v-model="addForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
                             
                         </el-autocomplete>
@@ -181,7 +181,7 @@
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员">
                         <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
-                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找"  icon="caret-top">
                             <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
@@ -189,7 +189,7 @@
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员">
                          <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
-                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找"  icon="caret-top">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -425,9 +425,12 @@ export default {
         //判断是否超时
         checkSession() {
             const self = this;
+            console.log(window.sessionStorage)
             if (window.sessionStorage) {
                 let nowDate = new Date().getTime();
                 let time = (nowDate - sessionStorage.haha) / 1000
+                //距离上一次操作时间
+                // console.log(nowDate - sessionStorage.haha)
                 //超过30秒没操作，重新登录
                 if (time > 1800) {
                     self.$router.push('/login');
@@ -707,8 +710,6 @@ export default {
             let addBelongAddress = (data.agentGradeId ==31 || data.agentGradeId ==266 )|| data.shopType == 'SELF_SUPPORT'?  self.$refs.addBelongAddress.getData() : null;
             let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);
             let dataSignedEndTime  = Utils.formatDayDate(data.signedEndTime);
-            console.log(dataSignedStartTime);
-            console.log(dataSignedEndTime);
             let data1 = {
                     'shop.shopName': data.shopName,
                     'shop.name': data.name,
@@ -1094,7 +1095,6 @@ export default {
     },
     created(){
         const self = this;
-
         if (!self.checkSession()) return;
         self.loading = true;
         
@@ -1212,21 +1212,21 @@ export default {
             height: 18px;
     }
     .delete_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
         top: 9px;
-        left: 164px;
+        left: 189px;
         z-index: 1000;
     }
     .delete_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
         top: 9px;
-        left:164px;
+        left: 189px;
         z-index: 1000;
     }
     .content_title h2 {

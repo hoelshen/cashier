@@ -1240,7 +1240,7 @@ export default {
         }
     }
     .delete_left {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
@@ -1249,7 +1249,7 @@ export default {
         // z-index: 1000;
     }
     .delete_right {
-        background: url("../assets/images/zph_close.png") no-repeat center;
+        background: url("../assets/images/zph_close.jpg") no-repeat center;
         position: absolute;
         width: 20px;
         height: 20px;
