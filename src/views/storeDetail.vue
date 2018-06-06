@@ -866,6 +866,8 @@ export default {
         if (sessionStorage.user) {
             self.createId = JSON.parse(sessionStorage.getItem('user')).id;
         }
+        self.renewalForm.timerValueStar="";
+        self.renewalForm.timerValueEnd="";
         this.renewalDialogVisible = true;
         self.$ajax({
               url:'/api/http/contractCycle/findCurrentContractCycle.jhtml',
