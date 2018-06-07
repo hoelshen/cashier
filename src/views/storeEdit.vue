@@ -1081,6 +1081,10 @@ export default {
                     self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.extendSuperShop.name
                 }
 
+                console.log(self.editForm.ruleTitle)
+                if(self.editForm.ruleTitle){
+                    self.$refs.rule.showPopper=true
+                }
                 }).catch(function (err) {
                     self.loading = false;
                     console.log(err);
