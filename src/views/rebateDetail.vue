@@ -17,7 +17,7 @@
             <el-row>
                 <el-col>
                     <el-form-item label="适配代理商：" label-width="11.5%">
-                        <el-button type="primary" @click="relatedAgenciesData(ruleNo,urlId)">点击查看</el-button>
+                        <el-button type="primary" @click="openRelatedAgenciesData">点击查看</el-button>
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -217,7 +217,7 @@
                         <el-row>
                             <el-col :span="5"  :offset="10">
                                 <el-form-item>
-                                     <el-checkbox v-model="searchData.checked" checked true-label="1" false-label="">不显示禁用代理商</el-checkbox>
+                                     <el-checkbox v-model="searchData.checked" checked true-label="1" @change="onSubmit" false-label="">不显示禁用代理商</el-checkbox>
                                 </el-form-item>
                             </el-col>
                             <el-col :span="6">
@@ -239,6 +239,10 @@
                           </template>
                       </el-table-column>
                       <el-table-column prop="shopNo" label="代理商编号" width="127">
+                           <template slot-scope="scope">
+                               <span> <router-link  target="_blank" class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">{{scope.row.shopNo}}</router-link></span>
+                           </template>
+                          
                       </el-table-column>
                       <el-table-column prop="name" label="代理商姓名" width="150">
                       </el-table-column>
@@ -371,11 +375,16 @@ export default {
         self.currentPage = val;
         self.relatedAgenciesData(this.ruleNo,this.urlId)
     },
+    openRelatedAgenciesData(){
+        this.searchData.checked = "1";
+        this.searchData.nameOrNo = "";
+        this.relatedAgenciesData(this.ruleNo,this.urlId);
+        this.relatedAgencies = true;
+    },
     relatedAgenciesData(ruleNo,urlId){
         this.relatedAgenciesTitle = "关联代理商（规则编号：" + ruleNo + "）"
         if (!this.checkSession()) return; 
         const self = this;               
-        self.relatedAgencies = true;
         self.loading = true;
         let url = '/api/http/businessExtendsRule/getRelatedAgentListAccordingToBusinessExtendsRuleId.jhtml' 
         self.$ajax({
@@ -420,7 +429,7 @@ export default {
     },
     onSubmit(){
         this.relatedAgenciesData(this.ruleNo,this.urlId);
-        self.currentPage=1;
+        this.currentPage=1;
     },
     getUrlId() {
       this.urlId = this.$route.query.id
@@ -621,7 +630,6 @@ export default {
 }
 .state-wrap{
     position: relative;
-    padding-left: 10px;
 }
 .icon-green{
     width: 5px;
@@ -631,7 +639,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left:0px;
+    left:-10px;
 }
 .icon-red{
     width: 5px;
@@ -641,7 +649,7 @@ export default {
     display: inline-block;
     position: absolute;
     top: 7px;
-    left: 0px;
+    left:-10px;
 }
 </style>
 

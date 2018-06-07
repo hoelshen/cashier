@@ -7,7 +7,7 @@
                     <el-form-item label="规则名称："   label-width="125px"
                      prop="businessExtendsRuleName"
                             :rules="[
-                            { required: true, message: '时间不能为空'}
+                            { required: true, message: '规则名称不能为空'}
                             ]">
                         <el-input type="businessExtendsRuleName" placeholder="请输入规则名称，最多25个汉字" :maxlength="50" v-model="form.businessExtendsRuleName"></el-input>
                     </el-form-item>
@@ -432,7 +432,7 @@
                 </el-row>
             </div>
             <el-row style="margin-top:20px;">
-                <el-button @click="resetForm('form')">取消</el-button>
+                <el-button @click="goBack">取消</el-button>
                 <el-button type="primary" @click="submitForm('form')">保存</el-button>
             </el-row>
         </el-form>
