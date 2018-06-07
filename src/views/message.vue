@@ -69,7 +69,7 @@
 					</el-table-column>
 					<el-table-column prop="status" label="状态" width=120>
 						<template slot-scope="scope">
-							<span class="greenPoint" :class="{redColor : scope.row.status === 2}"></span>
+							<span class="greenPoint" :class="{redColor : scope.row.status === 2}" style="margin-left:-15px"></span>
 							{{ scope.row.status === 1 ? '启用' : '禁用' }}
 						</template>
 					</el-table-column>
@@ -275,7 +275,6 @@ export default {
 	},
 	updated(){
 		this.getTableData()
-		
 	}
 }
 </script>

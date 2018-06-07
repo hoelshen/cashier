@@ -198,7 +198,7 @@
         </el-form>
         <!-- 新增店铺 end -->
         <!--新增确认保存弹窗-->
-        <el-dialog class="addPromptTitleStyle"   :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="small" @close="resetPromptForm" >
+        <el-dialog class="addPromptTitleStyle"   :title="addPromptTitle" :visible.sync="changePromptDialogFormVisible"  size="small" >
                 <i class="el-icon-warning" style="color:red"></i> 
                 <span>店铺新增成功后以下信息无法修改，请您核对信息</span>
                 <el-form  :model="addPromptForm" class="addPromptTitleStyle" style="    position:relative;padding: 27px 0px;">
@@ -660,8 +660,6 @@ export default {
                 this.addForm.superAgentGradeId= '';
                 this.addForm.extendSuperNoName = '';
             }
-
-
         },
         //气泡提示
         annualExtendPerformanceTitple(){
@@ -689,10 +687,7 @@ export default {
         ruleTitleTitple(){
             let self = this
             if(self.addForm.ruleTitle){
-                self.$refs.rule.showPopper=true
-                // setTimeout(function(){
-                //     self.$refs.rule.showPopper=false
-                // },6000)                
+                self.$refs.rule.showPopper=true         
             }
         },
         // 新增店铺
@@ -767,7 +762,6 @@ export default {
                         type: 'success'
                     })
                      setTimeout(function () {
-                         console.log(response.data.result.id)
                         self.$router.push({ name:'storeDetail',params:{shopNo:response.data.result.id} })
                     }, 1000)
                 }else{
@@ -826,123 +820,15 @@ export default {
         },
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
-                }
-
-                if (!queryString) {
-                    // console.log(response.data.result)
-
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-
-                    callback(list);
-
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.headPinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    // console.log(list);
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
+            Utils.operatorQuerySearchAsync(queryString, callback)
         },
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
-                }
-                if (!queryString) {
-                    // console.log(response.data.result)
-
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-
-                    callback(list);
-
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-
-
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
+            Utils.salesManQuerySearchAsync(queryString, callback)
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
-
-            // queryString = this.addForm.extendSuperNo ? '' : queryString;
-
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-
-                for (let i of response.data.result) {
-                    i.value = i.shopNoAndName;  //将CUSTOMER_NAME作为value
-                }
-
-                if (!queryString) {
-
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-                    callback(list);
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
-                    }
-                }
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
+            Utils.extendSuperNoQuerySearchAsync(queryString, callback)
         },
         //点击选中
         handleOperatorSelect(item) {
@@ -965,7 +851,8 @@ export default {
                     this.addForm.state = item.state;
                 }
 
-        },  
+        }, 
+        //删除匹配规则
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
                 this.addForm.superAgentGradeId = '';
@@ -991,9 +878,6 @@ export default {
         },
         addZuipin(){
             this.addForm.extendSuperType = 'ZUIPIN';
-        },
-        resetPromptForm(){
-            
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
@@ -1075,10 +959,7 @@ export default {
             this.isSearchRuleNo = ''; 
             let self = this
             if(self.addForm.ruleTitle){
-                self.$refs.rule.showPopper=true
-                // setTimeout(function(){
-                //     self.$refs.rule.showPopper=false
-                // },4000)                
+                self.$refs.rule.showPopper=true              
             }
         },
         //查询关系
@@ -1093,6 +974,15 @@ export default {
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
             this.addForm.ruleTitle = ruleNo +' '+  businessExtendsRuleName
             this.addForm.ruleId = id
+            
+            this.relationshipRulesDialogVisible = false;                   
+            this.relationshipRulesDialogForm = [];
+            this.currentPage = 1;            
+            this.isSearchRuleNo = ''; 
+            let self = this
+            if(self.addForm.ruleTitle){
+                self.$refs.rule.showPopper=true             
+            }
         },
         //添加样式
         changeActive($event){
@@ -1101,6 +991,37 @@ export default {
         //移除样式        
         removeActive($event){     
             $event.currentTarget.className=" arrowPng ";
+        },
+        //获取代理商等级列表
+        getAgencyLevel(){
+            const self = this ;
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
+                // console.log(response);
+                if (response.data.success == 1) {
+                    self.levelArray = response.data.result
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
+        //获取默认规则
+        getDefaultRules(){
+            const self = this ;
+            self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
+                }).then(function (response) {
+                self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
+                self.addForm.ruleId = response.data.result.id
+                if(response.data.result.ruleNo){
+                        self.$refs.rule.showPopper=true         
+                }
+                }).catch(function (err) {
+                    console.log(err);
+            });
         }
     },
     created(){
@@ -1109,28 +1030,9 @@ export default {
         self.loading = true;
         
         //获取代理商等级列表
-        self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
-            // console.log(response);
-            if (response.data.success == 1) {
-                self.levelArray = response.data.result
-            } else {
-                self.$message({
-                    message: response.data.msg,
-                    type: 'error'
-                })
-            }
-        }).catch(function (err) {
-            console.log(err);
-        });
+        self.getAgencyLevel();
+        self.getDefaultRules();
 
-        //获取默认规则
-        self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
-        }).then(function (response) {
-          self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
-          self.addForm.ruleId = response.data.result.id
-        }).catch(function (err) {
-            console.log(err);
-        });
     },
     watch:{
         'addForm.areaClass'(){

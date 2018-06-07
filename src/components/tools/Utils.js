@@ -1,3 +1,4 @@
+import axios from 'axios';
 let Utils = {
         //格式化日期成字符串
         formatDate(date) {
@@ -167,7 +168,109 @@ let Utils = {
         digitZero(val){
             var reg = /^[0-9]*$/.test(val)
             return reg
-        }  
+        },
+        //搜索运营人员
+        operatorQuerySearchAsync(queryString, callback) {
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
+            //从后台获取到对象数组
+            axios.get(url).then((response) => {
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                for (let i of response.data.result) {
+                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+                }
+                if (!queryString) {
+                    for (let item of response.data.result) {
+                        list.push(item)
+                    }
+                    callback(list);
+                } else {
+                    let QS = queryString.toLocaleLowerCase();
+                    for (let item of response.data.result) {
+                        if (item.headPinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
+                            list.push(item)
+                        }
+                    }
+                    // console.log(list);
+                    if (list.length == 1) {
+                        list.push({ value: `没有匹配结果"${queryString}"` });
+                    }
+                }
+                callback(list);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        //搜索业务人员
+        salesManQuerySearchAsync(queryString, callback) {
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
+            //从后台获取到对象数组
+            axios.get(url).then((response) => {
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+                for (let i of response.data.result) {
+                    i.value = i.userName;  //将CUSTOMER_NAME作为value
+                }
+                if (!queryString) {
+                    for (let item of response.data.result) {
+                        list.push(item)
+                    }
+                    callback(list);
+                } else {
+                    let QS = queryString.toLocaleLowerCase();
+                    for (let item of response.data.result) {
+                        if (item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
+                            list.push(item)
+                        }
+                    }
+                    if (list.length == 1) {
+                        list.push({ value: `没有匹配结果"${queryString}"` });
+                    }
+                }
+                callback(list);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
+        //搜索上级代理商
+        extendSuperNoQuerySearchAsync(queryString, callback){
+            var list = [{}];
+            //调用的后台接口
+            let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
+            //从后台获取到对象数组
+            axios.get(url).then((response) => {
+                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
+
+                for (let i of response.data.result) {
+                    i.value = i.shopNoAndName;  //将CUSTOMER_NAME作为value
+                }
+
+                if (!queryString) {
+
+                    for (let item of response.data.result) {
+                        list.push(item)
+                    }
+                    callback(list);
+                } else {
+
+                    let QS = queryString.toLocaleLowerCase();
+
+                    for (let item of response.data.result) {
+                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
+                            list.push(item)
+                        }
+                    }
+                    if (list.length == 1) {
+                        list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
+                    }
+                }
+                callback(list);
+            }).catch((error) => {
+                console.log(error);
+            });
+        },
     }
 
         export default Utils

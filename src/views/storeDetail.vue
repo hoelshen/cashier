@@ -2,10 +2,10 @@
     <div id="detailStore">
         <div class="renewal" style="padding: 0px 0 20px 0;">
             <el-button type="primary" @click="openRenewal">续签</el-button>
+            <span class="content_closeBtn" style="" @click="goBack">X</span>
         </div>
         <el-row class="content_title_top">
             <h2><span class="detail-title">基本信息</span><span class="detail-shopno"> ({{detailForm.shopNo}})</span></h2>
-            <div class="content_closeBtn" style="margin-top:10px;" @click="goBack">X</div>
         </el-row>
 
         <div class="info">
@@ -80,7 +80,7 @@
                     <el-col :span="24" style="padding-left:35px;">
                         合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}} 至 {{detailForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
-                        <span class="renewals"  v-show="detailForm.nextSignedStartTime" ></span>    
+                        <span class="next"  v-show="detailForm.nextSignedStartTime" ></span>    
                         <span slot="content" >{{detailForm.nextSignedStartTime}} 至 {{detailForm.nextSignedEndTime}}</span>
                         </el-tooltip>
                     </el-col>
@@ -290,7 +290,7 @@
                     </el-table-column>
                     <el-table-column prop="rebateRate" label='返利比例' width="127">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.rebateRate">{{scope.row.rebateRate}}</span>
+                            <span v-if="scope.row.rebateRate!=null">{{scope.row.rebateRate}}</span>
                             <span v-else>--</span>
                         </template>
                     </el-table-column>
