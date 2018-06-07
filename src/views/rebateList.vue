@@ -277,7 +277,7 @@ export default {
 						message: "设置“"+name+"”为默认规则成功~",
 						type: "success"
 					})
-                   self.$router.push("/rebateDetail?id="+id);
+                    self.getFormData();
                 } else {
                     self.$message({
                         message: response.data.msg,
