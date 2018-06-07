@@ -1036,6 +1036,7 @@ export default {
             });
         },
         getAgencyInformation(value){
+            const self = this;
             // 获取代理商信息
             self.$ajax.get('/api/http/shop/searchShop.jhtml', {
                 params: {
@@ -1098,6 +1099,7 @@ export default {
 
         self.loading = true;
         self.getAgencyLevel();
+        self.getAgencyInformation(this.id);
     },
     watch:{
         'editForm.areaClass'(){
