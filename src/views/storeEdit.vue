@@ -886,7 +886,7 @@ export default {
                 callback(list);
             }).catch((error) => {
                 console.log(error);
-        });
+            });
         },
         salesManQuerySearchAsync(queryString, callback) {
             queryString = !this.editForm.salesMan ? '' : queryString;
@@ -936,13 +936,17 @@ export default {
             //do something
         },
         handleExtendSuperNoSelect(item){
-            this.editForm.extendSuperNo = item.shopNo;
-            this.editForm.extendSuperName = item.name;
-            
-            this.editForm.extendSuperNoName = item.shopNo + ' ' + item.name
-            
-            this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
-            this.editForm.state = item.state;
+            if(item.name==null){
+                this.editForm.extendSuperNoName = ``                    
+            }else{            
+                this.editForm.extendSuperNo = item.shopNo;
+                this.editForm.extendSuperName = item.name;
+                
+                this.editForm.extendSuperNoName = item.shopNo + ' ' + item.name
+                
+                this.editForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
+                this.editForm.state = item.state;
+                }
         },
         deleteOperator(){
             this.editForm.operator='';

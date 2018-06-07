@@ -954,8 +954,6 @@ export default {
             this.addForm.salesMan =  item.userName;
         },
         handleExtendSuperNoSelect(item){
-
-                console.log(item)
                 if(item.name==null){
                     this.addForm.extendSuperNoName = ``                    
                 }else{
