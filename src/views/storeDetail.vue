@@ -127,7 +127,6 @@
                                         style="position:relative;border-bottom-right-radius: 10px; border-top-right-radius: 10px;float: left;"></div>
                                 </div> 
                                 
-                                
                                 <!--比率 -->
                                 <span  v-if="detailForm.shopType!='SELF_SUPPORT'
                                             && detailForm.annualPurchasePerformance != 0 
@@ -290,7 +289,7 @@
                     </el-table-column>
                     <el-table-column prop="rebateRate" label='返利比例' width="127">
                         <template slot-scope="scope">
-                            <span v-if="scope.row.rebateRate!=null">{{scope.row.rebateRate}}</span>
+                            <span v-if="scope.row.rebateRate!=null">{{(scope.row.rebateRate).toFixed(2) }}</span>
                             <span v-else>--</span>
                         </template>
                     </el-table-column>

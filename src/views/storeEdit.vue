@@ -982,6 +982,16 @@ export default {
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
             this.editForm.ruleTitle = ruleNo + ' ' +  businessExtendsRuleName
             this.editForm.ruleId = id
+
+            this.relationshipRulesDialogForm = [];
+            this.relationshipRulesDialogVisible = false; 
+            this.currentPage = 1;
+            this.selectrelationshipRulesValue = '';  
+            let self = this
+            if(self.editForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+            }
+
         },
         //删除规则
         deleteRuleTitle(){
@@ -989,6 +999,7 @@ export default {
             this.editForm.ruleId = '';
             this.editForm.businessExtendsRuleName = '';
             this.editForm = Object.assign({},this.editForm)
+            this.$refs.rule.showPopper=false       
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
