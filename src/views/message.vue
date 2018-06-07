@@ -44,39 +44,39 @@
 			<div class="tableInfo">
 				<el-button type="primary" class="el-icon-plus" @click="$router.push('/messageAdd')">发布通知</el-button>
 				<el-table border :data="tableData" style="margin: 10px auto 20px auto;font-size: 14px;">
-					<el-table-column label="序号" width="80" align="center">
+					<el-table-column label="序号" width="80"  >
 						<template slot-scope="scope">
-							<p class="limit">{{ sequence(scope.$index) }}</p>
+							<p >{{ sequence(scope.$index) }}</p>
 						</template>
 					</el-table-column>
-					<el-table-column prop="noticeTitle" label="通知标题" align="center" width="300px">
+					<el-table-column prop="noticeTitle" label="通知标题"  width="300px">
 						<template slot-scope="scope">
 							<div class="noticeTitle" :title="scope.row.noticeTitle">{{scope.row.noticeTitle}}</div>
 						</template>
 					</el-table-column>
-					<el-table-column prop="noticeType" label="通知类型" align="center" width="200px">
+					<el-table-column prop="noticeType" label="通知类型"  width="200px">
 						<template slot-scope="scope">
 							{{ scope.row.noticeType === 'newPro' ? '新品' : '系统公告' }}
 						</template>
 					</el-table-column>
-					<el-table-column label="发送对象" align="center" width=200>
+					<el-table-column label="发送对象"  width=200>
 						<template scope="scope">
 							<span>已读({{scope.row.numberOfReaders}}/{{scope.row.sendTheTotalNumber}})</span>
 							<!-- <span>已读{{tableData[scope.$index].numberOfReaders }}/{{tableData[scope.$index].sendTheTotalNumber}}</span> -->
 						</template>
 					</el-table-column>
-					<el-table-column prop="publishTime" label="发布时间" align="center" sortable min-width=200px>
+					<el-table-column prop="publishTime" label="发布时间"  sortable min-width=200px>
 					</el-table-column>
-					<el-table-column prop="status" label="状态" align="center" width=120>
+					<el-table-column prop="status" label="状态" width=120>
 						<template slot-scope="scope">
 							<span class="greenPoint" :class="{redColor : scope.row.status === 2}"></span>
 							{{ scope.row.status === 1 ? '启用' : '禁用' }}
 						</template>
 					</el-table-column>
 					
-					<el-table-column prop="publisher" label="发布人" align="center">
+					<el-table-column prop="publisher" label="发布人" >
 					</el-table-column>
-					<el-table-column prop="CREATED_TIME" label="操作" align="left" min-width=300px>
+					<el-table-column prop="CREATED_TIME" label="操作"  min-width=300px>
 						<template slot-scope="scope">
 							<span v-if="scope.row.status === 2" class="table_buleTxt" @click="changeMsg(scope.row,1)">启用</span>
 							<span v-if="scope.row.status === 1" class="table_buleTxt" @click="changeMsg(scope.row,2)">禁用</span>
@@ -117,8 +117,7 @@ export default {
 	methods: {
 		sequence(val){
 			return (this.currentPage - 1) * this.pageSize + val + 1 < 10 ?  
-						Number('0' + ((this.currentPage - 1) * this.pageSize + val + 1))  : Number((this.currentPage - 1) * this.pageSize + val + 1  ) 
-									
+						Number('0' + ((this.currentPage - 1) * this.pageSize + val + 1))  : Number((this.currentPage - 1) * this.pageSize + val + 1  ) 					
 		},
 		closeTip(e) {
 			e.path[3].style.display = "none";
