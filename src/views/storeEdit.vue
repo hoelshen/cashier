@@ -920,9 +920,9 @@ export default {
         ruleTitleTitple(){
             let self = this
             self.$refs.rule.showPopper=true
-            setTimeout(function(){
+            if(self.editForm.ruleTitle){
                 self.$refs.rule.showPopper=false
-            },2000)
+            }
         },
         //打开规则关系弹窗
         onOpenRelationshipRulesDialogVisible(val){
@@ -1084,9 +1084,6 @@ export default {
                     console.log(err);
             });
         }
-        
-                
-
     },
   
     created() {
