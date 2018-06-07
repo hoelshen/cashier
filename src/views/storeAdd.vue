@@ -925,7 +925,6 @@ export default {
                     for (let item of response.data.result) {
                         list.push(item)
                     }
-                    console.log(list)
                     callback(list);
                 } else {
 
@@ -955,11 +954,19 @@ export default {
             this.addForm.salesMan =  item.userName;
         },
         handleExtendSuperNoSelect(item){
-                this.addForm.extendSuperNo = item.shopNo;
-                this.addForm.extendSuperName = item.name;
-                this.addForm.extendSuperNoName = item.shopNo + ' ' +item.name;
-                this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
-                this.addForm.state = item.state;
+
+                console.log(item)
+                if(item.name==null){
+                    this.addForm.extendSuperNoName = `输入的代理商编号 / 姓名格式不正确，请检查后再试~`                    
+                }else{
+                    this.addForm.extendSuperNo = item.shopNo;
+                    this.addForm.extendSuperName = item.name;
+                    
+                    this.addForm.extendSuperNoName = item.shopNo + ' ' +item.name;
+                    this.addForm.superAgentGradeId = item.superAgentGradeId == 265 ? '区域' : (item.superAgentGradeId == 31 ? '单店' : '微店');
+                    this.addForm.state = item.state;
+                }
+
         },  
         deleteExtendSuperName(){
                 this.addForm.extendSuperNo = '' ;
