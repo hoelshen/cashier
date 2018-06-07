@@ -477,7 +477,6 @@ export default {
                 return false
             }            
             //合同服务期限判断
-            console.log(data.signedStartTime)
             if (data.signedStartTime=='' || data.signedEndTime== '') {
                 self.loading = false;
                 self.$message({
@@ -490,8 +489,6 @@ export default {
             //代理商姓名判断
             var _zh = data.name ? data.name.match(/[^ -~]/g) : 0;
             var num = Math.ceil((data.name.length + (_zh && _zh.length) || 0)/2);
-            // console.log(num)
-            // console.log(data.name.length)
             if (!data.name) {
                     self.loading = false;
                     self.$message({
@@ -528,7 +525,6 @@ export default {
                     }
             }
             //收件地址判断
-            // console.log(this.addressFlage)
             if(!this.addressFlage){
                 self.loading = false;                
                 self.$message({
@@ -558,9 +554,7 @@ export default {
                     }      
             }
             //所属区域判断
-            // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
-            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
-
+            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  || data.agentGradeId ==31){
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -1006,10 +1000,10 @@ export default {
             // console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
             
-            let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
+            let addBelongAddress = (data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT' || data.agentGradeId ==31) ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
-            // console.log(addAgentAddress)
+            // console.log(addBelongAddress)
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
             let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);   
