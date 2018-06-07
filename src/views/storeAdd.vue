@@ -969,6 +969,7 @@ export default {
         deleteRuleTitle(){
             this.addForm.ruleTitle = '';
             this.addForm.ruleId = '';
+            this.$refs.rule.showPopper=false       
         },
         //选择关系
         selectRuleNo(ruleNo,businessExtendsRuleName,id){
