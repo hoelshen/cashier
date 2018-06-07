@@ -272,6 +272,10 @@ export default {
 			this.user = JSON.parse(sessionStorage.getItem('user'));
 		}
 		this.getTableData();
+	},
+	updated(){
+		this.getTableData()
+		
 	}
 }
 </script>
