@@ -907,7 +907,8 @@ export default {
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
 
-            queryString = this.addForm.extendSuperNo ? '' : queryString;
+            // queryString = this.addForm.extendSuperNo ? '' : queryString;
+
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
@@ -931,7 +932,7 @@ export default {
                     let QS = queryString.toLocaleLowerCase();
 
                     for (let item of response.data.result) {
-                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
+                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
                             list.push(item)
                         }
                     }
