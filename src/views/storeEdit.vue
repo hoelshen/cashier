@@ -617,40 +617,6 @@ export default {
                 this.$message('取消成功')
             })
         },
-        //搜索上级代理商
-        extendSuperNoQuerySearchAsync(queryString, callback){
-            // queryString = this.editForm.extendSuperNo ? '' : queryString;
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-
-                for (let i of response.data.result) {
-                    i.value = i.shopNoAndName;  //将CUSTOMER_NAME作为value
-                }
-                if (!queryString) {
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-                    callback(list);
-                } else {
-                    let QS = queryString.toLocaleLowerCase();
-                    for (let item of response.data.result) {
-                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
-                    }
-                }
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
-        },
         // 确认修改店铺
         editAgent() {
             const self = this;
@@ -857,72 +823,14 @@ export default {
             });
         },
         operatorQuerySearchAsync(queryString, callback) {
-            queryString = !this.editForm.operator ? '' : queryString;
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个字段, 因为autocomplete只识别字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为
-                }
-                if (!queryString) {
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-                    callback(list);
-                } else {
-                    let QS = queryString.toLocaleLowerCase();
-                    for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
+            Utils.operatorQuerySearchAsync(queryString, callback)
         },
         salesManQuerySearchAsync(queryString, callback) {
-            queryString = !this.editForm.salesMan ? '' : queryString;
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个字段, 因为autocomplete只识别字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为
-                }
-                if (!queryString) {
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-                    callback(list);
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-
-
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
+            Utils.salesManQuerySearchAsync(queryString, callback)
+        },
+        //搜索上级代理商
+        extendSuperNoQuerySearchAsync(queryString, callback){
+            Utils.extendSuperNoQuerySearchAsync(queryString, callback)
         },
         //点击选中
         handleOperatorSelect(item) {
@@ -1081,7 +989,6 @@ export default {
             this.editForm.ruleId = '';
             this.editForm.businessExtendsRuleName = '';
             this.editForm = Object.assign({},this.editForm)
-
         },
         changeCancle(){
             this.relationshipRulesDialogForm = [];
@@ -1100,7 +1007,73 @@ export default {
         //移除样式        
         removeActive($event){     
             $event.currentTarget.className=" arrowPng ";
-        }        
+        },
+        //获取代理商等级列表
+        getAgencyLevel(){
+            const self = this;
+            self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
+                if (response.data.success == 1) {
+                    self.levelArray = response.data.result
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                }
+            }).catch(function (err) {
+                console.log(err);
+            });
+        },
+        getAgencyInformation(value){
+            // 获取代理商信息
+            self.$ajax.get('/api/http/shop/searchShop.jhtml', {
+                params: {
+                    'shopId': value,
+                }
+                }).then(function (response) {
+                    self.loading = false;
+                    self.editForm = response.data.result;
+
+                // console.log(self.editForm)
+                // console.log(self.editForm.businessExtendsRule)
+                //匹配规则
+                if(!self.editForm.businessExtendsRule){
+                    self.editForm.ruleTitle = ''
+                }else{
+                    self.editForm.ruleTitle = self.editForm.businessExtendsRule.ruleNo + ' '+ self.editForm.businessExtendsRule.businessExtendsRuleName;
+                }
+
+                if(self.flage ){
+                    self.editForm.areaClass = response.data.result.areaClass;
+                }else{
+                    self.editForm.areaClass = self.editForm.agentCityName        
+                }
+                self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
+
+                if(self.editForm.shopType=='SELF_SUPPORT'){
+                        self.areaClassFlag = false;
+                }
+                if(self.editForm.superAgentGradeId){
+                    self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
+                }
+
+                if(self.editForm.ruleId == null){
+                    self.editForm.ruleId = '' 
+                }
+                //拓展上级
+                if(self.editForm.extendSuperNo==null){
+                    self.editForm.extendSuperNoName = '';
+                }else{
+                    self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.extendSuperShop.name
+                }
+
+                }).catch(function (err) {
+                    self.loading = false;
+                    console.log(err);
+            });
+        }
+        
+                
 
     },
   
@@ -1113,71 +1086,7 @@ export default {
         const self = this; 
 
         self.loading = true;
-
-        //获取代理商等级列表
-        self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
-            if (response.data.success == 1) {
-                self.levelArray = response.data.result
-            } else {
-                self.$message({
-                    message: response.data.msg,
-                    type: 'error'
-                })
-            }
-        }).catch(function (err) {
-            console.log(err);
-        });
-        // 获取代理商信息
-        self.$ajax.get('/api/http/shop/searchShop.jhtml', {
-            params: {
-                'shopId': src[5],
-            }
-        }).then(function (response) {
-            self.loading = false;
-            self.editForm = response.data.result;
-
-            // console.log(self.editForm)
-            // console.log(self.editForm.businessExtendsRule)
-            //匹配规则
-            if(!self.editForm.businessExtendsRule){
-                self.editForm.ruleTitle = ''
-            }else{
-                 self.editForm.ruleTitle = self.editForm.businessExtendsRule.ruleNo + ' '+ self.editForm.businessExtendsRule.businessExtendsRuleName;
-            }
-
-            if(self.flage ){
-                self.editForm.areaClass = response.data.result.areaClass;
-            }else{
-                self.editForm.areaClass = self.editForm.agentCityName        
-            }
-            self.editForm.extendSuperType = self.editForm.extendSuperType || 'ZUIPIN'
-
-            if(self.editForm.shopType=='SELF_SUPPORT'){
-                    self.areaClassFlag = false;
-            }
-            if(self.editForm.superAgentGradeId){
-                self.editForm.superAgentGradeId =  response.data.result.superAgentGradeId == 265 ? '区域' : (response.data.result.superAgentGradeId == 31 ? '单店' : '微店') 
-            }
-
-            if(self.editForm.ruleId == null){
-                // console.log('ok')
-                self.editForm.ruleId = '' 
-            }
-            //拓展上级
-            // console.log(self.editForm.extendSuperNo )
-            if(self.editForm.extendSuperNo==null){
-                self.editForm.extendSuperNoName = '';
-            }else{
-                self.editForm.extendSuperNoName = response.data.result.extendSuperShop.shopNo +' '+ response.data.result.extendSuperShop.name
-            }
-
-        }).catch(function (err) {
-            self.loading = false;
-            console.log(err);
-        });
-
-        
-   
+        self.getAgencyLevel();
     },
     watch:{
         'editForm.areaClass'(){

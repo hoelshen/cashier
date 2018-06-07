@@ -17,7 +17,7 @@
                     </el-col>
 
                     <el-col :span="7">
-                        <el-form-item label="状态：">
+                        <el-form-item label="状态：" >
                             <el-select v-model="searchData.state" placeholder="请选择" clearable>
                                 <el-option v-for="item in stateArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
                             </el-select>
@@ -105,15 +105,15 @@
                         </el-table-column>
                         <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
                         </el-table-column>
-                        <el-table-column prop="signTime" label="注册时间" width="110">
+                        <el-table-column prop="signTime" label="注册时间" width='200'>
                         </el-table-column>
-                        <el-table-column prop="state" label="状态">
+                        <el-table-column prop="state" label="状态" width='150'  >
                             <template slot-scope="scope" >
                                 <p>
-                                    <span v-if="scope.row.state==0">
+                                    <span v-if="scope.row.state==0" style="margin-left:-15px">
                                         <span class="green-color"></span>启用</span>
-                                    <span v-if="scope.row.state==1">
-                                        <span class="red-color"></span>禁用</span>
+                                    <span v-if="scope.row.state==1" style="margin-left:-15px" >
+                                        <span class="red-color" ></span>禁用</span>
                                 </p>
                             </template>
                         </el-table-column>
