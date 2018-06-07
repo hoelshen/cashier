@@ -176,60 +176,60 @@
         </div>
         <!-- 表格 end -->   
         <!-- 预存款变更弹窗 start -->
-            <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
-                <el-form   :model="changeForm">
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="店铺名称：" label-width="100px">
-                                <el-input v-model="changeForm.changeShopName" disabled></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
+            <el-form   :model="changeForm">
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="店铺名称：" label-width="100px">
+                            <el-input v-model="changeForm.changeShopName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="变动类型：" label-width="100px">
-                                <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;" @click.native="selectIsFirstBatchMoney">
-                                    <el-option label="充值" value="TOP_UP" ></el-option>
-                                    <el-option label="扣款" value="DEDUCTIONS" ></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item  v-if="changeForm.changeType==='TOP_UP'" label="首批进货款：">
-                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="1" value="1" @click.native="changRemarkTrue">是</el-radio>
-                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0"  @click.native="changRemarkFalse">否</el-radio>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="变动类型：" label-width="100px">
+                            <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;" @click.native="selectIsFirstBatchMoney">
+                                <el-option label="充值" value="TOP_UP" ></el-option>
+                                <el-option label="扣款" value="DEDUCTIONS" ></el-option>
+                            </el-select>
+                        </el-form-item>
+                        <el-form-item  v-if="changeForm.changeType==='TOP_UP'" label="首批进货款：">
+                                <el-radio v-model="changeForm.isFirstBatchMoney" label="1" value="1" @click.native="changRemarkTrue">是</el-radio>
+                                <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0"  @click.native="changRemarkFalse">否</el-radio>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                    <el-row >
-                        <el-col :span="22"   >
-                            <el-form-item label="变动金额：" label-width="100px">  
-                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  >
-                                 <template slot="prepend" v-if="changeForm.changeType === 'TOP_UP'">➕</template>    
-                                 <template slot="prepend" v-if="changeForm.changeType === 'DEDUCTIONS'">➖</template>                                     
-                                 </el-input>
-                                <p class="yuan">元</p>
-                            </el-form-item>              
-                        </el-col>                  
-                    </el-row>
+                <el-row >
+                    <el-col :span="22"   >
+                        <el-form-item label="变动金额：" label-width="100px">  
+                            <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  >
+                                <template slot="prepend" v-if="changeForm.changeType === 'TOP_UP'">➕</template>    
+                                <template slot="prepend" v-if="changeForm.changeType === 'DEDUCTIONS'">➖</template>                                     
+                                </el-input>
+                            <p class="yuan">元</p>
+                        </el-form-item>              
+                    </el-col>                  
+                </el-row>
 
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="备注说明：" label-width="100px">
-                                <el-input v-model="changeForm.remark" ></el-input>
-                                <p class="triangle"></p>
-                                <p class="msg">备注修改的原因，不超过50个中文字符</p>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                </el-form>
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="备注说明：" label-width="100px">
+                            <el-input v-model="changeForm.remark" ></el-input>
+                            <p class="triangle"></p>
+                            <p class="msg">备注修改的原因，不超过50个中文字符</p>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
 
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="changeCancle">取 消</el-button>
-                    <el-button type="primary" @click="onChange">确 定</el-button>
-                </div>
-            </el-dialog>
-            <!-- 预存款变更弹窗 end -->  
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="changeCancle">取 消</el-button>
+                <el-button type="primary" @click="onChange">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 预存款变更弹窗 end -->  
     </div>
 </template>
 
@@ -381,11 +381,13 @@ export default {
         },
         //确定预存款变更
         onChange() {
+            
             if (sessionStorage.user) {
                 this.user = JSON.parse(sessionStorage.user);
                 // console.log(this.user);
             }
             const self = this;
+            self.loading = true;
             if (!self.checkSession()) return;
             if (!self.changeForm.changeType) {
                 self.$message({
@@ -415,35 +417,32 @@ export default {
                 })
                 return;
             }
-            self.loading = true;
             self.$ajax({
-                url: '/api/shop/shopManage/updateDepositAmount.jhtml',
-                method: 'post',
-                data: {
-                    'advanceDeposit.shopId': self.changeForm.changeShopId,
-                    'advanceDeposit.shopName': self.changeForm.changeShopName,
-                    'advanceDeposit.changeType': self.changeForm.changeType,
-                    'advanceDeposit.alterMoney': self.changeForm.alterMoney,
-                    'advanceDeposit.remark': self.changeForm.remark,
-                    'advanceDeposit.creatorId': self.user.id,
-                    'advanceDeposit.updatorId': self.user.id,
-                    'advanceDeposit.isBackground': 1,
-                    'advanceDeposit.isFirstBatchMoney':self.changeForm.isFirstBatchMoney ||'',
-                },
-                transformRequest: [function (data) {
-                    // Do whatever you want to transform the data
-                    let ret = ''
-                    for (let it in data) {
-                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    url: '/api/shop/shopManage/updateDepositAmount.jhtml',
+                    method: 'post',
+                    data: {
+                        'advanceDeposit.shopId': self.changeForm.changeShopId,
+                        'advanceDeposit.shopName': self.changeForm.changeShopName,
+                        'advanceDeposit.changeType': self.changeForm.changeType,
+                        'advanceDeposit.alterMoney': self.changeForm.alterMoney,
+                        'advanceDeposit.remark': self.changeForm.remark,
+                        'advanceDeposit.creatorId': self.user.id,
+                        'advanceDeposit.updatorId': self.user.id,
+                        'advanceDeposit.isBackground': 1,
+                        'advanceDeposit.isFirstBatchMoney':self.changeForm.isFirstBatchMoney ||'',
+                    },
+                    transformRequest: [function (data) {
+                        // Do whatever you want to transform the data
+                        let ret = ''
+                        for (let it in data) {
+                            ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                        }
+                        return ret;
+                    }],
+                    headers: {
+                        'Content-Type': 'application/x-www-form-urlencoded'
                     }
-                    return ret;
-                }],
-                headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded'
-                }
-            }).then(function (response) {
-                self.loading = false;
-                // console.log(response)
+                }).then(function (response) {
                 if (response.data.result === 1) {
                     if (window.sessionStorage) {
                         self.$message({
@@ -451,9 +450,7 @@ export default {
                             type: 'success'
                         })
                         self.dialogFormVisible = false;
-                        setTimeout(function () {
-                            self.handleCurrentChange(self.currentPage);
-                        }, 1000)
+                        self.handleCurrentChange(self.currentPage);
                     }
                 } else {
                     self.$message({
@@ -464,7 +461,6 @@ export default {
             }).catch(function (error) {
 
             });
-            self.dialogFormVisible = false;
         },
         //打开预存款弹窗
         chengPre(id, shopName, shopNo) {
@@ -706,13 +702,9 @@ export default {
 
             if(this.editForm.salesMan == queryString){
 
-
-            this.editForm.salesMan2 = false;
+                    this.editForm.salesMan2 = false;
   
             }
-        
-        
-        
             queryString = !this.editForm.salesMan2 ? '' : queryString;
          
           
@@ -1137,8 +1129,11 @@ export default {
         //重置预存款表格内容
         resetForm() {
             const self = this;
+
             self.changeForm.changeType = '';
+            
             self.changeForm.alterMoney = '';
+            
             self.changeForm.remark = '';
         },
         changRemarkTrue(){
@@ -1147,9 +1142,6 @@ export default {
         changRemarkFalse(){
            this.changeForm.remark='' ;
         }
-    },
-    computed:{
-        
     }
 }
 </script>
