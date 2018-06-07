@@ -57,7 +57,7 @@ export default {
                 'storeDetail': '店铺管理/店铺详情',
                 'rebateList': '规则管理 / 业务拓展返利',
                 'rebateDetail': '规则管理 / 业务拓展返利 / 规则详情',
-                'annualPerformance': '达标返利核算',
+                'annualPerformance': '年度业绩核算',
                 'businessExpansion': '业务返利核算',
                 'rebateAdd':"规则管理 / 业务拓展返利 / 规则新增"
             },
