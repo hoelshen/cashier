@@ -151,8 +151,8 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <span class="arrowPng"  @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -661,8 +661,13 @@ export default {
         },
         //清除代理商
         deleteExtendSuperType(val){  
-            this.addForm.extendSuperNo= '';
-            this.addForm.superAgentGradeId= '';
+            if(this.addForm.agentGradeId==265){
+                this.addForm.extendSuperNo= '';
+                this.addForm.superAgentGradeId= '';
+                this.addForm.extendSuperNoName = '';
+            }
+
+
         },
         //气泡提示
         annualExtendPerformanceTitple(){
