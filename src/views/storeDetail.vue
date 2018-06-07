@@ -80,7 +80,7 @@
                     <el-col :span="24" style="padding-left:35px;">
                         合同服务期限：<span class="font-color"> {{detailForm.signedStartTime}} 至 {{detailForm.signedEndTime}}</span>                   
                         <el-tooltip placement="right" effect="light">
-                        <span class="textBlue"  v-show="detailForm.nextSignedStartTime" ></span>    
+                        <span class="renewals"  v-show="detailForm.nextSignedStartTime" ></span>    
                         <span slot="content" >{{detailForm.nextSignedStartTime}} 至 {{detailForm.nextSignedEndTime}}</span>
                         </el-tooltip>
                     </el-col>

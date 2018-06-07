@@ -151,8 +151,8 @@
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名">
-                        <span class="delete_left" v-if="!(addForm.extendSuperNo==='')" @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom">
+                        <span class="arrowPng"  @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -477,7 +477,6 @@ export default {
                 return false
             }            
             //合同服务期限判断
-            console.log(data.signedStartTime)
             if (data.signedStartTime=='' || data.signedEndTime== '') {
                 self.loading = false;
                 self.$message({
@@ -490,8 +489,6 @@ export default {
             //代理商姓名判断
             var _zh = data.name ? data.name.match(/[^ -~]/g) : 0;
             var num = Math.ceil((data.name.length + (_zh && _zh.length) || 0)/2);
-            // console.log(num)
-            // console.log(data.name.length)
             if (!data.name) {
                     self.loading = false;
                     self.$message({
@@ -528,7 +525,6 @@ export default {
                     }
             }
             //收件地址判断
-            // console.log(this.addressFlage)
             if(!this.addressFlage){
                 self.loading = false;                
                 self.$message({
@@ -558,9 +554,7 @@ export default {
                     }      
             }
             //所属区域判断
-            // console.log(data.agentGradeId!=265 || data.shopType == 'SELF_SUPPORT')        
-            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT'){
-
+            if(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  || data.agentGradeId ==31){
                  if (!addBelongAddress.provinceCode || !addBelongAddress.cityCode || !addBelongAddress.areaCode) {
                     self.loading = false;
                     self.$message({
@@ -661,8 +655,13 @@ export default {
         },
         //清除代理商
         deleteExtendSuperType(val){  
-            this.addForm.extendSuperNo= '';
-            this.addForm.superAgentGradeId= '';
+            if(this.addForm.agentGradeId==265){
+                this.addForm.extendSuperNo= '';
+                this.addForm.superAgentGradeId= '';
+                this.addForm.extendSuperNoName = '';
+            }
+
+
         },
         //气泡提示
         annualExtendPerformanceTitple(){
@@ -908,7 +907,8 @@ export default {
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
 
-            queryString = this.addForm.extendSuperNo ? '' : queryString;
+            // queryString = this.addForm.extendSuperNo ? '' : queryString;
+
             var list = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
@@ -932,7 +932,7 @@ export default {
                     let QS = queryString.toLocaleLowerCase();
 
                     for (let item of response.data.result) {
-                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
+                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
                             list.push(item)
                         }
                     }
@@ -1001,10 +1001,10 @@ export default {
             // console.log(data)
             let addAddress =  self.$refs.addAddress.getData();
             
-            let addBelongAddress =(data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT'  && data.agentGradeId ==31  || data.shopType == 'SELF_SUPPORT') ?  self.$refs.addBelongAddress.getData() : null;
+            let addBelongAddress = (data.agentGradeId ==266  || data.shopType == 'SELF_SUPPORT' || data.agentGradeId ==31) ?  self.$refs.addBelongAddress.getData() : null;
             let addAgentAddress =  (data.agentGradeId ==265 && data.shopType != 'SELF_SUPPORT') ? self.$refs.addAgentAddress.getData() : null; 
 
-            // console.log(addAgentAddress)
+            // console.log(addBelongAddress)
             if (!this.testData(data, addAddress, addAgentAddress, addBelongAddress)) return;
     
             let dataSignedStartTime = Utils.formatDayDate(data.signedStartTime);   
