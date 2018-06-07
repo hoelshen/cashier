@@ -921,6 +921,8 @@ export default {
             let self = this
             self.$refs.rule.showPopper=true
             if(self.editForm.ruleTitle){
+                self.$refs.rule.showPopper=true
+            }else{
                 self.$refs.rule.showPopper=false
             }
         },

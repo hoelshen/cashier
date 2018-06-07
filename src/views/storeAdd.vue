@@ -687,7 +687,9 @@ export default {
         ruleTitleTitple(){
             let self = this
             if(self.addForm.ruleTitle){
-                self.$refs.rule.showPopper=true         
+                self.$refs.rule.showPopper=true    
+            }else{
+                self.$refs.rule.showPopper=false    
             }
         },
         // 新增店铺
