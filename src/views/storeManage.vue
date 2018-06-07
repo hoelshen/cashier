@@ -76,7 +76,7 @@
         <div class="t-bodywrap">
             <el-row class="t-body">
                 	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
-                    <el-button type="primary"  @click="allOutputExcel()">年度目标进度条导出({{totalSize}})</el-button>
+                    <el-button type="primary"  @click="allOutputExcel()">年度目标进度条导出</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
