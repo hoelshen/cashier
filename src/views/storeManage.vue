@@ -459,7 +459,7 @@ export default {
                     })
                 }
             }).catch(function (error) {
-
+                self.dialogFormVisible = false;
             });
         },
         //打开预存款弹窗
@@ -879,9 +879,7 @@ export default {
                             message: '编号：' + data.shopNo + ' ' + stateCN + '成功',
                             type: 'success'
                         })
-                        setTimeout(function () {
-                            self.handleCurrentChange(self.currentPage);
-                        }, 1000)
+                        self.handleCurrentChange(self.currentPage);
                     } else {
                         self.$message({
                             message: response.data.msg,
