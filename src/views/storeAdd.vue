@@ -957,7 +957,7 @@ export default {
 
                 console.log(item)
                 if(item.name==null){
-                    this.addForm.extendSuperNoName = `输入的代理商编号 / 姓名格式不正确，请检查后再试~`                    
+                    this.addForm.extendSuperNoName = ``                    
                 }else{
                     this.addForm.extendSuperNo = item.shopNo;
                     this.addForm.extendSuperName = item.name;
