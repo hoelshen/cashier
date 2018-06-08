@@ -619,17 +619,8 @@ export default {
                     params: {
                         'pager.pageIndex': self.currentPage,
                         'pager.pageSize': self.pageSize,
-                        // 'shop.shopName': self.searchData.shopName,
-                        // 'shop.phone': self.searchData.phone,
-                        // 'shop.name': self.searchData.name,
-                        // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                        // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                        // 'shop.state': self.searchData.state,
-                        // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
                         'shop.sort': 'remainDay',
                         'shop.order': self.order,
-                        // 'shop.operator': self.searchData.operator,
-                        // 'shop.salesMan': self.searchData.salesMan,
                     }
                 }).then(function (response) {
                     self.loading = false;
@@ -643,131 +634,6 @@ export default {
                 });
             }
             
-        },
-        //用户列表
-        operatorQuerySearchAsync(queryString, callback) {
-    
-
-            if(this.editForm.operator == queryString){
-
-               this.editForm.operator2 = false;
-
-                
-            }
-
-            
-            queryString = !this.editForm.operator2 ? '' : queryString;
-            this.editForm.operator2 = true;
-
-
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
-                }
-
-                if (!queryString) {
-                    // console.log(response.data.result)
-
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-
-                    callback(list);
-
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    // console.log(list);
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
-        },
-        salesManQuerySearchAsync(queryString, callback) {
-
-            if(this.editForm.salesMan == queryString){
-
-                    this.editForm.salesMan2 = false;
-  
-            }
-            queryString = !this.editForm.salesMan2 ? '' : queryString;
-         
-          
-            this.editForm.salesMan2 = true;
-
-            var list = [{}];
-            //调用的后台接口
-            let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
-            //从后台获取到对象数组
-            axios.get(url).then((response) => {
-                //在这里为这个数组中每一个对象加一个value字段, 因为autocomplete只识别value字段并在下拉列中显示
-                for (let i of response.data.result) {
-                    i.value = i.userName;  //将CUSTOMER_NAME作为value
-                }
-
-
-                if (!queryString) {
-                    // console.log(response.data.result)
-
-                    for (let item of response.data.result) {
-                        list.push(item)
-                    }
-
-                    callback(list);
-
-                } else {
-
-                    let QS = queryString.toLocaleLowerCase();
-
-                    for (let item of response.data.result) {
-                        if (item.pinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
-                            list.push(item)
-                        }
-                    }
-                    if (list.length == 1) {
-                        list.push({ value: `没有匹配结果"${queryString}"` });
-                    }
-                }
-
-
-                callback(list);
-            }).catch((error) => {
-                console.log(error);
-            });
-        },
-        //点击选中
-        handleoperatorSelect(item) {
-            this.operatorId = item.id;
-
-            this.editForm.operator  = item.userName;
-
-            this.editForm.operator2  = false;
-        
-            //do something
-        },
-        handlesalesManSelect(item) {
-            this.salesManId = item.id;
-
-            this.editForm.salesMan =  item.userName;
-            
-            this.editForm.salesMan2  = false;
- 
-            //do something
         },
         // 获取选中店铺信息
         getInfoById(id) {
@@ -984,7 +850,7 @@ export default {
                     } else {
                         time1 = time1 + '-' + temp.getDate();
                     }
-                    console.log(time1);
+                    // console.log(time1);
                     temp = new Date(this.searchData.searchTime[1]);
                     var time2 = temp.getFullYear();
                     if ((temp.getMonth() + 1) < 10) {
@@ -997,7 +863,7 @@ export default {
                     } else {
                         time2 = time2 + '-' + temp.getDate();
                     }
-                    console.log(time2);
+                    // console.log(time2);
                 } else {
                     var time1 = '';
                     var time2 = '';
@@ -1066,64 +932,6 @@ export default {
                     }
                 });
 		},
-        //重置新增表格内容
-        resetAddForm() {
-            const self = this;
-            self.$refs.addAddress.reset();
-            
-            self.addForm = {
-                shopName: '',
-                name: '',
-                phone: '',
-                signedTime: '',
-                agentGradeId: '',
-                agentProvince: '',
-                agentCity: '',
-                agentCounty: '',
-                address: '',
-                shopType: 'AGENT',
-                isShow: '1',
-                operator: '',
-                salesMan: '',
-                salesManId: '',
-                operatorId: '',
-                addAddress:'',
-                provinceCode: '',
-                cityCode: '',
-                countyCode: '',
-                areaCode:'',
-                areaClass:'',
-            }
-        },
-        //重置修改表格内容
-        resetEditForm() {
-            const self = this;
-            self.editForm = {
-                id: '',
-                shopName: '',
-                name: '',
-                phone: '',
-                signedTime: '',
-                agentGradeId: '',
-                provinceCode: '',
-                areaCode:'',
-                cityCode: '',
-                countyCode: '',
-                city:'',
-                county:'',
-                province:'',
-                agentProvince: '',
-                agentCity: '',
-                agentCounty: '',
-                address: '',
-                operator: '',
-                salesMan: '',
-                salesManId: '',
-                operatorId: '',
-                areaClass:'',
-            }
-
-        },
         //重置预存款表格内容
         resetForm() {
             const self = this;
@@ -1142,6 +950,7 @@ export default {
         }
     }
 }
+
 </script>
 <style lang="css" scoped>
 .address-wrap >>> .address-select{

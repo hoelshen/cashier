@@ -50,7 +50,6 @@
                         placeholder="开始日期"  
                         style="float:left;width:46.5%;"
                         :picker-options="selectionStartTime"
-                        disabled
                         >
                         </el-date-picker>
                         <span style="width:7%;float:left;text-align: center;">至</span>
@@ -370,8 +369,10 @@ export default {
             //时间选择器
             selectionStartTime: {
                disabledDate(time) {
-                    // console.log(time.getTime() = new Date() )
-                    // return  new Date()
+                   let now = new Date();
+                   let startDate = new Date().setDate(new Date().getDate() - 30)
+                   let endDate = new Date().setDate(new Date().getDate() + 30)
+                   return time.getTime() > endDate || time.getTime() < startDate;
                     
                 }
             },
