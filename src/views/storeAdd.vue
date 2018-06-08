@@ -376,8 +376,10 @@ export default {
                 }
             },
             selectionEndTime:{
-                  disabledDate(time) {
-                    return time.getTime() < Date.now();
+               disabledDate(time) {
+                   let now = new Date();
+                   let startDate = new Date().setDate(new Date().getDate() - 30)
+                   return   time.getTime() < startDate;
                 }
             },
             isDelectClass:true,
@@ -481,6 +483,19 @@ export default {
                 self.loading = false;
                 self.$message({
                     message: '合同服务期限不得为空',
+                    type: 'error'
+                })
+                return false
+            }
+            //合同结束时间不能小于开始时间 
+            console.log(data.signedStartTime)
+            console.log(data.signedEndTime)
+            console.log(data.signedStartTime<data.signedEndTime)
+
+            if (data.signedStartTime>data.signedEndTime) {
+                self.loading = false;
+                self.$message({
+                    message: '合同结束时间不能小于开始时间',
                     type: 'error'
                 })
                 return false
@@ -676,7 +691,6 @@ export default {
         //气泡提示
         annualPurchasePerformanceTitple(){
             let self = this
-            console.log(self.addForm.annualPurchasePerformance)
             if(!Number(self.addForm.annualPurchasePerformance) ){
                     self.$refs.annualPurchasePerformance.showPopper=true
             }else{
