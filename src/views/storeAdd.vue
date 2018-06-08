@@ -296,7 +296,7 @@ export default {
                 shopName: '',
                 name: '',
                 phone: '',
-                signedStartTime:  new Date() , //注册开始时间
+                signedStartTime: '', //注册开始时间
                 signedEndTime:'',  //注册结束时间
                 agentGradeId: '',
                 provinceCode: '',
@@ -373,7 +373,6 @@ export default {
                    let startDate = new Date().setDate(new Date().getDate() - 30)
                    let endDate = new Date().setDate(new Date().getDate() + 30)
                    return time.getTime() > endDate || time.getTime() < startDate;
-                    
                 }
             },
             selectionEndTime:{
