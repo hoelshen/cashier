@@ -380,8 +380,8 @@ export default {
             selectionStartTime: {
                disabledDate(time) {
                    let now = new Date();
-                   let startDate = new Date().setDate(new Date().getDate() - 30)
-                   let endDate = new Date().setDate(new Date().getDate() + 30)
+                   let startDate = new Date().setDate(new Date().getDate() - 31)
+                   let endDate = new Date().setDate(new Date().getDate() + 29)
                    return time.getTime() > endDate || time.getTime() < startDate;
                 }
             },
