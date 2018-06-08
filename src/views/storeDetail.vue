@@ -376,7 +376,7 @@
         <!-- 查看代理商年度业绩(编号：xxx) end -->  
 
         <!--续签弹窗-->
-        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal" size="30%">
+        <el-dialog :title="renewalTitle"   :visible.sync="renewalDialogVisible" :before-close="changeRenewal" size="40%">
                 <!-- <div style="position: relative;padding-bottom:50px;"> -->
                     <el-form>
                         <div class="resign_wrap name-tel">
