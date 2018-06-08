@@ -147,7 +147,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
-                    <el-form-item  :span="4"  label="上级编号/姓名" >
+                    <el-form-item  :span="4"  label="上级编号/姓名：" >
                         <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span>
                         <el-autocomplete v-model="editForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
                             <span class="search_left"></span>
@@ -155,7 +155,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="4"   v-if="editForm.shopType!='SELF_SUPPORT'&& (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
-                    <el-form-item :span="4" label="上级代理商等级:">
+                    <el-form-item :span="4" label="上级代理商等级：">
                             <el-input v-model="editForm.superAgentGradeId"  disabled></el-input>   
                     </el-form-item>
                  </el-col>
@@ -163,7 +163,7 @@
             <!-- 第三行-->
             <el-row  :gutter="10">
                 <el-col :span="10">
-                    <el-form-item label="匹配规则:"  style="width: 1024px;">
+                    <el-form-item label="匹配规则："  style="width: 1024px;">
                             <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"   popper-class="grayColor"    content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="arrowPng"  @click="deleteRuleTitle" style="left: 416px;z-index:99" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>  
@@ -175,14 +175,14 @@
             </el-row>    
             <el-row>
                 <el-col class="search-yy-wrap" :span="12">
-                    <el-form-item label="运营人员">
+                    <el-form-item label="运营人员：">
                         <span class="arrowPng" @click="deleteOperator" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>     
                         <el-autocomplete v-model="editForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" >    
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
-                    <el-form-item label="业务人员">
+                    <el-form-item label="业务人员：">
                         <span class="arrowPng" @click="deleteSalesMan" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span> 
                                               
                         <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" >

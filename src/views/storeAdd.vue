@@ -98,7 +98,7 @@
                     </el-form-item>
                 </el-col>
                 <el-col :span="8">
-                    <el-form-item label="代理商状态">
+                    <el-form-item label="代理商状态：">
                        ---
                     </el-form-item>
                 </el-col>
@@ -149,14 +149,14 @@
             </el-row>
             <el-row>
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
-                    <el-form-item  :span="4"  label="上级编号/姓名">
+                    <el-form-item  :span="4"  label="上级编号/姓名：">
                         <span class="arrowPng"  @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
                         <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4"  v-if="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
-                    <el-form-item :span="4" label="上级代理商等级:">
+                    <el-form-item :span="4" label="上级代理商等级：">
                             <el-input v-model="addForm.superAgentGradeId"></el-input>   
                     </el-form-item>
                 </el-col>
@@ -176,14 +176,14 @@
             <!--第三行-->
             <el-row :gutter="10">
                 <el-col class="search-yy-wrap" :span="12">
-                    <el-form-item label="运营人员">
+                    <el-form-item label="运营人员：">
                         <span class="arrowPng" @click="deleteOperator" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span>
                         <el-autocomplete v-model="addForm.operator" :class="{DelectClass:isDelectClass}"    :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找"  >
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
-                    <el-form-item label="业务人员">
+                    <el-form-item label="业务人员：">
                         <span class="arrowPng"  @click="deleteSalesMan" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
                         <el-autocomplete v-model="addForm.salesMan" :class="{DelectClass:isDelectClass}"  :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" >
                         </el-autocomplete>
@@ -488,9 +488,9 @@ export default {
                 return false
             }
             //合同结束时间不能小于开始时间 
-            console.log(data.signedStartTime)
-            console.log(data.signedEndTime)
-            console.log(data.signedStartTime<data.signedEndTime)
+            // console.log(data.signedStartTime)
+            // console.log(data.signedEndTime)
+            // console.log(data.signedStartTime<data.signedEndTime)
 
             if (data.signedStartTime>data.signedEndTime) {
                 self.loading = false;
