@@ -480,7 +480,7 @@ export default {
                         type: 'success'
                     })
                     setTimeout(function() {
-                        self.getFormData();
+                        self.$router.go(0);
                     }, 1000)
                 } else {
                     self.$message({
