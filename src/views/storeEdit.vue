@@ -148,9 +148,7 @@
                 </el-col>
                 <el-col :span="8"  v-if="editForm.shopType!='SELF_SUPPORT' && (editForm.agentGradeId=='31' || editForm.agentGradeId=='266') && editForm.extendSuperType!='ZUIPIN'">
                     <el-form-item  :span="4"  label="上级编号/姓名：" >
-                        <!-- <span class="delete_left" v-if="!(editForm.extendSuperNo==='')" @click="deleteExtendSuperNoName" style="left: 164px;"></span> -->
                         <el-autocomplete v-model="editForm.extendSuperNoName" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" icon="caret-bottom" disabled>
-                            <span class="search_left"></span>
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -835,7 +833,6 @@ export default {
                     if($.isEmptyObject(item)){
                         self.editForm.operator='';
                         self.editForm.operatorId='';
-
                     }
                 }
             })

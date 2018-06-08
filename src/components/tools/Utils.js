@@ -172,8 +172,6 @@ let Utils = {
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
             var list = [{}];
-            var notList = [{}];
-            console.log(111)
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
             //从后台获取到对象数组
@@ -185,7 +183,6 @@ let Utils = {
                 if (!queryString) {
                     for (let item of response.data.result) {
                         list.push(item)
-                        // console.log(list)
                     }
                     callback(list);
                 } else {
@@ -194,13 +191,11 @@ let Utils = {
                         if (item.headPinyin.indexOf(QS) > -1 || item.userName.indexOf(QS) > -1) {
                             list.push(item)
                             notList  = list;
-                            console.log(notList)
                         }
                     }
 
                     if (list.length == 1) {
                         list.push({ value: `没有匹配结果"${queryString}"` });
-                        // console.log(notList)                           
                     }
                 }
                 callback(list);
@@ -228,6 +223,7 @@ let Utils = {
                 } else {
                     let QS = queryString.toLocaleLowerCase();
                     for (let item of response.data.result) {
+                        console.log(item)
                         if (item.userName.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
                             list.push(item)
                         }
@@ -241,7 +237,6 @@ let Utils = {
                 console.log(error);
             });
             return list
-
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
@@ -266,15 +261,21 @@ let Utils = {
                 } else {
 
                     let QS = queryString.toLocaleLowerCase();
-
+                    // console.log(QS)
                     for (let item of response.data.result) {
-                        if (item.shopNo.indexOf(QS) > -1 || item.name.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.shopNoAndName.indexOf(QS) > -1) {
+                        debugger
+                        if (item.name && item.name.indexOf(QS) > -1 || item.shopNo.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1 || item.headPinyin.indexOf(QS) > -1) {
                             list.push(item)
                         }
+
                     }
+                    
+                    console.log(list)
+
                     if (list.length == 1) {
                         list.push({ value: `输入的代理商编号 / 姓名格式不正确，请检查后再试~` });
                     }
+
                 }
                 callback(list);
             }).catch((error) => {

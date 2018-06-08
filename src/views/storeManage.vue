@@ -120,6 +120,7 @@
                         <el-table-column   prop="remainDay" label="剩余天数" width="150" sortable="custom" >
                             <template slot-scope="scope">
                                     <span v-if="scope.row.isParticipateRebate" >{{scope.row.remainDay}}</span>
+                                    <span v-if="!scope.row.remainDay">-</span>
                                     <span v-if="!scope.row.isParticipateRebate" >-</span>
                             </template>
                         </el-table-column>

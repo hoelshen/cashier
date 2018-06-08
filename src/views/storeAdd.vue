@@ -171,7 +171,7 @@
                             style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
                             <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" 
-                            v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
+                                    v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
                             <el-input placeholder="请选择"    @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible"   >选择</el-button> 
                     </el-form-item>
@@ -846,17 +846,13 @@ export default {
         operatorQuerySearchAsync(queryString, callback) {
             const self = this;
             this.opeartorList = Utils.operatorQuerySearchAsync(queryString, callback)
-
             $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                
                 for(let item of self.opeartorList){
                     if($.isEmptyObject(item)){
                         self.addForm.operator='';
                         self.addForm.operatorId='';
-
                     }
                 }
-
             })
         },
         //搜索业务人员
@@ -874,7 +870,7 @@ export default {
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
-            Utils.extendSuperNoQuerySearchAsync(queryString, callback)
+          return  Utils.extendSuperNoQuerySearchAsync(queryString, callback)
         },
         //点击选中
         handleOperatorSelect(item) {
