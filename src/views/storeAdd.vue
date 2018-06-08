@@ -393,6 +393,8 @@ export default {
                 }
             },
             isDelectClass:true,
+            opeartorList:[],
+            salesManList:[],
         }
     },
     components: {
@@ -842,43 +844,37 @@ export default {
         },
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
-            Utils.operatorQuerySearchAsync(queryString, callback)
             const self = this;
+            this.opeartorList = Utils.operatorQuerySearchAsync(queryString, callback)
 
             $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                console.log( self.addForm.operatorId)
+                
+                for(let item of self.opeartorList){
+                    if($.isEmptyObject(item)){
+                        self.addForm.operator='';
+                        self.addForm.operatorId='';
 
-                if(self.addForm.operatorId ==''){
-                    self.addForm.operator='';
-                    console.log('ok')
-
+                    }
                 }
+
             })
         },
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
-            Utils.salesManQuerySearchAsync(queryString, callback)
-            const self = this;
+            const self = this;            
+            this.salesManList =  Utils.salesManQuerySearchAsync(queryString, callback)
             $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                // console.log(self.addForm.salesManId)
-
-                if(!self.addForm.salesManId){
-                    self.addForm.salesMan='';
-                // console.log('ok')
-
+                for(let item of self.salesManList){
+                    if($.isEmptyObject(item)){
+                        self.addForm.salesMan='';
+                        self.addForm.salesManId = ''
+                    }
                 }
-
             })
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
             Utils.extendSuperNoQuerySearchAsync(queryString, callback)
-            $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                if(self.addForm.salesManId==''){
-                    self.addForm.salesMan='';
-                }
-
-            })
         },
         //点击选中
         handleOperatorSelect(item) {

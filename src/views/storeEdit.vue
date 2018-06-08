@@ -331,7 +331,9 @@ export default {
             relationshipRulesForm:[],
             relationshipRulesTitle:'',
             descInputValue:'', 
-            selectrelationshipRulesValue:'', //查询规则关系的值           
+            selectrelationshipRulesValue:'', //查询规则关系的值
+            opeartorList:[],
+            salesManList:[]           
         }
     },
     components: {
@@ -826,21 +828,28 @@ export default {
             });
         },
         operatorQuerySearchAsync(queryString, callback) {
-            Utils.operatorQuerySearchAsync(queryString, callback)
+            const self = this
+            this.opeartorList  = Utils.operatorQuerySearchAsync(queryString, callback)
             $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                const self = this;
-                if(self.editForm.operatorId == null){
-                    self.editForm.operator='';
+                for(let item of self.opeartorList){
+                    if($.isEmptyObject(item)){
+                        self.editForm.operator='';
+                        self.editForm.operatorId='';
+
+                    }
                 }
             })
         },
         salesManQuerySearchAsync(queryString, callback) {
-            Utils.salesManQuerySearchAsync(queryString, callback)
+            const self = this
+            this.salesManList = Utils.salesManQuerySearchAsync(queryString, callback)
             $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-                const self = this;
                 console.log(self.editForm.salesManId)
-                if(self.editForm.salesManId==null){
-                    self.editForm.salesMan='';
+                for(let item of self.salesManList){
+                    if($.isEmptyObject(item)){
+                        self.editForm.salesMan='';
+                        self.editForm.salesManId = ''
+                    }
                 }
 
             })
