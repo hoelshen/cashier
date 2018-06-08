@@ -415,7 +415,7 @@
         </el-dialog>  
 
         <!--合约信息弹窗-->
-        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation" size="140%">
+        <el-dialog :title="contractInformationTitle"   :visible.sync="contractInformationVisible" :before-close="changeContractInformation" size="200%">
             <div style="width:50%;float: right;">
                 <el-date-picker class="picker-time" value-format="yyyy" format="yyyy年" 
                     v-model="searchContractInformationTime" type="year" placeholder="选择年度" >
