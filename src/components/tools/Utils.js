@@ -172,6 +172,7 @@ let Utils = {
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
             var list = [{}];
+            var notList = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=operator' + '&userName=' + queryString;
             //从后台获取到对象数组
@@ -192,9 +193,10 @@ let Utils = {
                             list.push(item)
                         }
                     }
-                    // console.log(list);
+                    notList = list ;
                     if (list.length == 1) {
                         list.push({ value: `没有匹配结果"${queryString}"` });
+                        list[0].id= '';
                     }
                 }
                 callback(list);
@@ -205,6 +207,7 @@ let Utils = {
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
             var list = [{}];
+            var notList = [{}];
             //调用的后台接口
             let url = '/api/shop/shopManage/searchSysUser.jhtml?userUnit=businessMan' + '&userName=' + queryString;
             //从后台获取到对象数组
@@ -225,8 +228,10 @@ let Utils = {
                             list.push(item)
                         }
                     }
+                    notList = list ;
                     if (list.length == 1) {
                         list.push({ value: `没有匹配结果"${queryString}"` });
+                        notList.salesManId = '';
                     }
                 }
                 callback(list);
@@ -237,6 +242,8 @@ let Utils = {
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
             var list = [{}];
+            var notList = [{}];
+
             //调用的后台接口
             let url = '/api/shop/shopManage/getAgentVoList.jhtml?'
             //从后台获取到对象数组

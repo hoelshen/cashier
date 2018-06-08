@@ -151,23 +151,27 @@
                 <el-col :span="8"  v-if="(addForm.agentGradeId=='31' || addForm.agentGradeId=='266') && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
                     <el-form-item  :span="4"  label="上级编号/姓名：">
                         <span class="arrowPng"  @click="deleteExtendSuperName" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
-                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" >
+                        <el-autocomplete v-model="addForm.extendSuperNoName" :class="{DelectClass:isDelectClass}" 
+                        :fetch-suggestions="extendSuperNoQuerySearchAsync" @select="handleExtendSuperNoSelect" placeholder="可输入查找" 
+                         placement="bottom ">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col :span="4"  v-if="(addForm.agentGradeId=='31'  || addForm.agentGradeId=='266')  && addForm.extendSuperType!='ZUIPIN' && addForm.shopType!='SELF_SUPPORT'">
-                    <el-form-item :span="4" label="上级代理商等级：">
-                            <el-input v-model="addForm.superAgentGradeId"></el-input>   
+                    <el-form-item :span="4" label="上级代理商等级："  class="superAgentGradeIdClass">
+                            <el-input v-model="addForm.superAgentGradeId" ></el-input>   
                     </el-form-item>
                 </el-col>
             </el-row>
             <!--第三行-->
             <el-row  :gutter="10">
                 <el-col :span="10">
-                    <el-form-item label="匹配规则:"  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
+                    <el-form-item label="匹配规则："  style="width: 1024px;">
+                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  
+                            style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
-                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
+                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" 
+                            v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
                             <el-input placeholder="请选择"    @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
                             <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible"   >选择</el-button> 
                     </el-form-item>
@@ -178,14 +182,20 @@
                 <el-col class="search-yy-wrap" :span="12">
                     <el-form-item label="运营人员：">
                         <span class="arrowPng" @click="deleteOperator" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span>
-                        <el-autocomplete v-model="addForm.operator" :class="{DelectClass:isDelectClass}"    :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找"  >
+                        <el-autocomplete v-model="addForm.operator" :class="{DelectClass:isDelectClass}"    
+                                    :fetch-suggestions="operatorQuerySearchAsync" @select="handleOperatorSelect" placeholder="可输入查找" 
+                                    class="operatorQuerySearchAsyncClass"
+                                     placement="bottom ">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
                 <el-col class="search-yw-wrap" :span="12">
                     <el-form-item label="业务人员：">
                         <span class="arrowPng"  @click="deleteSalesMan" v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)"></span>
-                        <el-autocomplete v-model="addForm.salesMan" :class="{DelectClass:isDelectClass}"  :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" >
+                        <el-autocomplete v-model="addForm.salesMan" :class="{DelectClass:isDelectClass}"  
+                                    :fetch-suggestions="salesManQuerySearchAsync" @select="handleSalesManSelect" placeholder="可输入查找" 
+                                    class="salesManQuerySearchAsyncClass"
+                                    placement="bottom ">
                         </el-autocomplete>
                     </el-form-item>
                 </el-col>
@@ -488,10 +498,6 @@ export default {
                 return false
             }
             //合同结束时间不能小于开始时间 
-            // console.log(data.signedStartTime)
-            // console.log(data.signedEndTime)
-            // console.log(data.signedStartTime<data.signedEndTime)
-
             if (data.signedStartTime>data.signedEndTime) {
                 self.loading = false;
                 self.$message({
@@ -837,19 +843,48 @@ export default {
         //搜索运营人员
         operatorQuerySearchAsync(queryString, callback) {
             Utils.operatorQuerySearchAsync(queryString, callback)
+            const self = this;
+
+            $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
+                console.log( self.addForm.operatorId)
+
+                if(self.addForm.operatorId ==''){
+                    self.addForm.operator='';
+                    console.log('ok')
+
+                }
+            })
         },
         //搜索业务人员
         salesManQuerySearchAsync(queryString, callback) {
             Utils.salesManQuerySearchAsync(queryString, callback)
+            const self = this;
+            $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
+                // console.log(self.addForm.salesManId)
+
+                if(!self.addForm.salesManId){
+                    self.addForm.salesMan='';
+                // console.log('ok')
+
+                }
+
+            })
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
             Utils.extendSuperNoQuerySearchAsync(queryString, callback)
+            $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
+                if(self.addForm.salesManId==''){
+                    self.addForm.salesMan='';
+                }
+
+            })
         },
         //点击选中
         handleOperatorSelect(item) {
             this.addForm.operatorId = item.id;
             this.addForm.operator  = item.userName;
+            console.log(this.addForm.operatorId)
         },
         handleSalesManSelect(item) {
             this.addForm.salesManId = item.id;
@@ -973,7 +1008,7 @@ export default {
             this.relationshipRulesDialogForm = [];
             this.currentPage = 1;            
             this.isSearchRuleNo = ''; 
-            let self = this
+            let self = this;
             if(self.addForm.ruleTitle){
                 self.$refs.rule.showPopper=true              
             }
@@ -1097,6 +1132,23 @@ export default {
         annualExtendPerformance(){
             this.addForm.annualPurchasePerformance =  Utils.digitInput(newval)
         }
+    },
+    mounted(){
+        const self = this;
+        $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
+            // console.log(self.addForm.operatorId)
+            if(self.addForm.operatorId == ''){
+                self.addForm.operator='';
+                // console.log('ok')
+
+            }
+        })
+
+        $('.salesManQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
+            if(self.addForm.salesManId==''){
+                self.addForm.salesMan='';
+            }
+        })
     }
 
 }
@@ -1106,7 +1158,9 @@ export default {
          position: relative;
          padding: 2% 18%;
     }
-
+    .superAgentGradeIdClass >>> .el-form-item__label{
+             padding-right: 5px;
+    }
 </style>
 
 <style >
