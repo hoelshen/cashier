@@ -121,7 +121,7 @@
                             <template slot-scope="scope">
                                     <span v-if="scope.row.isParticipateRebate" >{{scope.row.remainDay}}</span>
                                     <span v-if="!scope.row.remainDay">-</span>
-                                    <span v-if="!scope.row.isParticipateRebate" >-</span>
+                                    <!-- <span v-if="!scope.row.isParticipateRebate" >-</span> -->
                             </template>
                         </el-table-column>
                         <el-table-column  prop="goalCompletion" label="目标完成" width="100">
@@ -317,7 +317,6 @@ export default {
         if (!self.checkSession()) return;
         self.loading = true;
         
-
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
             // console.log(response);
@@ -340,17 +339,17 @@ export default {
             }
         }).then(function (response) {
             self.loading = false;
-            // console.log(response.data)
             self.myData = response.data.rows;
-
             // console.log(self.myData)
-            
+   
             for (var value of self.myData) {
                 if(!value.areaClass){
                     value.areaClass ==''  
                 }else{
-                    //  console.log((value.areaClass).toLocaleLowerCase())       
                      value.areaClass =  value.areaClass
+                }
+                if(value.operator==''){
+                    value.operator ='-'
                 }
             }                                           
             self.totalSize = response.data.total
@@ -550,6 +549,20 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.myData = response.data.rows;
+
+
+                for (var value of self.myData) {
+                    console.log(value.operator)
+                    if(value.operator){
+                        console.log(value.operator)
+                    }
+                    if(!value.operator){
+                        value.operator ='-'
+                    }
+
+                }   
+
+
                 self.totalSize = response.data.total
                 // console.log(response);
             }).catch(function (err) {
