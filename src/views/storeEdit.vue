@@ -915,6 +915,17 @@ export default {
         //清除代理商编号、类别
         deleteExtendSuperNo(){
             this.editForm.areaClass = '';
+
+
+            let self = this
+
+            if(self.editForm.ruleTitle){
+             setTimeout(function(){
+                self.$refs.rule.showPopper=true    
+            }
+            ,100)
+                self.$refs.rule.showPopper=false  ;               
+            }
         },
         deleteExtendSuperNoName(){
             this.editForm.extendSuperNo = '';

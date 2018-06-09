@@ -167,12 +167,17 @@
             <el-row  :gutter="10">
                 <el-col :span="10">
                     <el-form-item label="匹配规则："  style="width: 1024px;">
-                            <el-popover  placement="right" ref="rule" trigger="manual" manual=true width="200"  popper-class="grayColor"  
-                            style="  color: grey"   content="保存成功，该规则将立即生效~"  >     
+                            <el-popover  placement="right" ref="rule" 
+                                         trigger="manual" manual=true width="200"  
+                                         popper-class="grayColor"  
+                                        
+                               content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
-                            <span class="delete_left" v-if="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" 
-                                    v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" ></span> 
+                            <span class="delete_left" v-show="!(addForm.ruleTitle==='')" @click="deleteRuleTitle" style="left: 416px;" 
+                                    v-on:mouseover="changeActive($event)" v-on:mouseout="removeActive($event)" >
+                            </span>                             
                             <el-input placeholder="请选择"    @blur="ruleTitleTitple" v-bind:value="addForm.ruleTitle" style="width: 444px;" ></el-input>
+                            
                             <el-button type="primary"  v-popover:rule   @click="onOpenRelationshipRulesDialogVisible"   >选择</el-button> 
                     </el-form-item>
                 </el-col>
@@ -683,6 +688,14 @@ export default {
                 this.addForm.superAgentGradeId= '';
                 this.addForm.extendSuperNoName = '';
             }
+            const self = this;
+            if(self.addForm.ruleTitle){
+                setTimeout(function(){
+                    self.$refs.rule.showPopper=true    
+                }
+                ,100)
+                    self.$refs.rule.showPopper=false  ;               
+            }
         },
         //气泡提示
         annualExtendPerformanceTitple(){
@@ -918,9 +931,31 @@ export default {
             this.addForm.extendSuperType = '';
             this.addForm.superNo = '';
             this.addForm.areaClass  = '';
+
+            let self = this
+
+            if(self.addForm.ruleTitle){
+             setTimeout(function(){
+                self.$refs.rule.showPopper=true    
+            }
+            ,100)
+                self.$refs.rule.showPopper=false  ;               
+            }
         },
         addZuipin(){
             this.addForm.extendSuperType = 'ZUIPIN';
+            
+            
+            let self = this
+
+            if(self.addForm.ruleTitle){
+             setTimeout(function(){
+                self.$refs.rule.showPopper=true    
+            }
+            ,100)
+                self.$refs.rule.showPopper=false  ;               
+            }
+
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
@@ -950,6 +985,18 @@ export default {
         onOpenRelationshipRulesDialogVisible(val){
             this.relationshipRulesDialogVisible = true;
             this.onRelationshipRulesDialogVisible(1);
+            
+            let self = this
+
+            if(self.addForm.ruleTitle){
+             setTimeout(function(){
+                self.$refs.rule.showPopper=true    
+            }
+            ,100)
+                self.$refs.rule.showPopper=false  ;               
+            }
+
+
         },
         onRelationshipRulesDialogVisible(value){
             const self = this;    
@@ -1066,6 +1113,7 @@ export default {
                 }).catch(function (err) {
                     console.log(err);
             });
+            
         }
     },
     created(){
@@ -1076,6 +1124,7 @@ export default {
         //获取代理商等级列表
         self.getAgencyLevel();
         self.getDefaultRules();
+
 
     },
     watch:{
@@ -1117,8 +1166,7 @@ export default {
                     })               
                 }
             }            
-        }
-
+        },
     },
     computed:{
         annualExtendPerformance(){
@@ -1128,11 +1176,8 @@ export default {
     mounted(){
         const self = this;
         $('.operatorQuerySearchAsyncClass').on('blur','.el-input__inner',function(){
-            // console.log(self.addForm.operatorId)
             if(self.addForm.operatorId == ''){
                 self.addForm.operator='';
-                // console.log('ok')
-
             }
         })
 
@@ -1141,6 +1186,8 @@ export default {
                 self.addForm.salesMan='';
             }
         })
+
+
     }
 
 }
@@ -1157,7 +1204,7 @@ export default {
 
 <style >
     .grayColor{
-          color: gray
+          color: gray;
     }
 </style>
 
