@@ -142,8 +142,8 @@
             <el-row >
                 <el-col :span="8"  v-show="(addForm.agentGradeId=='266'&&addForm.shopType!='SELF_SUPPORT')||(addForm.agentGradeId=='31'&&addForm.shopType!='SELF_SUPPORT')">
                     <el-form-item label="括展上级：">
-                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN"  >醉品自开发</el-radio>
-                            <el-radio v-model="addForm.extendSuperType" label="AGENT" >代理商拓展</el-radio>                          
+                            <el-radio v-model="addForm.extendSuperType" label="ZUIPIN" @click.native="changePopover" >醉品自开发</el-radio>
+                            <el-radio v-model="addForm.extendSuperType" label="AGENT"  @click.native="changePopover" >代理商拓展</el-radio>                          
                     </el-form-item>
                 </el-col>
             </el-row>
@@ -883,13 +883,12 @@ export default {
         },
         //搜索上级代理商
         extendSuperNoQuerySearchAsync(queryString, callback){
-          return  Utils.extendSuperNoQuerySearchAsync(queryString, callback)
+            Utils.extendSuperNoQuerySearchAsync(queryString, callback)
         },
         //点击选中
         handleOperatorSelect(item) {
             this.addForm.operatorId = item.id;
             this.addForm.operator  = item.userName;
-            console.log(this.addForm.operatorId)
         },
         handleSalesManSelect(item) {
             this.addForm.salesManId = item.id;
@@ -956,6 +955,17 @@ export default {
                 self.$refs.rule.showPopper=false  ;               
             }
 
+        },
+        changePopover(){
+            let self = this
+
+            if(self.addForm.ruleTitle){
+             setTimeout(function(){
+                self.$refs.rule.showPopper=true    
+            }
+            ,100)
+                self.$refs.rule.showPopper=false  ;               
+            }
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
@@ -1107,9 +1117,16 @@ export default {
                 }).then(function (response) {
                 self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
                 self.addForm.ruleId = response.data.result.id
-                if(response.data.result.ruleNo){
-                        self.$refs.rule.showPopper=true         
-                }
+
+
+                if(self.addForm.ruleTitle){
+                    setTimeout(function(){
+                         self.$refs.rule.showPopper=true    
+                    }
+                     ,500)
+                    self.$refs.rule.showPopper=false               
+                }  
+                
                 }).catch(function (err) {
                     console.log(err);
             });
@@ -1124,8 +1141,6 @@ export default {
         //获取代理商等级列表
         self.getAgencyLevel();
         self.getDefaultRules();
-
-
     },
     watch:{
         'addForm.areaClass'(){
@@ -1186,7 +1201,6 @@ export default {
                 self.addForm.salesMan='';
             }
         })
-
 
     }
 
