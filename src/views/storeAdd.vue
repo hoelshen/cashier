@@ -1,7 +1,7 @@
 <template>
     <div id="addStore"> 
       <!-- 新增店铺 start -->
-        <el-form :model="addForm" label-width="120px" ref="addForm">
+        <el-form :model="addForm" label-width="120px" ref="addForm" :key="addForm.shopType">
             <el-row class="content_title">
                 <h2>基本信息</h2>
             </el-row>
@@ -170,6 +170,7 @@
                             <el-popover  placement="right" ref="rule" 
                                          trigger="manual" manual=true width="200"  
                                          popper-class="grayColor"  
+                                        :key="changeType"
                                         
                                content="保存成功，该规则将立即生效~"  >     
                             </el-popover>
@@ -400,6 +401,7 @@ export default {
             isDelectClass:true,
             opeartorList:[],
             salesManList:[],
+            changeType: 1,      // 改变店铺type变动key值
         }
     },
     components: {
@@ -933,39 +935,38 @@ export default {
 
             let self = this
 
-            if(self.addForm.ruleTitle){
-             setTimeout(function(){
-                self.$refs.rule.showPopper=true    
-            }
-            ,100)
-                self.$refs.rule.showPopper=false  ;               
-            }
+            self.$nextTick(() => {
+                if(self.addForm.ruleTitle){
+                        self.$refs.rule.showPopper = true;
+                }
+            })
         },
         addZuipin(){
             this.addForm.extendSuperType = 'ZUIPIN';
             
-            
             let self = this
 
-            if(self.addForm.ruleTitle){
-             setTimeout(function(){
-                self.$refs.rule.showPopper=true    
-            }
-            ,100)
-                self.$refs.rule.showPopper=false  ;               
-            }
-
+            self.$nextTick(() => {
+                if(self.addForm.ruleTitle){
+                        self.$refs.rule.showPopper=true    
+                    }
+            })
         },
         changePopover(){
             let self = this
 
+            // self.$nextTick(() => {
+            //     if(self.addForm.ruleTitle){
+            //             self.$refs.rule.showPopper=true    
+            //     }
+            // })
             if(self.addForm.ruleTitle){
              setTimeout(function(){
                 self.$refs.rule.showPopper=true    
             }
             ,100)
                 self.$refs.rule.showPopper=false  ;               
-            }
+            }            
         },
         //打开保存确认弹窗
         onChangePromptVisible(){
@@ -998,14 +999,11 @@ export default {
             
             let self = this
 
-            if(self.addForm.ruleTitle){
-             setTimeout(function(){
-                self.$refs.rule.showPopper=true    
-            }
-            ,100)
-                self.$refs.rule.showPopper=false  ;               
-            }
-
+            self.$nextTick(() => {
+                if(self.addForm.ruleTitle){
+                        self.$refs.rule.showPopper=true    
+                }
+            })
 
         },
         onRelationshipRulesDialogVisible(value){
@@ -1112,20 +1110,17 @@ export default {
         },
         //获取默认规则
         getDefaultRules(){
-            const self = this ;
-            self.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
-                }).then(function (response) {
-                self.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
-                self.addForm.ruleId = response.data.result.id
+            // const self = this ;
+            this.$ajax.post('/api/http/businessExtendsRule/getDefaultBusinessExtendsRule.jhtml',{
+                }).then(response =>  {
+                this.addForm.ruleTitle= response.data.result.ruleNo +' '+ response.data.result.businessExtendsRuleName
+                this.addForm.ruleId = response.data.result.id
 
-
-                if(self.addForm.ruleTitle){
-                    setTimeout(function(){
-                         self.$refs.rule.showPopper=true    
-                    }
-                     ,500)
-                    self.$refs.rule.showPopper=false               
-                }  
+                this.$nextTick(() => {
+                    if(this.addForm.ruleTitle){
+                             this.$refs.rule.showPopper=true    
+                        }
+                })
                 
                 }).catch(function (err) {
                     console.log(err);
