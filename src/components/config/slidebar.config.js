@@ -79,9 +79,18 @@ export default [{
         title: '分成核算',
         icon: 'icon-fenchenghesuan',
         children: [{
-            title: '区域订单',
-            path: '/area'
-        }]
+                title: '区域订单',
+                path: '/area',
+            },
+            {
+                title:'业务拓展',
+                path:'/businessExpansion'
+            },
+            {
+                title:'年度业绩',
+                path:'/annualPerformance'
+            }
+        ]
     },
     {
         title: '通知管理',
@@ -89,6 +98,14 @@ export default [{
         children: [{
             title: '通知管理',
             path: '/message'
+        }]
+    },
+    {
+        title: '规则管理',
+        icon: 'icon-shouyinhoutai_guizeshezhi',
+        children: [{
+            title: '业务扩展返利',
+            path: '/rebate',
         }]
     }
 

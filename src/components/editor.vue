@@ -221,7 +221,8 @@ export default {
                         accessKeyId: res.data.data.accessKeyId,
                         accessKeySecret: res.data.data.accessKeySecret,
                         stsToken: res.data.data.securityToken,
-                        bucket: 'cashier-img'
+                        bucket: 'cashier-img',
+                        secure:true
                     });
 
 
