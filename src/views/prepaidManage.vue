@@ -335,17 +335,21 @@ export default {
 		//     console.log(jsonData)
             return jsonData.map(v => {
 		// 	   console.log(v)
-				return filterVal.map(j => {
-			//       console.log(j,v[j])
-					return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
-				// }
-				})			
+            return filterVal.map(j => {
+		//       console.log(j,v[j])
+		    	return v[j] = (  j === "agentGradeId" ?  ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  ): v[j]  );
+			// }
+			})
+		    
+						
 			})	
-		},
+        },
 		//导出所选明细
 		outputExcel() {
 		if (!this.checkSession()) return;
 			var temp = new Date(this.searchData.searchTime[0]);
+			            console.log(temp)
+
 			if (temp.getFullYear() > 2006) {
 				var time1 = temp.getFullYear();
 				if ((temp.getMonth() + 1) < 10) {
@@ -392,18 +396,12 @@ export default {
 					'advanceDeposit.changeType': this.searchData.searchStatus,
 					'advanceDeposit.startTime': time1,
 					'advanceDeposit.endTime': time2,
-				
 					'advanceDeposit.operator': this.searchData.operator,
 				},
 				success(response) {
-
+					// console.log(response.data.success)
 					if (response.data.success === 1) {
 							self.tableData = response.data.result;
-							for(var i=0;self.tableData.length>i;i++){
-									if(self.tableData[i].changeType=='充值'||self.tableData[i].changeType=='扣款'){
-									self.tableData[i].purchaseOrderNo=self.tableData[i].remark
-								}
-							}
 							if(self.tableData.length>0){
 										require.ensure([], () => {
 											const {	export_json_to_excel } = require('../components/tools/Export2Excel2')
@@ -411,7 +409,6 @@ export default {
 											const filterVal = ['shopNo', 'agentGradeId', 'shopName', 'name', 'changeType', 'alterMoney' , 'afterMoney','purchaseOrderNo', 'creator', 'createdTime', 'operator']
 											const list = self.tableData;
 											const data = this.formatJson(filterVal, list);
-											
 											// console.log(data)
 											export_json_to_excel(tHeader, data, '预存款明细');
 										})
@@ -446,11 +443,16 @@ export default {
 	created() {
 		var src = window.location.href.split('/');
 		this.searchData.searchId = src[5];
-		this.searchData.searchName = src[6] && decodeURI(src[6]) ;
+		this.searchData.searchName = decodeURI(src[6])
 
-		console.log(src)
-		// console.log(typeof src[6]);
-		// console.log(typeof decodeURI(src[6] ))
+		// console.log(src)
+		// console.log(src[6])
+		if(src[6]  === 'undefined' || src[6]  === undefined){
+			this.searchData.searchName  = '';
+			console.log('ok')
+		}else{
+			this.searchData.searchName = decodeURI(src[6])
+		}
 		this.$getData({
 			url: 'http/advanceDeposit/queryAdvanceDepositList.jhtml',
 			data: {
@@ -458,6 +460,8 @@ export default {
 				'pager.pageSize': this.pageSize,
 				'advanceDeposit.shopNo': this.searchData.searchId,
 				'advanceDeposit.name': this.searchData.searchName,
+				
+				
 			},
 			success(response) {
 				// console.log(response.data.result)
