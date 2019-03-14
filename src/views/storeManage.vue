@@ -11,7 +11,7 @@
                     </el-col>
 
                     <el-col :span="6">
-                        <el-form-item label="代理商姓名："> 
+                        <el-form-item label="代理商姓名：">
                             <el-input v-model="searchData.name" @keyup.enter.native="onSubmit" placeholder="代理商姓名"></el-input>
                         </el-form-item>
                     </el-col>
@@ -45,6 +45,7 @@
                         </el-form-item>
                     </el-col>
                     <el-col :span="6">
+
                         <el-form-item label="注册时间：">
                             <el-date-picker v-model="searchData.signTime" type="daterange" placeholder="选择日期范围" :picker-options="pickerOptions">
                             </el-date-picker>
@@ -62,40 +63,31 @@
         <!-- 表格 start -->
         <div class="t-bodywrap">
             <el-row class="t-body">
-                	<el-button type="primary" class="add-btn el-icon-plus" @click="$router.push('/storeAdd')">新增店铺</el-button>
-                    <el-button type="primary"  @click="allOutputExcel()">导出目标进度条({{totalSize}})</el-button>
+                <el-button type="primary" class="add-btn" icon="plus" @click="openAddDialog">新增店铺</el-button>
                 <el-row class="tablebar">
                     <el-table :data="myData" border v-loading.fullscreen.lock="loading" highlight-current-row style="width: 100%" @sort-change='sortAmount'>
-                        <!-- <el-table-column  type="selection" width="50" :reserve-selection="true">
-                        </el-table-column> -->
                         <el-table-column prop="shopNo" label="代理商编号" width="115">
                             <template slot-scope="scope">
                                 <span>{{scope.row.shopNo}}</span>
                                 <span class="type-icon" v-if="scope.row.shopType=='SELF_SUPPORT'">直营</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="name" label="姓名" width="190">
+                        <el-table-column prop="name" label="姓名">
                         </el-table-column>
-                        <el-table-column title="shopName" prop="shopName" label="店铺名称" width="190">
+                        <el-table-column title="shopName" prop="shopName" label="店铺名称" width="200">
                             <template slot-scope="scope">
                                 <span class="limit-two" :title="scope.row.shopName">{{scope.row.shopName}}</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="agentGradeId" label="代理商等级" width="160">
+                        <el-table-column prop="agentGradeId" label="代理商等级" width="110">
                             <template slot-scope="scope">
                                 <span v-if="scope.row.agentGradeId==31">单店代理</span>
                                 <span v-if="scope.row.agentGradeId==265">区域代理</span>
                                 <span v-if="scope.row.agentGradeId==266">微店代理</span>
-                                <p class="textOrange" v-if="myData[scope.$index].areaClass == 'S' ">S类</p>
-                                <p class="textRed" v-if="myData[scope.$index].areaClass == 'A' ">A类</p>
-                                <p class="textGreen" v-if="myData[scope.$index].areaClass  == 'B'">B类</p>
-                                <!-- <p class="textGreen" v-if="Type(myData[scope.$index].areaClass)">B类</p> -->
-                                <p class="textPurple" v-if="myData[scope.$index].areaClass  == 'C' ">C类</p>
-                                <!-- <p>{{myData[scope.$index].areaClass}}</p>   -->
-                                <!-- <span v-if="!myData[scope.$index].areaClass ">-</span> -->
+                                <span v-if="!scope.row.agentGradeId">-</span>
                             </template>
                         </el-table-column>
-                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="150">
+                        <el-table-column prop="depositAmount" label="预存款余额" align="right" sortable="custom" min-width="100" width="157">
                         </el-table-column>
                         <el-table-column prop="signTime" label="注册时间" width="110">
                         </el-table-column>
@@ -109,47 +101,17 @@
                                 </p>
                             </template>
                         </el-table-column>
-                        <el-table-column   prop="remainDay" label="剩余天数" width="150" sortable="custom" >
-                            <template slot-scope="scope">
-                                    <span v-if="scope.row.isParticipateRebate" >{{scope.row.remainDay}}</span>
-                                    <span v-if="!scope.row.isParticipateRebate" >-</span>
-                            </template>
+                        <el-table-column prop="operator" label="运营人员" width="127">
                         </el-table-column>
-                        <el-table-column  prop="goalCompletion" label="目标完成" width="100">
-                            <template slot-scope="scope" >
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 )  && !scope.row.annualPurchasePerformance)">
-                                     -
-                                </span>
-                                <span v-if="scope.row.shopType!='SELF_SUPPORT' && ( (scope.row.agentGradeId==31 || scope.row.agentGradeId==266 ) && scope.row.annualPurchasePerformance)">
-                                     {{  (scope.row.goalCompletion * 100).toFixed(2) }}%
-                                </span>
-                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
-                                            (scope.row.agentGradeId ==265 &&
-                                             (scope.row.annualPurchasePerformance!=0 || 
-                                             scope.row.annualExtendPerformance!=0 )
-                                            )"> 
-                                     {{ (scope.row.goalCompletion * 100).toFixed(2) }}%
-                                </span>
-                                <span v-if=" scope.row.shopType!='SELF_SUPPORT' && 
-                                            (scope.row.agentGradeId ==265 &&
-                                             (scope.row.annualPurchasePerformance==0 && 
-                                             scope.row.annualExtendPerformance==0 )
-                                            )">-
-                                </span>
-                                <span v-if="scope.row.shopType!='AGENT'">-</span>
-                            </template>
-                        </el-table-column>
-                        <el-table-column prop="operator" label="运营人员" width="100">
-                        </el-table-column>
-                        <el-table-column prop="salesMan" label="业务人员" width="100">
+                        <el-table-column prop="salesMan" label="业务人员" width="127">
                         </el-table-column>
                         <el-table-column label="操作" width="240">
                             <template slot-scope="scope">
                                 <p class="operation">
                                     <span v-if="scope.row.state==1" @click="updateAgentState(scope.row)">启用</span>
                                     <span v-if="scope.row.state==0" @click="updateAgentState(scope.row)">禁用</span>
-                                    <span> <router-link class="router-link-active" :to="{ name: 'storeEdit', params: { shopNo: scope.row.id}}">修改</router-link></span>
-                                    <span> <router-link class="router-link-active" :to="{ name: 'storeDetail', params: { shopNo: scope.row.id}}">详情</router-link></span>
+                                    <span @click="openEditDialog(scope.row,'edit')">修改</span>
+                                    <span @click="openEditDialog(scope.row,'detail')">详情</span>
                                     <span @click='chengPre(scope.row.id,scope.row.shopName,scope.row.shopNo)'>预存款变更</span>
                                 </p>
                             </template>
@@ -162,66 +124,258 @@
                 </div>
             </el-row>
         </div>
-        <!-- 表格 end -->   
+        <!-- 表格 end -->
+        <!-- 新增店铺弹窗 start -->
+        <el-dialog title="新增店铺" :visible.sync="addDialogVisible" @close="resetAddForm">
+            <el-form :model="addForm" label-width="120px" ref="addForm">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺类型：">
+                            <el-radio v-model="addForm.shopType" label="AGENT">代理商</el-radio>
+                            <el-radio v-model="addForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="展示选项：">
+                            <el-radio v-model="addForm.isShow" label="1">展示</el-radio>
+                            <el-radio v-model="addForm.isShow" label="0">不展示</el-radio>
+                            <div class="mark">
+                                是否展示到醉品线下M2O体验店
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="addForm.shopName" placeholder="店铺名称"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商姓名：">
+                            <el-input v-model="addForm.name" placeholder="代理商姓名"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="addForm.phone" :maxlength='phoneLength' placeholder="代理商手机"></el-input>
+                            <div class="mark">
+                                代理商登录系统使用的账号
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="addForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions">
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：" v-show="addForm.shopType!='SELF_SUPPORT'">
+                            <el-select v-model="addForm.agentGradeId" placeholder="代理商等级" clearable>
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-show="addForm.agentGradeId=='265'&&addForm.shopType!='SELF_SUPPORT'">
+                        <el-form-item label="代理区域：">
+                            <addressComponent ref='addAgentAddress' :isDetail="false" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent ref='addAddress' :isDetail="false" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="addForm.address" placeholder="详细地址"></el-input>
+                            <div class="mark">
+                                地址为店铺地址，会展示到醉品的线下门店展示平台
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col class="search-yy-wrap" :span="12">
+                        <span class="delete_left" v-if="!(addForm.operator==='')" @click="deleteOperator"></span>
+
+                        <el-form-item label="运营人员">
+                            <el-autocomplete v-model="addForm.operator" :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="请选择" icon="caret-bottom">
+                                <span class="search_left"></span>
+                            </el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                    <el-col class="search-yw-wrap" :span="12">
+                        <span class="delete_right" v-if="!(addForm.salesMan==='')" @click="deleteSalesMan"></span>
+
+                        <el-form-item label="业务人员">
+                            <el-autocomplete v-model="addForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="请选择" icon="caret-bottom">
+                            </el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+    
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="addAgent">确 定</el-button>
+                <el-button @click="addDialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!-- 新增店铺弹窗 end -->
+
+        <!-- 修改店铺及店铺详情弹窗 start -->
+        <el-dialog :title="editFormTitle" :visible.sync="editDialogVisible" @close="resetEditForm">
+            <el-form :model="editForm" label-width="120px" ref="editForm">
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺类型：">
+                            <el-radio disabled v-model="editForm.shopType" label="AGENT">代理商</el-radio>
+                            <el-radio disabled v-model="editForm.shopType" label="SELF_SUPPORT">直营店铺</el-radio>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="展示选项：">
+                            <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="1">展示</el-radio>
+                            <el-radio :disabled="isDisable" v-model="editForm.isShow" :label="0">不展示</el-radio>
+                            <div class="mark">
+                                是否展示到醉品线下M2O体验店
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="店铺名称：">
+                            <el-input v-model="editForm.shopName" placeholder="店铺名称" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="代理商姓名：">
+                            <el-input v-model="editForm.name" placeholder="代理商姓名" :disabled="isDisable"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="12">
+                        <el-form-item label="代理商手机：">
+                            <el-input v-model="editForm.phone" placeholder="代理商手机" :maxlength='phoneLength' :disabled="isDisable"></el-input>
+                            <div class="mark">
+                                代理商登录系统使用的账号
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="12">
+                        <el-form-item label="合同签约日期：">
+                            <el-date-picker v-model="editForm.signedTime" type="date" placeholder="选择日期" :picker-options="pickerOptions" disabled>
+                            </el-date-picker>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="代理商等级：" v-show="editForm.shopType!='SELF_SUPPORT'">
+                            <el-select v-model="editForm.agentGradeId" placeholder="代理商等级" clearable :disabled="isDisable">
+                                <el-option v-for="item in levelArray" :key="item.index" :label="item.name" :value="item.index"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+
+                    <el-col :span="24" v-show="editForm.agentGradeId=='265'&&editForm.shopType!='SELF_SUPPORT'">
+                        <el-form-item label="代理区域：">
+                            <addressComponent :provinceCode="editForm.agentProvince" :cityCode="editForm.agentCity" :areaCode="editForm.agentCounty" ref='editAgentAddress' :isDetail="false" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="收件地址：">
+                            <addressComponent :provinceCode="editForm.provinceCode" :cityCode="editForm.cityCode" :areaCode="editForm.countyCode" ref='editAddress' :isDetail="false" />
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24">
+                        <el-form-item label="详细地址：">
+                            <el-input v-model="editForm.address" placeholder="详细地址" :disabled="isDisable"></el-input>
+                            <div class="mark">
+                                地址为店铺地址，会展示到醉品的线下门店展示平台
+                            </div>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="24" v-if="isDisable">
+                        <el-form-item label="预存款详情：">
+                            <router-link :to="{ name: 'prepaidManage', params: { shopNo:editForm.shopNo,name:editForm.name}}">点击查看</router-link>
+                        </el-form-item>
+                    </el-col>
+                    <el-col class="xg-search-yy-wrap" :span="12">
+                        <el-form-item label="运营人员">
+                            <span class="delete_left" v-if="!(editForm.operator==='')" @click="deleteOperator"></span>
+                            <el-autocomplete v-model="editForm.operator"  :fetch-suggestions="operatorQuerySearchAsync" @select="handleoperatorSelect" placeholder="运营人员" icon="caret-bottom" :disabled="isDisable">
+                            </el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                    <el-col class="xg-search-yw-wrap" :span="12" :disabled="isDisable">
+                        <el-form-item label="业务人员">
+                            <span class="delete_right" v-if="!(editForm.salesMan==='')" @click="deleteSalesMan"></span>
+                            <el-autocomplete v-model="editForm.salesMan" :fetch-suggestions="salesManQuerySearchAsync" @select="handlesalesManSelect" placeholder="业务人员" icon="caret-bottom" :disabled="isDisable">
+                            </el-autocomplete>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button type="primary" @click="editAgent()" v-if="!isDisable">确 定</el-button>
+                <el-button @click="editDialogVisible = false">取 消</el-button>
+            </div>
+        </el-dialog>
+        <!-- 修改店铺及店铺详情弹窗 end -->
         <!-- 预存款变更弹窗 start -->
-            <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
-                <el-form   :model="changeForm">
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="店铺名称：" label-width="100px">
-                                <el-input v-model="changeForm.changeShopName" disabled></el-input>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+        <el-dialog :title="changeTitle" :visible.sync="dialogFormVisible" size="tiny" @close="resetForm">
+            <el-form :model="changeForm">
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="店铺名称：" label-width="100px">
+                            <el-input v-model="changeForm.changeShopName" disabled></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="变动类型：" label-width="100px">
-                                <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;" @click.native="selectIsFirstBatchMoney">
-                                    <el-option label="充值" value="TOP_UP"></el-option>
-                                    <el-option label="扣款" value="DEDUCTIONS"></el-option>
-                                </el-select>
-                            </el-form-item>
-                            <el-form-item  v-if="changeForm.changeType==='TOP_UP'" label="首批进货款：">
-                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="1" value="1">是</el-radio>
-                                  <el-radio v-model="changeForm.isFirstBatchMoney" label="0" value="0">否</el-radio>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="变动类型：" label-width="100px">
+                            <el-select v-model="changeForm.changeType" clearable placeholder="请选择" style="width:257px;">
+                                <el-option label="充值" value="TOP_UP"></el-option>
+                                <el-option label="扣款" value="DEDUCTIONS"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                    <el-row >
-                        <el-col :span="22"   >
-                            <el-form-item label="变动金额：" label-width="100px">  
-                                <el-input v-model="changeForm.alterMoney" placeholder="变动金额"  >
-                                 <template slot="prepend" v-if="changeForm.changeType === 'TOP_UP'">➕</template>    
-                                 <template slot="prepend" v-if="changeForm.changeType === 'DEDUCTIONS'">➖</template>                                     
-                                 </el-input>
-                                <p class="yuan">元</p>
-                            </el-form-item>
-                                 
-            
-              
-                        </el-col>
-                   
-                    </el-row>
+                <el-row :gutter="20">
+                    <el-col :span="5">
+                        <el-form-item label="变动金额：" label-width="100px">
+                            <h3 v-if="changeForm.changeType === 'DEDUCTIONS'">➖</h3>
+                            <h4 v-if="changeForm.changeType === 'TOP_UP'">➕</h4>
+                        </el-form-item>
+                    </el-col>
+                    <el-col :span="17">
+                        <el-form-item>
+                            <el-input v-model="changeForm.alterMoney" placeholder="变动金额" @keyup.native="checkMoney" style="padding-right:5px;"> </el-input>
+                            <p class="yuan">元</p>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
 
-                    <el-row>
-                        <el-col :span="22">
-                            <el-form-item label="备注说明：" label-width="100px">
-                                <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
-                                <p class="triangle"></p>
-                                <p class="msg">备注修改的原因，不超过50个中文字符</p>
-                            </el-form-item>
-                        </el-col>
-                    </el-row>
-                </el-form>
+                <el-row>
+                    <el-col :span="22">
+                        <el-form-item label="备注说明：" label-width="100px">
+                            <el-input v-model="changeForm.remark" placeholder="备注"></el-input>
+                            <p class="triangle"></p>
+                            <p class="msg">备注修改的原因，不超过50个中文字符</p>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
 
-                <div slot="footer" class="dialog-footer">
-                    <el-button @click="changeCancle">取 消</el-button>
-                    <el-button type="primary" @click="onChange">确 定</el-button>
-                </div>
-            </el-dialog>
-            <!-- 预存款变更弹窗 end -->  
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="changeCancle">取 消</el-button>
+                <el-button type="primary" @click="onChange">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 预存款变更弹窗 end -->
     </div>
 </template>
 
@@ -229,6 +383,9 @@
 import Utils from '../components/tools/Utils';
 import addressComponent from '../components/address.vue';
 import axios from 'axios';
+
+// import ElSearchTablePagination from 'el-search-table-pagination';
+
 
 import $ from 'jquery';
 export default {
@@ -248,14 +405,9 @@ export default {
                 operator: '',
                 salesMan: '',
                 operatorId: '',
-                salesManId: '', 
-				searchId: '',			//代理商编号
-				searchStatus: '',		//订单状态
-				searchTime: '',			//下单时间
-				searchLevel: [],		//代理商等级
-				Level: [],			//代理商等级替代
-				searchName:'',        //代理商姓名
-                operator:"" ,       //运营人员
+                salesManId: '',
+                // operatorName: '',
+                // salesManName: '',
             },
             myData: [],
             levelArray: [], //代理商等级数组
@@ -289,9 +441,56 @@ export default {
                 operator: '',
                 salesManId: '',
                 operatorId: '',
-                isFirstBatchMoney:'0',
+            },
+            addForm: {
+                shopName: '',
+                name: '',
+                phone: '',
+                signedTime: '',
+                agentGradeId: '',
+                provinceCode: '',
+                province: '',
+                city: '',
+                cityCode: '',
+                countyCode: '',
+                agentProvince: '',
+                agentCity: '',
+                agentCounty: '',
+                address: '',
+                shopType: 'AGENT',
+                isShow: '1',
+                salesMan: '',
+                operator: '',
+                salesManId: '',
+                operatorId: '',
+              
             },
             editFormTitle: '',
+            editForm: {
+                id: '',
+                shopName: '',
+                name: '',
+                phone: '',
+                signedTime: '',
+                agentGradeId: '',
+                province: '',
+                city: '',
+                county: '',
+                cityCode: '',
+                countyCode: '',
+                agentProvince: '',
+                agentCity: '',
+                agentCounty: '',
+                address: '',
+                shopType: '',
+                isShow: '',
+                operator: '',
+                operator2: '',
+                operatorId: '',
+                salesMan: '',
+                salesMan2: '',                
+                salesManId: '',
+            },
             isDisable: false,
             order: '', //预存款排序
             phoneLength: 11
@@ -304,7 +503,7 @@ export default {
         const self = this;
         if (!self.checkSession()) return;
         self.loading = true;
-        
+        // console.log()
 
         //获取代理商等级列表
         self.$ajax.post('/api/http/shop/queryAgentGradeList.jhtml', {}).then(function (response) {
@@ -328,33 +527,9 @@ export default {
             }
         }).then(function (response) {
             self.loading = false;
-            // console.log(response.data)
             self.myData = response.data.rows;
-
-            // console.log(response.data.rows[1].isParticipateRebate);
-            // console.log(self.myData)
-            
-            for (var value of self.myData) {
-                if(!value.areaClass){
-                    value.areaClass ==''  
-                }else{
-                    //  console.log((value.areaClass).toLocaleLowerCase())
-                     
-                     value.areaClass =  value.areaClass
-
-                    //  console.log(value.areaClass)
-                }
-            }
-            // response.data.rows.forEach(data => {
-                // console.log(data.areaClass)
-                //  console.log(data.areaClass.toLocaleLowerCase()) 
-            // });
-            
-    
-
-                                           
-                                            
             self.totalSize = response.data.total
+            console.log(response);
         }).catch(function (err) {
             self.loading = false;
             console.log(err);
@@ -362,10 +537,6 @@ export default {
 
     },
     methods: {
-        // Type(val){
-        //     if(val)  {val = {a:val}}
-        //     console.log(String(val), typeof val)
-        // },
         //判断是否超时
         checkSession() {
             const self = this;
@@ -433,8 +604,7 @@ export default {
                     'advanceDeposit.remark': self.changeForm.remark,
                     'advanceDeposit.creatorId': self.user.id,
                     'advanceDeposit.updatorId': self.user.id,
-                    'advanceDeposit.isBackground': 1,
-                    'advanceDeposit.isFirstBatchMoney':self.changeForm.isFirstBatchMoney ||'',
+                    'advanceDeposit.isBackground': 1
                 },
                 transformRequest: [function (data) {
                     // Do whatever you want to transform the data
@@ -477,14 +647,7 @@ export default {
             this.changeForm.changeShopId = id;
             this.changeForm.changeShopName = shopName;
             this.changeTitle = "编辑代理商店铺（编号：" + shopNo + "）"
-            this.dialogFormVisible = true;    
-        },
-        changeCancle() {
-            this.dialogFormVisible = false;
-            this.changeForm.changeType = '';
-            this.changeForm.alterMoney = '';
-            this.changeForm.remark = '';
-            this.changeForm.isFirstBatchMoney = '0';
+            this.dialogFormVisible = true;
         },
         //查询
         onSubmit: function () {
@@ -515,19 +678,44 @@ export default {
             }).then(function (response) {
                 self.loading = false;
                 self.myData = response.data.rows;
-                // console.log(self.myData)
-
-                console.log(self.myData.annualPurchasePerformance)
-                if(self.myData.annualPurchasePerformance){
-                    console.log('1')
-                }
-                self.totalSize = response.data.total;
+                self.totalSize = response.data.total
                 // console.log(response);
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
             });
         },
+        // 改变每页显示的条数
+        // handleSizeChange:function(val){
+        //     const self = this;
+        //     if(!self.checkSession())return;
+        //     self.pageSize = val;
+        //     self.currentPage = 1;
+        //     self.loading = true;
+        //     self.$ajax.get('/api/shop/ShopManage/search.jhtml',{
+        //         params:{
+        //             'pager.pageIndex':self.currentPage,
+        //             'pager.pageSize':self.pageSize,
+        //             'shop.shopName':self.searchData.shopName,
+        //             'shop.phone':self.searchData.phone,
+        //             'shop.name':self.searchData.name,
+        //             'shop.startTime':self.searchData.signTime&&self.searchData.signTime[0]?Utils.formatDayDate(this.searchData.signTime[0]):'',
+        //             'shop.endTime':self.searchData.signTime&&self.searchData.signTime[1]?Utils.formatDayDate(this.searchData.signTime[1]):'',
+        //             'shop.state':self.searchData.state,
+        //             'shop.agentGradeIds':self.searchData.agentLevelIds.join(','),
+        //             'shop.sort':'depositAmount',
+        //             'shop.order':self.order
+        //         }
+        //     }).then(function(response){
+        //         self.loading = false;
+        //         self.myData = response.data.rows;
+        //         self.totalSize = response.data.total
+        //         console.log(response);
+        //     }).catch(function(err){
+        //         self.loading = false;
+        //         console.log(err);
+        //     });
+        // },
         //改变当前页
         handleCurrentChange: function (val) {
             const self = this;
@@ -562,94 +750,55 @@ export default {
                 console.log(err);
             });
         },
-
-        //排序
+        // 预存款余额排序
         sortAmount(row, column) {
-            // console.log(row);
-            // 预存款余额
-            if(row.prop == 'depositAmount'){
-                    const self = this;
-                    // console.log(row.order)
-                    if (row.order === 'ascending') {
-                        self.order = 'asc';
-                    } else if (row.order === 'descending') {
-                        self.order = 'desc';
-                    } else {
-                        self.order = '';
-                    }
-                    if (!self.checkSession()) return;
-                    self.loading = true;
-                    self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-                        params: {
-                            'pager.pageIndex': self.currentPage,
-                            'pager.pageSize': self.pageSize,
-                            // 'shop.shopName': self.searchData.shopName,
-                            // 'shop.phone': self.searchData.phone,
-                            // 'shop.name': self.searchData.name,
-                            // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                            // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                            // 'shop.state': self.searchData.state,
-                            // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                            'shop.sort': 'depositAmount',
-                            'shop.order': self.order,
-                            // 'shop.operator': self.searchData.operator,
-                            // 'shop.salesMan': self.searchData.salesMan,
-                        }
-                    }).then(function (response) {
-                        self.loading = false;
-                        self.myData = response.data.rows;
-                        self.totalSize = response.data.total
-                        console.log(self.myData)
-                        // console.log(response);
-                    }).catch(function (err) {
-                        self.loading = false;
-                        console.log(err);
-                    });
-
+            const self = this;
+            // console.log(row.order)
+            if (row.order === 'ascending') {
+                self.order = 'asc';
+            } else if (row.order === 'descending') {
+                self.order = 'desc';
+            } else {
+                self.order = '';
             }
-
-            //剩余天数
-            if(row.prop == 'remainDay'){
-                // console.log('ok')
-                const self = this;
-                // console.log(row.order)
-                if (row.order === 'ascending') {
-                    self.order = 'asc';
-                } else if (row.order === 'descending') {
-                    self.order = 'desc';
-                } else {
-                    self.order = '';
+            if (!self.checkSession()) return;
+            self.loading = true;
+            self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
+                params: {
+                    'pager.pageIndex': self.currentPage,
+                    'pager.pageSize': self.pageSize,
+                    'shop.shopName': self.searchData.shopName,
+                    'shop.phone': self.searchData.phone,
+                    'shop.name': self.searchData.name,
+                    'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
+                    'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
+                    'shop.state': self.searchData.state,
+                    'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
+                    'shop.sort': 'depositAmount',
+                    'shop.order': self.order,
+                    'shop.operator': self.searchData.operator,
+                    'shop.salesMan': self.searchData.salesMan,
                 }
-                if (!self.checkSession()) return;
-                self.loading = true;
-                self.$ajax.get('/api/shop/ShopManage/search.jhtml', {
-                    params: {
-                        'pager.pageIndex': self.currentPage,
-                        'pager.pageSize': self.pageSize,
-                        // 'shop.shopName': self.searchData.shopName,
-                        // 'shop.phone': self.searchData.phone,
-                        // 'shop.name': self.searchData.name,
-                        // 'shop.startTime': self.searchData.signTime && self.searchData.signTime[0] ? Utils.formatDayDate(this.searchData.signTime[0]) : '',
-                        // 'shop.endTime': self.searchData.signTime && self.searchData.signTime[1] ? Utils.formatDayDate(this.searchData.signTime[1]) : '',
-                        // 'shop.state': self.searchData.state,
-                        // 'shop.agentGradeIds': self.searchData.agentLevelIds.join(','),
-                        'shop.sort': 'remainDay',
-                        'shop.order': self.order,
-                        // 'shop.operator': self.searchData.operator,
-                        // 'shop.salesMan': self.searchData.salesMan,
-                    }
-                }).then(function (response) {
-                    self.loading = false;
-                    self.myData = response.data.rows;
-                    self.totalSize = response.data.total
-                    console.log(self.myData);
-                    // console.log(response);
-                }).catch(function (err) {
-                    self.loading = false;
-                    console.log(err);
-                });
-            }
+            }).then(function (response) {
+                self.loading = false;
+                self.myData = response.data.rows;
+                self.totalSize = response.data.total
+                // console.log(response);
+            }).catch(function (err) {
+                self.loading = false;
+                console.log(err);
+            });
+
+        },
+        //打开新增店铺弹窗
+        openAddDialog() {
             
+        //   console.log(this.addForm.areacode);
+        //   console.log(this.addForm.provinceCode);
+        //   console.log(this.addForm.cityCode); 
+        //   console.log(this.addForm.agentCity);
+        //   console.log(this.addForm.addAddress)    
+            this.addDialogVisible = true;
         },
         //用户列表
         operatorQuerySearchAsync(queryString, callback) {
@@ -782,6 +931,13 @@ export default {
          
             //do something
         },
+        //打开修改店铺及店铺详情弹窗
+        openEditDialog(data, type) {
+            type == 'edit' ? this.isDisable = false : this.isDisable = true
+            this.editFormTitle = type == 'edit' ? "编辑店铺（编号：" + data.shopNo + "）" : "查看店铺（编号：" + data.shopNo + "）"
+            this.getInfoById(data.id);
+            this.editDialogVisible = true;
+        },
         // 获取选中店铺信息
         getInfoById(id) {
             const self = this;
@@ -796,13 +952,15 @@ export default {
                 self.editForm = response.data.result;
                 self.operatorId = response.data.result.operatorId;
                 self.salesManId = response.data.result.salesManId;
+                // console.log(self.editForm.city)
+                // console.log(self.editForm.county)
+                // console.log(self.editForm.province)
+
+
             }).catch(function (err) {
                 self.loading = false;
                 console.log(err);
             });
-        },
-        selectIsFirstBatchMoney(){
-            this.isFirstBatchMoney='0';
         },
         //修改代理商状态
         updateAgentState(data) {
@@ -907,191 +1065,306 @@ export default {
 
             });
         },
-        // formatSelect() {
-        //     let myData = this.myData;
-        //     let array = []
-        //     for (let i = 0; i < selectData.length; i++) {
-        //         array.push(selectData[i].id)
-        //     }
-        //     return array.join(',')
-        // },
-
-        // 导出全部明细
-        allOutputExcel() {
-          let self  = this;
-          self.outputExcel()
-        },
-        getData(obj){
+        //提交字段校验
+        testData(data, Address, AgentAddress) {
             const self = this;
-            obj.method = obj.method || 'get';
-            obj.url = obj.url || '';
-            obj.data = obj.data  || {};
-            obj.code = obj.code || function () {};
-            obj.fail = obj.fail || function () {};
-            obj.error = obj.error || function () {};
-            if (obj.method === 'get') {
-                var str = '?';
-                for(var item in obj.data){
-                    if (obj.data[item] != '' && obj.data[item] != undefined) {
-                        str  += item + '=' + obj.data[item] + '&';
-                    }
+            let isMobile = /^1\d{10}$/
+            //店铺名判断
+            if (!data.shopName) {
+                self.loading = false;
+                self.$message({
+                    message: '店铺名不得为空',
+                    type: 'error'
+                })
+                return false
+            } else {
+                if (data.shopName.length > 50) {
+                    self.loading = false;
+                    self.$message({
+                        message: '店铺名长度不得大于50',
+                        type: 'error'
+                    })
+                    return false
                 }
-                str = str.substring(0,str.length-1);
-                obj.url = obj.url+str;
-                self.$ajax({
-                    method: 'get',
-                    url: `api/${obj.url}`
-                }).then(function(response){
-                    if(response.data.code === 1){
-                        obj.success.call(self,response);
-                    }else{
-                        // console.log(response);
-                        obj.fail.call(self,response);
-                    }
-                }).catch(function(error){
-                    obj.error.call(self,error);
-                });
             }
-        },
-        formatJson(filterVal, jsonData) {
-            //     ----> 格式化json
-            //     console.log(jsonData)
-                return jsonData.map(v => {
-            // 	   console.log(v)
-                    return filterVal.map(j => {
-                      console.log(j,v[j])
-                            if(j === "agentGradeId" ){
-                                 return v[j] =     ( v[j] == 31 ?  "单店" : ( v[j] == 265 ? "区域" : "微店")  )  ;
-                            }
-                            if(j === 'remark'){
-                                 return v[j] =     ( v[j] == 0 ?  "达标" : ( v[j] == 1 ? "未达标" : "无上年度业绩")  )  ;
-                            }
-                            if(j === 'annualExtendPerformance'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-                            if(j === 'annualAreadyExtendPerformance'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-                            if(j === 'annualExtendPerformanceSchedule'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-                            if(j === 'annualPurchasePerformance'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-                            if(j === 'annualAreadyPurchasePerformance'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-                            if(j === 'aannualPurchasePerformanceSchedule'){
-                                 return v[j] =     ( v[j] == undefined ?  "-" : ( v[j])  )  ;
-                            }
-
-                           return  v[j]  = v[j];
-                    // }
-                    })			
-                })	
-
-                
-        },
-        // 导出明细
-		outputExcel() {
-            if (!this.checkSession()) return;
-                var temp = new Date(this.searchData.searchTime[0]);
-                if (temp.getFullYear() > 2006) {
-                    var time1 = temp.getFullYear();
-                    if ((temp.getMonth() + 1) < 10) {
-                        time1 = time1 + '-0' + (temp.getMonth() + 1);
-                    } else {
-                        time1 = time1 + '-' + (temp.getMonth() + 1);
-                    }
-                    if (temp.getDate() < 10) {
-                        time1 = time1 + '-0' + temp.getDate();
-                    } else {
-                        time1 = time1 + '-' + temp.getDate();
-                    }
-                    console.log(time1);
-                    temp = new Date(this.searchData.searchTime[1]);
-                    var time2 = temp.getFullYear();
-                    if ((temp.getMonth() + 1) < 10) {
-                        time2 = time2 + '-0' + (temp.getMonth() + 1);
-                    } else {
-                        time2 = time2 + '-' + (temp.getMonth() + 1);
-                    }
-                    if (temp.getDate() < 10) {
-                        time2 = time2 + '-0' + temp.getDate();
-                    } else {
-                        time2 = time2 + '-' + temp.getDate();
-                    }
-                    console.log(time2);
-                } else {
-                    var time1 = '';
-                    var time2 = '';
+            //代理商姓名判断
+            if (!data.name) {
+                self.loading = false;
+                self.$message({
+                    message: '代理商姓名不得为空',
+                    type: 'error'
+                })
+                return false
+            } else {
+                if (data.name.length > 10) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商姓名长度不得大于10',
+                        type: 'error'
+                    })
+                    return false
                 }
-                if (this.searchData.searchLevel != '') {
-                    this.searchData.level = this.searchData.searchLevel.join(',');
-                } else {
-                    this.searchData.level = '';
+            }
+            //代理商手机判断
+            if (!data.phone) {
+                self.loading = false;
+                self.$message({
+                    message: '代理商手机不得为空',
+                    type: 'error'
+                })
+                return false
+            } else {
+                if (!isMobile.test(data.phone)) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理商手机格式有误',
+                        type: 'error'
+                    })
+                    return false
                 }
+            }
+            //合同签约日期判断
+            if (!data.signedTime) {
+                self.loading = false;
+                self.$message({
+                    message: '合同签约日期不得为空',
+                    type: 'error'
+                })
+                return false
+            }
+            // 如果是直营直接转成区域代理
+            if (data.shopType == 'SELF_SUPPORT') {
+                data.agentGradeId = 265;
+            }
+            //代理商等级判断
+            if (!data.agentGradeId) {
+                self.loading = false;
+                self.$message({
+                    message: '代理商等级不得为空',
+                    type: 'error'
+                })
+                return false
+            }
+            //收件地址判断
+            if (!Address.provinceCode || !Address.cityCode || !Address.areaCode) {
+                self.loading = false;
+                self.$message({
+                    message: '收件地址不得为空',
+                    type: 'error'
+                })
+                return false
+            } else {
+                if (Address.cityCode == 1) {
+                    self.loading = false;
+                    self.$message({
+                        message: '请选择具体收件城市',
+                        type: 'error'
+                    })
+                    return false
+                }
+                if (Address.areaCode == 1) {
+                    self.loading = false;
+                    self.$message({
+                        message: '请选择具体收件地区',
+                        type: 'error'
+                    })
+                    return false
+                }
+            }
+            //详细地址判断
+            if (!data.address) {
+                self.loading = false;
+                self.$message({
+                    message: '详细地址不得为空',
+                    type: 'error'
+                })
+                return false
+            } else {
+                if (data.address.length > 100) {
+                    self.loading = false;
+                    self.$message({
+                        message: '详细地址长度不得大于100个字符',
+                        type: 'error'
+                    })
 
-
-                this.getData({
-                    url: 'shop/ShopManage/search.jhtml',
-                    data: {
-                        'pager.pageSize':  this.totalSize ,
-
-                    },
-                    success(response) {                     
-                        if (response.data.code === 1) {
-                            if(this.myData.length==30){
-                                 self.tableData =  response.data.rows
-                            }else{
-                                    self.tableData =  (response.data.total == this.myData.length)  ? response.data.rows : this.myData ;
-                            }
-                            // console.log(self.tableData)
-                            // console.log( (response.data.total == this.myData.length)  )
-                               
-
-                                // console.log(self.tableData);
-                                if(self.tableData.length>0){
-                                            require.ensure([], () => {
-                                                const {	export_json_to_excel } = require('../components/tools/Export2Excel2')                                                
-                                                const tHeader =['代理商编号', '代理商等级', '代理商姓名', '年度店铺拓展目标',
-                                                                 '已完成', '进度', '年度进货业绩目标', '已完成', '进度',
-                                                                 '剩余时间','备注', ]
-                                                const filterVal =['shopNo', 'agentGradeId', 'shopName', 'annualExtendPerformance', 
-                                                                    'annualAreadyExtendPerformance', 'annualExtendPerformanceSchedule', 'annualPurchasePerformance', 'annualAreadyPurchasePerformance', 'aannualPurchasePerformanceSchedule',
-                                                                    'remainDay', 'remark',]
-                                                const list = self.tableData;
-                                                const data = this.formatJson(filterVal, list);
-                                                export_json_to_excel(tHeader, data, '代理商' + (Utils.formatYearDate(self.tableData[0].signTime) ? Utils.formatYearDate(self.tableData[0].signTime)  + '' : '') +'年度目标完成进度');
-                                            })
-                                }else{
-                                    self.$message({
-                                        message: '订单暂无明细',
-                                        type: 'error'
-                                    })
-                                }
-                            } else {
-                                self.$message({
-                                    message: response.data.msg,
-                                    type: 'error'
-                                })
-                            }
-                    },
-                    fail(response) {
-                        alert('ok')
-                        this.$message({
-                            message: response.data.msg,
+                    return false
+                }
+                //业务人员判断
+                if(!data.salesMan){
+                    // console.log(data.salesMan)
+                    self.loading = false;
+                    self.$message({
+                        message:'业务人员为必填项',
+                        type:'error'
+                    })
+                    return false;
+                }
+            }
+            //代理区域判断
+            if (data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT') {
+                if (!AgentAddress.provinceCode || !AgentAddress.cityCode || !AgentAddress.areaCode) {
+                    self.loading = false;
+                    self.$message({
+                        message: '代理区域不得为空',
+                        type: 'error'
+                    })
+                    return false
+                } else {
+                    if (AgentAddress.cityCode == 1) {
+                        self.loading = false;
+                        self.$message({
+                            message: '请选择具体代理城市',
                             type: 'error'
                         })
-                    },
-                    error(response) {
-                        this.$message({
-                            message: response.data.msg,
-                            type: 'error'
-                        })
+                        return false
                     }
-                });
-		},
+                }
+
+            }
+            return true
+        },
+        // 新增店铺
+        addAgent() {
+            const self = this;
+            if (!self.checkSession()) return;
+            self.loading = true;
+            const data = self.addForm;
+            let addAddress = self.$refs.addAddress.getData();
+            let addAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.addAgentAddress.getData() : null;
+            if (!self.testData(data, addAddress, addAgentAddress)) return;
+            //请求
+            self.$ajax({
+                url: '/api/shop/shopManage/modify.jhtml',
+                method: 'post',
+                data: {
+                    'shop.shopName': data.shopName,
+                    'shop.name': data.name,
+                    'shop.phone': data.phone,
+                    'shop.signedTime': Utils.formatDayDate(data.signedTime),
+                    'shop.agentGradeId': data.agentGradeId,
+                    'shop.provinceCode': addAddress.provinceCode,
+                    'shop.cityCode': addAddress.cityCode,
+                    'shop.countyCode': addAddress.areaCode,
+                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? addAgentAddress.areaCode : '',
+                    'shop.address': data.address,
+                    'shop.shopType': data.shopType,
+                    'shop.isShow': data.isShow,
+                    'shop.operator': data.operator,
+                    'shop.salesMan': data.salesMan,
+                    'shop.salesManId': this.salesManId,
+                    'shop.operatorId': this.operatorId || '',
+              
+                },
+                transformRequest: [function (data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                self.loading = false;
+                // console.log(response)
+                if (response.data.result == 0) {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'success'
+                    })
+                    self.addDialogVisible = false;
+                    setTimeout(function () {
+                        self.handleCurrentChange(self.currentPage);
+                    }, 1000)
+                }
+            }).catch(function (err) {
+                self.loading = false;
+            });
+
+
+
+        },
+        // 修改店铺
+        editAgent() {
+            const self = this;
+            if (!self.checkSession()) return;
+            self.loading = true;
+            const data = self.editForm;
+            let editAddress = self.$refs.editAddress.getData();
+            
+            console.log(editAddress);
+            // return;
+            let editAgentAddress = data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? self.$refs.editAgentAddress.getData() : null;
+            if (!self.testData(data, editAddress, editAgentAddress)) return;
+            //请求
+            // console.log(data)
+            self.$ajax({
+                url: '/api/shop/shopManage/modify.jhtml',
+                method: 'post',
+                data: {
+                    'shop.id': data.id,
+                    'shop.shopName': data.shopName,
+                    'shop.name': data.name,
+                    'shop.phone': data.phone,
+                    'shop.signedTime': data.signedTime,
+                    'shop.agentGradeId': data.agentGradeId,
+                    'shop.provinceCode': editAddress.provinceCode,
+                    'shop.cityCode': editAddress.cityCode,
+                    'shop.countyCode': editAddress.areaCode,
+                    'shop.agentProvince': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.provinceCode : '',
+                    'shop.agentCity': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.cityCode : '',
+                    'shop.agentCounty': data.agentGradeId == 265 && data.shopType != 'SELF_SUPPORT' ? editAgentAddress.areaCode : '',
+                    'shop.address': data.address,
+                    'shop.shopType': data.shopType,
+                    'shop.city': data.city,
+                    'shop.provinceCode': editAddress.provinceCode,
+                    'shop.isShow': data.isShow,
+                    'shop.operator': data.operator,
+                    'shop.salesMan': data.salesMan,
+                    'shop.salesManId': this.salesManId || '',
+                    'shop.operatorId': this.operatorId || '',
+                },
+                transformRequest: [function (data) {
+                    let ret = ''
+                    for (let it in data) {
+                        ret += encodeURIComponent(it) + '=' + encodeURIComponent(data[it]) + '&'
+                    }
+                    return ret
+                }],
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded'
+                }
+            }).then(function (response) {
+                self.loading = false;
+                // console.log(response)
+                if (response.data.result == 0) {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'error'
+                    })
+                } else {
+                    self.$message({
+                        message: response.data.msg,
+                        type: 'success'
+                    })
+                    self.editDialogVisible = false;
+                    setTimeout(function () {
+                        self.handleCurrentChange(self.currentPage);
+                    }, 1000)
+                }
+
+            }).catch(function (err) {
+                self.loading = false;
+            });
+        },
         //重置新增表格内容
         resetAddForm() {
             const self = this;
@@ -1118,7 +1391,6 @@ export default {
                 cityCode: '',
                 countyCode: '',
                 areaCode:'',
-                areaClass:'',
             }
         },
         //重置修改表格内容
@@ -1146,7 +1418,6 @@ export default {
                 salesMan: '',
                 salesManId: '',
                 operatorId: '',
-                areaClass:'',
             }
 
         },
@@ -1157,9 +1428,15 @@ export default {
             self.changeForm.alterMoney = '';
             self.changeForm.remark = '';
         },
-    },
-    computed:{
-        
+        deleteOperator(){
+            this.addForm.operator='';
+            this.editForm.operator='';
+        },
+        deleteSalesMan(){
+            this.addForm.salesMan='';
+            this.editForm.salesMan='';
+            
+        }
     }
 }
 </script>
@@ -1170,6 +1447,8 @@ export default {
     top: 72%;
     left: 60%;
 }
+</style>
+<style>
 .el-message-box {
     width: 500px;
 }
@@ -1289,8 +1568,5 @@ export default {
     top: 9px;
     left: 171px;
     z-index: 1000;
-}
-.router-link-active { 
-   color: #1990ff;
 }
 </style>
